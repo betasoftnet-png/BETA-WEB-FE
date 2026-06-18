@@ -15,7 +15,7 @@ export default function Login() {
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate('/admin');
+      navigate('/adminofcarrer');
     }
   }, [user, navigate]);
 
@@ -27,7 +27,7 @@ export default function Login() {
     try {
       const res = await login(username, password);
       if (res.success) {
-        navigate('/admin');
+        navigate('/adminofcarrer');
       } else {
         setError(res.message);
       }

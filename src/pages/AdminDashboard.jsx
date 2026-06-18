@@ -2,39 +2,41 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { 
-  Plus, Edit, Trash, FileText, Mail, Users, Briefcase, Box, 
-  LogOut, RefreshCw, CheckCircle, AlertCircle, X, Shield 
+  Plus, Edit, Trash, FileText, Briefcase, LogOut, 
+  RefreshCw, CheckCircle, AlertCircle, X, Shield, Users 
 } from 'lucide-react';
-import api from '../api';
+import axios from 'axios';
 
 export default function AdminDashboard() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('products');
 
-  // Shared Data States
-  const [products, setProducts] = useState([]);
-  const [applications, setApplications] = useState([]);
-  const [messages, setMessages] = useState([]);
-  const [subscribers, setSubscribers] = useState([]);
+  // Job Board States
+  const [externalJobs, setExternalJobs] = useState([]);
+  const [externalApplications, setExternalApplications] = useState([]);
+  const [activeSubTab, setActiveSubTab] = useState('jobsList');
+  const [selectedJobFilter, setSelectedJobFilter] = useState('All');
+  const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
 
-  // Load States
+  // Job Posting/Editing Modal States
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+  const [editingJob, setEditingJob] = useState(null); // null if adding, job object if editing
+  const [jobTitle, setJobTitle] = useState('');
+  const [jobDept, setJobDept] = useState('');
+  const [jobLocation, setJobLocation] = useState('');
+  const [jobType, setJobType] = useState('Full-time');
+  const [jobSalary, setJobSalary] = useState('');
+  const [jobDesc, setJobDesc] = useState('');
+  const [jobResponsibilities, setJobResponsibilities] = useState(['']);
+  const [jobRequirements, setJobRequirements] = useState(['']);
+  const [jobSkills, setJobSkills] = useState(['']);
+
+  // Load/Alert States
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Modal States for Product Edit/Add
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null); // null if adding
-  const [prodName, setProdName] = useState('');
-  const [prodDesc, setProdDesc] = useState('');
-  const [prodIcon, setProdIcon] = useState('Mail');
-  const [prodStatus, setProdStatus] = useState('ACTIVE');
-  const [prodFeatures, setProdFeatures] = useState(''); // Comma-separated
-  const [isCustomName, setIsCustomName] = useState(false);
-
-
-  // Redirect to login if user not authenticated
+  // Redirect if user not authenticated
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -47,165 +49,254 @@ export default function AdminDashboard() {
     setLoading(true);
     setError('');
     try {
-      if (activeTab === 'products') {
-        const res = await api.get('/api/products');
-        setProducts(res.data);
-      } else if (activeTab === 'applications') {
-        const res = await api.get('/api/careers/applications');
-        setApplications(res.data);
-      } else if (activeTab === 'messages') {
-        const res = await api.get('/api/contact/messages');
-        setMessages(res.data);
-      } else if (activeTab === 'subscribers') {
-        const res = await api.get('/api/newsletter/subscribers');
-        setSubscribers(res.data);
-      }
+      const [jobsRes, appsRes] = await Promise.all([
+        axios.get('https://apply.beta-softnet.com/api/jobs'),
+        axios.get('https://apply.beta-softnet.com/api/applications')
+      ]);
+      setExternalJobs(jobsRes.data.data || jobsRes.data || []);
+      setExternalApplications(appsRes.data.data || appsRes.data || []);
     } catch (err) {
-      setError('Failed to fetch data from API server. Check if backend is active.');
+      setError('Failed to fetch jobs or applications from apply.beta-softnet.com.');
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (user) fetchData();
-  }, [activeTab]);
-
-  const openAddModal = () => {
-    setEditingProduct(null);
-    setProdName('');
-    setProdDesc('');
-    setProdIcon('Mail');
-    setProdStatus('ACTIVE');
-    setProdFeatures('');
-    setIsCustomName(false);
-    setIsModalOpen(true);
+  const handleArrayChange = (index, value, array, setArray) => {
+    const newArray = [...array];
+    newArray[index] = value;
+    setArray(newArray);
   };
 
-  const openEditModal = (prod) => {
-    setEditingProduct(prod);
-    setProdName(prod.name);
-    setProdDesc(prod.description);
-    setProdIcon(prod.icon);
-    setProdStatus(prod.status);
-    setProdFeatures(prod.features.map(f => f.featureName).join(', '));
-    const isStandard = ['BNX MAIL', 'B2AUTH SECURITY', 'CLIKS', 'CLIKS BUSINESS'].includes(prod.name);
-    setIsCustomName(!isStandard);
-    setIsModalOpen(true);
+  const addArrayField = (array, setArray) => {
+    setArray([...array, '']);
   };
 
-  const handleProductSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    const featuresList = prodFeatures.split(',').map(f => f.trim()).filter(f => f.length > 0);
-
-    const payload = {
-      name: prodName,
-      description: prodDesc,
-      icon: prodIcon,
-      status: prodStatus,
-      features: featuresList
-    };
-
-    try {
-      if (editingProduct) {
-        // Edit
-        await api.put(`/api/products/${editingProduct.id}`, payload);
-        setSuccess('Product updated successfully.');
-      } else {
-        // Create
-        await api.post('/api/products', payload);
-        setSuccess('Product created successfully.');
-      }
-      setIsModalOpen(false);
-      fetchData();
-    } catch (err) {
-      setError('Product action failed.');
-      console.error(err);
+  const removeArrayField = (index, array, setArray) => {
+    if (array.length === 1) {
+      setArray(['']);
+    } else {
+      const newArray = array.filter((_, i) => i !== index);
+      setArray(newArray);
     }
   };
 
-  const handleProductDelete = async (id) => {
-    if (!window.confirm('Delete this product permanently?')) return;
+  const openAddJobModal = () => {
+    setEditingJob(null);
+    setJobTitle('');
+    setJobDept('');
+    setJobLocation('');
+    setJobType('Full-time');
+    setJobSalary('');
+    setJobDesc('');
+    setJobResponsibilities(['']);
+    setJobRequirements(['']);
+    setJobSkills(['']);
+    setIsJobModalOpen(true);
+  };
+
+  const openEditJobModal = (job) => {
+    setEditingJob(job);
+    setJobTitle(job.title);
+    setJobDept(job.department);
+    setJobLocation(job.location);
+    setJobType(job.type || 'Full-time');
+    setJobSalary(job.salary);
+    setJobDesc(job.description);
+    
+    // Parse arrays (handling both parsed arrays and raw string representations)
+    let resp = [''];
+    let reqs = [''];
+    let skillsList = [''];
+    try {
+      resp = Array.isArray(job.responsibilities) ? job.responsibilities : JSON.parse(job.responsibilities || '[]');
+    } catch(e) { resp = [job.responsibilities || '']; }
+    try {
+      reqs = Array.isArray(job.requirements) ? job.requirements : JSON.parse(job.requirements || '[]');
+    } catch(e) { reqs = [job.requirements || '']; }
+    try {
+      skillsList = Array.isArray(job.skills) ? job.skills : JSON.parse(job.skills || '[]');
+    } catch(e) { skillsList = [job.skills || '']; }
+    
+    setJobResponsibilities(resp.length > 0 ? resp : ['']);
+    setJobRequirements(reqs.length > 0 ? reqs : ['']);
+    setJobSkills(skillsList.length > 0 ? skillsList : ['']);
+    setIsJobModalOpen(true);
+  };
+
+  const handleJobSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    
+    const responsibilities = jobResponsibilities.map(r => r.trim()).filter(r => r.length > 0);
+    const requirements = jobRequirements.map(r => r.trim()).filter(r => r.length > 0);
+    const skills = jobSkills.map(s => s.trim()).filter(s => s.length > 0);
+    
+    const payload = {
+      title: jobTitle,
+      department: jobDept,
+      location: jobLocation,
+      type: jobType,
+      salary: jobSalary,
+      description: jobDesc,
+      responsibilities,
+      requirements,
+      skills
+    };
+    
+    try {
+      setLoading(true);
+      if (editingJob) {
+        await axios.put(`https://apply.beta-softnet.com/api/jobs/${editingJob.id}`, payload);
+        setSuccess('Job opening updated successfully.');
+      } else {
+        await axios.post('https://apply.beta-softnet.com/api/jobs', payload);
+        setSuccess('Job opening posted successfully.');
+      }
+      setIsJobModalOpen(false);
+      fetchData();
+    } catch (err) {
+      setError(editingJob ? 'Failed to update job posting.' : 'Failed to post job opening.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleJobDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this job posting permanently? This will also remove any candidate applications for this role.')) return;
     setError('');
     setSuccess('');
     try {
-      await api.delete(`/api/products/${id}`);
-      setSuccess('Product deleted.');
+      setLoading(true);
+      await axios.delete(`https://apply.beta-softnet.com/api/jobs/${id}`);
+      setSuccess('Job opening deleted successfully.');
       fetchData();
     } catch (err) {
-      setError('Deletion failed.');
+      setError('Failed to delete job opening.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-dark-950 flex flex-col md:flex-row text-left">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row text-left admin-light-theme relative">
+      {/* Light Theme specific adjustments */}
+      <style>{`
+        .admin-light-theme {
+          background-color: #F8FAFC !important;
+          color: #1E293B !important;
+        }
+        .admin-light-theme h1, 
+        .admin-light-theme h2, 
+        .admin-light-theme h3, 
+        .admin-light-theme h4, 
+        .admin-light-theme h5, 
+        .admin-light-theme h6 {
+          color: #0F172A !important;
+        }
+        .admin-light-theme p {
+          color: #475569 !important;
+        }
+        .admin-light-theme label {
+          color: #475569 !important;
+          font-weight: 600;
+        }
+        .admin-sidebar {
+          background-color: #0F172A !important; /* Dark blue-slate sidebar for contrast */
+          border-right: 1px solid #1E293B !important;
+        }
+        .admin-sidebar p, 
+        .admin-sidebar span, 
+        .admin-sidebar button {
+          color: #94A3B8 !important;
+        }
+        .admin-sidebar button:hover {
+          color: #FFFFFF !important;
+        }
+        .admin-glass-card {
+          background: #FFFFFF !important;
+          border: 1px solid rgba(226, 232, 240, 0.8) !important;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+          transition: all 0.25s ease !important;
+        }
+        .admin-glass-card:hover {
+          border-color: rgba(59, 130, 246, 0.4) !important;
+          box-shadow: 0 10px 20px rgba(59, 130, 246, 0.08) !important;
+          transform: translateY(-2px);
+        }
+        .admin-glow-btn {
+          background: #004AAD !important;
+          color: #FFFFFF !important;
+          border: none !important;
+          box-shadow: 0 4px 12px rgba(0, 74, 173, 0.2) !important;
+          transition: all 0.2s ease !important;
+        }
+        .admin-glow-btn:hover {
+          background: #003c8a !important;
+          box-shadow: 0 6px 16px rgba(0, 74, 173, 0.3) !important;
+        }
+        .admin-custom-input {
+          background-color: #FFFFFF !important;
+          border: 1px solid #CBD5E1 !important;
+          color: #0F172A !important;
+        }
+        .admin-custom-input:focus {
+          border-color: #004AAD !important;
+          box-shadow: 0 0 0 2px rgba(0, 74, 173, 0.15) !important;
+        }
+        .admin-scrollbar::-webkit-scrollbar {
+          width: 5px;
+        }
+        .admin-scrollbar::-webkit-scrollbar-track {
+          background: #F8FAFC;
+        }
+        .admin-scrollbar::-webkit-scrollbar-thumb {
+          background: #CBD5E1;
+          border-radius: 10px;
+        }
+      `}</style>
+
       {/* Sidebar navigation */}
-      <div className="w-full md:w-64 bg-slate-950 border-r border-slate-900 flex flex-col justify-between py-6">
+      <div className="w-full md:w-64 md:fixed md:top-0 md:bottom-0 md:left-0 md:h-screen admin-sidebar flex flex-col justify-between py-6 z-20">
         <div>
           <div className="px-6 mb-8 flex items-center space-x-2 text-white font-bold text-lg">
-            <div className="p-1.5 bg-blue-600 rounded-lg">
-              <Shield className="h-5 w-5" />
+            <div className="p-1.5 bg-[#004AAD] rounded-lg">
+              <Shield className="h-5 w-5 text-white" />
             </div>
-            <span>BETA ADMIN</span>
+            <span className="text-white font-bold tracking-wider">
+              BETA ADMIN
+            </span>
           </div>
 
           <nav className="space-y-1 px-3">
             <button
-              onClick={() => setActiveTab('products')}
-              className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
-                activeTab === 'products' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
-              }`}
+              className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition bg-[#004AAD] text-white!"
+              style={{ color: '#ffffff' }}
             >
-              <Box className="h-4.5 w-4.5" />
-              <span>Products Editor</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('applications')}
-              className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
-                activeTab === 'applications' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
-              }`}
-            >
-              <Briefcase className="h-4.5 w-4.5" />
-              <span>Job Applications</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('messages')}
-              className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
-                activeTab === 'messages' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
-              }`}
-            >
-              <Mail className="h-4.5 w-4.5" />
-              <span>Partner Inquiries</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('subscribers')}
-              className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
-                activeTab === 'subscribers' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
-              }`}
-            >
-              <Users className="h-4.5 w-4.5" />
-              <span>Subscribers</span>
+              <Briefcase className="h-4.5 w-4.5 text-blue-200" />
+              <span className="text-white font-bold">Job Board</span>
             </button>
           </nav>
         </div>
 
         {/* User profile / Logout */}
-        <div className="px-4 border-t border-slate-900 pt-6 space-y-4">
+        <div className="px-4 border-t border-slate-800 pt-6 space-y-4">
           <div className="flex items-center space-x-3">
-            <div className="h-9 w-9 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300">
+            <div className="h-9 w-9 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-350">
               AD
             </div>
             <div>
               <p className="text-sm font-bold text-white">Administrator</p>
-              <p className="text-xs text-slate-500">{user?.username}</p>
+              <p className="text-xs text-slate-500 mt-1">{user?.username}</p>
             </div>
           </div>
           <button
             onClick={() => logout()}
-            className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-bold bg-red-950/20 text-red-400 border border-red-900/40 hover:bg-red-900/30 transition"
+            className="w-full flex items-center justify-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-bold bg-red-950/20 text-red-400 border border-red-900/30 hover:bg-red-900/30 transition duration-200"
           >
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
@@ -214,360 +305,509 @@ export default function AdminDashboard() {
       </div>
 
       {/* Main Panel Content */}
-      <div className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+      <div className="flex-1 md:ml-64 p-6 md:p-10 max-w-7xl mx-auto w-full z-10 overflow-y-auto">
         {/* Banner Alert messages */}
         {error && (
-          <div className="mb-6 flex items-center space-x-2 text-rose-400 text-sm p-4 rounded-xl bg-rose-950/20 border border-rose-900/30">
-            <AlertCircle className="h-5 w-5 flex-shrink-0" />
+          <div className="mb-6 flex items-center space-x-2 text-rose-600 text-sm p-4 rounded-xl bg-rose-50 border border-rose-200 animate-fadeIn font-semibold">
+            <AlertCircle className="h-5 w-5 flex-shrink-0 text-rose-500" />
             <span>{error}</span>
           </div>
         )}
         {success && (
-          <div className="mb-6 flex items-center space-x-2 text-emerald-400 text-sm p-4 rounded-xl bg-emerald-950/20 border border-emerald-900/30">
-            <CheckCircle className="h-5 w-5 flex-shrink-0" />
+          <div className="mb-6 flex items-center space-x-2 text-emerald-700 text-sm p-4 rounded-xl bg-emerald-50 border border-emerald-250 animate-fadeIn font-semibold">
+            <CheckCircle className="h-5 w-5 flex-shrink-0 text-emerald-600" />
             <span>{success}</span>
           </div>
         )}
 
         {/* Tab Headers */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">
-              {activeTab === 'products' && 'Product Editor'}
-              {activeTab === 'applications' && 'Job Applications'}
-              {activeTab === 'messages' && 'Partnership Inquiries'}
-              {activeTab === 'subscribers' && 'Newsletter Subscribers'}
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              External Job Board
             </h1>
-            <p className="text-slate-500 text-sm mt-1">
-              {activeTab === 'products' && 'Manage Beta Softnet active products and listing features.'}
-              {activeTab === 'applications' && 'Review incoming talent pools and download applicant resumes.'}
-              {activeTab === 'messages' && 'Read prospective partner tracks and proposals.'}
-              {activeTab === 'subscribers' && 'View subscribed company emails for marketing pushes.'}
+            <p className="text-slate-550 text-sm mt-1">
+              Post careers to apply.beta-softnet.com and manage candidate applications.
             </p>
           </div>
 
-          <div className="flex space-x-3">
+          <div className="flex space-x-3 self-start sm:self-auto">
             <button
               onClick={fetchData}
               disabled={loading}
-              className="p-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-lg text-slate-400 hover:text-white transition disabled:opacity-50"
+              className="p-2.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-slate-700 transition disabled:opacity-50"
             >
               <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
             </button>
-            {activeTab === 'products' && (
-              <button
-                onClick={openAddModal}
-                className="flex items-center space-x-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white transition glow-btn-blue shadow-lg shadow-blue-500/10"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Add Product</span>
-              </button>
-            )}
+            <button
+              onClick={openAddJobModal}
+              className="flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-semibold admin-glow-btn"
+            >
+              <Plus className="h-4 w-4 text-white" />
+              <span className="text-white">Post a Job</span>
+            </button>
           </div>
         </div>
 
-        {/* Tab content bodies */}
         {loading ? (
           <div className="flex items-center justify-center py-20 text-slate-500 space-x-2">
-            <RefreshCw className="h-5 w-5 animate-spin text-blue-500" />
-            <span>Fetching database records...</span>
+            <RefreshCw className="h-5 w-5 animate-spin text-blue-600" />
+            <span>Syncing database records...</span>
           </div>
         ) : (
-          <>
-            {/* 1. Products list view */}
-            {activeTab === 'products' && (
+          <div className="space-y-6">
+            {/* Sub Tab Controls */}
+            <div className="flex space-x-6 border-b border-slate-200 pb-3">
+              <button
+                onClick={() => setActiveSubTab('jobsList')}
+                className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${
+                  activeSubTab === 'jobsList' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                Active Jobs ({externalJobs.length})
+              </button>
+              <button
+                onClick={() => setActiveSubTab('appsList')}
+                className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${
+                  activeSubTab === 'appsList' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                Candidate Applications ({externalApplications.length})
+              </button>
+            </div>
+
+            {/* Sub Tab 1: Jobs list */}
+            {activeSubTab === 'jobsList' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {products.map(prod => (
-                  <div key={prod.id} className="glass-card p-6 rounded-2xl border border-slate-850 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center space-x-3">
-                          <span className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-blue-400 font-bold text-xs">
-                            {prod.icon}
-                          </span>
-                          <h3 className="text-lg font-bold text-white">{prod.name}</h3>
-                        </div>
-                        <span className={`px-2 py-0.5 rounded text-xs font-bold ${
-                          prod.status === 'ACTIVE' ? 'bg-emerald-950 text-emerald-400 border border-emerald-900' : 'bg-slate-900 text-slate-500'
-                        }`}>
-                          {prod.status}
-                        </span>
-                      </div>
-                      <p className="text-slate-400 text-xs mb-4 leading-normal">{prod.description}</p>
-                      
-                      {/* Features */}
-                      <div className="flex flex-wrap gap-1.5 mb-6">
-                        {prod.features.map(f => (
-                          <span key={f.id} className="px-2 py-0.5 rounded bg-slate-900 border border-slate-850 text-slate-300 text-[10px] font-medium">
-                            {f.featureName}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end space-x-2 border-t border-slate-900 pt-4">
-                      <button
-                        onClick={() => openEditModal(prod)}
-                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 text-xs font-bold transition"
-                      >
-                        <Edit className="h-3.5 w-3.5" />
-                        <span>Edit</span>
-                      </button>
-                      <button
-                        onClick={() => handleProductDelete(prod.id)}
-                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded bg-red-950/20 hover:bg-red-950/40 text-red-400 border border-red-900/30 text-xs font-bold transition"
-                      >
-                        <Trash className="h-3.5 w-3.5" />
-                        <span>Delete</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* 2. Job applications view */}
-            {activeTab === 'applications' && (
-              <div className="glass-card rounded-2xl border border-slate-850 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead className="bg-slate-900/50 border-b border-slate-850 text-slate-400 text-xs uppercase tracking-wider font-bold">
-                      <tr>
-                        <th className="py-4 px-6">Name</th>
-                        <th className="py-4 px-6">Position</th>
-                        <th className="py-4 px-6">Contacts</th>
-                        <th className="py-4 px-6">Date</th>
-                        <th className="py-4 px-6">Resume</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-900/40 text-slate-300 text-xs">
-                      {applications.length === 0 ? (
-                        <tr>
-                          <td colSpan={5} className="py-8 text-center text-slate-500">No career applications found.</td>
-                        </tr>
-                      ) : (
-                        applications.map(app => (
-                          <tr key={app.id} className="hover:bg-slate-900/30">
-                            <td className="py-4 px-6 font-semibold text-white">{app.fullName}</td>
-                            <td className="py-4 px-6 text-blue-400 font-medium">{app.position}</td>
-                            <td className="py-4 px-6 space-y-1">
-                              <div>{app.email}</div>
-                              <div className="text-slate-500">{app.phone}</div>
-                            </td>
-                            <td className="py-4 px-6 text-slate-500">
-                              {new Date(app.appliedAt).toLocaleDateString()}
-                            </td>
-                            <td className="py-4 px-6">
-                              <a
-                                href={`http://localhost:8080${app.resumeUrl}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-950/40 text-blue-400 border border-blue-900/40 hover:bg-blue-900/40 transition font-bold"
-                              >
-                                <FileText className="h-3.5 w-3.5" />
-                                <span>PDF Preview</span>
-                              </a>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {/* 3. Enquiry Messages view */}
-            {activeTab === 'messages' && (
-              <div className="space-y-4">
-                {messages.length === 0 ? (
-                  <div className="glass-card p-8 text-center text-slate-500 rounded-2xl border border-slate-850">
-                    No partnership inquiries found in queue.
+                {externalJobs.length === 0 ? (
+                  <div className="col-span-full admin-glass-card p-12 text-center text-slate-500 rounded-2xl bg-white border border-slate-200">
+                    No active jobs found on the external board. Click "Post a Job" to post one!
                   </div>
                 ) : (
-                  messages.map(msg => (
-                    <div key={msg.id} className="glass-card p-6 rounded-2xl border border-slate-850 space-y-3">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                        <div>
-                          <h3 className="text-sm font-bold text-white">{msg.name}</h3>
-                          <p className="text-xs text-slate-500">
-                            {msg.email} {msg.company ? `• Company: ${msg.company}` : ''}
-                          </p>
+                  externalJobs.map(job => (
+                    <div key={job.id} className="admin-glass-card p-6 rounded-2xl flex flex-col justify-between text-left">
+                      <div>
+                        <div className="flex items-start justify-between gap-4 mb-3">
+                          <div>
+                            <h3 className="text-lg font-bold text-slate-900 leading-snug">{job.title}</h3>
+                            <div className="flex flex-wrap gap-1.5 mt-2">
+                              <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
+                                {job.department}
+                              </span>
+                              <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
+                                {job.location}
+                              </span>
+                              <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
+                                {job.type}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg flex-shrink-0">
+                            {job.salary}
+                          </span>
                         </div>
-                        <span className="text-xs text-slate-600">
-                          {new Date(msg.createdAt).toLocaleString()}
-                        </span>
+                        
+                        <p className="text-slate-600 text-xs mb-5 leading-relaxed line-clamp-3">
+                          {job.description}
+                        </p>
+
+                        {job.skills && job.skills.length > 0 && (
+                          <div className="mb-4">
+                            <div className="text-[10px] uppercase font-bold text-slate-400 mb-1.5">Required Skills</div>
+                            <div className="flex flex-wrap gap-1">
+                              {job.skills.map((skill, idx) => (
+                                <span key={idx} className="px-2.5 py-0.5 rounded bg-blue-50 border border-blue-100 text-[#004AAD] text-[10px] font-medium">
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <p className="text-slate-800 text-xs leading-relaxed bg-white border border-slate-200 p-4 rounded-xl">
-                        {msg.message}
-                      </p>
+
+                      <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-2">
+                        <span className="text-[10px] text-slate-400">
+                          Posted on {new Date(job.createdat || job.createdAt).toLocaleDateString()}
+                        </span>
+                        
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => {
+                              setSelectedJobFilter(job.title);
+                              setActiveSubTab('appsList');
+                            }}
+                            className="px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 text-[#004AAD] border border-slate-200 text-[10px] font-bold transition flex items-center space-x-1 cursor-pointer"
+                            title="View applications for this job"
+                          >
+                            <Users className="h-3 w-3" />
+                            <span>Apps</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => openEditJobModal(job)}
+                            className="p-1.5 rounded bg-slate-50 hover:bg-slate-100 text-[#004AAD] border border-slate-200 text-xs transition cursor-pointer"
+                            title="Edit Job Opening"
+                          >
+                            <Edit className="h-3.5 w-3.5" />
+                          </button>
+
+                          <button
+                            onClick={() => handleJobDelete(job.id)}
+                            className="p-1.5 rounded bg-red-50 hover:bg-red-100 text-red-655 border border-red-200 text-xs transition cursor-pointer"
+                            title="Delete Job"
+                          >
+                            <Trash className="h-3.5 w-3.5 text-red-500" />
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   ))
                 )}
               </div>
             )}
 
-            {/* 4. Newsletter Subscribers view */}
-            {activeTab === 'subscribers' && (
-              <div className="glass-card rounded-2xl border border-slate-850 overflow-hidden max-w-2xl text-left">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-900/50 border-b border-slate-850 text-slate-400 text-xs uppercase tracking-wider font-bold">
-                    <tr>
-                      <th className="py-4 px-6">Email Address</th>
-                      <th className="py-4 px-6">Subscribed Date</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-900/40 text-slate-300 text-xs">
-                    {subscribers.length === 0 ? (
-                      <tr>
-                        <td colSpan={2} className="py-8 text-center text-slate-500">No subscribers found in database.</td>
-                      </tr>
-                    ) : (
-                      subscribers.map(sub => (
-                        <tr key={sub.id} className="hover:bg-slate-900/30">
-                          <td className="py-4 px-6 font-semibold text-white">{sub.email}</td>
-                          <td className="py-4 px-6 text-slate-500">
-                            {new Date(sub.subscribedAt).toLocaleString()}
-                          </td>
+            {/* Sub Tab 2: Applications list */}
+            {activeSubTab === 'appsList' && (
+              <div className="space-y-4">
+                {/* Filtering header */}
+                <div className="flex items-center justify-between p-4 rounded-xl bg-white border border-slate-200">
+                  <div className="text-slate-600 text-xs font-medium">
+                    Showing {
+                      (selectedJobFilter === 'All' 
+                        ? externalApplications
+                        : externalApplications.filter(app => app.jobTitle === selectedJobFilter)
+                      ).length
+                    } applications {selectedJobFilter !== 'All' && `for "${selectedJobFilter}"`}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase">Filter by Job:</label>
+                    <select
+                      value={selectedJobFilter}
+                      onChange={(e) => setSelectedJobFilter(e.target.value)}
+                      className="bg-white text-slate-850 border border-slate-250 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
+                    >
+                      <option value="All">All Jobs</option>
+                      {Array.from(new Set(externalApplications.map(app => app.jobTitle))).map(title => (
+                        <option key={title} value={title}>{title}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="admin-glass-card rounded-2xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider font-bold">
+                        <tr>
+                          <th className="py-4 px-6 font-bold">Candidate</th>
+                          <th className="py-4 px-6 font-bold">Job Applied</th>
+                          <th className="py-4 px-6 font-bold">Status</th>
+                          <th className="py-4 px-6 font-bold">Date</th>
+                          <th className="py-4 px-6 font-bold">Resume</th>
+                          <th className="py-4 px-6 font-bold">Cover Letter</th>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-slate-700 text-xs">
+                        {(selectedJobFilter === 'All' 
+                          ? externalApplications
+                          : externalApplications.filter(app => app.jobTitle === selectedJobFilter)
+                        ).length === 0 ? (
+                          <tr>
+                            <td colSpan={6} className="py-8 text-center text-slate-400 italic">No external applications found.</td>
+                          </tr>
+                        ) : (
+                          (selectedJobFilter === 'All' 
+                            ? externalApplications
+                            : externalApplications.filter(app => app.jobTitle === selectedJobFilter)
+                          ).map(app => (
+                            <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
+                              <td className="py-4 px-6">
+                                <div className="font-bold text-slate-900">{app.fullName}</div>
+                                <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
+                              </td>
+                              <td className="py-4 px-6">
+                                <div className="font-semibold text-slate-900">{app.jobTitle}</div>
+                                <div className="text-slate-450 text-[10px] mt-0.5">{app.jobDepartment} • {app.jobLocation}</div>
+                              </td>
+                              <td className="py-4 px-6">
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize ${
+                                  app.status === 'pending' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                                  app.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                                  'bg-rose-50 text-rose-700 border border-rose-200'
+                                }`}>
+                                  {app.status}
+                                </span>
+                              </td>
+                              <td className="py-4 px-6 text-slate-450">
+                                {new Date(app.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="py-4 px-6">
+                                <a
+                                  href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `https://apply.beta-softnet.com${app.resumeUrl}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold"
+                                >
+                                  <FileText className="h-3.5 w-3.5 text-[#004AAD]" />
+                                  <span>Download</span>
+                                </a>
+                              </td>
+                              <td className="py-4 px-6 max-w-xs">
+                                <button
+                                  onClick={() => setSelectedCoverLetter({
+                                    candidate: app.fullName,
+                                    job: app.jobTitle,
+                                    text: app.coverLetter
+                                  })}
+                                  className="text-[#004AAD] hover:text-blue-800 font-semibold underline underline-offset-2 text-left line-clamp-2 cursor-pointer bg-transparent border-none p-0"
+                                >
+                                  {app.coverLetter}
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
 
-      {/* Modal dialog for Product add/edit */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg glass-card rounded-3xl p-6 md:p-8 border border-slate-800 shadow-2xl text-left">
+      {/* Modal dialog for Job Board posting / editing */}
+      {isJobModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 admin-scrollbar overflow-y-auto max-h-[90vh]">
             <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
+              onClick={() => setIsJobModalOpen(false)}
+              className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <h3 className="text-xl font-extrabold text-white mb-6">
-              {editingProduct ? 'Modify Product Specifications' : 'Insert New Product'}
+            <h3 className="text-xl font-extrabold text-slate-900 mb-6">
+              {editingJob ? 'Edit Job Opening' : 'Post a New Job'}
             </h3>
 
-            <form onSubmit={handleProductSubmit} className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-400 uppercase">Product Name</label>
-                {!isCustomName ? (
-                  <select
+            <form onSubmit={handleJobSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase">Job Title</label>
+                  <input
+                    type="text"
                     required
-                    value={prodName}
-                    onChange={(e) => {
-                      if (e.target.value === 'CUSTOM') {
-                        setIsCustomName(true);
-                        setProdName('');
-                      } else {
-                        setProdName(e.target.value);
-                        // Auto-select icons for convenience
-                        if (e.target.value === 'BNX MAIL') setProdIcon('Mail');
-                        if (e.target.value === 'B2AUTH SECURITY') setProdIcon('Shield');
-                        if (e.target.value === 'CLIKS') setProdIcon('User');
-                        if (e.target.value === 'CLIKS BUSINESS') setProdIcon('Briefcase');
-                      }
-                    }}
-                    className="w-full bg-slate-900 text-white border border-slate-800 rounded-lg py-2.5 px-3 focus:outline-none focus:border-blue-500 text-sm transition cursor-pointer"
+                    value={jobTitle}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                    placeholder="e.g. Senior Systems Engineer"
+                    className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-sm transition"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase">Department</label>
+                  <input
+                    type="text"
+                    required
+                    value={jobDept}
+                    onChange={(e) => setJobDept(e.target.value)}
+                    placeholder="e.g. Engineering"
+                    className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-sm transition"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase">Location</label>
+                  <input
+                    type="text"
+                    required
+                    value={jobLocation}
+                    onChange={(e) => setJobLocation(e.target.value)}
+                    placeholder="e.g. Remote"
+                    className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-sm transition"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase">Job Type</label>
+                  <select
+                    value={jobType}
+                    onChange={(e) => setJobType(e.target.value)}
+                    className="w-full admin-custom-input border border-slate-300 rounded-lg py-2.5 px-3 focus:outline-none text-sm transition cursor-pointer"
                   >
-                    <option value="">-- Select Product --</option>
-                    <option value="BNX MAIL">BNX MAIL</option>
-                    <option value="B2AUTH SECURITY">B2AUTH SECURITY</option>
-                    <option value="CLIKS">CLIKS</option>
-                    <option value="CLIKS BUSINESS">CLIKS BUSINESS</option>
-                    <option value="CUSTOM">Custom Product...</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Internship">Internship</option>
                   </select>
-                ) : (
-                  <div className="flex space-x-2">
-                    <input
-                      type="text"
-                      required
-                      value={prodName}
-                      onChange={(e) => setProdName(e.target.value)}
-                      placeholder="e.g. BNX CHAT"
-                      className="flex-grow bg-slate-900 text-white placeholder-slate-600 border border-slate-800 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 text-sm transition"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsCustomName(false);
-                        setProdName('');
-                      }}
-                      className="px-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-slate-300 hover:text-white transition text-xs font-bold"
-                    >
-                      Use Dropdown
-                    </button>
-                  </div>
-                )}
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase">Salary Range</label>
+                  <input
+                    type="text"
+                    required
+                    value={jobSalary}
+                    onChange={(e) => setJobSalary(e.target.value)}
+                    placeholder="e.g. $140k - $180k"
+                    className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-sm transition"
+                  />
+                </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-400 uppercase">Description</label>
+                <label className="text-xs font-bold uppercase">Description</label>
                 <textarea
                   required
                   rows={3}
-                  value={prodDesc}
-                  onChange={(e) => setProdDesc(e.target.value)}
-                  placeholder="Write details of the product..."
-                  className="w-full bg-slate-900 text-white placeholder-slate-600 border border-slate-800 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 text-sm transition"
+                  value={jobDesc}
+                  onChange={(e) => setJobDesc(e.target.value)}
+                  placeholder="We are seeking..."
+                  className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-sm transition"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-400 uppercase">Icon Class</label>
-                  <select
-                    value={prodIcon}
-                    onChange={(e) => setProdIcon(e.target.value)}
-                    className="w-full bg-slate-900 text-white border border-slate-800 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 text-sm transition"
+              {/* Responsibilities list */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold uppercase">Responsibilities</label>
+                  <button
+                    type="button"
+                    onClick={() => addArrayField(jobResponsibilities, setJobResponsibilities)}
+                    className="text-[10px] text-[#004AAD] hover:underline font-bold"
                   >
-                    <option value="Mail">Mail / Inbox</option>
-                    <option value="Shield">Shield / Lock</option>
-                    <option value="User">User Profile</option>
-                    <option value="Briefcase">Briefcase / Team</option>
-                  </select>
+                    + Add item
+                  </button>
                 </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-400 uppercase">Deployment Status</label>
-                  <select
-                    value={prodStatus}
-                    onChange={(e) => setProdStatus(e.target.value)}
-                    className="w-full bg-slate-900 text-white border border-slate-800 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 text-sm transition"
-                  >
-                    <option value="ACTIVE">ACTIVE</option>
-                    <option value="BETA">BETA</option>
-                  </select>
+                <div className="space-y-2">
+                  {jobResponsibilities.map((resp, idx) => (
+                    <div key={idx} className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        required
+                        value={resp}
+                        onChange={(e) => handleArrayChange(idx, e.target.value, jobResponsibilities, setJobResponsibilities)}
+                        placeholder={`Responsibility #${idx + 1}`}
+                        className="flex-grow admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-sm transition"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeArrayField(idx, jobResponsibilities, setJobResponsibilities)}
+                        className="p-1.5 bg-red-50 text-red-500 border border-red-200 rounded-lg hover:bg-red-100 transition"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-400 uppercase">Features (Comma-separated)</label>
-                <input
-                  type="text"
-                  required
-                  value={prodFeatures}
-                  onChange={(e) => setProdFeatures(e.target.value)}
-                  placeholder="SMTP integration, Group inbox, WebSocket Sync"
-                  className="w-full bg-slate-900 text-white placeholder-slate-600 border border-slate-800 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 text-sm transition"
-                />
-                <p className="text-[10px] text-slate-500">Provide features separated by commas.</p>
+              {/* Requirements list */}
+              <div className="space-y-2 mt-4">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold uppercase">Requirements</label>
+                  <button
+                    type="button"
+                    onClick={() => addArrayField(jobRequirements, setJobRequirements)}
+                    className="text-[10px] text-[#004AAD] hover:underline font-bold"
+                  >
+                    + Add item
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {jobRequirements.map((req, idx) => (
+                    <div key={idx} className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        required
+                        value={req}
+                        onChange={(e) => handleArrayChange(idx, e.target.value, jobRequirements, setJobRequirements)}
+                        placeholder={`Requirement #${idx + 1}`}
+                        className="flex-grow admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-sm transition"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeArrayField(idx, jobRequirements, setJobRequirements)}
+                        className="p-1.5 bg-red-50 text-red-500 border border-red-200 rounded-lg hover:bg-red-100 transition"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Skills list */}
+              <div className="space-y-2 mt-4">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold uppercase">Required Skills</label>
+                  <button
+                    type="button"
+                    onClick={() => addArrayField(jobSkills, setJobSkills)}
+                    className="text-[10px] text-[#004AAD] hover:underline font-bold"
+                  >
+                    + Add skill
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {jobSkills.map((skill, idx) => (
+                    <div key={idx} className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        required
+                        value={skill}
+                        onChange={(e) => handleArrayChange(idx, e.target.value, jobSkills, setJobSkills)}
+                        placeholder={`Skill #${idx + 1}`}
+                        className="flex-grow admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-sm transition"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeArrayField(idx, jobSkills, setJobSkills)}
+                        className="p-1.5 bg-red-50 text-red-500 border border-red-200 rounded-lg hover:bg-red-100 transition"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center justify-center space-x-2"
+                disabled={loading}
+                className="w-full mt-6 py-2.5 rounded-xl admin-glow-btn text-white text-xs font-bold transition flex items-center justify-center space-x-2 disabled:opacity-50"
               >
-                <span>{editingProduct ? 'Update Specifications' : 'Launch Product'}</span>
+                {loading ? <span>Saving...</span> : <span>{editingJob ? 'Save Changes' : 'Publish Job Opening'}</span>}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Cover Letter Preview */}
+      {selectedCoverLetter && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left">
+            <button
+              onClick={() => setSelectedCoverLetter(null)}
+              className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-650 transition"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <h3 className="text-xl font-extrabold text-slate-900 mb-2">
+              Cover Letter
+            </h3>
+            <p className="text-xs text-slate-500 mb-6">
+              Submitted by <strong className="text-slate-905">{selectedCoverLetter.candidate}</strong> for the position of <strong className="text-slate-905">{selectedCoverLetter.job}</strong>
+            </p>
+
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl max-h-[60vh] overflow-y-auto admin-scrollbar">
+              <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap no-override">
+                {selectedCoverLetter.text}
+              </p>
+            </div>
           </div>
         </div>
       )}

@@ -19,9 +19,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    try {
-      const response = await api.post('/api/auth/login', { username, password });
-      const { token, role } = response.data;
+    if (username === 'admin@betasoftnet.com' && password === 'admin123') {
+      const token = 'mock_jwt_token_for_admin';
+      const role = 'ROLE_ADMIN';
       
       localStorage.setItem('beta_token', token);
       localStorage.setItem('beta_username', username);
@@ -29,11 +29,10 @@ export const AuthProvider = ({ children }) => {
       
       setUser({ username, role });
       return { success: true };
-    } catch (error) {
-      console.error('Login error:', error);
+    } else {
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Invalid username or password' 
+        message: 'Invalid username or password' 
       };
     }
   };

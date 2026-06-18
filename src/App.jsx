@@ -20,7 +20,7 @@ import ScrollToTop from './components/ScrollToTop';
 function AppContent() {
   const location = useLocation();
   // Don't render the site-wide navbar and footer on the admin dashboard, cliks business dashboard, or bnx mail dashboard
-  const isDashboardMode = location.pathname.startsWith('/admin') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail');
+  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail');
 
   return (
     <div className={`flex flex-col min-h-screen ${isDashboardMode ? 'bg-[#f3f7f5]' : 'bg-dark-900 text-slate-800'} relative`}>
@@ -44,7 +44,7 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/support" element={<Support />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/adminofcarrer" element={<AdminDashboard />} />
           <Route path="/cliks-business" element={<CliksBusinessDashboard />} />
           <Route path="/cliks-business/dashboard" element={<CliksBusinessDashboard />} />
           <Route path="/bnx-mail/dashboard" element={<BnxMailDashboard />} />

@@ -374,7 +374,7 @@ export default function Navbar() {
 
                     <div className="space-y-4">
                       <Link
-                        to="/admin"
+                        to="/adminofcarrer"
                         onClick={() => setIsProfileOpen(false)}
                         className="block text-sm font-semibold text-slate-700 hover:text-[#004AAD] transition"
                       >
@@ -570,7 +570,7 @@ export default function Navbar() {
                     </div>
                   </div>
                   <Link
-                    to="/admin"
+                    to="/adminofcarrer"
                     onClick={() => setIsOpen(false)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]"
                   >
