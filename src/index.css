@@ -1,0 +1,640 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark-950: #ffffff;
+  --color-dark-900: #f8fafc;
+  --color-dark-800: #e9f4ff;
+  --color-dark-700: #cbd5e1;
+  --color-dark-600: #94a3b8;
+
+  --color-primary-500: #004AAD;
+  --color-primary-400: #003c8a;
+  --color-primary-300: #002b5c;
+
+  --color-accent-cyan: #3b82f6;
+  --color-accent-violet: #60a5fa;
+
+  --background-image-glow-gradient: radial-gradient(circle at top, rgba(0, 74, 173, 0.08) 0%, transparent 65%);
+  --background-image-mesh-pattern: radial-gradient(rgba(0, 74, 173, 0.02) 1px, transparent 1px);
+  --background-size-mesh: 24px 24px;
+
+  --animate-pulse-slow: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+body {
+  background: #F8FAFC !important;
+  color: #0f172a;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  background-image: radial-gradient(rgba(0, 74, 173, 0.012) 1px, transparent 1px) !important;
+  background-size: 24px 24px;
+}
+
+/* Light Theme Overrides for Text & Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: #0f172a !important;
+  font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+  font-family: 'Roboto', sans-serif;
+}
+
+p {
+  color: #334155 !important; /* Slate 700 */
+}
+
+span.text-slate-400,
+p.text-slate-400,
+div.text-slate-400 {
+  color: #475569 !important; /* Slate 600 */
+}
+
+span.text-slate-500,
+p.text-slate-500,
+div.text-slate-500 {
+  color: #64748b !important; /* Slate 500 */
+}
+
+label {
+  color: #475569 !important; /* Slate 600 */
+}
+
+/* Form inputs styling for light theme */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #004AAD !important;
+  box-shadow: 0 0 0 2px rgba(0, 74, 173, 0.15) !important;
+}
+
+/* Navbar links and overrides */
+nav a {
+  color: #475569;
+}
+
+nav a:hover {
+  color: #004AAD;
+}
+
+nav a.text-emerald-300,
+nav a.text-blue-400,
+nav a.font-bold {
+  color: #004AAD;
+}
+
+nav span.bg-gradient-to-r {
+  color: #0f172a !important;
+}
+
+nav .bg-slate-800,
+nav .bg-slate-900 {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Exceptions: Keep text white on colored buttons */
+a.bg-gradient-to-r,
+button.bg-gradient-to-r,
+button[type="submit"],
+.bg-blue-600,
+.bg-red-950,
+.glow-btn-blue {
+  color: #ffffff !important;
+}
+
+/* Cosmic Background Floating Blobs Keyframes */
+@keyframes blob-float-1 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(40px, -60px) scale(1.15); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes blob-float-2 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-50px, 50px) scale(1.1); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes blob-float-3 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(60px, -40px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob-1 {
+  animation: blob-float-1 25s ease-in-out infinite;
+}
+
+.animate-blob-2 {
+  animation: blob-float-2 30s ease-in-out infinite;
+}
+
+.animate-blob-3 {
+  animation: blob-float-3 28s ease-in-out infinite;
+}
+
+/* Glassmorphism Card Utility (Light Theme) - Set to pure #FFFFFF Cards */
+.glass-card {
+  background: #FFFFFF !important;
+  backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Glassmorphism Panel (Light Theme) - Set to pure #FFFFFF */
+.glass-panel {
+  background: #FFFFFF !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+}
+
+/* Glass Card Interactive Hover Effect (Light Theme) */
+.glass-card-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #004AAD;
+}
+
+/* Text Glow Effects (Light Theme adaptions) */
+.glow-text-cyan {
+  text-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+}
+
+.glow-text-blue {
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+}
+
+/* Button Glows */
+.glow-btn-cyan:hover {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.glow-btn-blue:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Dark Footer High-Contrast Overrides */
+footer.custom-site-footer,
+footer.custom-site-footer p,
+footer.custom-site-footer span {
+  color: #64748B !important;
+}
+
+footer.custom-site-footer a {
+  color: #004AAD !important;
+}
+
+footer.custom-site-footer a:hover {
+  color: #002D7A !important;
+}
+
+footer.custom-site-footer h1,
+footer.custom-site-footer h2,
+footer.custom-site-footer h3,
+footer.custom-site-footer h4,
+footer.custom-site-footer h5,
+footer.custom-site-footer h6,
+footer.custom-site-footer strong {
+  color: #0F172A !important;
+}
+
+/* Admin Sidebar High-Contrast Overrides */
+.bg-slate-950 p,
+.bg-slate-950 span,
+.bg-slate-950 a,
+.bg-slate-950 button,
+.bg-slate-950 div {
+  color: #94a3b8;
+}
+
+.bg-slate-950 a:hover,
+.bg-slate-950 button:hover {
+  color: #ffffff;
+}
+
+.bg-slate-950 a.bg-blue-600,
+.bg-slate-950 button.bg-blue-600 {
+  color: #ffffff !important;
+}
+
+/* ==========================================
+   CLIKS BUSINESS ROYAL BLUE COLOR THEME OVERRIDES
+   ========================================== */
+
+/* Overrides for floating cosmic background blobs in App.jsx */
+.bg-blue-300\/10 {
+  background-color: rgba(0, 74, 173, 0.05) !important; /* Primary blue tint */
+}
+.bg-violet-300\/10 {
+  background-color: rgba(59, 130, 246, 0.05) !important;
+}
+.bg-indigo-300\/10 {
+  background-color: rgba(96, 165, 250, 0.05) !important;
+}
+
+/* Gradients and Backgrounds */
+.bg-gradient-to-r.from-blue-600.to-cyan-500,
+.bg-gradient-to-r.from-blue-500.to-cyan-400 {
+  background: linear-gradient(to right, #004AAD, #3b82f6) !important;
+}
+.bg-gradient-to-tr.from-blue-600.to-cyan-500 {
+  background: linear-gradient(to top right, #004AAD, #3b82f6) !important;
+}
+
+/* Force white text inside blue hero banners to override general light theme rules */
+.hero-blue-banner h1,
+.hero-blue-banner h2,
+.hero-blue-banner h3,
+.hero-blue-banner h4,
+.hero-blue-banner h5,
+.hero-blue-banner h6 {
+  color: #ffffff !important;
+}
+.hero-blue-banner p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.hover\:from-blue-500:hover {
+  --tw-gradient-from: #004AAD !important;
+}
+.hover\:to-cyan-400:hover {
+  --tw-gradient-to: #3b82f6 !important;
+}
+
+/* Gradient stops mappings for dynamic background panels */
+.from-blue-600\/20 {
+  --tw-gradient-from: rgba(0, 74, 173, 0.08) !important;
+}
+.to-cyan-500\/20 {
+  --tw-gradient-to: rgba(59, 130, 246, 0.08) !important;
+}
+.border-blue-500\/10 {
+  border-color: rgba(0, 74, 173, 0.1) !important;
+}
+
+/* Utility buttons and badge colors */
+.bg-blue-600 {
+  background-color: #004AAD !important; /* Primary Royal Blue */
+}
+.bg-blue-600\/10 {
+  background-color: rgba(0, 74, 173, 0.1) !important;
+}
+.hover\:bg-blue-500:hover {
+  background-color: #003882 !important;
+}
+.bg-emerald-955\/50, .bg-emerald-950\/50 {
+  background-color: rgba(0, 74, 173, 0.08) !important;
+}
+
+/* Active links bottom underline indicator */
+.bg-gradient-to-r.from-blue-500.to-cyan-400 {
+  background: linear-gradient(to right, #004AAD, #3b82f6) !important;
+}
+
+/* Text Accent Overrides */
+.text-blue-400,
+.text-cyan-400,
+.text-indigo-400,
+.text-emerald-400 {
+  color: #004AAD !important; /* High contrast primary */
+}
+.text-blue-500,
+.text-cyan-500,
+.text-indigo-500 {
+  color: #004AAD !important;
+}
+.hover\:text-blue-400:hover {
+  color: #3b82f6 !important;
+}
+.hover\:text-blue-300:hover {
+  color: #60a5fa !important;
+}
+
+/* Shadows and card borders */
+.shadow-blue-500\/25,
+.shadow-blue-500\/20 {
+  box-shadow: 0 10px 15px -3px rgba(0, 74, 173, 0.15), 0 4px 6px -4px rgba(0, 74, 173, 0.1) !important;
+}
+.glass-card-hover:hover {
+  border-color: rgba(0, 74, 173, 0.25) !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 74, 173, 0.1) !important;
+}
+.glow-text-cyan, .glow-text-blue {
+  text-shadow: 0 0 20px rgba(0, 74, 173, 0.15) !important;
+}
+
+/* ==========================================
+   NAVBAR OVAL PILL LAYOUT OVERRIDES
+   ========================================== */
+nav .nav-pill-container > a,
+nav .nav-pill-container > div > button {
+  color: #475569 !important;
+  font-size: 13px !important;
+  font-weight: 650 !important;
+  padding: 6px 16px !important;
+  border-radius: 9999px !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  background-color: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+}
+
+nav .nav-pill-container > a:hover,
+nav .nav-pill-container > div > button:hover {
+  color: #004AAD !important;
+  background-color: rgba(0, 74, 173, 0.06) !important;
+}
+
+nav .nav-pill-container > a.active-pill,
+nav .nav-pill-container > div > button.active-pill {
+  color: #ffffff !important;
+  background-color: #004AAD !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(0, 74, 173, 0.15) !important;
+}
+
+/* ==========================================
+   NAVBAR SEARCH BAR OVERRIDES (MATCH MOCKUP)
+   ========================================== */
+nav .nav-search-container input[type="text"].nav-search-input {
+  background-color: rgba(241, 245, 249, 0.9) !important;
+  color: #1e293b !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 9999px !important;
+  padding-left: 36px !important;
+  padding-right: 16px !important;
+  font-size: 14px !important;
+  height: 38px !important;
+  transition: all 0.25s ease-in-out !important;
+}
+
+nav .nav-search-container input[type="text"].nav-search-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+nav .nav-search-container input[type="text"].nav-search-input:focus {
+  background-color: #ffffff !important;
+  border-color: #004AAD !important;
+  box-shadow: 0 0 0 2px rgba(0, 74, 173, 0.15) !important;
+}
+
+nav .nav-search-container svg.nav-search-icon {
+  color: #94a3b8 !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+/* ==========================================
+   AUTH PAGE WHITE THEME OVERRIDES
+   ========================================== */
+.auth-white-theme {
+  background: #F8FAFC !important;
+  color: #0f172a !important;
+}
+
+.auth-white-theme h1,
+.auth-white-theme h2,
+.auth-white-theme h3,
+.auth-white-theme h4,
+.auth-white-theme h5,
+.auth-white-theme h6 {
+  color: #0f172a !important;
+}
+
+.auth-white-theme p {
+  color: #475569 !important;
+}
+
+.auth-white-theme label {
+  color: #475569 !important;
+}
+
+.auth-white-theme .glass-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.auth-white-theme input[type="text"],
+.auth-white-theme input[type="email"],
+.auth-white-theme input[type="password"] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.auth-white-theme input[type="text"]:focus,
+.auth-white-theme input[type="email"]:focus,
+.auth-white-theme input[type="password"]:focus {
+  border-color: #004AAD !important;
+  box-shadow: 0 0 0 2px rgba(0, 74, 173, 0.15) !important;
+}
+
+.auth-white-theme a.text-blue-400 {
+  color: #004AAD !important;
+}
+
+.auth-white-theme a.text-blue-400:hover {
+  color: #3b82f6 !important;
+}
+
+.auth-white-theme button[type="submit"],
+.auth-white-theme .bg-blue-600 {
+  background: #004AAD !important;
+  color: #ffffff !important;
+}
+
+.auth-white-theme button[type="submit"]:hover,
+.auth-white-theme .bg-blue-600:hover {
+  background: #003882 !important;
+}
+
+.auth-white-theme .text-slate-400,
+.auth-white-theme span.text-slate-400,
+.auth-white-theme p.text-slate-400,
+.auth-white-theme div.text-slate-400 {
+  color: #475569 !important;
+}
+
+.auth-white-theme .text-slate-500,
+.auth-white-theme span.text-slate-500,
+.auth-white-theme p.text-slate-500,
+.auth-white-theme div.text-slate-500 {
+  color: #64748b !important;
+}
+
+/* ==========================================
+   SUPPORT DROPDOWN CONTRAST FIXES
+   ========================================== */
+nav .support-dropdown {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+nav .support-signin-btn,
+nav .support-signup-btn {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+nav .support-signin-btn:hover,
+nav .support-signup-btn:hover {
+  background-color: #e6f0fa !important;
+  color: #004AAD !important;
+  border-color: #004AAD !important;
+}
+
+nav .support-signin-btn svg,
+nav .support-signin-btn span,
+nav .support-signup-btn svg,
+nav .support-signup-btn span {
+  color: #0f172a !important;
+}
+
+nav .support-signin-btn:hover svg,
+nav .support-signin-btn:hover span,
+nav .support-signup-btn:hover svg,
+nav .support-signup-btn:hover span {
+  color: #004AAD !important;
+}
+
+/* ==========================================
+   HEADER AUTH BUTTON CONTRAST FIXES
+   ========================================== */
+nav a.header-signup-btn,
+nav a.mobile-signup-btn,
+nav a.header-signup-btn span,
+nav a.mobile-signup-btn span {
+  color: #ffffff !important;
+}
+
+nav a.header-signin-btn,
+nav a.mobile-signin-btn,
+nav a.header-signin-btn span,
+nav a.mobile-signin-btn span {
+  color: #475569 !important;
+}
+
+nav a.header-signin-btn:hover,
+nav a.mobile-signin-btn:hover,
+nav a.header-signin-btn:hover span,
+nav a.mobile-signin-btn:hover span {
+  color: #004AAD !important;
+}
+
+/* ==========================================
+   PRODUCTS DROPDOWN CATEGORY CONTRAST FIXES
+   ========================================== */
+nav a.products-category-link,
+nav button.products-category-btn,
+nav button.products-category-btn span {
+  color: #0f172a !important;
+}
+
+nav a.products-category-link:hover,
+nav button.products-category-btn:hover,
+nav button.products-category-btn:hover span,
+nav a.products-category-link:focus,
+nav button.products-category-btn:focus,
+nav button.products-category-btn:focus span {
+  color: #004AAD !important;
+  background-color: rgba(0, 74, 173, 0.08) !important;
+}
+
+/* Global Navbar Dropdowns Overrides */
+nav .absolute.bg-white,
+nav .absolute.bg-white\/95,
+nav .absolute.bg-slate-50 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+nav .absolute.bg-white p,
+nav .absolute.bg-white\/95 p,
+nav .absolute.bg-white span,
+nav .absolute.bg-white\/95 span,
+nav .absolute.bg-white h4,
+nav .absolute.bg-white\/95 h4,
+nav .absolute.bg-white button,
+nav .absolute.bg-white\/95 button,
+nav .absolute.bg-white select,
+nav .absolute.bg-white\/95 select,
+nav .absolute.bg-slate-50 button,
+nav .absolute.bg-slate-50 p,
+nav .absolute.bg-slate-50 span {
+  color: #0f172a !important;
+}
+
+nav .absolute.bg-white a,
+nav .absolute.bg-white\/95 a {
+  color: #004AAD !important;
+}
+
+/* FAQ accordion borders in light mode dropdown */
+nav .absolute.bg-white\/95 .border-slate-150,
+nav .absolute.bg-white\/95 .border-slate-200,
+nav .absolute.bg-white\/95 .divide-slate-100 {
+  border-color: #e2e8f0 !important;
+}
+
+nav .absolute.bg-white\/95 .bg-slate-50\/20,
+nav .absolute.bg-white\/95 .bg-slate-50\/80 {
+  background-color: rgba(241, 245, 249, 0.8) !important;
+}
+
+
+
+
+
