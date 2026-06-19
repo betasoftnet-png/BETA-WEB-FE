@@ -415,17 +415,10 @@ export default function Navbar() {
               <div className="flex items-center space-x-2 flex-shrink-0">
                 <Link
                   to="/login"
-                  className="flex items-center space-x-1.5 px-4 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 text-slate-700 hover:bg-slate-200/60 transition duration-300 text-xs font-bold cursor-pointer header-signin-btn whitespace-nowrap flex-shrink-0"
+                  className="flex items-center space-x-1.5 px-4 py-1.5 rounded-full bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 text-xs font-bold cursor-pointer header-signin-btn whitespace-nowrap flex-shrink-0 shadow-md shadow-blue-950/20"
                 >
-                  <LogIn className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />
-                  <span className="text-slate-700 whitespace-nowrap">Sign In</span>
-                </Link>
-                <Link
-                  to="/signup"
-                  className="flex items-center space-x-1.5 px-4 py-1.5 rounded-full bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 text-xs font-bold cursor-pointer shadow-md shadow-blue-950/20 header-signup-btn whitespace-nowrap flex-shrink-0"
-                >
-                  <UserPlus className="h-3.5 w-3.5 text-white flex-shrink-0" />
-                  <span className="text-white whitespace-nowrap">Sign Up</span>
+                  <LogIn className="h-3.5 w-3.5 text-white flex-shrink-0" />
+                  <span className="text-white whitespace-nowrap">Sign In</span>
                 </Link>
               </div>
             )}
@@ -593,18 +586,10 @@ export default function Navbar() {
                   <Link
                     to="/login"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center space-x-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200/60 transition duration-300 cursor-pointer mobile-signin-btn"
+                    className="flex items-center justify-center space-x-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 cursor-pointer mobile-signin-btn shadow-md shadow-blue-950/20"
                   >
-                    <LogIn className="h-4 w-4 text-slate-500" />
-                    <span className="text-slate-700">Sign In</span>
-                  </Link>
-                  <Link
-                    to="/signup"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center space-x-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 cursor-pointer mobile-signup-btn"
-                  >
-                    <UserPlus className="h-4 w-4 text-white" />
-                    <span className="text-white">Sign Up</span>
+                    <LogIn className="h-4 w-4 text-white" />
+                    <span className="text-white">Sign In</span>
                   </Link>
                 </div>
               )}
