@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { Shield, RefreshCw, AlertCircle, ArrowLeft } from 'lucide-react';
 import { AuthContext } from './context/AuthContext';
@@ -27,12 +27,19 @@ function AppContent() {
   const [verifyingSSO, setVerifyingSSO] = useState(false);
   const [ssoError, setSsoError] = useState('');
 
+  const codeExchangeInProgress = useRef(false);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     const state = params.get('state');
 
-    if (code) {
+    if (code && !codeExchangeInProgress.current) {
+      codeExchangeInProgress.current = true;
+      
+      // Clean the query parameters from URL immediately to prevent subsequent/race trigger runs
+      window.history.replaceState({}, document.title, window.location.pathname);
+
       const exchangeCode = async () => {
         setVerifyingSSO(true);
         setSsoError('');
@@ -67,9 +74,6 @@ function AppContent() {
           // Step 3: Set State in Context
           loginWithSSO(accessToken, username, role, email, fullName, firstName, lastName);
 
-          // Clean the query parameters from URL without page reload
-          window.history.replaceState({}, document.title, window.location.pathname);
-          
           // Redirect to website home page
           navigate('/');
         } catch (error) {

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import api from '../api';
 
 export const AuthContext = createContext();
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (username, password) => {
+  const login = useCallback(async (username, password) => {
     if (username === 'admin@betasoftnet.com' && password === 'admin123') {
       const token = 'mock_jwt_token_for_admin';
       const role = 'ROLE_ADMIN';
@@ -43,9 +43,9 @@ export const AuthProvider = ({ children }) => {
         message: 'Invalid username or password' 
       };
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('beta_token');
     localStorage.removeItem('beta_username');
     localStorage.removeItem('beta_role');
@@ -54,9 +54,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('beta_firstName');
     localStorage.removeItem('beta_lastName');
     setUser(null);
-  };
+  }, []);
 
-  const refreshToken = async () => {
+  const refreshToken = useCallback(async () => {
     try {
       const response = await api.post('/api/auth/refresh-token');
       const { token, role, username } = response.data;
@@ -65,9 +65,9 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       logout();
     }
-  };
+  }, [logout]);
 
-  const loginWithSSO = (token, username, role, email = '', fullName = '', firstName = '', lastName = '') => {
+  const loginWithSSO = useCallback((token, username, role, email = '', fullName = '', firstName = '', lastName = '') => {
     localStorage.setItem('beta_token', token);
     localStorage.setItem('beta_username', username);
     localStorage.setItem('beta_role', role);
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('beta_lastName', lastName);
     
     setUser({ username, role, email, fullName, firstName, lastName });
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout, refreshToken, loginWithSSO }}>
