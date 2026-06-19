@@ -10,6 +10,7 @@ import Partners from './pages/Partners';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Support from './pages/Support';
+import OAuthCallback from './pages/OAuthCallback';
 import CliksBusinessDashboard from './pages/CliksBusinessDashboard';
 import BnxMailDashboard from './pages/BnxMailDashboard';
 import AdminDashboard from './pages/AdminDashboard';
@@ -19,8 +20,8 @@ import ScrollToTop from './components/ScrollToTop';
 
 function AppContent() {
   const location = useLocation();
-  // Don't render the site-wide navbar and footer on the admin dashboard, cliks business dashboard, or bnx mail dashboard
-  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail');
+  // Don't render the site-wide navbar and footer on the admin dashboard, cliks business dashboard, bnx mail dashboard, or auth callback page
+  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || location.pathname === '/auth';
 
   return (
     <div className={`flex flex-col min-h-screen ${isDashboardMode ? 'bg-[#f3f7f5]' : 'bg-dark-900 text-slate-800'} relative`}>
@@ -42,6 +43,7 @@ function AppContent() {
           <Route path="/careers" element={<Careers />} />
           <Route path="/partners" element={<Partners />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/auth" element={<OAuthCallback />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/support" element={<Support />} />
           <Route path="/adminofcarrer" element={<AdminDashboard />} />

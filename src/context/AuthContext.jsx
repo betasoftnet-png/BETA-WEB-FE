@@ -55,8 +55,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithSSO = (token, username, role) => {
+    localStorage.setItem('beta_token', token);
+    localStorage.setItem('beta_username', username);
+    localStorage.setItem('beta_role', role);
+    setUser({ username, role });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refreshToken }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshToken, loginWithSSO }}>
       {children}
     </AuthContext.Provider>
   );

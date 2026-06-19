@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, Mail, AlertCircle, RefreshCw } from 'lucide-react';
+import { Lock, Mail, AlertCircle, RefreshCw, Shield } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 
 export default function Login() {
@@ -36,6 +36,15 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSSOLogin = () => {
+    const clientId = import.meta.env.VITE_CLIENT_ID || 'beta_website';
+    const redirectUri = import.meta.env.VITE_REDIRECT_URI || 'http://localhost:5173/auth';
+    const b2authUrl = import.meta.env.VITE_B2AUTH_URL || 'https://b2auth.com';
+    const state = Math.random().toString(36).substring(2, 15);
+    
+    window.location.href = `${b2authUrl}/?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
   };
 
   return (
@@ -130,6 +139,26 @@ export default function Login() {
             )}
           </button>
         </form>
+
+        {/* Separator */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-3 font-bold text-slate-400 select-none">Or secure access via</span>
+          </div>
+        </div>
+
+        {/* SSO Button */}
+        <button
+          type="button"
+          onClick={handleSSOLogin}
+          className="w-full py-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#004AAD] text-xs font-bold transition flex items-center justify-center space-x-2 border border-blue-200 cursor-pointer shadow-sm"
+        >
+          <Shield className="h-4 w-4 text-[#004AAD] animate-pulse" />
+          <span>Sign in with B2Auth SSO</span>
+        </button>
 
         {/* Credentials Tip */}
         <div className="mt-6 pt-4 border-t border-slate-200 text-center">
