@@ -74,11 +74,14 @@ function AppContent() {
           // Step 3: Set State in Context
           loginWithSSO(accessToken, username, role, email, fullName, firstName, lastName);
 
-          // Redirect to website home page
-          navigate('/');
+          // Redirect to target page or website home page
+          const redirectTo = localStorage.getItem('sso_redirect_to') || '/';
+          localStorage.removeItem('sso_redirect_to');
+          navigate(redirectTo);
         } catch (error) {
           console.error('SSO Authentication Error:', error);
           localStorage.removeItem('beta_token');
+          localStorage.removeItem('sso_redirect_to');
           setSsoError(error.response?.data?.message || error.message || 'SSO authentication failed.');
         } finally {
           setVerifyingSSO(false);

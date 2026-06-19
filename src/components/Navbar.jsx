@@ -414,7 +414,7 @@ export default function Navbar() {
             ) : (
               <div className="flex items-center space-x-2 flex-shrink-0">
                 <Link
-                  to="/login"
+                  to={`/login?redirect=${encodeURIComponent(location.pathname)}`}
                   className="flex items-center space-x-1.5 px-4 py-1.5 rounded-full bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 text-xs font-bold cursor-pointer header-signin-btn whitespace-nowrap flex-shrink-0 shadow-md shadow-blue-950/20"
                 >
                   <LogIn className="h-3.5 w-3.5 text-white flex-shrink-0" />
@@ -585,7 +585,7 @@ export default function Navbar() {
               ) : (
                 <div className="space-y-2 px-3">
                   <Link
-                    to="/login"
+                    to={`/login?redirect=${encodeURIComponent(location.pathname)}`}
                     onClick={() => setIsOpen(false)}
                     className="flex items-center justify-center space-x-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 cursor-pointer mobile-signin-btn shadow-md shadow-blue-950/20"
                   >

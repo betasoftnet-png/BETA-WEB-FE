@@ -25,6 +25,11 @@ export default function Login() {
     const b2authUrl = import.meta.env.VITE_B2AUTH_URL || 'https://b2auth.com';
     const state = Math.random().toString(36).substring(2, 15);
     
+    // Parse redirect path and store in localStorage
+    const params = new URLSearchParams(window.location.search);
+    const redirectTo = params.get('redirect') || '/';
+    localStorage.setItem('sso_redirect_to', redirectTo);
+    
     window.location.href = `${b2authUrl}/?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
   };
 
