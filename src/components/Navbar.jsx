@@ -357,7 +357,7 @@ export default function Navbar() {
                     <User className="h-3.5 w-3.5" />
                   </div>
                   <span className="text-sm font-semibold tracking-wide pr-1 text-slate-700">
-                    {user.username ? user.username.split('@')[0] : 'User'}
+                    {user.fullName || user.firstName || (user.username ? user.username.split('@')[0] : 'User')}
                   </span>
                   <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -366,8 +366,8 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-2xl p-5 z-50 text-left text-slate-800">
                     <div className="space-y-1">
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Logged In As</p>
-                      <p className="text-sm font-extrabold text-slate-900 truncate">{user.username}</p>
-                      <p className="text-xs text-slate-500 font-medium">India</p>
+                      <p className="text-sm font-extrabold text-slate-900 truncate">{user.fullName || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.username)}</p>
+                      <p className="text-xs text-slate-500 font-medium truncate">{user.email || user.username}</p>
                     </div>
 
                     <div className="border-b border-slate-100 my-4" />
@@ -559,7 +559,8 @@ export default function Navbar() {
                     </div>
                     <div>
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Account</p>
-                      <p className="text-sm font-bold text-slate-800 truncate">{user.username}</p>
+                      <p className="text-sm font-bold text-slate-800 truncate">{user.fullName || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.username)}</p>
+                      {user.email && <p className="text-xs text-slate-500 truncate">{user.email}</p>}
                     </div>
                   </div>
                   <Link

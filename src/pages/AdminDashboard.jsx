@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import { 
   Plus, Edit, Trash, FileText, Briefcase, LogOut, 
-  RefreshCw, CheckCircle, AlertCircle, X, Shield, Users 
+  RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
+  Lock, Mail
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -36,11 +38,33 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Redirect if user not authenticated
+  // Admin credentials login states
+  const [adminUsername, setAdminUsername] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminError, setAdminError] = useState('');
+  const [adminLoading, setAdminLoading] = useState(false);
+  const { login } = useContext(AuthContext);
+
+  const handleAdminSubmit = async (e) => {
+    e.preventDefault();
+    setAdminError('');
+    setAdminLoading(true);
+
+    try {
+      const res = await login(adminUsername, adminPassword);
+      if (!res.success) {
+        setAdminError(res.message);
+      }
+    } catch (err) {
+      setAdminError('Connection to security server failed.');
+    } finally {
+      setAdminLoading(false);
+    }
+  };
+
+  // Load data only if authenticated as admin
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    } else {
+    if (user && user.role === 'ROLE_ADMIN') {
       fetchData();
     }
   }, [user]);
@@ -181,6 +205,101 @@ export default function AdminDashboard() {
       setLoading(false);
     }
   };
+
+  const isAuthorized = user && user.role === 'ROLE_ADMIN';
+
+  if (!isAuthorized) {
+    return (
+      <div className="auth-white-theme min-h-screen flex items-center justify-center bg-slate-50 px-4 py-12 text-left relative overflow-hidden w-full">
+        {/* Background blobs */}
+        <div className="absolute top-[30%] left-[20%] w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[30%] right-[20%] w-[300px] h-[300px] bg-cyan-600/10 rounded-full blur-[100px] pointer-events-none" />
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-md glass-card p-8 rounded-3xl border border-slate-200 shadow-2xl relative bg-white z-10"
+        >
+          {/* Header */}
+          <div className="text-center space-y-2 mb-8">
+            <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center mx-auto text-white shadow-lg shadow-blue-500/20">
+              <Lock className="h-5 w-5" />
+            </div>
+            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Admin Portal</h2>
+            <p className="text-slate-500 text-xs uppercase tracking-widest font-bold">Secure Gatekeeping</p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleAdminSubmit} className="space-y-5">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-500 uppercase">Username / Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type="text"
+                  required
+                  value={adminUsername}
+                  onChange={(e) => setAdminUsername(e.target.value)}
+                  placeholder="admin@betasoftnet.com"
+                  className="w-full bg-white text-slate-900 placeholder-slate-400 border border-slate-200 rounded-lg py-2 px-3 pl-10 focus:outline-none focus:border-blue-500 text-sm transition"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-500 uppercase">Password</label>
+                <a href="#" className="text-xs font-semibold text-[#004AAD] hover:text-[#003c8a] transition">
+                  Forgot password?
+                </a>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type="password"
+                  required
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                  className="w-full bg-white text-slate-900 placeholder-slate-400 border border-slate-200 rounded-lg py-2 px-3 pl-10 focus:outline-none focus:border-blue-500 text-sm transition"
+                />
+              </div>
+            </div>
+
+            {adminError && (
+              <div className="flex items-center space-x-2 text-rose-600 text-xs p-3 rounded-lg bg-rose-50 border border-rose-100">
+                <AlertCircle className="h-4 w-4 flex-shrink-0 text-rose-500" />
+                <span>{adminError}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={adminLoading}
+              className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center justify-center space-x-2 disabled:bg-slate-400 cursor-pointer border-none outline-none"
+            >
+              {adminLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin text-white" />
+                  <span>Authenticating...</span>
+                </>
+              ) : (
+                <span>Login to Dashboard</span>
+              )}
+            </button>
+          </form>
+
+          {/* Credentials Tip */}
+          <div className="mt-6 pt-4 border-t border-slate-200 text-center">
+            <p className="text-xs text-slate-500 leading-normal">
+              Demo Credentials:<br />
+              <span className="font-semibold text-slate-700">admin@betasoftnet.com</span> / <span className="font-semibold text-slate-700">admin123</span>
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row text-left admin-light-theme relative">

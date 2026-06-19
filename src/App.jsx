@@ -61,17 +61,17 @@ function AppContent() {
             throw new Error(profileResponse.data?.message || 'Failed to retrieve user profile.');
           }
 
-          const { username, accountType } = profileResponse.data.data;
+          const { username, accountType, email, fullName, firstName, lastName } = profileResponse.data.data;
           const role = accountType || 'ROLE_ADMIN';
 
           // Step 3: Set State in Context
-          loginWithSSO(accessToken, username, role);
+          loginWithSSO(accessToken, username, role, email, fullName, firstName, lastName);
 
           // Clean the query parameters from URL without page reload
           window.history.replaceState({}, document.title, window.location.pathname);
           
-          // Redirect to admin dashboard
-          navigate('/adminofcarrer');
+          // Redirect to website home page
+          navigate('/');
         } catch (error) {
           console.error('SSO Authentication Error:', error);
           localStorage.removeItem('beta_token');
@@ -86,7 +86,7 @@ function AppContent() {
   }, [navigate, loginWithSSO]);
 
   // Don't render the site-wide navbar and footer on the admin dashboard, cliks business dashboard, bnx mail dashboard, or during SSO verification
-  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || verifyingSSO || !!ssoError;
+  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/admincarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || verifyingSSO || !!ssoError;
 
   if (verifyingSSO || ssoError) {
     return (
@@ -165,6 +165,7 @@ function AppContent() {
           <Route path="/signup" element={<Navigate to="/login" replace />} />
           <Route path="/support" element={<Support />} />
           <Route path="/adminofcarrer" element={<AdminDashboard />} />
+          <Route path="/admincarrer" element={<AdminDashboard />} />
           <Route path="/cliks-business" element={<CliksBusinessDashboard />} />
           <Route path="/cliks-business/dashboard" element={<CliksBusinessDashboard />} />
           <Route path="/bnx-mail/dashboard" element={<BnxMailDashboard />} />

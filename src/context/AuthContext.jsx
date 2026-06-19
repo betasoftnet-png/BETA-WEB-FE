@@ -11,9 +11,13 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('beta_token');
     const username = localStorage.getItem('beta_username');
     const role = localStorage.getItem('beta_role');
+    const email = localStorage.getItem('beta_email');
+    const fullName = localStorage.getItem('beta_fullName');
+    const firstName = localStorage.getItem('beta_firstName');
+    const lastName = localStorage.getItem('beta_lastName');
 
     if (token && username && role) {
-      setUser({ username, role });
+      setUser({ username, role, email, fullName, firstName, lastName });
     }
     setLoading(false);
   }, []);
@@ -22,12 +26,16 @@ export const AuthProvider = ({ children }) => {
     if (username === 'admin@betasoftnet.com' && password === 'admin123') {
       const token = 'mock_jwt_token_for_admin';
       const role = 'ROLE_ADMIN';
+      const fullName = 'Administrator';
+      const email = 'admin@betasoftnet.com';
       
       localStorage.setItem('beta_token', token);
       localStorage.setItem('beta_username', username);
       localStorage.setItem('beta_role', role);
+      localStorage.setItem('beta_email', email);
+      localStorage.setItem('beta_fullName', fullName);
       
-      setUser({ username, role });
+      setUser({ username, role, email, fullName });
       return { success: true };
     } else {
       return { 
@@ -41,6 +49,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('beta_token');
     localStorage.removeItem('beta_username');
     localStorage.removeItem('beta_role');
+    localStorage.removeItem('beta_email');
+    localStorage.removeItem('beta_fullName');
+    localStorage.removeItem('beta_firstName');
+    localStorage.removeItem('beta_lastName');
     setUser(null);
   };
 
@@ -55,11 +67,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const loginWithSSO = (token, username, role) => {
+  const loginWithSSO = (token, username, role, email = '', fullName = '', firstName = '', lastName = '') => {
     localStorage.setItem('beta_token', token);
     localStorage.setItem('beta_username', username);
     localStorage.setItem('beta_role', role);
-    setUser({ username, role });
+    localStorage.setItem('beta_email', email);
+    localStorage.setItem('beta_fullName', fullName);
+    localStorage.setItem('beta_firstName', firstName);
+    localStorage.setItem('beta_lastName', lastName);
+    
+    setUser({ username, role, email, fullName, firstName, lastName });
   };
 
   return (

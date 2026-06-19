@@ -11,7 +11,11 @@ export default function Login() {
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate('/adminofcarrer');
+      if (user.role === 'ROLE_ADMIN') {
+        navigate('/adminofcarrer');
+      } else {
+        navigate('/');
+      }
     }
   }, [user, navigate]);
 
@@ -41,12 +45,12 @@ export default function Login() {
             <Shield className="h-7 w-7 text-white" />
             <div className="absolute inset-0 rounded-2xl border border-white/20 animate-ping pointer-events-none" />
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Admin Portal</h2>
+          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Sign In</h2>
           <p className="text-slate-500 text-xs uppercase tracking-widest font-bold">Secure Gatekeeping</p>
         </div>
 
         <p className="text-slate-500 text-xs leading-normal">
-          This system is restricted to authorized personnel. Single Sign-On (SSO) and Multi-Factor Authentication are enforced via B2Auth Security.
+          Single Sign-On (SSO) and Multi-Factor Authentication are enforced via B2Auth Security.
         </p>
 
         {/* SSO Button */}
