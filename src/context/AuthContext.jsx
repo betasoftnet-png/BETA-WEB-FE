@@ -79,8 +79,18 @@ export const AuthProvider = ({ children }) => {
     setUser({ username, role, email, fullName, firstName, lastName });
   }, []);
 
+  const redirectToSSO = useCallback((redirectPath = '/') => {
+    const clientId = import.meta.env.VITE_CLIENT_ID || 'beta_website';
+    const redirectUri = import.meta.env.VITE_REDIRECT_URI || window.location.origin;
+    const b2authUrl = import.meta.env.VITE_B2AUTH_URL || 'https://b2auth.com';
+    const state = Math.random().toString(36).substring(2, 15);
+    
+    localStorage.setItem('sso_redirect_to', redirectPath);
+    window.location.href = `${b2authUrl}/?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refreshToken, loginWithSSO }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshToken, loginWithSSO, redirectToSSO }}>
       {children}
     </AuthContext.Provider>
   );

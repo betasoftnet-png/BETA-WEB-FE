@@ -23,7 +23,7 @@ import ScrollToTop from './components/ScrollToTop';
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { loginWithSSO, user } = useContext(AuthContext);
+  const { loginWithSSO, user, redirectToSSO } = useContext(AuthContext);
   const [verifyingSSO, setVerifyingSSO] = useState(false);
   const [ssoError, setSsoError] = useState('');
 
@@ -116,7 +116,7 @@ function AppContent() {
                 onClick={() => {
                   setSsoError('');
                   window.history.replaceState({}, document.title, window.location.pathname);
-                  navigate('/login');
+                  redirectToSSO('/');
                 }}
                 className="w-full py-2.5 rounded-lg bg-[#004AAD] hover:bg-[#003882] text-white text-xs font-bold transition flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/10 border-none outline-none cursor-pointer"
               >

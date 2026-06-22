@@ -81,7 +81,7 @@ const processSteps = [
 
 export default function Careers() {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { user, redirectToSSO } = useContext(AuthContext);
 
   const [jobsList, setJobsList] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
@@ -729,7 +729,7 @@ export default function Careers() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => navigate('/login?redirect=/careers')}
+                  onClick={() => redirectToSSO('/careers')}
                   className="px-6 py-2.5 rounded-xl text-xs font-black bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] text-white transition-all duration-300 shadow-md cursor-pointer border-none"
                 >
                   Sign In to Continue
@@ -960,7 +960,7 @@ export default function Careers() {
                   <button
                     onClick={() => {
                       setSelectedJob(null);
-                      navigate('/login?redirect=/careers');
+                      redirectToSSO('/careers');
                     }}
                     className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] text-white text-xs font-extrabold transition cursor-pointer border-none shadow-md"
                   >
