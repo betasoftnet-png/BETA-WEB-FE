@@ -661,15 +661,19 @@ export default function AdminDashboard() {
                                 {new Date(app.createdAt).toLocaleDateString()}
                               </td>
                               <td className="py-4 px-6">
-                                <a
-                                  href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `https://apply.beta-softnet.com${app.resumeUrl}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold"
-                                >
-                                  <FileText className="h-3.5 w-3.5 text-[#004AAD]" />
-                                  <span>Download</span>
-                                </a>
+                                {app.resumeUrl ? (
+                                  <a
+                                    href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `https://apply.beta-softnet.com${app.resumeUrl}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold"
+                                  >
+                                    <FileText className="h-3.5 w-3.5 text-[#004AAD]" />
+                                    <span>Download</span>
+                                  </a>
+                                ) : (
+                                  <span className="text-slate-400 italic">No resume</span>
+                                )}
                               </td>
                               <td className="py-4 px-6 max-w-xs">
                                 <button
@@ -728,7 +732,7 @@ export default function AdminDashboard() {
                   <label className="text-xs font-bold uppercase">Department</label>
                   <input
                     type="text"
-                    required
+                    
                     value={jobDept}
                     onChange={(e) => setJobDept(e.target.value)}
                     placeholder="e.g. Engineering"
@@ -766,10 +770,9 @@ export default function AdminDashboard() {
                   <label className="text-xs font-bold uppercase">Salary Range</label>
                   <input
                     type="text"
-                    required
                     value={jobSalary}
                     onChange={(e) => setJobSalary(e.target.value)}
-                    placeholder="e.g. $140k - $180k"
+                    placeholder="e.g. ₹10k - ₹15k"
                     className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-sm transition"
                   />
                 </div>
@@ -778,7 +781,6 @@ export default function AdminDashboard() {
               <div className="space-y-1">
                 <label className="text-xs font-bold uppercase">Description</label>
                 <textarea
-                  required
                   rows={3}
                   value={jobDesc}
                   onChange={(e) => setJobDesc(e.target.value)}
@@ -804,7 +806,7 @@ export default function AdminDashboard() {
                     <div key={idx} className="flex items-center space-x-2">
                       <input
                         type="text"
-                        required
+                        
                         value={resp}
                         onChange={(e) => handleArrayChange(idx, e.target.value, jobResponsibilities, setJobResponsibilities)}
                         placeholder={`Responsibility #${idx + 1}`}
@@ -839,7 +841,7 @@ export default function AdminDashboard() {
                     <div key={idx} className="flex items-center space-x-2">
                       <input
                         type="text"
-                        required
+                        
                         value={req}
                         onChange={(e) => handleArrayChange(idx, e.target.value, jobRequirements, setJobRequirements)}
                         placeholder={`Requirement #${idx + 1}`}
@@ -874,7 +876,7 @@ export default function AdminDashboard() {
                     <div key={idx} className="flex items-center space-x-2">
                       <input
                         type="text"
-                        required
+                        
                         value={skill}
                         onChange={(e) => handleArrayChange(idx, e.target.value, jobSkills, setJobSkills)}
                         placeholder={`Skill #${idx + 1}`}
