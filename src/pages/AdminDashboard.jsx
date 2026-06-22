@@ -78,7 +78,22 @@ export default function AdminDashboard() {
         axios.get('https://apply.beta-softnet.com/api/applications')
       ]);
       setExternalJobs(jobsRes.data.data || jobsRes.data || []);
-      setExternalApplications(appsRes.data.data || appsRes.data || []);
+      
+      const apps = appsRes.data.data || appsRes.data || [];
+      const normalizedApps = apps.map(app => ({
+        id: app.id,
+        fullName: app.fullName || app.fullname || '',
+        email: app.email || '',
+        phone: app.phone || '',
+        resumeUrl: app.resumeUrl || app.resumeurl || '',
+        coverLetter: app.coverLetter || app.coverletter || '',
+        status: app.status || '',
+        createdAt: app.createdAt || app.createdat || '',
+        jobTitle: app.jobTitle || app.jobtitle || '',
+        jobDepartment: app.jobDepartment || app.jobdepartment || '',
+        jobLocation: app.jobLocation || app.joblocation || ''
+      }));
+      setExternalApplications(normalizedApps);
     } catch (err) {
       setError('Failed to fetch jobs or applications from apply.beta-softnet.com.');
       console.error(err);
