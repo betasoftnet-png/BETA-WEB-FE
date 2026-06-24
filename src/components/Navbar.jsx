@@ -140,9 +140,9 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Products', path: '/products' },
-    { name: 'About Us', path: '/about' },
-    { name: 'Careers', path: '/careers' },
     { name: 'Partners', path: '/partners' },
+    { name: 'Careers', path: '/careers' },
+    { name: 'About Us', path: '/about' },
     { name: 'Support', path: '/support' },
   ];
 
