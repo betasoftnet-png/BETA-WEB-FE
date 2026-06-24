@@ -61,7 +61,7 @@ export default function About() {
   const leadership = [
     {
       name: 'Mr.B',
-      role: 'CEO/Founder',
+      role: 'Founder & CEO',
       avatar: "/MR.B.png",
       desc: 'Former Engineering Director at AWS. Guiding enterprise software scaling and corporate direction.',
       infoLink: 'https://www.mr-b.info/'
@@ -210,6 +210,19 @@ export default function About() {
           border-color: rgba(255, 99, 37, 0.45) !important; /* Brand orange glow */
           box-shadow: 0 12px 40px 0 rgba(10, 49, 97, 0.08) !important;
           transform: translateY(-4px);
+        }
+        .founder-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+          .founder-grid {
+            grid-template-columns: 11rem 1fr;
+            grid-template-rows: 11rem auto;
+            column-gap: 2.5rem;
+            row-gap: 1.5rem;
+          }
         }
       `}</style>
 
@@ -518,58 +531,57 @@ export default function About() {
             <p className="text-slate-400 text-sm">Meet the innovators guiding our engineering and product vision.</p>
           </div>
 
-          <div className="flex justify-center gap-8">
-            {leadership.map((member, idx) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.08 }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="glass-card p-8 rounded-3xl border border-[#0A3161]/12 text-center space-y-4 hover:border-[#FF6325]/30 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 relative group overflow-hidden w-full max-w-sm"
-              >
-                {/* Circular Profile Avatar Image */}
-                <div className="relative h-24 w-24 mx-auto rounded-full overflow-hidden border-2 border-slate-200 shadow-lg transition-transform duration-500 group-hover:scale-105 group-hover:border-sky-400/50 z-10">
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="max-w-4xl mr-auto founder-grid pt-4 text-left md:-ml-8 lg:-ml-12"
+          >
+            {/* Left Column: Image (Row 1, Col 1) */}
+            <div className="md:col-start-1 md:row-start-1 md:self-start flex flex-col items-center shrink-0">
+              <div className="h-44 w-44 rounded-2xl overflow-hidden border-2 border-slate-200/80 shadow-md relative group">
+                <img
+                  src={leadership[0].avatar}
+                  alt={leadership[0].name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+            </div>
 
-                {/* Card hover glow backdrop */}
-                <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                <div className="space-y-1 relative z-10">
-                  <h3 className="text-lg font-extrabold text-white">{member.name}</h3>
-                  <p className="text-xs font-bold text-[#FF6325] uppercase tracking-widest">{member.role}</p>
-                </div>
-
-                <p className="text-slate-400 text-xs leading-relaxed relative z-10 font-medium h-12 flex items-center justify-center">
-                  {member.desc}
+            {/* Left Column: Metadata (Name, Title, Info Button) stacked & centered below the image (Row 2, Col 1) */}
+            <div className="md:col-start-1 md:row-start-2 flex flex-col items-center text-center space-y-3 w-44">
+              <div className="space-y-1">
+                <h3 className="text-xl font-black text-slate-800">{leadership[0].name}</h3>
+                <p className="text-xs font-bold text-[#FF6325] uppercase tracking-widest">
+                  Founder & CEO
                 </p>
+              </div>
+              <div>
+                <a
+                  href={leadership[0].infoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-6 py-2 rounded-full bg-[#0E0F89] hover:bg-[#FF6325] text-white text-xs font-bold transition duration-300 select-none cursor-pointer"
+                >
+                  Info
+                </a>
+              </div>
+            </div>
 
-                {/* Info link */}
-                <div className="flex items-center justify-center pt-4 relative z-10 border-t border-slate-100">
-                  <a
-                    href={member.infoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center px-6 py-1.5 rounded-full bg-slate-100 hover:bg-[#FF6325] text-slate-700 hover:text-white text-xs font-bold transition duration-300 select-none cursor-pointer"
-                  >
-                    Info
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+            {/* Right Column: Envisioned content (Row 1, Col 2 - centered vertically with the image) */}
+            <div className="md:col-start-2 md:row-start-1 md:self-center flex-grow flex flex-col justify-center max-w-4xl">
+              <p className="text-base md:text-lg text-slate-650 leading-relaxed font-semibold">
+                Our founder envisioned Beta as a platform that empowers businesses through innovative and reliable technology solutions. With a strong focus on quality, simplicity, and customer success, the company was built to solve real-world business challenges. Today, that vision continues to drive our products, culture, and commitment to excellence.
+              </p>
+            </div>
+          </motion.div>
 
           {/* Vision Statement Section */}
           <div className="glass-card p-8 md:p-12 rounded-3xl border border-[#0A3161]/12 shadow-xl max-w-4xl mx-auto mt-16 relative overflow-hidden group">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#FF6325]/5 to-transparent opacity-30 pointer-events-none" />
-            
+
             <div className="relative z-10 flex flex-col md:flex-row gap-8 items-stretch justify-between text-left">
               {/* Left Column */}
               <div className="md:w-1/2 flex flex-col justify-center space-y-4 border-b md:border-b-0 md:border-r border-[#0A3161]/10 pb-6 md:pb-0 md:pr-8">

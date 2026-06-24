@@ -315,7 +315,10 @@ export default function Navbar() {
                                           <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">B2Auth</p>
+                                          <p className="font-semibold text-slate-800 text-sm flex items-center">
+                                            B2Auth
+                                            <span className="coming-soon-badge">Coming Soon</span>
+                                          </p>
                                           <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
                                         </div>
                                       </a>
@@ -330,7 +333,10 @@ export default function Navbar() {
                                           <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">Bit-Tool</p>
+                                          <p className="font-semibold text-slate-800 text-sm flex items-center">
+                                            Bit-Tool
+                                            <span className="coming-soon-badge">Coming Soon</span>
+                                          </p>
                                           <p className="text-xs text-slate-450 font-medium">Developer utility assistant</p>
                                         </div>
                                       </a>
@@ -345,7 +351,10 @@ export default function Navbar() {
                                           <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">Cliks</p>
+                                          <p className="font-semibold text-slate-800 text-sm flex items-center">
+                                            Cliks
+                                            <span className="coming-soon-badge">Coming Soon</span>
+                                          </p>
                                           <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
                                         </div>
                                       </a>
@@ -633,7 +642,22 @@ export default function Navbar() {
                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
                             >
                               <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
-                              <span className="font-semibold">B2Auth Security</span>
+                              <span className="font-semibold flex items-center">
+                                B2Auth Security
+                                <span className="coming-soon-badge">Coming Soon</span>
+                              </span>
+                            </a>
+                            <a
+                              href="https://bittool.beta-softnet.com/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                            >
+                              <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-4 w-4 object-contain" />
+                              <span className="font-semibold flex items-center">
+                                Bit-Tool
+                                <span className="coming-soon-badge">Coming Soon</span>
+                              </span>
                             </a>
                             <a
                               href="https://cliks.beta-softnet.com/"
@@ -642,7 +666,10 @@ export default function Navbar() {
                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
                             >
                               <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
-                              <span className="font-semibold">Cliks</span>
+                              <span className="font-semibold flex items-center">
+                                Cliks
+                                <span className="coming-soon-badge">Coming Soon</span>
+                              </span>
                             </a>
                           </div>
                         </div>
