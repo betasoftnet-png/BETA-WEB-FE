@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Briefcase, 
-  Award, 
-  Sparkles, 
-  Upload, 
-  CheckCircle2, 
-  AlertCircle, 
-  X, 
-  Quote, 
-  Code2, 
-  Search, 
-  User, 
+import {
+  Briefcase,
+  Award,
+  Sparkles,
+  Upload,
+  CheckCircle2,
+  AlertCircle,
+  X,
+  Quote,
+  Code2,
+  Search,
+  User,
   Users,
   MapPin,
   CheckSquare,
@@ -30,7 +30,6 @@ const JOB_BOARD_API_BASE = window.location.hostname === 'localhost' || window.lo
 
 const benefits = [
   { emoji: '💰', title: 'Bonus', desc: 'Competitive base package with performance bonuses tied to milestones.' },
-  { emoji: '🏠', title: 'Remote Work', desc: 'Flexible hours and high-end remote developer workstation setup.' },
   { emoji: '📚', title: 'Learning', desc: 'Annual education grant of $2,000 for courses and tech conferences.' },
   { emoji: '✈️', title: 'Trips', desc: 'Distributed team offsites and engineering hackathons worldwide.' },
   { emoji: '🎯', title: 'Mentorship', desc: 'Regular syncs with domain architects and technical roadmap reviews.' }
@@ -42,6 +41,49 @@ const processSteps = [
   { id: '3', title: 'Interview', desc: 'Systems architecture alignment', icon: User, color: 'text-amber-405', bg: 'bg-amber-500/10 border-amber-500/20' },
   { id: '4', title: 'Offer', desc: 'Proposal and equity breakdown', icon: Award, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
   { id: '5', title: 'Welcome', desc: 'Developer bootcamp onboarding', icon: CheckCircle2, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' }
+];
+
+const fallbackJobs = [
+  {
+    id: 'mock-1',
+    title: 'Senior Full Stack Engineer',
+    team: 'Engineering',
+    location: 'Chennai, India (Hybrid)',
+    type: 'Full-Time',
+    experience: '3+ Years',
+    skills: ['React', 'Node.js', 'MongoDB', 'Express'],
+    description: 'We are seeking a talented Senior Full Stack Engineer to lead development of our client-facing portal, APIs, and key features.'
+  },
+  {
+    id: 'mock-2',
+    title: 'UI/UX Designer & Developer',
+    team: 'Design',
+    location: 'Chennai, India (Hybrid)',
+    type: 'Full-Time',
+    experience: '2+ Years',
+    skills: ['Figma', 'React', 'Tailwind CSS', 'Framer Motion'],
+    description: 'Join us to design beautiful user experiences and translate them into high-fidelity web components.'
+  },
+  {
+    id: 'mock-3',
+    title: 'DevOps & Infrastructure Lead',
+    team: 'Platform',
+    location: 'Chennai, India (Hybrid)',
+    type: 'Full-Time',
+    experience: '4+ Years',
+    skills: ['AWS', 'Kubernetes', 'CI/CD Pipelines', 'Docker'],
+    description: 'Own our deployment architecture, monitoring pipeline, database clustering, and security controls.'
+  },
+  {
+    id: 'mock-4',
+    title: 'QA Automation Engineer',
+    team: 'Quality Assurance',
+    location: 'Chennai, India (Hybrid)',
+    type: 'Full-Time',
+    experience: '2+ Years',
+    skills: ['Selenium', 'Cypress', 'JavaScript', 'Postman'],
+    description: 'Help build automated end-to-end testing scripts, integration tests, and performance benchmark suites.'
+  }
 ];
 
 export default function Careers() {
@@ -64,7 +106,6 @@ export default function Careers() {
 
   // Live Job Search & Filters State
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All Jobs');
 
   // Fetch active job openings from API
   useEffect(() => {
@@ -80,10 +121,15 @@ export default function Careers() {
           experience: job.experience || '2+ Years',
           skills: Array.isArray(job.skills) ? job.skills : []
         }));
-        setJobsList(fetched);
+        if (fetched.length > 0) {
+          setJobsList(fetched);
+        } else {
+          setJobsList(fallbackJobs);
+        }
       } catch (err) {
         console.error('Error fetching jobs:', err);
         setJobsError('Failed to load active job openings.');
+        setJobsList(fallbackJobs);
       } finally {
         setLoadingJobs(false);
       }
@@ -106,12 +152,9 @@ export default function Careers() {
 
   // Filter logic
   const filteredJobs = jobsList.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          job.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesCategory = selectedCategory === 'All Jobs' || 
-                            job.team === selectedCategory;
-    return matchesSearch && matchesCategory;
+    return job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()));
   });
 
   const handleApply = async (e, jobOverride = null) => {
@@ -297,53 +340,23 @@ export default function Careers() {
 
 
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 space-y-36">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-36">
 
 
         {/* SECTION 3: OPEN ROLES SECTION */}
-        <div id="search-roles" className="space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
+        <div id="search-roles" className="space-y-6">
+          <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
               <Briefcase className="h-3.5 w-3.5" />
               <span>Current Openings</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Open Roles</h2>
-          </div>
-
-          {/* Search Controls */}
-          <div className="glass-card-purple p-4 rounded-3xl border border-purple-500/20 shadow-xl flex flex-col md:flex-row items-center gap-4 text-left">
-            <div className="relative flex-grow w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-purple-400" />
-              <input
-                type="text"
-                placeholder="Search by title, team, or skill (e.g. React, Spring)..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#EC4899] text-sm"
-              />
-            </div>
-            <div className="flex items-center space-x-2 text-xs text-purple-700 bg-purple-50 px-4 py-3 rounded-2xl border border-purple-200 w-full md:w-auto flex-shrink-0 select-none">
+            <div className="inline-flex items-center space-x-2 text-xs text-purple-700 bg-purple-50 px-4 py-2.5 rounded-2xl border border-purple-200 select-none">
               <MapPin className="h-4 w-4 text-[#EC4899]" />
               <span>Office: Chennai, India</span>
             </div>
           </div>
 
-          {/* Categories Filter Badges */}
-          <div className="flex flex-wrap gap-2 justify-center border-b border-purple-950/20 pb-6">
-            {['All Jobs', ...new Set(jobsList.map(j => j.team))].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-5 py-2 rounded-xl text-xs font-extrabold tracking-wide border transition-all duration-300 cursor-pointer ${
-                  selectedCategory === cat 
-                    ? 'bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white border-transparent shadow-lg shadow-purple-500/20' 
-                    : 'bg-white text-slate-600 border-purple-200 hover:border-[#8B5CF6]/30 hover:text-[#8B5CF6]'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+
 
           {/* Job grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -385,7 +398,7 @@ export default function Careers() {
                       onClick={() => setSelectedJob(job)}
                       className="w-full py-2 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm"
                     >
-                      [Apply Now]
+                      Apply Now
                     </button>
                   </motion.div>
                 ))
@@ -509,9 +522,8 @@ export default function Careers() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className={`h-48 w-48 rounded-full border border-purple-200 bg-white/80 shadow-lg shadow-purple-500/5 flex flex-col items-center justify-center p-6 text-center space-y-2 relative group overflow-hidden ${
-                    isEven ? 'float-circle-even' : 'float-circle-odd'
-                  }`}
+                  className={`h-48 w-48 rounded-full border border-purple-200 bg-white/80 shadow-lg shadow-purple-500/5 flex flex-col items-center justify-center p-6 text-center space-y-2 relative group overflow-hidden ${isEven ? 'float-circle-even' : 'float-circle-odd'
+                    }`}
                 >
                   {/* Backdrop glow */}
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#8B5CF6]/10 to-[#EC4899]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />

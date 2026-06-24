@@ -321,6 +321,21 @@ export default function Navbar() {
                                     </a>
 
                                     <a
+                                      href="https://bittool.beta-softnet.com/"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                    >
+                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
+                                      </div>
+                                      <div>
+                                        <p className="font-bold text-slate-800 text-sm">BIT TOOL</p>
+                                        <p className="text-xs text-slate-450 font-medium">Developer utility assistant</p>
+                                      </div>
+                                    </a>
+
+                                    <a
                                       href="https://cliks.beta-softnet.com/"
                                       target="_blank"
                                       rel="noopener noreferrer"
@@ -493,13 +508,15 @@ export default function Navbar() {
               </div>
             )}
             <div className="h-6 w-px bg-slate-300 self-center" />
-            <button
-              type="button"
+            <a
+              href="https://bittool.beta-softnet.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-1 rounded-xl hover:bg-slate-100 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent ml-2"
-              title="Custom Action"
+              title="Bit Tool"
             >
-              <img src="/custom_icon.png" alt="Custom Icon" className="h-7 w-7 object-contain rounded-lg shadow-sm" />
-            </button>
+              <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-7 w-7 object-contain rounded-lg shadow-sm" />
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
