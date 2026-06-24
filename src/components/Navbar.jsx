@@ -156,14 +156,14 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#e2f0e8] shadow-sm text-slate-800">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-16">
+        <div className="relative flex items-center justify-between h-14">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center ml-2 sm:ml-6 space-x-4 flex-1 justify-start">
+          <div className="flex-shrink-0 flex items-center ml-4 sm:ml-12 space-x-2 flex-1 justify-start">
             <Link to="/" className="flex items-center select-none">
               <img src="/logo.png" alt="Beta Logo" className="h-12 w-auto object-contain" />
             </Link>
 
-            <div className="relative animate-fadeIn ml-2 sm:ml-4" ref={locationRef}>
+            <div className="relative animate-fadeIn ml-0" ref={locationRef}>
               <button
                 onClick={() => setIsLocationOpen(!isLocationOpen)}
                 className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 hover:bg-slate-200/60 transition duration-300 text-xs font-bold text-slate-700 cursor-pointer focus:outline-none"
