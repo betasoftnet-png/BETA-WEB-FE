@@ -250,23 +250,23 @@ export default function Navbar() {
                       <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 z-50 text-left text-slate-800">
                         <table className="w-full text-left border-collapse">
                           <thead>
-                            <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 text-xs uppercase tracking-wider font-extrabold select-none">
+                            <tr className="bg-emerald-50 border-b border-emerald-100/30 text-emerald-800 text-xs uppercase tracking-wider font-extrabold select-none">
                               <th 
-                                className="py-2.5 px-4 rounded-l-lg text-slate-500 w-1/5 select-none"
+                                className="py-2.5 px-4 rounded-l-lg text-emerald-800 w-1/5 select-none"
                               >
                                 <div className="flex items-center space-x-1">
                                   <span>Category</span>
                                 </div>
                               </th>
                               <th 
-                                className="py-2.5 px-4 text-slate-500 w-2/5 select-none"
+                                className="py-2.5 px-4 text-emerald-800 w-2/5 select-none"
                               >
                                 <div className="flex items-center space-x-1">
                                   <span>Public</span>
                                 </div>
                               </th>
                               <th 
-                                className="py-2.5 px-4 rounded-r-lg text-slate-500 w-2/5 select-none"
+                                className="py-2.5 px-4 rounded-r-lg text-emerald-800 w-2/5 select-none"
                               >
                                 <div className="flex items-center space-x-1">
                                   <span>Business</span>
@@ -276,7 +276,7 @@ export default function Navbar() {
                           </thead>
                           <tbody className="divide-y divide-slate-100 text-slate-750 text-xs">
                             {/* Row 1: Base */}
-                            <tr className="hover:bg-slate-50/50 transition-colors">
+                            <tr className="bg-yellow-50/85 hover:bg-yellow-100/40 transition-colors">
                               <td className="py-3 px-2 align-top pt-3 w-1/5">
                                 {isDropdownCategoryOpen && (
                                   <div
@@ -286,7 +286,7 @@ export default function Navbar() {
                                   </div>
                                 )}
                               </td>
-                              <td className="py-3 px-4 align-top w-2/5 border-r border-slate-100">
+                              <td className="py-3 px-4 align-top w-2/5 border-r border-slate-200">
                                 {/* Public Products */}
                                 {isDropdownPublicOpen && (
                                   <div className="flex flex-col gap-3 pt-1 pb-1">
@@ -294,7 +294,7 @@ export default function Navbar() {
                                       href="https://www.bnxmail.com/login"
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-slate-50 cursor-pointer text-left block"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
                                     >
                                       <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                         <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
@@ -309,7 +309,7 @@ export default function Navbar() {
                                       href="https://www.b2auth.com/"
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-slate-50 cursor-pointer text-left block"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
                                     >
                                       <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                         <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
@@ -324,7 +324,7 @@ export default function Navbar() {
                                       href="https://cliks.beta-softnet.com/"
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-slate-50 cursor-pointer text-left block"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
                                     >
                                       <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                         <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
@@ -345,7 +345,7 @@ export default function Navbar() {
                                       href="https://www.cliksbusiness.com/"
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-slate-50 cursor-pointer text-left block"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
                                     >
                                       <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                         <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
