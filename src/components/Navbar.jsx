@@ -18,16 +18,65 @@ export default function Navbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [selectedCity, setSelectedCity] = useState('Mumbai');
+  const [selectedCity, setSelectedCity] = useState('Tiruvallur');
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isMobileLocationOpen, setIsMobileLocationOpen] = useState(false);
   const locationRef = useRef(null);
   const searchContainerRef = useRef(null);
   const searchInputRef = useRef(null);
-  const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune'];
+  const cities = ['Tiruvallur', 'Vellore'];
   const { user, logout, redirectToSSO } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [isDetecting, setIsDetecting] = useState(false);
+  const [detectionError, setDetectionError] = useState(null);
+
+  const handleCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setDetectionError("Geolocation is not supported by your browser.");
+      return;
+    }
+    
+    setIsDetecting(true);
+    setDetectionError(null);
+    
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const response = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          );
+          if (!response.ok) throw new Error("Failed to fetch location data");
+          const data = await response.json();
+          const detectedCity = data.city || data.locality || data.principalSubdivision || "Unknown City";
+          setSelectedCity(detectedCity);
+          setIsDetecting(false);
+          setIsLocationOpen(false);
+          setIsMobileLocationOpen(false);
+        } catch (error) {
+          console.error("Error detecting city:", error);
+          setDetectionError("Failed to resolve city name.");
+          setIsDetecting(false);
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        let errorMsg = "Permission denied or location unavailable.";
+        if (error.code === error.PERMISSION_DENIED) {
+          errorMsg = "Location permission denied.";
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          errorMsg = "Location position unavailable.";
+        } else if (error.code === error.TIMEOUT) {
+          errorMsg = "Location detection timed out.";
+        }
+        setDetectionError(errorMsg);
+        setIsDetecting(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
 
   const profileRef = useRef(null);
   const productsDropdownRef = useRef(null);
@@ -130,6 +179,27 @@ export default function Navbar() {
                     Select Location
                   </div>
                   <div className="py-1 max-h-60 overflow-y-auto">
+                    {/* Current Location Option */}
+                    <button
+                      onClick={handleCurrentLocation}
+                      disabled={isDetecting}
+                      className="w-full text-left px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 hover:bg-slate-50 text-slate-700 hover:text-emerald-750 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isDetecting ? (
+                        <RefreshCw className="h-3.5 w-3.5 text-emerald-600 animate-spin" />
+                      ) : (
+                        <MapPin className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
+                      )}
+                      <span>{isDetecting ? "Detecting Location..." : "Current Location"}</span>
+                    </button>
+                    {detectionError && (
+                      <div className="px-3 py-1 text-[10px] text-rose-500 font-semibold leading-tight animate-fadeIn">
+                        {detectionError}
+                      </div>
+                    )}
+                    <div className="my-1.5 border-t border-slate-100/80" />
+
+                    {/* Cities List */}
                     {cities.map((city) => (
                       <button
                         key={city}
@@ -455,6 +525,27 @@ export default function Navbar() {
                 </button>
                 {isMobileLocationOpen && (
                   <div className="mt-1 w-full bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 p-1 text-left">
+                    {/* Current Location Option */}
+                    <button
+                      onClick={handleCurrentLocation}
+                      disabled={isDetecting}
+                      className="w-full text-left px-3 py-2 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition hover:bg-slate-50 text-slate-700 hover:text-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isDetecting ? (
+                        <RefreshCw className="h-3.5 w-3.5 text-emerald-600 animate-spin" />
+                      ) : (
+                        <MapPin className="h-3.5 w-3.5 text-emerald-600" />
+                      )}
+                      <span>{isDetecting ? "Detecting..." : "Current Location"}</span>
+                    </button>
+                    {detectionError && (
+                      <div className="px-3 py-1 text-[10px] text-rose-500 font-semibold leading-tight">
+                        {detectionError}
+                      </div>
+                    )}
+                    <div className="my-1 border-t border-slate-100" />
+
+                    {/* Cities List */}
                     {cities.map((city) => (
                       <button
                         key={city}
