@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Handshake, 
-  Award, 
-  CheckCircle2, 
-  AlertCircle, 
-  Users, 
-  Layers, 
-  Globe, 
-  Building, 
+import {
+  Handshake,
+  Award,
+  CheckCircle2,
+  AlertCircle,
+  Users,
+  Layers,
+  Globe,
+  Building,
   ArrowRight,
   Code2,
   Cpu,
@@ -39,7 +39,7 @@ function CountUpNumber({ value }) {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       const currentVal = progress * (numericValue - startValue) + startValue;
-      
+
       if (numericValue % 1 !== 0) {
         setDisplayValue(currentVal.toFixed(1) + suffix);
       } else {
@@ -121,7 +121,7 @@ export default function Partners() {
   const [fullName, setFullName] = useState('');
   const [workEmail, setWorkEmail] = useState('');
   const [phone, setPhone] = useState('');
-  
+
   const [status, setStatus] = useState('idle'); // idle, loading, success, error
   const [statusMsg, setStatusMsg] = useState('');
 
@@ -150,7 +150,7 @@ export default function Partners() {
       handleNextStep();
       return;
     }
-    
+
     setStatus('loading');
     const constructedMessage = `
       [Futuristic Partner Request]
@@ -163,11 +163,11 @@ export default function Partners() {
     `;
 
     try {
-      await api.post('/api/contact', { 
-        name: fullName, 
-        email: workEmail, 
-        company: companyName, 
-        message: constructedMessage 
+      await api.post('/api/contact', {
+        name: fullName,
+        email: workEmail,
+        company: companyName,
+        message: constructedMessage
       });
       setStatus('success');
       setStatusMsg('Thank you! Your strategic partner request has been recorded. Our alliance engineers will connect shortly.');
@@ -413,7 +413,7 @@ export default function Partners() {
         {/* Shifting blobs */}
         <div className="absolute top-[10%] left-[5%] w-[450px] h-[450px] bg-[#00E5FF]/10 rounded-full blur-[140px] pointer-events-none blob-cyan-pulse" />
         <div className="absolute bottom-[10%] right-[5%] w-[500px] h-[500px] bg-[#7C3AED]/10 rounded-full blur-[140px] pointer-events-none blob-purple-pulse" />
-        
+
         {/* Animated Connected Network background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-20">
           <svg className="absolute w-full h-full" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
@@ -423,7 +423,7 @@ export default function Partners() {
             <line x1="300" y1="250" x2="600" y2="450" stroke="#00E5FF" strokeWidth="1" />
             <line x1="600" y1="450" x2="800" y2="250" stroke="#7C3AED" strokeWidth="1" className="flow-vector-line" />
             <line x1="800" y1="250" x2="900" y2="500" stroke="#00FFB2" strokeWidth="1" />
-            
+
             <circle cx="100" cy="150" r="4" fill="#00E5FF" className="animate-ping" />
             <circle cx="300" cy="250" r="5" fill="#7C3AED" />
             <circle cx="500" cy="150" r="4" fill="#00FFB2" />
@@ -499,7 +499,7 @@ export default function Partners() {
           </div>
 
           {/* Central Interactive Orbit Node Map */}
-          <div className="relative max-w-2xl mx-auto h-[450px] flex items-center justify-center rounded-3xl bg-[#0E0F89] border border-[#FF6325]/15 shadow-2xl p-6 overflow-hidden">
+          <div className="relative max-w-2xl mx-auto h-[450px] flex items-center justify-center rounded-3xl bg-gradient-to-r from-yellow-100 via-amber-100 to-yellow-200 border border-[#FF6325]/15 shadow-2xl p-6 overflow-hidden">
             {/* Background grids */}
             <div className="absolute inset-0 bg-[radial-gradient(rgba(255,99,37,0.05)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none opacity-40" />
 
@@ -517,17 +517,19 @@ export default function Partners() {
             </svg>
 
             {/* Central Hub Node */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.05 }}
-              className="absolute z-10 h-28 w-28 rounded-full bg-[#0A3161] border-4 border-[#FF6325] flex flex-col items-center justify-center text-center shadow-lg shadow-[#FF6325]/20 cursor-pointer select-none"
+              className="absolute z-10 h-28 w-28 rounded-full bg-white border-4 border-[#FF6325] flex flex-col items-center justify-center text-center shadow-lg shadow-[#FF6325]/20 cursor-pointer select-none"
             >
               <Building className="h-7 w-7 text-[#FF6325] mb-1 animate-pulse" />
-              <span className="text-[10px] font-black text-white uppercase tracking-wider">BETA HUB</span>
+              <span className="text-[10px] font-black text-[#0A3161] uppercase tracking-wider">
+                BETA HUB
+              </span>
             </motion.div>
 
             {/* Outer Nodes */}
             {/* Node 1: Cloud (Top Center) */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.08 }}
               className="absolute top-[35px] left-1/2 -translate-x-1/2 z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#FF6325] flex items-center justify-center shadow-md cursor-pointer group"
             >
@@ -538,7 +540,7 @@ export default function Partners() {
             </motion.div>
 
             {/* Node 2: Technology (Top Right) */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.08 }}
               className="absolute top-[125px] right-[115px] z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#0E0F89] flex items-center justify-center shadow-md cursor-pointer group"
             >
@@ -549,7 +551,7 @@ export default function Partners() {
             </motion.div>
 
             {/* Node 3: Integration (Bottom Right) */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.08 }}
               className="absolute bottom-[85px] right-[170px] z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#135029] flex items-center justify-center shadow-md cursor-pointer group"
             >
@@ -560,7 +562,7 @@ export default function Partners() {
             </motion.div>
 
             {/* Node 4: Reseller (Bottom Left) */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.08 }}
               className="absolute bottom-[85px] left-[170px] z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#FF6325] flex items-center justify-center shadow-md cursor-pointer group"
             >
@@ -571,7 +573,7 @@ export default function Partners() {
             </motion.div>
 
             {/* Node 5: Strategic (Top Left) */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.08 }}
               className="absolute top-[125px] left-[115px] z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#0E0F89] flex items-center justify-center shadow-md cursor-pointer group"
             >
@@ -605,9 +607,8 @@ export default function Partners() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  className={`glass-card-neon p-8 rounded-3xl border text-left space-y-4 shadow-sm ${
-                    isEven ? 'float-perk-even' : 'float-perk-odd'
-                  }`}
+                  className={`glass-card-neon p-8 rounded-3xl border text-left space-y-4 shadow-sm ${isEven ? 'float-perk-even' : 'float-perk-odd'
+                    }`}
                 >
                   <div className={`h-11 w-11 rounded-xl flex items-center justify-center border ${ben.bg}`}>
                     <Icon className={`h-5.5 w-5.5 ${ben.color}`} />
@@ -657,7 +658,7 @@ export default function Partners() {
                       <p className="text-xs text-[#CBD5E1] leading-relaxed font-medium">{cat.desc}</p>
                     </div>
                   </div>
-                  
+
                   <div className="border-t border-white/5 pt-4">
                     <span className="text-[10px] font-extrabold text-[#00FFB2] uppercase tracking-wider">Explore Program specs</span>
                   </div>
@@ -711,14 +712,14 @@ export default function Partners() {
 
             {/* Slider buttons */}
             <div className="flex space-x-3 self-end sm:self-center">
-              <button 
+              <button
                 onClick={() => scrollCarousel('left')}
                 className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 text-white border border-slate-800 transition cursor-pointer"
                 aria-label="Previous story"
               >
                 <ChevronLeft className="h-4.5 w-4.5" />
               </button>
-              <button 
+              <button
                 onClick={() => scrollCarousel('right')}
                 className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 text-white border border-slate-800 transition cursor-pointer"
                 aria-label="Next story"
@@ -729,12 +730,12 @@ export default function Partners() {
           </div>
 
           {/* Horizontal Scroll Story Grid */}
-          <div 
+          <div
             ref={carouselRef}
             className="flex space-x-6 overflow-x-auto pb-6 scrollbar-none snap-x snap-mandatory text-left"
           >
             {successStories.map((story) => (
-              <div 
+              <div
                 key={story.id}
                 className="flex-shrink-0 w-full sm:w-[400px] snap-center glass-card-neon p-6 rounded-3xl border border-purple-500/15 flex flex-col justify-between space-y-6"
               >
@@ -858,14 +859,13 @@ export default function Partners() {
           <div className="flex items-center justify-between max-w-md mx-auto select-none">
             {[1, 2, 3, 4].map((stepNum) => (
               <div key={stepNum} className="flex items-center flex-1 last:flex-none">
-                <div 
-                  className={`h-8 w-8 rounded-full border flex items-center justify-center text-xs font-black transition-all duration-300 ${
-                    currentStep === stepNum 
-                      ? 'bg-[#FF6325] border-[#FF6325] text-white shadow-md shadow-[#FF6325]/20 scale-105' 
-                      : currentStep > stepNum 
-                        ? 'bg-[#0E0F89] border-[#0E0F89] text-white' 
-                        : 'bg-slate-900 border-slate-800 text-slate-500'
-                  }`}
+                <div
+                  className={`h-8 w-8 rounded-full border flex items-center justify-center text-xs font-black transition-all duration-300 ${currentStep === stepNum
+                    ? 'bg-[#FF6325] border-[#FF6325] text-white shadow-md shadow-[#FF6325]/20 scale-105'
+                    : currentStep > stepNum
+                      ? 'bg-[#0E0F89] border-[#0E0F89] text-white'
+                      : 'bg-slate-900 border-slate-800 text-slate-500'
+                    }`}
                 >
                   {stepNum}
                 </div>
@@ -890,7 +890,7 @@ export default function Partners() {
                     className="space-y-4"
                   >
                     <h3 className="text-lg font-bold text-white border-b border-white/5 pb-2 mb-4">Step 1: Company Profile</h3>
-                    
+
                     <div className="space-y-1">
                       <label className="text-xs font-extrabold text-slate-400 uppercase">Company Name</label>
                       <input
@@ -1057,9 +1057,8 @@ export default function Partners() {
                 <button
                   type="button"
                   onClick={handlePrevStep}
-                  className={`px-5 py-2 rounded-xl text-xs font-bold bg-white/5 text-[#CBD5E1] border border-white/10 hover:border-white/20 transition cursor-pointer select-none ${
-                    currentStep === 1 ? 'opacity-30 pointer-events-none' : ''
-                  }`}
+                  className={`px-5 py-2 rounded-xl text-xs font-bold bg-white/5 text-[#CBD5E1] border border-white/10 hover:border-white/20 transition cursor-pointer select-none ${currentStep === 1 ? 'opacity-30 pointer-events-none' : ''
+                    }`}
                 >
                   Previous Step
                 </button>

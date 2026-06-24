@@ -92,7 +92,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-transparent relative z-10 pt-24 pb-20">
+    <div className="relative min-h-screen bg-transparent z-10 pt-16 pb-20">
       <style>{`
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
@@ -119,7 +119,7 @@ export default function Home() {
       `}</style>
 
       {/* HERO SECTION: TWO-COLUMN LAYOUT */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 pt-8 md:pt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 pt-4 md:pt-6">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
           {/* Left Column: Heading, description, and buttons */}
           <motion.div
