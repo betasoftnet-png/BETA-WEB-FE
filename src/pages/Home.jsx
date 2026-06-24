@@ -145,13 +145,13 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 pt-2">
-              <Link
-                to="/products"
-                className="px-6 py-3.5 rounded-xl text-sm font-bold bg-[#004AAD] hover:bg-[#003882] text-white shadow-lg shadow-blue-500/10 transition-all duration-300 flex items-center space-x-2 group hover:scale-[1.02]"
+              <button
+                type="button"
+                className="px-6 py-3.5 rounded-xl text-sm font-bold bg-[#004AAD] text-white shadow-lg shadow-blue-500/10 flex items-center space-x-2 cursor-pointer"
               >
                 <span>Explore Product Suite</span>
-                <ArrowRight className="h-4 w-4 text-white group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+                <ArrowRight className="h-4 w-4 text-white" />
+              </button>
               <Link
                 to="/support"
                 className="px-6 py-3.5 rounded-xl text-sm font-bold bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200 transition-all duration-300 hover:scale-[1.02]"
@@ -375,12 +375,12 @@ export default function Home() {
               Unify your group mailbox, auth logs, dashboard notes, and project backlogs under one centralized and secure portal.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
-              <Link
-                to="/products"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white text-[#004AAD] hover:bg-slate-55 transition-all duration-300 hover:scale-[1.02]"
+              <button
+                type="button"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white text-[#004AAD] cursor-pointer"
               >
                 Browse Product Suites
-              </Link>
+              </button>
               <Link
                 to="/support"
                 className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30 transition-all duration-300 hover:scale-[1.02]"

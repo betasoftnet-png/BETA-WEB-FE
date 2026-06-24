@@ -64,9 +64,7 @@ export default function About() {
       role: 'CEO/Founder',
       avatar: "/MR.B.png",
       desc: 'Former Engineering Director at AWS. Guiding enterprise software scaling and corporate direction.',
-      github: '#',
-      linkedin: '#',
-      twitter: '#'
+      infoLink: 'https://www.mr-b.info/'
     }
   ];
 
@@ -552,16 +550,15 @@ export default function About() {
                   {member.desc}
                 </p>
 
-                {/* Social media links */}
-                <div className="flex items-center justify-center space-x-4 pt-4 relative z-10 border-t border-slate-100">
-                  <a href={member.github} className="text-slate-500 hover:text-[#FF6325] transition-colors duration-200" aria-label="GitHub Profile">
-                    <Globe className="h-4.5 w-4.5" />
-                  </a>
-                  <a href={member.linkedin} className="text-slate-500 hover:text-[#FF6325] transition-colors duration-200" aria-label="LinkedIn Profile">
-                    <User className="h-4.5 w-4.5" />
-                  </a>
-                  <a href={member.twitter} className="text-slate-500 hover:text-[#FF6325] transition-colors duration-200" aria-label="Twitter Profile">
-                    <Mail className="h-4.5 w-4.5" />
+                {/* Info link */}
+                <div className="flex items-center justify-center pt-4 relative z-10 border-t border-slate-100">
+                  <a
+                    href={member.infoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-6 py-1.5 rounded-full bg-slate-100 hover:bg-[#FF6325] text-slate-700 hover:text-white text-xs font-bold transition duration-300 select-none cursor-pointer"
+                  >
+                    Info
                   </a>
                 </div>
               </motion.div>
