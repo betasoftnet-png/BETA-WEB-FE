@@ -34,7 +34,7 @@ export default function Home() {
       icon: Mail,
       color: 'bg-blue-500/10 border-blue-500/20 text-[#004AAD]',
       features: ['SMTP & IMAP', 'Shared Threads', 'Live WebSockets', 'Group Inbox'],
-      link: '/bnx-mail/dashboard'
+      link: 'https://www.bnxmail.com/login'
     },
     {
       name: 'CLIKS BUSINESS',
@@ -42,7 +42,7 @@ export default function Home() {
       icon: Briefcase,
       color: 'bg-violet-500/10 border-violet-500/20 text-violet-600',
       features: ['Agile Sprints', 'Workspace Chat', 'Analytical Reports', 'Doc Collaborator'],
-      link: '/cliks-business'
+      link: 'https://www.cliksbusiness.com/'
     }
   ];
 
@@ -185,9 +185,11 @@ export default function Home() {
                     transition={{ duration: 0.4, delay: idx * 0.1 }}
                     className="h-full"
                   >
-                    <Link
-                      to={product.link}
-                      className="glass-card glass-card-hover p-5 rounded-2xl border border-slate-200/80 bg-white shadow-sm flex flex-col justify-between group text-left h-full transition-all duration-200 hover:shadow-md hover:border-[#004AAD]/30"
+                    <a
+                      href={product.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="glass-card glass-card-hover p-5 rounded-2xl border border-slate-200/80 bg-white shadow-sm flex flex-col justify-between group text-left h-full transition-all duration-200 hover:shadow-md hover:border-[#004AAD]/30 block"
                     >
                       <div className="space-y-3.5">
                         {/* Top Row: Icon and Tag */}
@@ -232,7 +234,7 @@ export default function Home() {
                           </span>
                         ))}
                       </div>
-                    </Link>
+                    </a>
                   </motion.div>
                 );
               })}

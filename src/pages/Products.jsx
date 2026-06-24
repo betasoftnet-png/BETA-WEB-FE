@@ -163,23 +163,21 @@ export default function Products() {
 
         {/* Action Button */}
         <div className="pt-2 flex justify-start">
-          {isCliksBusiness ? (
-            <Link
-              to="/partners"
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition duration-300"
-            >
-              <span>Request Integration</span>
-              <ChevronRight className="h-3.5 w-3.5 text-slate-500" />
-            </Link>
-          ) : (
-            <Link
-              to={product.name.toUpperCase().includes('BNX MAIL') ? "/bnx-mail/dashboard" : "/partners"}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition duration-300"
-            >
-              <span>Request Integration</span>
-              <ChevronRight className="h-3.5 w-3.5 text-slate-500" />
-            </Link>
-          )}
+          <a
+            href={
+              product.name.toUpperCase().includes('BNX MAIL') ? 'https://www.bnxmail.com/login' :
+              product.name.toUpperCase().includes('CLIKS BUSINESS') ? 'https://www.cliksbusiness.com/' :
+              product.name.toUpperCase().includes('CLIKS') ? 'https://cliks.beta-softnet.com/' :
+              product.name.toUpperCase().includes('B2AUTH') || product.name.toUpperCase().includes('B2 AUTH') ? 'https://www.b2auth.com/' :
+              '/partners'
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition duration-300"
+          >
+            <span>{product.name.toUpperCase().includes('BNX MAIL') || product.name.toUpperCase().includes('CLIKS') || product.name.toUpperCase().includes('B2AUTH') || product.name.toUpperCase().includes('B2 AUTH') ? "Launch Platform" : "Request Integration"}</span>
+            <ChevronRight className="h-3.5 w-3.5 text-slate-500" />
+          </a>
         </div>
       </div>
     );

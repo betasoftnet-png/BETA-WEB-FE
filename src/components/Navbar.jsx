@@ -290,50 +290,50 @@ export default function Navbar() {
                                 {/* Public Products */}
                                 {isDropdownPublicOpen && (
                                   <div className="flex flex-col gap-3 pt-1 pb-1">
-                                    <div
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group select-none"
+                                    <a
+                                      href="https://www.bnxmail.com/login"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-slate-50 cursor-pointer text-left block"
                                     >
                                       <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                         <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                                       </div>
                                       <div>
-                                        <div className="flex items-center space-x-2">
-                                          <p className="font-bold text-slate-800 text-sm">BNX MAIL</p>
-                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold uppercase tracking-wider">Public</span>
-                                        </div>
+                                        <p className="font-bold text-slate-800 text-sm">BNX MAIL</p>
                                         <p className="text-xs text-slate-450 font-medium">Collaborative group inbox</p>
                                       </div>
-                                    </div>
+                                    </a>
 
-                                    <div
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group select-none"
+                                    <a
+                                      href="https://www.b2auth.com/"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-slate-50 cursor-pointer text-left block"
                                     >
                                       <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                         <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
                                       </div>
                                       <div>
-                                        <div className="flex items-center space-x-2">
-                                          <p className="font-bold text-slate-800 text-sm">B2AUTH SECURITY</p>
-                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold uppercase tracking-wider">Public</span>
-                                        </div>
+                                        <p className="font-bold text-slate-800 text-sm">B2AUTH SECURITY</p>
                                         <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
                                       </div>
-                                    </div>
+                                    </a>
 
-                                    <div
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group select-none"
+                                    <a
+                                      href="https://cliks.beta-softnet.com/"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-slate-50 cursor-pointer text-left block"
                                     >
                                       <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                         <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
                                       </div>
                                       <div>
-                                        <div className="flex items-center space-x-2">
-                                          <p className="font-bold text-slate-800 text-sm">CLIKS</p>
-                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold uppercase tracking-wider">Public</span>
-                                        </div>
+                                        <p className="font-bold text-slate-800 text-sm">CLIKS</p>
                                         <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
                                       </div>
-                                    </div>
+                                    </a>
                                   </div>
                                 )}
                               </td>
@@ -341,20 +341,20 @@ export default function Navbar() {
                                 {/* Business Products */}
                                 {isDropdownBusinessOpen && (
                                   <div className="flex flex-col gap-3 pt-1 pb-1">
-                                    <div
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group select-none"
+                                    <a
+                                      href="https://www.cliksbusiness.com/"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-slate-50 cursor-pointer text-left block"
                                     >
                                       <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                         <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                                       </div>
                                       <div>
-                                        <div className="flex items-center space-x-2">
-                                          <p className="font-bold text-slate-800 text-sm">CLIKS BUSINESS</p>
-                                          <span className="px-1.5 py-0.2 rounded bg-purple-50 text-purple-650 border border-purple-100 text-[10px] font-extrabold uppercase tracking-wider">Business</span>
-                                        </div>
+                                        <p className="font-bold text-slate-800 text-sm">CLIKS BUSINESS</p>
                                         <p className="text-xs text-slate-450 font-medium">Team project chats</p>
                                       </div>
-                                    </div>
+                                    </a>
                                   </div>
                                 )}
                               </td>
@@ -595,31 +595,51 @@ export default function Navbar() {
                         <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Public</p>
                           <div className="space-y-2.5 pl-1">
-                            <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
-                              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-4 w-4 object-contain" />
-                              <span className="font-bold">BNX Mail</span>
-                            </div>
-                            <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
-                              <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
-                              <span className="font-bold">B2Auth Security</span>
-                            </div>
-                            <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
-                              <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
-                              <span className="font-bold">Cliks</span>
-                            </div>
-                          </div>
-                        </div>
+                             <a
+                               href="https://www.bnxmail.com/login"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                             >
+                               <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-4 w-4 object-contain" />
+                               <span className="font-bold">BNX Mail</span>
+                             </a>
+                             <a
+                               href="https://www.b2auth.com/"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                             >
+                               <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
+                               <span className="font-bold">B2Auth Security</span>
+                             </a>
+                             <a
+                               href="https://cliks.beta-softnet.com/"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                             >
+                               <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
+                               <span className="font-bold">Cliks</span>
+                             </a>
+                           </div>
+                         </div>
 
-                        {/* Mobile Business */}
-                        <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Business</p>
-                          <div className="space-y-2.5 pl-1">
-                             <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
+                         {/* Mobile Business */}
+                         <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
+                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Business</p>
+                           <div className="space-y-2.5 pl-1">
+                             <a
+                               href="https://www.cliksbusiness.com/"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                             >
                                <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-4 w-4 object-contain" />
                                <span className="font-bold">Cliks Business</span>
-                             </div>
-                          </div>
-                        </div>
+                             </a>
+                           </div>
+                         </div>
                       </div>
                     )}
                   </div>
