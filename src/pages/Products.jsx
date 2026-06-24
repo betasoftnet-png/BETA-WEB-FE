@@ -194,7 +194,7 @@ export default function Products() {
   const otherProducts = products.filter(p => !coreIds.includes(p.id));
 
   return (
-    <div className="relative min-h-screen bg-transparent pt-20 pb-24 px-4 sm:px-6 lg:px-8 z-10">
+    <div className="relative min-h-screen bg-transparent pt-4 pb-24 px-4 sm:px-6 lg:px-8 z-10">
       {/* Background radial highlights */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[120px] pointer-events-none" />

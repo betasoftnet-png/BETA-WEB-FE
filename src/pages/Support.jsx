@@ -81,7 +81,7 @@ export default function Support() {
   return (
     <div className="min-h-screen bg-transparent pb-16 relative z-10">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-tr from-[#EFF6FF] via-[#DBEAFE] to-[#BFDBFE] py-20 text-gray-900 text-center hero-blue-banner">
+      <div className="relative overflow-hidden bg-gradient-to-tr from-[#EFF6FF] via-[#DBEAFE] to-[#BFDBFE] pt-8 pb-16 text-gray-900 text-center hero-blue-banner">
         {/* Glow grid mesh overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40" />
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[60%] rounded-full bg-emerald-400/20 blur-[130px] pointer-events-none" />

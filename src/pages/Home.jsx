@@ -92,7 +92,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-transparent z-10 pt-16 pb-20">
+    <div className="relative min-h-screen bg-transparent z-10 pt-0 pb-20">
       <style>{`
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
@@ -192,35 +192,35 @@ export default function Home() {
                       className="glass-card glass-card-hover p-5 rounded-2xl border border-slate-200/80 bg-white shadow-sm flex flex-col justify-between group text-left h-full transition-all duration-200 hover:shadow-md hover:border-[#004AAD]/30 block"
                     >
                       <div className="space-y-3.5">
-                        {/* Top Row: Icon and Tag */}
+                        {/* Header Row: Logo, Name & Tag (horizontally aligned) */}
                         <div className="flex items-center justify-between">
-                          {product.name === 'BNX MAIL' ? (
-                            <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
-                            </div>
-                          ) : product.name === 'CLIKS BUSINESS' ? (
-                            <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                              <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
-                            </div>
-                          ) : (
-                            <div className={`h-10 w-10 rounded-xl flex items-center justify-center border flex-shrink-0 group-hover:scale-105 transition-transform duration-300 ${product.color}`}>
-                              <Icon className="h-4.5 w-4.5" />
-                            </div>
-                          )}
-                          <span className="px-1.5 py-0.2 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 border border-slate-250/50 text-slate-500">
+                          <div className="flex items-center space-x-3">
+                            {product.name === 'BNX MAIL' ? (
+                              <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                              </div>
+                            ) : product.name === 'CLIKS BUSINESS' ? (
+                              <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
+                              </div>
+                            ) : (
+                              <div className={`h-10 w-10 rounded-xl flex items-center justify-center border flex-shrink-0 group-hover:scale-105 transition-transform duration-300 ${product.color}`}>
+                                <Icon className="h-4.5 w-4.5" />
+                              </div>
+                            )}
+                            <h4 className="text-base font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                              {product.name}
+                            </h4>
+                          </div>
+                          <span className="px-1.5 py-0.2 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 border border-slate-250/50 text-slate-500 flex-shrink-0">
                             Suite
                           </span>
                         </div>
                         
-                        {/* Middle: Title & Description */}
-                        <div className="space-y-1.5">
-                          <h4 className="text-base font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
-                            {product.name}
-                          </h4>
-                          <p className="text-slate-500 text-sm leading-relaxed font-medium">
-                            {product.description}
-                          </p>
-                        </div>
+                        {/* Description: Starts below the logo-name header and aligns to left edge */}
+                        <p className="text-slate-500 text-sm leading-relaxed font-medium">
+                          {product.description}
+                        </p>
                       </div>
 
                       {/* Bottom: Feature Badges */}

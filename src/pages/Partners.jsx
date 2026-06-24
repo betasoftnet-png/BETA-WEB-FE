@@ -187,7 +187,7 @@ export default function Partners() {
   };
 
   return (
-    <div className="partners-futuristic-theme min-h-screen relative overflow-hidden pb-20 pt-24">
+    <div className="partners-futuristic-theme min-h-screen relative overflow-hidden pb-20 pt-4">
       <style>{`
         .partners-futuristic-theme {
           background: linear-gradient(135deg, #F5F7FB 0%, #E2EDFA 50%, #C8DCF7 100%) !important;
@@ -409,7 +409,7 @@ export default function Partners() {
       `}</style>
 
       {/* SECTION 1: Futurisic Hero with Floating Network */}
-      <div className="relative overflow-hidden min-h-[95vh] flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8 border-b border-purple-950/20">
+      <div className="relative overflow-hidden flex flex-col items-center justify-center pt-8 pb-16 px-4 sm:px-6 lg:px-8 border-b border-purple-950/20">
         {/* Shifting blobs */}
         <div className="absolute top-[10%] left-[5%] w-[450px] h-[450px] bg-[#00E5FF]/10 rounded-full blur-[140px] pointer-events-none blob-cyan-pulse" />
         <div className="absolute bottom-[10%] right-[5%] w-[500px] h-[500px] bg-[#7C3AED]/10 rounded-full blur-[140px] pointer-events-none blob-purple-pulse" />

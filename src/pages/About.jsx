@@ -218,16 +218,21 @@ export default function About() {
         }
         @media (min-width: 768px) {
           .founder-grid {
-            grid-template-columns: 11rem 1fr;
-            grid-template-rows: 11rem auto;
+            grid-template-columns: 12rem 1fr;
+            grid-template-rows: 12rem auto;
             column-gap: 2.5rem;
             row-gap: 1.5rem;
           }
         }
+        .leader-card {
+          background: linear-gradient(135deg, #fdf2f8, #fce7f3) !important;
+          border-radius: 12px !important;
+          padding: 24px !important;
+        }
       `}</style>
 
       {/* SECTION 1: HERO BANNER */}
-      <div className="animated-gradient-bg-light relative overflow-hidden min-h-[90vh] flex items-center justify-center py-24 px-4 sm:px-6 lg:px-8 border-b border-[#0A3161]/10">
+      <div className="animated-gradient-bg-light relative overflow-hidden flex flex-col items-center justify-center pt-8 pb-16 px-4 sm:px-6 lg:px-8 border-b border-[#0A3161]/10">
         {/* Floating Particles and Glows */}
         <div className="absolute top-[20%] left-[10%] w-[350px] h-[350px] bg-[#FF6325]/5 rounded-full blur-[130px] pointer-events-none particle-glow-1" />
         <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] bg-[#0E0F89]/5 rounded-full blur-[130px] pointer-events-none particle-glow-2" />
@@ -536,11 +541,11 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="max-w-4xl mr-auto founder-grid pt-4 text-left md:-ml-8 lg:-ml-12"
+            className="max-w-4xl mr-auto founder-grid pt-4 text-left md:-ml-8 lg:-ml-12 leader-card"
           >
             {/* Left Column: Image (Row 1, Col 1) */}
             <div className="md:col-start-1 md:row-start-1 md:self-start flex flex-col items-center shrink-0">
-              <div className="h-44 w-44 rounded-2xl overflow-hidden border-2 border-slate-200/80 shadow-md relative group">
+              <div className="h-48 w-48 rounded-2xl overflow-hidden border-2 border-slate-200/80 shadow-md relative group">
                 <img
                   src={leadership[0].avatar}
                   alt={leadership[0].name}
@@ -550,10 +555,10 @@ export default function About() {
             </div>
 
             {/* Left Column: Metadata (Name, Title, Info Button) stacked & centered below the image (Row 2, Col 1) */}
-            <div className="md:col-start-1 md:row-start-2 flex flex-col items-center text-center space-y-3 w-44">
+            <div className="md:col-start-1 md:row-start-2 flex flex-col items-center text-center space-y-3 w-48">
               <div className="space-y-1">
-                <h3 className="text-xl font-black text-slate-800">{leadership[0].name}</h3>
-                <p className="text-xs font-bold text-[#FF6325] uppercase tracking-widest">
+                <h3 className="text-2xl font-black text-slate-800">{leadership[0].name}</h3>
+                <p className="text-sm font-bold text-[#FF6325] uppercase tracking-widest">
                   Founder & CEO
                 </p>
               </div>
@@ -562,7 +567,7 @@ export default function About() {
                   href={leadership[0].infoLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-2 rounded-full bg-[#0E0F89] hover:bg-[#FF6325] text-white text-xs font-bold transition duration-300 select-none cursor-pointer"
+                  className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-[#004AAD] to-[#3b82f6] hover:scale-105 shadow-lg text-white text-xs font-bold transition duration-300 select-none cursor-pointer"
                 >
                   Info
                 </a>
@@ -571,7 +576,7 @@ export default function About() {
 
             {/* Right Column: Envisioned content (Row 1, Col 2 - centered vertically with the image) */}
             <div className="md:col-start-2 md:row-start-1 md:self-center flex-grow flex flex-col justify-center max-w-4xl">
-              <p className="text-base md:text-lg text-slate-650 leading-relaxed font-semibold">
+              <p className="text-lg md:text-xl text-slate-650 leading-relaxed font-semibold">
                 Our founder envisioned Beta as a platform that empowers businesses through innovative and reliable technology solutions. With a strong focus on quality, simplicity, and customer success, the company was built to solve real-world business challenges. Today, that vision continues to drive our products, culture, and commitment to excellence.
               </p>
             </div>

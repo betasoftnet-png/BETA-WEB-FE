@@ -192,7 +192,7 @@ export default function Careers() {
   };
 
   return (
-    <div className="careers-purple-pink-theme min-h-screen relative overflow-hidden pb-20 pt-24">
+    <div className="careers-purple-pink-theme min-h-screen relative overflow-hidden pb-20 pt-4">
       <style>{`
         .careers-purple-pink-theme {
           background: linear-gradient(135deg, #F5F3FF 0%, #EFF6FF 50%, #FDF2F8 100%) !important;
