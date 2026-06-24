@@ -351,8 +351,8 @@ export default function Careers() {
 
 
 
-          {/* Job grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Job list */}
+          <div className="flex flex-col gap-6 w-full max-w-5xl mr-auto">
             <AnimatePresence>
               {filteredJobs.length > 0 ? (
                 filteredJobs.map((job) => (
@@ -363,9 +363,9 @@ export default function Careers() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.3 }}
-                    className="hacker-layout-box p-6 rounded-2xl text-left flex flex-col justify-between space-y-6 transition-all duration-300 hover:border-[#8B5CF6] hover:shadow-lg hover:shadow-purple-500/10 group"
+                    className="hacker-layout-box p-6 rounded-2xl text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:border-[#8B5CF6] hover:shadow-lg hover:shadow-purple-500/10 group"
                   >
-                    <div className="space-y-4">
+                    <div className="space-y-4 flex-grow">
                       <div>
                         <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300">
                           {job.title}
@@ -384,15 +384,23 @@ export default function Careers() {
                           <span className="text-[#EC4899]">•</span>
                           <span>{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
                         </div>
+                        {job.description && (
+                          <div className="flex items-start space-x-2">
+                            <span className="text-[#EC4899] select-none">•</span>
+                            <span className="text-slate-500 leading-relaxed">{job.description}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    <button
-                      onClick={() => setSelectedJob(job)}
-                      className="w-full py-2 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm"
-                    >
-                      Apply Now
-                    </button>
+                    <div className="flex-shrink-0 w-full sm:w-auto">
+                      <button
+                        onClick={() => setSelectedJob(job)}
+                        className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
+                      >
+                        Apply Now
+                      </button>
+                    </div>
                   </motion.div>
                 ))
               ) : (

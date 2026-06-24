@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Box, LogOut, LayoutDashboard, LogIn, ChevronDown, ChevronRight, Mail, Shield, User, Briefcase, Search, UserPlus, Lock, CheckCircle2, AlertCircle, HelpCircle, MessageSquare, Download, Phone, Activity, MapPin, Check, Copy, Clock, Send, RefreshCw } from 'lucide-react';
+import { Menu, X, Box, LogOut, LayoutDashboard, LogIn, ChevronDown, ChevronRight, Mail, Shield, User, Briefcase, Search, UserPlus, Lock, CheckCircle2, AlertCircle, HelpCircle, MessageSquare, Download, Phone, Activity, MapPin, Check, Copy, Clock, Send, RefreshCw, Calendar, Calculator, Contact, ShieldCheck, Plus, SquarePen, Sliders } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api';
@@ -31,6 +31,7 @@ export default function Navbar() {
 
   const [isDetecting, setIsDetecting] = useState(false);
   const [detectionError, setDetectionError] = useState(null);
+  const [isBitToolOpen, setIsBitToolOpen] = useState(false);
 
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -208,8 +209,8 @@ export default function Navbar() {
                           setIsLocationOpen(false);
                         }}
                         className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-between ${selectedCity === city
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'hover:bg-slate-50 text-slate-700 hover:text-[#004AAD]'
+                          ? 'bg-emerald-50 text-emerald-700'
+                          : 'hover:bg-slate-50 text-slate-700 hover:text-[#004AAD]'
                           }`}
                       >
                         <span>{city}</span>
@@ -299,7 +300,7 @@ export default function Navbar() {
                                           <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">BNX MAIL</p>
+                                          <p className="font-semibold text-slate-800 text-sm">BNXmail</p>
                                           <p className="text-xs text-slate-450 font-medium">Collaborative group inbox</p>
                                         </div>
                                       </a>
@@ -314,7 +315,7 @@ export default function Navbar() {
                                           <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">B2AUTH SECURITY</p>
+                                          <p className="font-semibold text-slate-800 text-sm">B2Auth</p>
                                           <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
                                         </div>
                                       </a>
@@ -329,7 +330,7 @@ export default function Navbar() {
                                           <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">BIT TOOL</p>
+                                          <p className="font-semibold text-slate-800 text-sm">Bit-Tool</p>
                                           <p className="text-xs text-slate-450 font-medium">Developer utility assistant</p>
                                         </div>
                                       </a>
@@ -344,7 +345,7 @@ export default function Navbar() {
                                           <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">CLIKS</p>
+                                          <p className="font-semibold text-slate-800 text-sm">Cliks</p>
                                           <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
                                         </div>
                                       </a>
@@ -365,7 +366,7 @@ export default function Navbar() {
                                           <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">CLIKS BUSINESS</p>
+                                          <p className="font-semibold text-slate-800 text-sm">CliksBusiness</p>
                                           <p className="text-xs text-slate-450 font-medium">Team project chats</p>
                                         </div>
                                       </a>
@@ -507,15 +508,13 @@ export default function Navbar() {
               </div>
             )}
             <div className="h-6 w-px bg-slate-300 self-center" />
-            <a
-              href="https://bittool.beta-softnet.com/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setIsBitToolOpen(true)}
               className="p-1 rounded-xl hover:bg-slate-100 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent ml-2"
               title="Bit Tool"
             >
               <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-7 w-7 object-contain rounded-lg shadow-sm" />
-            </a>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -578,8 +577,8 @@ export default function Navbar() {
                           setIsMobileLocationOpen(false);
                         }}
                         className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between transition cursor-pointer ${selectedCity === city
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'hover:bg-slate-50 text-slate-700'
+                          ? 'bg-emerald-50 text-emerald-700'
+                          : 'hover:bg-slate-50 text-slate-700'
                           }`}
                       >
                         <span>{city}</span>
@@ -675,8 +674,8 @@ export default function Navbar() {
                   to={link.path}
                   onClick={() => setIsOpen(false)}
                   className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(link.path)
-                      ? 'bg-blue-50 text-[#004AAD] font-semibold'
-                      : 'text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]'
+                    ? 'bg-blue-50 text-[#004AAD] font-semibold'
+                    : 'text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]'
                     }`}
                 >
                   {link.name}
@@ -736,6 +735,118 @@ export default function Navbar() {
 
 
 
+      {/* Bit Tool Side Drawer */}
+      <AnimatePresence>
+        {isBitToolOpen && (
+          <motion.div
+            key="bit-tool-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsBitToolOpen(false)}
+            className="fixed inset-0 bg-slate-900/10 backdrop-blur-xs z-50 cursor-pointer"
+          />
+        )}
+        {isBitToolOpen && (
+          <motion.div
+            key="bit-tool-panel"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+            className="fixed right-0 top-0 bottom-0 w-[80px] bg-white border-l border-slate-200 shadow-2xl z-50 flex flex-col items-center py-6 justify-between select-none"
+          >
+            {/* Top Section: Features */}
+            <div className="flex flex-col items-center space-y-5 w-full">
+              {/* Close Button */}
+              <button
+                onClick={() => setIsBitToolOpen(false)}
+                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition cursor-pointer mb-2"
+                title="Close Bit Tool"
+              >
+                <X className="h-4.5 w-4.5" />
+              </button>
+
+              {/* Calendar Feature */}
+              <div className="relative group">
+                <button className="h-12 w-12 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-100/50 text-amber-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-amber-500/10 cursor-pointer">
+                  <Calendar className="h-5.5 w-5.5" />
+                </button>
+                {/* Tooltip */}
+                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                  Calendar Sync
+                </div>
+              </div>
+
+              {/* Calculator Feature */}
+              <div className="relative group">
+                <button className="h-12 w-12 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-100/50 text-emerald-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-emerald-500/10 cursor-pointer">
+                  <Calculator className="h-5.5 w-5.5" />
+                </button>
+                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                  GST Calculator
+                </div>
+              </div>
+
+              {/* Identity Feature */}
+              <div className="relative group">
+                <button className="h-12 w-12 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-100/50 text-blue-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-blue-500/10 cursor-pointer">
+                  <Contact className="h-5.5 w-5.5" />
+                </button>
+                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                  Identity Guard
+                </div>
+              </div>
+
+              {/* Security Feature */}
+              <div className="relative group">
+                <button className="h-12 w-12 rounded-2xl bg-teal-50 hover:bg-teal-100 border border-teal-100/50 text-teal-650 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-teal-500/10 cursor-pointer">
+                  <ShieldCheck className="h-5.5 w-5.5" />
+                </button>
+                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                  Security Center
+                </div>
+              </div>
+
+              {/* Plus / Add Feature */}
+              <div className="relative group">
+                <button className="h-12 w-12 rounded-2xl border border-dashed border-slate-200 hover:border-slate-350 bg-slate-50/30 hover:bg-slate-50 text-slate-400 flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer">
+                  <Plus className="h-5 w-5" />
+                </button>
+                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                  Add custom tool
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Section: Separator and Settings */}
+            <div className="flex flex-col items-center w-full space-y-4">
+              {/* Horizontal Separator */}
+              <div className="w-10 h-px bg-slate-100" />
+
+              {/* Memo Compose */}
+              <div className="relative group">
+                <button className="h-11 w-11 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer">
+                  <SquarePen className="h-5 w-5" />
+                </button>
+                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                  Quick Memo
+                </div>
+              </div>
+
+              {/* Settings / Controls */}
+              <div className="relative group">
+                <button className="h-11 w-11 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer">
+                  <Sliders className="h-5 w-5" />
+                </button>
+                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                  Settings
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
