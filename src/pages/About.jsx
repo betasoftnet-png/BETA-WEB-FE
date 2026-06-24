@@ -60,8 +60,8 @@ function CountUpNumber({ value }) {
 export default function About() {
   const leadership = [
     {
-      name: 'Balaji',
-      role: 'Chief Executive Officer',
+      name: 'Mr.B',
+      role: 'CEO/Founder',
       avatar: "/MR.B.png",
       desc: 'Former Engineering Director at AWS. Guiding enterprise software scaling and corporate direction.',
       github: '#',
@@ -262,7 +262,7 @@ export default function About() {
           >
             <a
               href="#story"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold bg-[#FF6325] hover:bg-[#e0531b] text-white shadow-xl shadow-[#FF6325]/25 border border-[#FF6325] transition-all duration-300 flex items-center justify-center space-x-2 group hover:scale-[1.02]"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold bg-[#FF6325] hover:bg-[#e0531b] text-black shadow-xl shadow-[#FF6325]/25 border border-[#FF6325] transition-all duration-300 flex items-center justify-center space-x-2 group hover:scale-[1.02]"
             >
               <span>Explore Our Story</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -567,6 +567,31 @@ export default function About() {
               </motion.div>
             ))}
           </div>
+
+          {/* Vision Statement Section */}
+          <div className="glass-card p-8 md:p-12 rounded-3xl border border-[#0A3161]/12 shadow-xl max-w-4xl mx-auto mt-16 relative overflow-hidden group">
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#FF6325]/5 to-transparent opacity-30 pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col md:flex-row gap-8 items-stretch justify-between text-left">
+              {/* Left Column */}
+              <div className="md:w-1/2 flex flex-col justify-center space-y-4 border-b md:border-b-0 md:border-r border-[#0A3161]/10 pb-6 md:pb-0 md:pr-8">
+                <p className="text-slate-400 text-sm leading-relaxed font-medium">
+                  My work is driven by the belief that progress has meaning only when it uplifts people across borders, cultures, and communities. I am committed to building organizations that operate with purpose—where innovation, responsibility, and humanity go hand in hand.
+                </p>
+              </div>
+
+              {/* Right Column */}
+              <div className="md:w-1/2 flex flex-col justify-center space-y-6 md:pl-8">
+                <p className="text-slate-400 text-sm leading-relaxed font-medium">
+                  Through my ventures, I strive to create a society where individuals from every country are treated with dignity and equality, free from discrimination and division.
+                </p>
+                <div className="border-l-4 border-[#FF6325] pl-4 py-2 italic font-semibold text-black text-sm bg-[#FF6325]/5 rounded-r-lg">
+                  "This vision is not just an idea; it is the foundation on which every company I lead is built."
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* SECTION 8: CALL TO ACTION */}
@@ -584,7 +609,7 @@ export default function About() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Link
                 to="/support"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-[#FF6325] hover:bg-[#e0531b] text-white transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-[#FF6325]/15"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-[#FF6325] hover:bg-[#e0531b] text-black transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-[#FF6325]/15"
               >
                 Contact Us
               </Link>
