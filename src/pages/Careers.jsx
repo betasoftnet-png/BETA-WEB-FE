@@ -22,42 +22,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api';
 
-// Custom Count Up animation component
-function CountUpNumber({ value }) {
-  const numericValue = parseFloat(value);
-  const suffix = value.replace(/^[0-9.]+/, ''); // Extracts '%', 'K+', '+', '/7', etc.
-  const [displayValue, setDisplayValue] = useState(() => isNaN(numericValue) ? value : '0');
 
-  useEffect(() => {
-    if (isNaN(numericValue)) {
-      const timer = setTimeout(() => setDisplayValue(value), 0);
-      return () => clearTimeout(timer);
-    }
-    let startTimestamp = null;
-    const duration = 1800; // 1.8 seconds transition
-    const startValue = 0;
-
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const currentVal = progress * (numericValue - startValue) + startValue;
-      
-      if (numericValue % 1 !== 0) {
-        setDisplayValue(currentVal.toFixed(1) + suffix);
-      } else {
-        setDisplayValue(Math.floor(currentVal) + suffix);
-      }
-
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
-
-    window.requestAnimationFrame(step);
-  }, [value, numericValue, suffix]);
-
-  return <span>{displayValue}</span>;
-}
 
 const JOB_BOARD_API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:5000'
@@ -93,7 +58,6 @@ export default function Careers() {
   const [phone, setPhone] = useState('');
   const [coverLetter, setCoverLetter] = useState('');
   const [resume, setResume] = useState(null);
-  const [selectedJobForGeneral, setSelectedJobForGeneral] = useState(null);
 
   const [status, setStatus] = useState('idle'); // idle, loading, success, error
   const [message, setMessage] = useState('');
@@ -101,10 +65,6 @@ export default function Careers() {
   // Live Job Search & Filters State
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Jobs');
-
-  // Drag and drop zone state
-  const [dragActive, setDragActive] = useState(false);
-  const fileInputRef = useRef(null);
 
   // Fetch active job openings from API
   useEffect(() => {
@@ -143,35 +103,6 @@ export default function Careers() {
     }
   }, [user]);
 
-  const handleDrag = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      if (file.type === "application/pdf") {
-        setResume(file);
-      } else {
-        alert("Only PDF files are supported.");
-      }
-    }
-  };
-
-  const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setResume(e.target.files[0]);
-    }
-  };
 
   // Filter logic
   const filteredJobs = jobsList.filter(job => {
@@ -364,68 +295,7 @@ export default function Careers() {
         }
       `}</style>
 
-      {/* SECTION 1: HERO SECTION */}
-      <div className="relative overflow-hidden min-h-[95vh] flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8 border-b border-purple-950/30">
-        {/* Animated Background blobs */}
-        <div className="absolute top-[10%] left-[5%] w-[450px] h-[450px] bg-[#8B5CF6]/15 rounded-full blur-[140px] pointer-events-none blob-purple" />
-        <div className="absolute bottom-[10%] right-[5%] w-[500px] h-[500px] bg-[#EC4899]/15 rounded-full blur-[140px] pointer-events-none blob-pink" />
-        
-        {/* Floating geometric shapes (SVG) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-20">
-          <svg className="absolute top-[20%] right-[15%] w-24 h-24 text-[#8B5CF6] shape-spin-slow" viewBox="0 0 100 100">
-            <polygon points="50,15 90,85 10,85" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
-          <svg className="absolute bottom-[25%] left-[10%] w-32 h-32 text-[#EC4899] shape-spin-slow" style={{ animationDirection: 'reverse' }} viewBox="0 0 100 100">
-            <rect x="15" y="15" width="70" height="70" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
-          <div className="absolute top-[40%] left-[30%] w-3 h-3 rounded-full bg-[#F59E0B] animate-ping" />
-          <div className="absolute bottom-[35%] right-[25%] w-4 h-4 rounded-full bg-[#8B5CF6] animate-pulse" />
-        </div>
 
-        <div className="max-w-4xl mx-auto text-center space-y-12 relative z-10">
-          {/* Header Terminal Layout */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="hacker-layout-box p-8 sm:p-12 rounded-3xl backdrop-blur-md shadow-2xl border border-purple-500/30 text-center max-w-2xl mx-auto space-y-6"
-          >
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] uppercase">
-              YOUR FUTURE STARTS HERE
-            </h1>
-            
-            <div className="grid grid-cols-3 gap-4 border-t border-b border-purple-500/20 py-6 text-center">
-              <div>
-                <div className="text-xl sm:text-3xl font-black text-[#8B5CF6]">
-                  <CountUpNumber value={loadingJobs ? "..." : jobsList.length.toString()} />
-                </div>
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Open Positions</p>
-              </div>
-              <div>
-                <div className="text-xl sm:text-3xl font-black text-[#8B5CF6]">
-                  <CountUpNumber value={loadingJobs ? "..." : new Set(jobsList.map(j => j.team)).size.toString()} />
-                </div>
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Teams</p>
-              </div>
-              <div>
-                <div className="text-xl sm:text-3xl font-black text-[#8B5CF6]">
-                  <CountUpNumber value={loadingJobs ? "..." : new Set(jobsList.map(j => j.location)).size.toString()} />
-                </div>
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Locations</p>
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <a
-                href="#search-roles"
-                className="inline-flex items-center px-8 py-3 rounded-xl text-sm font-extrabold text-white bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] transition-all duration-300 shadow-lg shadow-purple-500/20 transform hover:scale-[1.03] select-none"
-              >
-                <span>[Explore Careers]</span>
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 space-y-36">
 
@@ -710,189 +580,7 @@ export default function Careers() {
           </div>
         </div>
 
-        {/* SECTION 7: RESUME DROP ZONE */}
-        <div id="resume-drop" className="space-y-6 max-w-3xl mx-auto">
-          <div className="text-center space-y-2">
-            <h3 className="text-2xl font-extrabold">General Application</h3>
-            <p className="text-slate-500 text-sm">Don't see a matching position? Drop your resume in our talent pool.</p>
-          </div>
 
-          {!user ? (
-            <div className="glass-card-purple p-10 rounded-3xl border border-dashed border-purple-500/20 text-center space-y-6 relative overflow-hidden">
-              <div className="flex flex-col items-center justify-center space-y-4">
-                <div className="h-14 w-14 rounded-full bg-slate-50 flex items-center justify-center border border-purple-300/40 text-[#EC4899] shadow-inner">
-                  <AlertCircle className="h-6 w-6 animate-pulse" />
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-base font-bold">Sign In Required</h4>
-                  <p className="text-xs text-slate-500 font-medium">Please sign in to submit your resume and apply for active positions.</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => redirectToSSO('/careers')}
-                  className="px-6 py-2.5 rounded-xl text-xs font-black bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] text-white transition-all duration-300 shadow-md cursor-pointer border-none"
-                >
-                  Sign In to Continue
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div 
-                onDragEnter={handleDrag}
-                onDragOver={handleDrag}
-                onDragLeave={handleDrag}
-                onDrop={handleDrop}
-                className={`glass-card-purple p-10 rounded-3xl border border-dashed text-center space-y-6 relative overflow-hidden transition-all duration-300 ${
-                  dragActive 
-                    ? 'border-[#EC4899] bg-[#EC4899]/5 shadow-lg shadow-[#EC4899]/10' 
-                    : 'border-purple-500/20 hover:border-purple-500/50'
-                }`}
-              >
-                <input
-                  type="file"
-                  accept=".pdf"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <div className="flex flex-col items-center justify-center space-y-4">
-                  <div className="h-14 w-14 rounded-full bg-slate-100 flex items-center justify-center border border-purple-300/40 text-[#EC4899] shadow-inner">
-                    <Upload className="h-6 w-6" />
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="text-base font-bold">
-                      {resume ? resume.name : 'Drag & drop your resume PDF here'}
-                    </h4>
-                    <p className="text-xs text-slate-500 font-medium">Only PDF formats supported (Max 10MB)</p>
-                  </div>
-                  
-                  {resume ? (
-                    <div className="flex items-center space-x-2 text-xs text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg">
-                      <CheckCircle2 className="h-4 w-4" />
-                      <span>Resume loaded successfully. Complete the quick form below to submit.</span>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current.click()}
-                      className="px-5 py-2.5 rounded-xl text-xs font-black bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] text-white transition-all duration-300 shadow-md cursor-pointer"
-                    >
-                      Browse Files
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Quick Apply panel if file is loaded */}
-              {resume && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 text-left space-y-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-bold">General Candidate Submission</h4>
-                    <button onClick={() => { setResume(null); setSelectedJobForGeneral(null); }} className="text-purple-600 hover:text-purple-800 transition">
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <form 
-                    onSubmit={(e) => handleApply(e, selectedJobForGeneral)} 
-                    className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-                  >
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-500 uppercase">Select Target Position</label>
-                      <select
-                        required
-                        value={selectedJobForGeneral ? selectedJobForGeneral.id : ''}
-                        onChange={(e) => {
-                          const job = jobsList.find(j => j.id === e.target.value);
-                          setSelectedJobForGeneral(job);
-                        }}
-                        className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 text-xs focus:outline-none focus:border-[#EC4899]"
-                      >
-                        <option value="">-- Choose a Position --</option>
-                        {jobsList.map(job => (
-                          <option key={job.id} value={job.id}>{job.title} ({job.location})</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-500 uppercase">Full Name</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="Full Name"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#EC4899]"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-500 uppercase">Email Address</label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#EC4899]"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-500 uppercase">Phone Number</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="Phone"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#EC4899]"
-                      />
-                    </div>
-
-                    <div className="space-y-1 sm:col-span-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase">Cover Letter</label>
-                      <textarea
-                        required
-                        rows="3"
-                        placeholder="Briefly introduce yourself and why you're interested..."
-                        value={coverLetter}
-                        onChange={(e) => setCoverLetter(e.target.value)}
-                        className="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#EC4899]"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={status === 'loading'}
-                      className="sm:col-span-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black transition-all flex items-center justify-center space-x-2 cursor-pointer disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400"
-                    >
-                      {status === 'loading' ? <span>Submitting Profile...</span> : <span>Submit Profile</span>}
-                    </button>
-                  </form>
-                  
-                  {status === 'success' && (
-                    <div className="text-xs text-emerald-600 bg-emerald-50 border border-emerald-100 p-3 rounded-xl flex items-center space-x-2">
-                      <CheckCircle2 className="h-4.5 w-4.5" />
-                      <span>{message}</span>
-                    </div>
-                  )}
-                  {status === 'error' && (
-                    <div className="text-xs text-rose-600 bg-rose-50 border border-rose-100 p-3 rounded-xl flex items-center space-x-2">
-                      <AlertCircle className="h-4.5 w-4.5" />
-                      <span>{message}</span>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </>
-          )}
-        </div>
 
         {/* SECTION 8: CALL TO ACTION SECTION */}
         <div className="cta-block relative overflow-hidden rounded-3xl p-10 md:p-16 border border-purple-500/30 text-center shadow-2xl" style={{ background: 'linear-gradient(135deg, #8B5CF6, #EC4899)' }}>
@@ -913,12 +601,6 @@ export default function Careers() {
                 className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-purple-950/20 hover:bg-purple-950/45 text-white border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02]"
               >
                 Apply Now
-              </a>
-              <a
-                href="#resume-drop"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-purple-950/20 hover:bg-purple-950/45 text-white border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02]"
-              >
-                Upload Resume
               </a>
             </div>
           </div>
