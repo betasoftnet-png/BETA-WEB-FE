@@ -74,7 +74,7 @@ export default function About() {
     { 
       year: '2022', 
       title: 'Company Founded', 
-      desc: 'Beta Softnet was established in Tiruvallur, India, by a core team of 5 engineers aiming to redefine enterprise software.' 
+      desc: 'Beta was established in Tiruvallur, India, by a core team of 5 engineers aiming to redefine enterprise software.' 
     },
     { 
       year: '2023', 
@@ -229,7 +229,7 @@ export default function About() {
             className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-[#FF6325]/10 border border-[#FF6325]/20 text-[#FF6325] text-xs font-bold uppercase tracking-widest select-none"
           >
             <Compass className="h-3.5 w-3.5 text-[#FF6325] animate-spin-slow" />
-            <span>Beta Softnet Ecosystem</span>
+            <span>Beta Ecosystem</span>
           </motion.div>
 
           <motion.h1
@@ -251,7 +251,7 @@ export default function About() {
             transition={{ delay: 0.2 }}
             className="text-slate-650 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
           >
-            Beta Softnet designs high-performance enterprise tech suites. From secure SMTP shared conversational messaging to single sign-on validations, we help businesses protect and coordinate their workloads.
+            Beta designs high-performance enterprise tech suites. From secure SMTP shared conversational messaging to single sign-on validations, we help businesses protect and coordinate their workloads.
           </motion.p>
 
           <motion.div
@@ -301,7 +301,7 @@ export default function About() {
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Innovating with Passion</h2>
             <p className="text-slate-400 leading-relaxed text-base">
-              Founded in 2022, Beta Softnet set out to build a platform that respects developer focus and enterprise scale. We believe that enterprise software doesn't need to be sluggish or fragmented.
+              Founded in 2022, Beta set out to build a platform that respects developer focus and enterprise scale. We believe that enterprise software doesn't need to be sluggish or fragmented.
             </p>
             <p className="text-slate-400 leading-relaxed text-base">
               Over the years, we have scaled our modules from a basic SMTP group inbox to a complete suite of services including **BNX Mail** for collaborative messaging, **B2 Auth Security** for multi-factor validations, and **Cliks** for sprint workflow collaboration.

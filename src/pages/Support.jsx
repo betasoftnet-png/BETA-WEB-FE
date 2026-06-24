@@ -21,7 +21,7 @@ export default function Support() {
     phone: '+1 (800) 555-0199',
     email: 'support@betasoftnet.com',
     hours: 'Mon - Fri, 9:00 AM - 6:00 PM IST',
-    address: 'Beta Softnet Towers, No. 12, Main Road, Tiruvallur, Tamil Nadu 602001, India'
+    address: 'Beta Towers, No. 12, Main Road, Tiruvallur, Tamil Nadu 602001, India'
   };
 
   const supportFaqs = [
@@ -30,7 +30,7 @@ export default function Support() {
       a: 'Once your account is set up, navigate to the Products overview page to get API keys or click "Launch Demo App" inside Cliks Business to view your active dashboards.' 
     },
     { 
-      q: 'Is my data secure with Beta Softnet?', 
+      q: 'Is my data secure with Beta?', 
       a: 'Yes, all communication in transit is encrypted using 256-bit SSL, and stored data is fully encrypted at rest. We also support SSO and MFA through B2Auth Security.' 
     },
     { 

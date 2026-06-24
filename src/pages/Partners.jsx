@@ -75,7 +75,7 @@ const categories = [
 ];
 
 const successStories = [
-  { id: 1, name: 'Apex Cloud Systems', category: 'Cloud Infrastructure', metric: '+180% Latency Reduction', desc: 'Powers Beta Softnet distributed cloud deployments with ultra-low latency compute clusters globally.', logo: 'APEX', logoColor: 'from-blue-500 to-indigo-500' },
+  { id: 1, name: 'Apex Cloud Systems', category: 'Cloud Infrastructure', metric: '+180% Latency Reduction', desc: 'Powers Beta distributed cloud deployments with ultra-low latency compute clusters globally.', logo: 'APEX', logoColor: 'from-blue-500 to-indigo-500' },
   { id: 2, name: 'Nova Core Cyber', category: 'Security Integration', metric: '99.99% Hardened MFA Gates', desc: 'Co-development partner for B2 Auth Security protocols, auditing and hardening SSO & MFA gateways.', logo: 'NOVA', logoColor: 'from-cyan-500 to-teal-500' },
   { id: 3, name: 'Vertex Solutions', category: 'System Integration', metric: '10K+ Client Migrations', desc: 'Specialized consulting partner orchestrating large-scale enterprise migrations onto the Cliks Business suite.', logo: 'VERTEX', logoColor: 'from-purple-500 to-indigo-500' },
   { id: 4, name: 'Vanguard Networks', category: 'Network Services', metric: '100% Encrypted Transport', desc: 'Collaborator on encrypted transport pipes ensuring secure and private network routing for BNX Mail nodes.', logo: 'VANGUARD', logoColor: 'from-blue-500 to-cyan-500' }
@@ -441,7 +441,7 @@ export default function Partners() {
             className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#00E5FF] text-xs font-bold uppercase tracking-widest select-none"
           >
             <Handshake className="h-3.5 w-3.5 text-[#00E5FF] animate-pulse" />
-            <span>Beta Softnet Partner Network</span>
+            <span>Beta Partner Network</span>
           </motion.div>
 
           <motion.h1
@@ -628,7 +628,7 @@ export default function Partners() {
               <span>Alliance Tiers</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-white">Partner Categories</h2>
-            <p className="text-[#CBD5E1] text-sm">Discover where your business fits inside the Beta Softnet Strategic network.</p>
+            <p className="text-[#CBD5E1] text-sm">Discover where your business fits inside the Beta Strategic network.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -1123,7 +1123,7 @@ export default function Partners() {
               Let's Build the Future Together
             </h2>
             <p className="text-white/80 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-medium">
-              Consolidate API capabilities, co-sell integrations, and scaling software solutions on top of the Beta Softnet platform.
+              Consolidate API capabilities, co-sell integrations, and scaling software solutions on top of the Beta platform.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <a

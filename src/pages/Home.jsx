@@ -30,7 +30,7 @@ export default function Home() {
   const products = [
     {
       name: 'BNX MAIL',
-      description: 'A WhatsApp-style collaborative email platform designed for modern teams. Unify multiple SMTP/IMAP boxes into a single group inbox, assign ownership, and resolve client support threads together in real-time with zero friction.',
+      description: 'WhatsApp-style collaborative email platform for modern teams to manage group inboxes together.',
       icon: Mail,
       color: 'bg-blue-500/10 border-blue-500/20 text-[#004AAD]',
       features: ['SMTP & IMAP', 'Shared Threads', 'Live WebSockets', 'Group Inbox'],
@@ -38,7 +38,7 @@ export default function Home() {
     },
     {
       name: 'CLIKS BUSINESS',
-      description: 'An all-in-one enterprise collaboration and sprint workflow engine. Fuel your project releases, manage tasks, coordinate with live team chat, share documents, and track milestones with real-time analytics.',
+      description: 'All-in-one team collaboration and agile sprint engine for task management and chat.',
       icon: Briefcase,
       color: 'bg-violet-500/10 border-violet-500/20 text-violet-600',
       features: ['Agile Sprints', 'Workspace Chat', 'Analytical Reports', 'Doc Collaborator'],
@@ -141,7 +141,7 @@ export default function Home() {
             </motion.h1>
 
             <motion.p variants={itemVariants} className="text-slate-600 text-sm md:text-base leading-relaxed">
-              Beta Softnet builds secure, real-time corporate applications. Consolidation is here: SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
+              Beta builds secure, real-time corporate applications. Consolidation is here: SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 pt-2">
@@ -207,17 +207,17 @@ export default function Home() {
                               <Icon className="h-4.5 w-4.5" />
                             </div>
                           )}
-                          <span className="px-1.5 py-0.2 rounded text-[8px] font-bold uppercase tracking-wider bg-slate-100 border border-slate-250/50 text-slate-500">
+                          <span className="px-1.5 py-0.2 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 border border-slate-250/50 text-slate-500">
                             Suite
                           </span>
                         </div>
                         
                         {/* Middle: Title & Description */}
-                        <div className="space-y-1">
-                          <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                        <div className="space-y-1.5">
+                          <h4 className="text-base font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                             {product.name}
                           </h4>
-                          <p className="text-slate-500 text-[11px] leading-relaxed">
+                          <p className="text-slate-500 text-sm leading-relaxed font-medium">
                             {product.description}
                           </p>
                         </div>
@@ -228,7 +228,7 @@ export default function Home() {
                         {product.features.slice(0, 3).map((feat) => (
                           <span
                             key={feat}
-                            className="px-1.5 py-0.2 rounded bg-slate-50 border border-slate-150 text-slate-500 text-[8px] font-semibold"
+                            className="px-1.5 py-0.5 rounded bg-slate-50 border border-slate-150 text-slate-500 text-[10px] font-semibold"
                           >
                             {feat}
                           </span>
