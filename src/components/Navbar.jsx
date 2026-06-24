@@ -299,7 +299,7 @@ export default function Navbar() {
                                           <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-bold text-slate-800 text-sm">BNX MAIL</p>
+                                          <p className="font-semibold text-slate-800 text-sm">BNX MAIL</p>
                                           <p className="text-xs text-slate-450 font-medium">Collaborative group inbox</p>
                                         </div>
                                       </a>
@@ -314,7 +314,7 @@ export default function Navbar() {
                                           <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-bold text-slate-800 text-sm">B2AUTH SECURITY</p>
+                                          <p className="font-semibold text-slate-800 text-sm">B2AUTH SECURITY</p>
                                           <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
                                         </div>
                                       </a>
@@ -329,7 +329,7 @@ export default function Navbar() {
                                           <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-bold text-slate-800 text-sm">BIT TOOL</p>
+                                          <p className="font-semibold text-slate-800 text-sm">BIT TOOL</p>
                                           <p className="text-xs text-slate-450 font-medium">Developer utility assistant</p>
                                         </div>
                                       </a>
@@ -344,7 +344,7 @@ export default function Navbar() {
                                           <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-bold text-slate-800 text-sm">CLIKS</p>
+                                          <p className="font-semibold text-slate-800 text-sm">CLIKS</p>
                                           <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
                                         </div>
                                       </a>
@@ -365,7 +365,7 @@ export default function Navbar() {
                                           <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-bold text-slate-800 text-sm">CLIKS BUSINESS</p>
+                                          <p className="font-semibold text-slate-800 text-sm">CLIKS BUSINESS</p>
                                           <p className="text-xs text-slate-450 font-medium">Team project chats</p>
                                         </div>
                                       </a>
@@ -625,7 +625,7 @@ export default function Navbar() {
                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
                             >
                               <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-4 w-4 object-contain" />
-                              <span className="font-bold">BNX Mail</span>
+                              <span className="font-semibold">BNX Mail</span>
                             </a>
                             <a
                               href="https://www.b2auth.com/"
@@ -634,7 +634,7 @@ export default function Navbar() {
                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
                             >
                               <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
-                              <span className="font-bold">B2Auth Security</span>
+                              <span className="font-semibold">B2Auth Security</span>
                             </a>
                             <a
                               href="https://cliks.beta-softnet.com/"
@@ -643,7 +643,7 @@ export default function Navbar() {
                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
                             >
                               <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
-                              <span className="font-bold">Cliks</span>
+                              <span className="font-semibold">Cliks</span>
                             </a>
                           </div>
                         </div>
@@ -659,7 +659,7 @@ export default function Navbar() {
                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
                             >
                               <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-4 w-4 object-contain" />
-                              <span className="font-bold">Cliks Business</span>
+                              <span className="font-semibold">Cliks Business</span>
                             </a>
                           </div>
                         </div>
