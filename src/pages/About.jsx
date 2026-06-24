@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Target, 
-  Compass, 
-  Award, 
-  Calendar, 
-  Shield, 
-  Activity, 
-  Users, 
-  Clock, 
-  Cpu, 
-  Layers, 
-  Globe, 
-  User, 
+import {
+  Target,
+  Compass,
+  Award,
+  Calendar,
+  Shield,
+  Activity,
+  Users,
+  Clock,
+  Cpu,
+  Layers,
+  Globe,
+  User,
   Mail,
   ChevronDown,
   UserCheck,
@@ -39,7 +39,7 @@ function CountUpNumber({ value }) {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       const currentVal = progress * (numericValue - startValue) + startValue;
-      
+
       if (numericValue % 1 !== 0) {
         setDisplayValue(currentVal.toFixed(1) + suffix);
       } else {
@@ -59,10 +59,10 @@ function CountUpNumber({ value }) {
 
 export default function About() {
   const leadership = [
-    { 
-      name: 'Balaji', 
-      role: 'Chief Executive Officer', 
-      avatar: '/balaji_avatar.png', 
+    {
+      name: 'Balaji',
+      role: 'Chief Executive Officer',
+      avatar: "/MR.B.png",
       desc: 'Former Engineering Director at AWS. Guiding enterprise software scaling and corporate direction.',
       github: '#',
       linkedin: '#',
@@ -71,25 +71,25 @@ export default function About() {
   ];
 
   const milestones = [
-    { 
-      year: '2022', 
-      title: 'Company Founded', 
-      desc: 'Beta was established in Tiruvallur, India, by a core team of 5 engineers aiming to redefine enterprise software.' 
+    {
+      year: '2022',
+      title: 'Company Founded',
+      desc: 'Beta was established in Tiruvallur, India, by a core team of 5 engineers aiming to redefine enterprise software.'
     },
-    { 
-      year: '2023', 
-      title: 'BNX Mail Launch', 
-      desc: 'Released our collaborative email dashboard concept, securing our first 100 enterprise clients.' 
+    {
+      year: '2023',
+      title: 'BNX Mail Launch',
+      desc: 'Released our collaborative email dashboard concept, securing our first 100 enterprise clients.'
     },
-    { 
-      year: '2024', 
-      title: 'Series A Funding', 
-      desc: 'Secured $12M in Series A funding to expand our security-first auth frameworks and database clustering.' 
+    {
+      year: '2024',
+      title: 'Series A Funding',
+      desc: 'Secured $12M in Series A funding to expand our security-first auth frameworks and database clustering.'
     },
-    { 
-      year: '2026', 
-      title: 'Global Footprint', 
-      desc: 'Now powering 1.2M+ active corporate connections globally across 500+ major companies.' 
+    {
+      year: '2026',
+      title: 'Global Footprint',
+      desc: 'Now powering 1.2M+ active corporate connections globally across 500+ major companies.'
     }
   ];
 
@@ -286,7 +286,7 @@ export default function About() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 space-y-32">
-        
+
         {/* SECTION 2: OUR STORY */}
         <div id="story" className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
@@ -331,10 +331,10 @@ export default function About() {
             className="relative overflow-hidden rounded-3xl glass-card p-4 border border-[#0A3161]/12 shadow-2xl flex items-center justify-center group"
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-sky-500/5 opacity-50 pointer-events-none group-hover:opacity-80 transition duration-500" />
-            <img 
-              src="/bnx_product_showcase.png" 
-              alt="BNX Product Showcase" 
-              className="w-full h-auto object-cover rounded-2xl relative z-10 transition-transform duration-700 group-hover:scale-[1.03]" 
+            <img
+              src="/bnx_product_showcase.png"
+              alt="BNX Product Showcase"
+              className="w-full h-auto object-cover rounded-2xl relative z-10 transition-transform duration-700 group-hover:scale-[1.03]"
             />
           </motion.div>
         </div>
@@ -358,11 +358,10 @@ export default function About() {
               {milestones.map((milestone, idx) => {
                 const isLeft = idx % 2 === 0;
                 return (
-                  <div 
+                  <div
                     key={milestone.year}
-                    className={`flex flex-col md:flex-row items-center justify-between relative ${
-                      isLeft ? 'md:flex-row-reverse' : ''
-                    }`}
+                    className={`flex flex-col md:flex-row items-center justify-between relative ${isLeft ? 'md:flex-row-reverse' : ''
+                      }`}
                   >
                     {/* Content Card */}
                     <motion.div
@@ -383,16 +382,16 @@ export default function About() {
                     </motion.div>
 
                     {/* Timeline Node Dot */}
-                    <motion.div 
+                    <motion.div
                       initial={{ scale: 0.8, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
                       viewport={{ once: true, margin: "-100px" }}
                       className="hidden md:flex h-8 w-8 rounded-full bg-white border-2 border-[#0A3161] items-center justify-center z-10 shadow-md absolute left-1/2 -translate-x-1/2"
                     >
-                      <motion.div 
+                      <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
                         transition={{ repeat: Infinity, duration: 3 }}
-                        className="h-3 w-3 rounded-full bg-[#FF6325]" 
+                        className="h-3 w-3 rounded-full bg-[#FF6325]"
                       />
                     </motion.div>
 
@@ -415,7 +414,7 @@ export default function About() {
           >
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#0A3161]/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none" />
-            
+
             <div className="p-4 bg-[#0A3161]/10 rounded-2xl border border-[#0A3161]/20 text-[#0A3161] mb-6 flex-shrink-0">
               <Target className="h-8 w-8" />
             </div>
@@ -434,7 +433,7 @@ export default function About() {
           >
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#FF6325]/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none" />
-            
+
             <div className="p-4 bg-[#FF6325]/10 rounded-2xl border border-[#FF6325]/20 text-[#FF6325] mb-6 flex-shrink-0">
               <Compass className="h-8 w-8" />
             </div>
@@ -495,7 +494,7 @@ export default function About() {
                 className="glass-card glass-card-hover p-8 rounded-3xl border border-[#0A3161]/12 text-center space-y-3 relative overflow-hidden group shadow-lg"
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none" />
-                
+
                 <div className="flex flex-col items-center justify-center">
                   <div className={`h-12 w-12 rounded-2xl flex items-center justify-center border ${stat.bg} mb-3`}>
                     <Icon className={`h-6 w-6 ${stat.color}`} />
@@ -534,9 +533,9 @@ export default function About() {
               >
                 {/* Circular Profile Avatar Image */}
                 <div className="relative h-24 w-24 mx-auto rounded-full overflow-hidden border-2 border-slate-200 shadow-lg transition-transform duration-500 group-hover:scale-105 group-hover:border-sky-400/50 z-10">
-                  <img 
-                    src={member.avatar} 
-                    alt={member.name} 
+                  <img
+                    src={member.avatar}
+                    alt={member.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -548,7 +547,7 @@ export default function About() {
                   <h3 className="text-lg font-extrabold text-white">{member.name}</h3>
                   <p className="text-xs font-bold text-[#FF6325] uppercase tracking-widest">{member.role}</p>
                 </div>
-                
+
                 <p className="text-slate-400 text-xs leading-relaxed relative z-10 font-medium h-12 flex items-center justify-center">
                   {member.desc}
                 </p>

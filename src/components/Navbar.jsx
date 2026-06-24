@@ -37,10 +37,10 @@ export default function Navbar() {
       setDetectionError("Geolocation is not supported by your browser.");
       return;
     }
-    
+
     setIsDetecting(true);
     setDetectionError(null);
-    
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
@@ -142,7 +142,7 @@ export default function Navbar() {
     { name: 'Products', path: '/products' },
     { name: 'Partners', path: '/partners' },
     { name: 'Careers', path: '/careers' },
-    { name: 'About Us', path: '/about' },
+    { name: 'About', path: '/about' },
     { name: 'Support', path: '/support' },
   ];
 
@@ -207,11 +207,10 @@ export default function Navbar() {
                           setSelectedCity(city);
                           setIsLocationOpen(false);
                         }}
-                        className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-between ${
-                          selectedCity === city
+                        className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-between ${selectedCity === city
                             ? 'bg-emerald-50 text-emerald-700'
                             : 'hover:bg-slate-50 text-slate-700 hover:text-[#004AAD]'
-                        }`}
+                          }`}
                       >
                         <span>{city}</span>
                         {selectedCity === city && <Check className="h-3.5 w-3.5 text-emerald-600" />}
@@ -227,172 +226,172 @@ export default function Navbar() {
           <div className="hidden md:flex items-center justify-center flex-1 z-20">
             {/* Desktop Nav Links */}
             <div className="flex items-center space-x-0.5 bg-slate-100/90 p-1 rounded-full border border-slate-200/80 shadow-inner nav-pill-container">
-            {navLinks.map((link) => {
-              if (link.name === 'Products') {
-                return (
-                  <div
-                    key={link.name}
-                    ref={productsDropdownRef}
-                    className=""
-                  >
-                    <button 
-                      type="button"
-                      onClick={() => {
-                        setIsDropdownOpen(!isDropdownOpen);
-                      }}
-                      className={`flex items-center space-x-1 focus:outline-none cursor-pointer ${isActive('/products') || isDropdownOpen ? 'active-pill' : ''}`}
+              {navLinks.map((link) => {
+                if (link.name === 'Products') {
+                  return (
+                    <div
+                      key={link.name}
+                      ref={productsDropdownRef}
+                      className=""
                     >
-                      <span>Products</span>
-                      <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    
-                    {isDropdownOpen && (
-                      <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 z-50 text-left text-slate-800">
-                        <table className="w-full text-left border-collapse">
-                          <thead>
-                            <tr className="bg-emerald-50 border-b border-emerald-100/30 text-emerald-800 text-xs uppercase tracking-wider font-extrabold select-none">
-                              <th 
-                                className="py-2.5 px-4 rounded-l-lg text-emerald-800 w-1/5 select-none"
-                              >
-                                <div className="flex items-center space-x-1">
-                                  <span>Category</span>
-                                </div>
-                              </th>
-                              <th 
-                                className="py-2.5 px-4 text-emerald-800 w-2/5 select-none"
-                              >
-                                <div className="flex items-center space-x-1">
-                                  <span>Public</span>
-                                </div>
-                              </th>
-                              <th 
-                                className="py-2.5 px-4 rounded-r-lg text-emerald-800 w-2/5 select-none"
-                              >
-                                <div className="flex items-center space-x-1">
-                                  <span>Business</span>
-                                </div>
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100 text-slate-750 text-xs">
-                            {/* Row 1: Base */}
-                            <tr className="bg-yellow-50/85 hover:bg-yellow-100/40 transition-colors">
-                              <td className="py-3 px-2 align-top pt-3 w-1/5">
-                                {isDropdownCategoryOpen && (
-                                  <div
-                                    className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left"
-                                  >
-                                    Base
-                                  </div>
-                                )}
-                              </td>
-                              <td className="py-3 px-4 align-top w-2/5 border-r border-slate-200">
-                                {/* Public Products */}
-                                {isDropdownPublicOpen && (
-                                  <div className="flex flex-col gap-3 pt-1 pb-1">
-                                    <a
-                                      href="https://www.bnxmail.com/login"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
-                                    >
-                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
-                                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
-                                      </div>
-                                      <div>
-                                        <p className="font-bold text-slate-800 text-sm">BNX MAIL</p>
-                                        <p className="text-xs text-slate-450 font-medium">Collaborative group inbox</p>
-                                      </div>
-                                    </a>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsDropdownOpen(!isDropdownOpen);
+                        }}
+                        className={`flex items-center space-x-1 focus:outline-none cursor-pointer ${isActive('/products') || isDropdownOpen ? 'active-pill' : ''}`}
+                      >
+                        <span>Products</span>
+                        <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                      </button>
 
-                                    <a
-                                      href="https://www.b2auth.com/"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
-                                    >
-                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
-                                        <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
-                                      </div>
-                                      <div>
-                                        <p className="font-bold text-slate-800 text-sm">B2AUTH SECURITY</p>
-                                        <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
-                                      </div>
-                                    </a>
-
-                                    <a
-                                      href="https://bittool.beta-softnet.com/"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
-                                    >
-                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
-                                        <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
-                                      </div>
-                                      <div>
-                                        <p className="font-bold text-slate-800 text-sm">BIT TOOL</p>
-                                        <p className="text-xs text-slate-450 font-medium">Developer utility assistant</p>
-                                      </div>
-                                    </a>
-
-                                    <a
-                                      href="https://cliks.beta-softnet.com/"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
-                                    >
-                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
-                                        <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
-                                      </div>
-                                      <div>
-                                        <p className="font-bold text-slate-800 text-sm">CLIKS</p>
-                                        <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
-                                      </div>
-                                    </a>
+                      {isDropdownOpen && (
+                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 z-50 text-left text-slate-800">
+                          <table className="w-full text-left border-collapse">
+                            <thead>
+                              <tr className="bg-emerald-50 border-b border-emerald-100/30 text-emerald-800 text-xs uppercase tracking-wider font-extrabold select-none">
+                                <th
+                                  className="py-2.5 px-4 rounded-l-lg text-emerald-800 w-1/5 select-none"
+                                >
+                                  <div className="flex items-center space-x-1">
+                                    <span>Category</span>
                                   </div>
-                                )}
-                              </td>
-                              <td className="py-3 px-4 align-top w-2/5">
-                                {/* Business Products */}
-                                {isDropdownBusinessOpen && (
-                                  <div className="flex flex-col gap-3 pt-1 pb-1">
-                                    <a
-                                      href="https://www.cliksbusiness.com/"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
-                                    >
-                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
-                                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
-                                      </div>
-                                      <div>
-                                        <p className="font-bold text-slate-800 text-sm">CLIKS BUSINESS</p>
-                                        <p className="text-xs text-slate-450 font-medium">Team project chats</p>
-                                      </div>
-                                    </a>
+                                </th>
+                                <th
+                                  className="py-2.5 px-4 text-emerald-800 w-2/5 select-none"
+                                >
+                                  <div className="flex items-center space-x-1">
+                                    <span>Public</span>
                                   </div>
-                                )}
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
+                                </th>
+                                <th
+                                  className="py-2.5 px-4 rounded-r-lg text-emerald-800 w-2/5 select-none"
+                                >
+                                  <div className="flex items-center space-x-1">
+                                    <span>Business</span>
+                                  </div>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 text-slate-750 text-xs">
+                              {/* Row 1: Base */}
+                              <tr className="bg-yellow-50/85 hover:bg-yellow-100/40 transition-colors">
+                                <td className="py-3 px-2 align-top pt-3 w-1/5">
+                                  {isDropdownCategoryOpen && (
+                                    <div
+                                      className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left"
+                                    >
+                                      Base
+                                    </div>
+                                  )}
+                                </td>
+                                <td className="py-3 px-4 align-top w-2/5 border-r border-slate-200">
+                                  {/* Public Products */}
+                                  {isDropdownPublicOpen && (
+                                    <div className="flex flex-col gap-3 pt-1 pb-1">
+                                      <a
+                                        href="https://www.bnxmail.com/login"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                      >
+                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                          <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                                        </div>
+                                        <div>
+                                          <p className="font-bold text-slate-800 text-sm">BNX MAIL</p>
+                                          <p className="text-xs text-slate-450 font-medium">Collaborative group inbox</p>
+                                        </div>
+                                      </a>
+
+                                      <a
+                                        href="https://www.b2auth.com/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                      >
+                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                          <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
+                                        </div>
+                                        <div>
+                                          <p className="font-bold text-slate-800 text-sm">B2AUTH SECURITY</p>
+                                          <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
+                                        </div>
+                                      </a>
+
+                                      <a
+                                        href="https://bittool.beta-softnet.com/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                      >
+                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                          <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
+                                        </div>
+                                        <div>
+                                          <p className="font-bold text-slate-800 text-sm">BIT TOOL</p>
+                                          <p className="text-xs text-slate-450 font-medium">Developer utility assistant</p>
+                                        </div>
+                                      </a>
+
+                                      <a
+                                        href="https://cliks.beta-softnet.com/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                      >
+                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                          <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
+                                        </div>
+                                        <div>
+                                          <p className="font-bold text-slate-800 text-sm">CLIKS</p>
+                                          <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
+                                        </div>
+                                      </a>
+                                    </div>
+                                  )}
+                                </td>
+                                <td className="py-3 px-4 align-top w-2/5">
+                                  {/* Business Products */}
+                                  {isDropdownBusinessOpen && (
+                                    <div className="flex flex-col gap-3 pt-1 pb-1">
+                                      <a
+                                        href="https://www.cliksbusiness.com/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                      >
+                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                          <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
+                                        </div>
+                                        <div>
+                                          <p className="font-bold text-slate-800 text-sm">CLIKS BUSINESS</p>
+                                          <p className="text-xs text-slate-450 font-medium">Team project chats</p>
+                                        </div>
+                                      </a>
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    className={isActive(link.path) ? 'active-pill' : ''}
+                  >
+                    {link.name}
+                  </Link>
                 );
-              }
-
-
-              return (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={isActive(link.path) ? 'active-pill' : ''}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
+              })}
             </div>
           </div>
 
@@ -446,7 +445,7 @@ export default function Navbar() {
                   </span>
                   <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
                 </button>
-                
+
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-2xl p-5 z-50 text-left text-slate-800">
                     <div className="space-y-1">
@@ -578,11 +577,10 @@ export default function Navbar() {
                           setSelectedCity(city);
                           setIsMobileLocationOpen(false);
                         }}
-                        className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between transition cursor-pointer ${
-                          selectedCity === city
+                        className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between transition cursor-pointer ${selectedCity === city
                             ? 'bg-emerald-50 text-emerald-700'
                             : 'hover:bg-slate-50 text-slate-700'
-                        }`}
+                          }`}
                       >
                         <span>{city}</span>
                         {selectedCity === city && <Check className="h-3.5 w-3.5 text-emerald-600" />}
@@ -620,51 +618,51 @@ export default function Navbar() {
                         <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Public</p>
                           <div className="space-y-2.5 pl-1">
-                             <a
-                               href="https://www.bnxmail.com/login"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                             >
-                               <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-4 w-4 object-contain" />
-                               <span className="font-bold">BNX Mail</span>
-                             </a>
-                             <a
-                               href="https://www.b2auth.com/"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                             >
-                               <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
-                               <span className="font-bold">B2Auth Security</span>
-                             </a>
-                             <a
-                               href="https://cliks.beta-softnet.com/"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                             >
-                               <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
-                               <span className="font-bold">Cliks</span>
-                             </a>
-                           </div>
-                         </div>
+                            <a
+                              href="https://www.bnxmail.com/login"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                            >
+                              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-4 w-4 object-contain" />
+                              <span className="font-bold">BNX Mail</span>
+                            </a>
+                            <a
+                              href="https://www.b2auth.com/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                            >
+                              <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
+                              <span className="font-bold">B2Auth Security</span>
+                            </a>
+                            <a
+                              href="https://cliks.beta-softnet.com/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                            >
+                              <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
+                              <span className="font-bold">Cliks</span>
+                            </a>
+                          </div>
+                        </div>
 
-                         {/* Mobile Business */}
-                         <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
-                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Business</p>
-                           <div className="space-y-2.5 pl-1">
-                             <a
-                               href="https://www.cliksbusiness.com/"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                             >
-                               <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-4 w-4 object-contain" />
-                               <span className="font-bold">Cliks Business</span>
-                             </a>
-                           </div>
-                         </div>
+                        {/* Mobile Business */}
+                        <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Business</p>
+                          <div className="space-y-2.5 pl-1">
+                            <a
+                              href="https://www.cliksbusiness.com/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                            >
+                              <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-4 w-4 object-contain" />
+                              <span className="font-bold">Cliks Business</span>
+                            </a>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -676,11 +674,10 @@ export default function Navbar() {
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium ${
-                    isActive(link.path)
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(link.path)
                       ? 'bg-blue-50 text-[#004AAD] font-semibold'
                       : 'text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]'
-                  }`}
+                    }`}
                 >
                   {link.name}
                 </Link>

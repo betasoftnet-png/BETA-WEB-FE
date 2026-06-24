@@ -110,7 +110,7 @@ export default function Footer() {
           <div>
             <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Company</h2>
             <ul className="space-y-2 text-sm font-medium">
-              <li><Link to="/about" className="text-slate-600 hover:text-blue-600 transition">About Us</Link></li>
+              <li><Link to="/about" className="text-slate-600 hover:text-blue-600 transition">About</Link></li>
               <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Careers</Link></li>
               <li><Link to="/partners" className="text-slate-600 hover:text-blue-600 transition">Partners</Link></li>
               <li><Link to="/support" className="text-slate-600 hover:text-blue-600 transition">Support</Link></li>
