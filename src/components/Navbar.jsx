@@ -156,11 +156,11 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#e2f0e8] shadow-sm text-slate-800">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-14">
+        <div className="relative flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center -ml-2 sm:-ml-4 space-x-4 flex-1 justify-start">
+          <div className="flex-shrink-0 flex items-center ml-2 sm:ml-6 space-x-4 flex-1 justify-start">
             <Link to="/" className="flex items-center select-none">
-              <img src="/logo.png" alt="Beta Logo" className="h-10 w-auto object-contain" />
+              <img src="/logo.png" alt="Beta Logo" className="h-12 w-auto object-contain" />
             </Link>
 
             <div className="relative animate-fadeIn ml-2 sm:ml-4" ref={locationRef}>
@@ -247,10 +247,10 @@ export default function Navbar() {
                     </button>
                     
                     {isDropdownOpen && (
-                      <div className="absolute left-4 sm:left-6 lg:left-8 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 z-50 text-left text-slate-800">
+                      <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 z-50 text-left text-slate-800">
                         <table className="w-full text-left border-collapse">
                           <thead>
-                            <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 text-[10px] uppercase tracking-wider font-extrabold select-none">
+                            <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 text-xs uppercase tracking-wider font-extrabold select-none">
                               <th 
                                 className="py-2.5 px-4 rounded-l-lg text-slate-500 w-1/5 select-none"
                               >
@@ -280,7 +280,7 @@ export default function Navbar() {
                               <td className="py-3 px-2 align-top pt-3 w-1/5">
                                 {isDropdownCategoryOpen && (
                                   <div
-                                    className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-extrabold uppercase tracking-widest select-none text-left"
+                                    className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left"
                                   >
                                     Base
                                   </div>
@@ -293,45 +293,45 @@ export default function Navbar() {
                                     <div
                                       className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group select-none"
                                     >
-                                      <div className="h-7 w-7 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                        <Mail className="h-4 w-4" />
+                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                                       </div>
                                       <div>
                                         <div className="flex items-center space-x-2">
-                                          <p className="font-bold text-slate-800 text-[11px]">BNX MAIL</p>
-                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[8px] font-bold uppercase tracking-wider">Public</span>
+                                          <p className="font-bold text-slate-800 text-sm">BNX MAIL</p>
+                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold uppercase tracking-wider">Public</span>
                                         </div>
-                                        <p className="text-[9px] text-slate-400 font-medium">Collaborative group inbox</p>
+                                        <p className="text-xs text-slate-450 font-medium">Collaborative group inbox</p>
                                       </div>
                                     </div>
 
                                     <div
                                       className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group select-none"
                                     >
-                                      <div className="h-7 w-7 rounded-full bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600 flex-shrink-0">
-                                        <Shield className="h-4 w-4" />
+                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
                                       </div>
                                       <div>
                                         <div className="flex items-center space-x-2">
-                                          <p className="font-bold text-slate-800 text-[11px]">B2AUTH SECURITY</p>
-                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[8px] font-bold uppercase tracking-wider">Public</span>
+                                          <p className="font-bold text-slate-800 text-sm">B2AUTH SECURITY</p>
+                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold uppercase tracking-wider">Public</span>
                                         </div>
-                                        <p className="text-[9px] text-slate-400 font-medium">MFA & SSO Gateway</p>
+                                        <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
                                       </div>
                                     </div>
 
                                     <div
                                       className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group select-none"
                                     >
-                                      <div className="h-7 w-7 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 flex-shrink-0">
-                                        <User className="h-4 w-4" />
+                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
                                       </div>
                                       <div>
                                         <div className="flex items-center space-x-2">
-                                          <p className="font-bold text-slate-800 text-[11px]">CLIKS</p>
-                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[8px] font-bold uppercase tracking-wider">Public</span>
+                                          <p className="font-bold text-slate-800 text-sm">CLIKS</p>
+                                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold uppercase tracking-wider">Public</span>
                                         </div>
-                                        <p className="text-[9px] text-slate-400 font-medium">Notes & calendars</p>
+                                        <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
                                       </div>
                                     </div>
                                   </div>
@@ -344,15 +344,15 @@ export default function Navbar() {
                                     <div
                                       className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group select-none"
                                     >
-                                      <div className="h-7 w-7 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-650 flex-shrink-0">
-                                        <Briefcase className="h-4 w-4" />
+                                      <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                                       </div>
                                       <div>
                                         <div className="flex items-center space-x-2">
-                                          <p className="font-bold text-slate-800 text-[11px]">CLIKS BUSINESS</p>
-                                          <span className="px-1.5 py-0.2 rounded bg-purple-50 text-purple-650 border border-purple-100 text-[8px] font-extrabold uppercase tracking-wider">Business</span>
+                                          <p className="font-bold text-slate-800 text-sm">CLIKS BUSINESS</p>
+                                          <span className="px-1.5 py-0.2 rounded bg-purple-50 text-purple-650 border border-purple-100 text-[10px] font-extrabold uppercase tracking-wider">Business</span>
                                         </div>
-                                        <p className="text-[9px] text-slate-400 font-medium">Team project chats</p>
+                                        <p className="text-xs text-slate-450 font-medium">Team project chats</p>
                                       </div>
                                     </div>
                                   </div>
@@ -596,15 +596,15 @@ export default function Navbar() {
                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Public</p>
                           <div className="space-y-2.5 pl-1">
                             <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
-                              <Mail className="h-4 w-4 text-blue-500" />
+                              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-4 w-4 object-contain" />
                               <span className="font-bold">BNX Mail</span>
                             </div>
                             <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
-                              <Shield className="h-4 w-4 text-cyan-500" />
+                              <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
                               <span className="font-bold">B2Auth Security</span>
                             </div>
                             <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
-                              <User className="h-4 w-4 text-emerald-500" />
+                              <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
                               <span className="font-bold">Cliks</span>
                             </div>
                           </div>
@@ -614,10 +614,10 @@ export default function Navbar() {
                         <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Business</p>
                           <div className="space-y-2.5 pl-1">
-                            <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
-                              <Briefcase className="h-4 w-4 text-teal-600" />
-                              <span className="font-bold">Cliks Business</span>
-                            </div>
+                             <div className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 select-none text-left">
+                               <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-4 w-4 object-contain" />
+                               <span className="font-bold">Cliks Business</span>
+                             </div>
                           </div>
                         </div>
                       </div>

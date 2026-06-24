@@ -187,9 +187,9 @@ export default function Support() {
             {/* BNX Mail Card */}
             <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
-                  <Mail className="h-6 w-6" />
-                </div>
+                 <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                   <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
                     <h3 className="font-extrabold text-slate-800 text-sm tracking-wide uppercase">BNX MAIL</h3>
@@ -211,10 +211,10 @@ export default function Support() {
 
             {/* B2Auth Security Card */}
             <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="h-12 w-12 rounded-2xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600">
-                  <Shield className="h-6 w-6" />
-                </div>
+               <div className="space-y-3">
+                 <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                   <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
+                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
                     <h3 className="font-extrabold text-slate-800 text-sm tracking-wide uppercase">B2AUTH SECURITY</h3>
@@ -237,8 +237,8 @@ export default function Support() {
             {/* Cliks Business Card */}
             <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="h-12 w-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
-                  <Briefcase className="h-6 w-6" />
+                <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                  <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">

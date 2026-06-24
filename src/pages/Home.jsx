@@ -192,9 +192,19 @@ export default function Home() {
                       <div className="space-y-3.5">
                         {/* Top Row: Icon and Tag */}
                         <div className="flex items-center justify-between">
-                          <div className={`h-10 w-10 rounded-xl flex items-center justify-center border flex-shrink-0 group-hover:scale-105 transition-transform duration-300 ${product.color}`}>
-                            <Icon className="h-4.5 w-4.5" />
-                          </div>
+                          {product.name === 'BNX MAIL' ? (
+                            <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                            </div>
+                          ) : product.name === 'CLIKS BUSINESS' ? (
+                            <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                              <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
+                            </div>
+                          ) : (
+                            <div className={`h-10 w-10 rounded-xl flex items-center justify-center border flex-shrink-0 group-hover:scale-105 transition-transform duration-300 ${product.color}`}>
+                              <Icon className="h-4.5 w-4.5" />
+                            </div>
+                          )}
                           <span className="px-1.5 py-0.2 rounded text-[8px] font-bold uppercase tracking-wider bg-slate-100 border border-slate-250/50 text-slate-500">
                             Suite
                           </span>

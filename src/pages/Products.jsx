@@ -116,9 +116,27 @@ export default function Products() {
       >
         {/* Icon & Name */}
         <div className="flex items-center space-x-3">
-          <div className="h-11 w-11 bg-gradient-to-tr from-blue-50 to-indigo-50 rounded-xl border border-blue-250/60 flex-shrink-0 flex items-center justify-center text-[#004AAD]">
-            <IconComponent className="h-5 w-5" />
-          </div>
+          {product.name.toUpperCase().includes('BNX MAIL') ? (
+            <div className="h-11 w-11 flex-shrink-0 flex items-center justify-center">
+              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+            </div>
+          ) : product.name.toUpperCase().includes('CLIKS BUSINESS') ? (
+            <div className="h-11 w-11 flex-shrink-0 flex items-center justify-center">
+              <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
+            </div>
+          ) : product.name.toUpperCase().includes('CLIKS') ? (
+            <div className="h-11 w-11 flex-shrink-0 flex items-center justify-center">
+              <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
+            </div>
+          ) : product.name.toUpperCase().includes('B2AUTH') || product.name.toUpperCase().includes('B2 AUTH') ? (
+            <div className="h-11 w-11 flex-shrink-0 flex items-center justify-center">
+              <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
+            </div>
+          ) : (
+            <div className="h-11 w-11 bg-gradient-to-tr from-blue-50 to-indigo-50 rounded-xl border border-blue-250/60 flex-shrink-0 flex items-center justify-center text-[#004AAD]">
+              <IconComponent className="h-5 w-5" />
+            </div>
+          )}
           <div>
             <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">{product.name}</h4>
             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
