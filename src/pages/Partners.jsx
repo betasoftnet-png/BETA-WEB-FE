@@ -1065,8 +1065,7 @@ export default function Partners() {
 
                 {currentStep < 4 ? (
                   <button
-                    type="button"
-                    onClick={handleNextStep}
+                    type="submit"
                     className="px-6 py-2.5 rounded-xl text-xs font-black text-white bg-[#FF6325] hover:bg-[#e0531b] transition shadow-md cursor-pointer select-none"
                   >
                     Next Step
