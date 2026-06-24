@@ -90,8 +90,8 @@ export default function Careers() {
   const navigate = useNavigate();
   const { user, redirectToSSO } = useContext(AuthContext);
 
-  const [jobsList, setJobsList] = useState([]);
-  const [loadingJobs, setLoadingJobs] = useState(true);
+  const [jobsList, setJobsList] = useState(fallbackJobs);
+  const [loadingJobs, setLoadingJobs] = useState(false);
   const [jobsError, setJobsError] = useState('');
 
   const [selectedJob, setSelectedJob] = useState(null);
@@ -111,7 +111,6 @@ export default function Careers() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        setLoadingJobs(true);
         setJobsError('');
         const response = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs`);
         const data = response.data.data || response.data || [];
@@ -123,15 +122,9 @@ export default function Careers() {
         }));
         if (fetched.length > 0) {
           setJobsList(fetched);
-        } else {
-          setJobsList(fallbackJobs);
         }
       } catch (err) {
-        console.error('Error fetching jobs:', err);
-        setJobsError('Failed to load active job openings.');
-        setJobsList(fallbackJobs);
-      } finally {
-        setLoadingJobs(false);
+        console.error('Error fetching jobs silently:', err);
       }
     };
     fetchJobs();

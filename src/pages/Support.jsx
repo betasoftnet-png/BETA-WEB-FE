@@ -25,21 +25,21 @@ export default function Support() {
   };
 
   const supportFaqs = [
-    { 
-      q: 'How do I access my integrations and products?', 
-      a: 'Once your account is set up, navigate to the Products overview page to get API keys or click "Launch Demo App" inside Cliks Business to view your active dashboards.' 
+    {
+      q: 'How do I access my integrations and products?',
+      a: 'Once your account is set up, navigate to the Products overview page to get API keys or click "Launch Demo App" inside Cliks Business to view your active dashboards.'
     },
-    { 
-      q: 'Is my data secure with Beta?', 
-      a: 'Yes, all communication in transit is encrypted using 256-bit SSL, and stored data is fully encrypted at rest. We also support SSO and MFA through B2Auth Security.' 
+    {
+      q: 'Is my data secure with Beta?',
+      a: 'Yes, all communication in transit is encrypted using 256-bit SSL, and stored data is fully encrypted at rest. We also support SSO and MFA through B2Auth Security.'
     },
-    { 
-      q: 'What is the average response time for support tickets?', 
-      a: 'Our team maintains a strict SLA response time of under 15 minutes for all email inquiries and developer tickets, backed by our 24/7 dedicated engineering desk.' 
+    {
+      q: 'What is the average response time for support tickets?',
+      a: 'Our team maintains a strict SLA response time of under 15 minutes for all email inquiries and developer tickets, backed by our 24/7 dedicated engineering desk.'
     },
-    { 
-      q: 'How can I submit feature requests or partner feedback?', 
-      a: 'We welcome suggestions and inquiries. Please use our Support Request form below, or visit our Partners portal to lodge proposals directly.' 
+    {
+      q: 'How can I submit feature requests or partner feedback?',
+      a: 'We welcome suggestions and inquiries. Please use our Support Request form below, or visit our Partners portal to lodge proposals directly.'
     }
   ];
 
@@ -81,7 +81,7 @@ export default function Support() {
   return (
     <div className="min-h-screen bg-transparent pb-16 relative z-10">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-tr from-[#022C22] to-[#0B5C46] py-20 text-white text-center hero-blue-banner">
+      <div className="relative overflow-hidden bg-gradient-to-tr from-[#EFF6FF] via-[#DBEAFE] to-[#BFDBFE] py-20 text-gray-900 text-center hero-blue-banner">
         {/* Glow grid mesh overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40" />
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[60%] rounded-full bg-emerald-400/20 blur-[130px] pointer-events-none" />
@@ -91,7 +91,7 @@ export default function Support() {
           <span className="inline-block px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-xs font-bold uppercase tracking-widest text-black select-none">
             Help & Customer Desk
           </span>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight select-none">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight select-none text-[#0A3161]">
             How Can We Help You?
           </h1>
           <p className="text-emerald-100 text-sm md:text-base max-w-xl mx-auto font-medium select-none">
@@ -177,7 +177,7 @@ export default function Support() {
         </div>
 
         {/* Product Support Section */}
-        <div className="space-y-6 bg-[#fed600] border border-[#e0bc00]/40 p-8 rounded-3xl shadow-sm">
+        <div className="space-y-6 bg-gradient-to-br from-orange-50 via-red-50 to-rose-100 border border-orange-200/40 p-8 rounded-3xl shadow-sm">
           <div className="text-left space-y-1.5">
             <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Ecosystem Product Support</h2>
             <p className="text-sm text-slate-955 font-semibold">Guides, diagnostic links, and configuration standards for our primary suites.</p>
@@ -187,9 +187,9 @@ export default function Support() {
             {/* BNX Mail Card */}
             <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
               <div className="space-y-3">
-                 <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                   <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
-                 </div>
+                <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                  <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                </div>
                 <div>
                   <div className="flex items-center space-x-2">
                     <h3 className="font-extrabold text-slate-800 text-sm tracking-wide uppercase">BNX MAIL</h3>
@@ -202,19 +202,19 @@ export default function Support() {
                 </p>
               </div>
               <div className="border-t border-slate-100 pt-4">
-                <Link to="/products" className="text-xs font-bold text-[#004AAD] hover:text-blue-700 transition flex items-center space-x-1.5">
+                <div className="text-xs font-bold text-[#004AAD] flex items-center space-x-1.5 select-none">
                   <span>View SMTP/IMAP Setup Guide</span>
                   <ExternalLink className="h-3.5 w-3.5" />
-                </Link>
+                </div>
               </div>
             </div>
 
             {/* B2Auth Security Card */}
             <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
-               <div className="space-y-3">
-                 <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                   <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
-                 </div>
+              <div className="space-y-3">
+                <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                  <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
+                </div>
                 <div>
                   <div className="flex items-center space-x-2">
                     <h3 className="font-extrabold text-slate-800 text-sm tracking-wide uppercase">B2AUTH SECURITY</h3>
@@ -227,10 +227,10 @@ export default function Support() {
                 </p>
               </div>
               <div className="border-t border-slate-100 pt-4">
-                <Link to="/products" className="text-xs font-bold text-[#004AAD] hover:text-blue-700 transition flex items-center space-x-1.5">
+                <div className="text-xs font-bold text-[#004AAD] flex items-center space-x-1.5 select-none">
                   <span>Open Gateway OAuth Specs</span>
                   <ExternalLink className="h-3.5 w-3.5" />
-                </Link>
+                </div>
               </div>
             </div>
 
@@ -252,10 +252,10 @@ export default function Support() {
                 </p>
               </div>
               <div className="border-t border-slate-100 pt-4">
-                <Link to="/products" className="text-xs font-bold text-[#004AAD] hover:text-blue-700 transition flex items-center space-x-1.5">
+                <div className="text-xs font-bold text-[#004AAD] flex items-center space-x-1.5 select-none">
                   <span>Launch Invoicing Manuals</span>
                   <ExternalLink className="h-3.5 w-3.5" />
-                </Link>
+                </div>
               </div>
             </div>
           </div>

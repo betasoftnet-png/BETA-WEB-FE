@@ -275,7 +275,7 @@ export default function Navbar() {
                             </thead>
                             <tbody className="divide-y divide-slate-100 text-slate-750 text-xs">
                               {/* Row 1: Base */}
-                              <tr className="bg-yellow-50/85 hover:bg-yellow-100/40 transition-colors">
+                              <tr className="bg-transparent hover:bg-slate-50/40 transition-colors">
                                 <td className="py-3 px-2 align-top pt-3 w-1/5">
                                   {isDropdownCategoryOpen && (
                                     <div

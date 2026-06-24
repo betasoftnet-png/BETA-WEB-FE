@@ -22,8 +22,15 @@
   --animate-float: float 6s ease-in-out infinite;
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
   }
 }
 
@@ -39,7 +46,12 @@ body {
 }
 
 /* Light Theme Overrides for Text & Headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #0f172a !important;
   font-family: 'Roboto', sans-serif;
 }
@@ -49,23 +61,27 @@ h1 {
 }
 
 p {
-  color: #334155 !important; /* Slate 700 */
+  color: #334155 !important;
+  /* Slate 700 */
 }
 
 span.text-slate-400,
 p.text-slate-400,
 div.text-slate-400 {
-  color: #475569 !important; /* Slate 600 */
+  color: #475569 !important;
+  /* Slate 600 */
 }
 
 span.text-slate-500,
 p.text-slate-500,
 div.text-slate-500 {
-  color: #64748b !important; /* Slate 500 */
+  color: #64748b !important;
+  /* Slate 500 */
 }
 
 label {
-  color: #475569 !important; /* Slate 600 */
+  color: #475569 !important;
+  /* Slate 600 */
 }
 
 /* Form inputs styling for light theme */
@@ -126,22 +142,49 @@ button[type="submit"],
 
 /* Cosmic Background Floating Blobs Keyframes */
 @keyframes blob-float-1 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(40px, -60px) scale(1.15); }
-  66% { transform: translate(-30px, 30px) scale(0.9); }
-  100% { transform: translate(0px, 0px) scale(1); }
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(40px, -60px) scale(1.15);
+  }
+
+  66% {
+    transform: translate(-30px, 30px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
 }
 
 @keyframes blob-float-2 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(-50px, 50px) scale(1.1); }
-  100% { transform: translate(0px, 0px) scale(1); }
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  50% {
+    transform: translate(-50px, 50px) scale(1.1);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
 }
 
 @keyframes blob-float-3 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(60px, -40px) scale(0.95); }
-  100% { transform: translate(0px, 0px) scale(1); }
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  50% {
+    transform: translate(60px, -40px) scale(0.95);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
 }
 
 .animate-blob-1 {
@@ -270,11 +313,14 @@ footer.custom-site-footer strong {
 
 /* Overrides for floating cosmic background blobs in App.jsx */
 .bg-blue-300\/10 {
-  background-color: rgba(0, 74, 173, 0.05) !important; /* Primary blue tint */
+  background-color: rgba(0, 74, 173, 0.05) !important;
+  /* Primary blue tint */
 }
+
 .bg-violet-300\/10 {
   background-color: rgba(59, 130, 246, 0.05) !important;
 }
+
 .bg-indigo-300\/10 {
   background-color: rgba(96, 165, 250, 0.05) !important;
 }
@@ -284,6 +330,7 @@ footer.custom-site-footer strong {
 .bg-gradient-to-r.from-blue-500.to-cyan-400 {
   background: linear-gradient(to right, #004AAD, #3b82f6) !important;
 }
+
 .bg-gradient-to-tr.from-blue-600.to-cyan-500 {
   background: linear-gradient(to top right, #004AAD, #3b82f6) !important;
 }
@@ -295,14 +342,17 @@ footer.custom-site-footer strong {
 .hero-blue-banner h4,
 .hero-blue-banner h5,
 .hero-blue-banner h6 {
-  color: #ffffff !important;
+  color: #0A3161 !important;
 }
+
 .hero-blue-banner p {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #475569 !important;
 }
+
 .hover\:from-blue-500:hover {
   --tw-gradient-from: #004AAD !important;
 }
+
 .hover\:to-cyan-400:hover {
   --tw-gradient-to: #3b82f6 !important;
 }
@@ -311,24 +361,31 @@ footer.custom-site-footer strong {
 .from-blue-600\/20 {
   --tw-gradient-from: rgba(0, 74, 173, 0.08) !important;
 }
+
 .to-cyan-500\/20 {
   --tw-gradient-to: rgba(59, 130, 246, 0.08) !important;
 }
+
 .border-blue-500\/10 {
   border-color: rgba(0, 74, 173, 0.1) !important;
 }
 
 /* Utility buttons and badge colors */
 .bg-blue-600 {
-  background-color: #004AAD !important; /* Primary Royal Blue */
+  background-color: #004AAD !important;
+  /* Primary Royal Blue */
 }
+
 .bg-blue-600\/10 {
   background-color: rgba(0, 74, 173, 0.1) !important;
 }
+
 .hover\:bg-blue-500:hover {
   background-color: #003882 !important;
 }
-.bg-emerald-955\/50, .bg-emerald-950\/50 {
+
+.bg-emerald-955\/50,
+.bg-emerald-950\/50 {
   background-color: rgba(0, 74, 173, 0.08) !important;
 }
 
@@ -342,16 +399,20 @@ footer.custom-site-footer strong {
 .text-cyan-400,
 .text-indigo-400,
 .text-emerald-400 {
-  color: #004AAD !important; /* High contrast primary */
+  color: #004AAD !important;
+  /* High contrast primary */
 }
+
 .text-blue-500,
 .text-cyan-500,
 .text-indigo-500 {
   color: #004AAD !important;
 }
+
 .hover\:text-blue-400:hover {
   color: #3b82f6 !important;
 }
+
 .hover\:text-blue-300:hover {
   color: #60a5fa !important;
 }
@@ -361,19 +422,22 @@ footer.custom-site-footer strong {
 .shadow-blue-500\/20 {
   box-shadow: 0 10px 15px -3px rgba(0, 74, 173, 0.15), 0 4px 6px -4px rgba(0, 74, 173, 0.1) !important;
 }
+
 .glass-card-hover:hover {
   border-color: rgba(0, 74, 173, 0.25) !important;
   box-shadow: 0 20px 40px -15px rgba(0, 74, 173, 0.1) !important;
 }
-.glow-text-cyan, .glow-text-blue {
+
+.glow-text-cyan,
+.glow-text-blue {
   text-shadow: 0 0 20px rgba(0, 74, 173, 0.15) !important;
 }
 
 /* ==========================================
    NAVBAR OVAL PILL LAYOUT OVERRIDES
    ========================================== */
-nav .nav-pill-container > a,
-nav .nav-pill-container > div > button {
+nav .nav-pill-container>a,
+nav .nav-pill-container>div>button {
   color: #475569 !important;
   font-size: 13px !important;
   font-weight: 650 !important;
@@ -389,14 +453,14 @@ nav .nav-pill-container > div > button {
   white-space: nowrap !important;
 }
 
-nav .nav-pill-container > a:hover,
-nav .nav-pill-container > div > button:hover {
+nav .nav-pill-container>a:hover,
+nav .nav-pill-container>div>button:hover {
   color: #004AAD !important;
   background-color: rgba(0, 74, 173, 0.06) !important;
 }
 
-nav .nav-pill-container > a.active-pill,
-nav .nav-pill-container > div > button.active-pill {
+nav .nav-pill-container>a.active-pill,
+nav .nav-pill-container>div>button.active-pill {
   color: #ffffff !important;
   background-color: #004AAD !important;
   font-weight: 700 !important;
@@ -633,8 +697,3 @@ nav .absolute.bg-white\/95 .bg-slate-50\/20,
 nav .absolute.bg-white\/95 .bg-slate-50\/80 {
   background-color: rgba(241, 245, 249, 0.8) !important;
 }
-
-
-
-
-
