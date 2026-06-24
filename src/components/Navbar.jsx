@@ -279,10 +279,34 @@ export default function Navbar() {
                               <tr className="bg-transparent hover:bg-slate-50/40 transition-colors">
                                 <td className="py-3 px-2 align-top pt-3 w-1/5">
                                   {isDropdownCategoryOpen && (
-                                    <div
-                                      className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left"
-                                    >
-                                      Base
+                                    <div className="flex flex-col gap-3 pt-1 pb-1">
+                                      {/* Aligns with BNXmail */}
+                                      <div className="h-11 flex items-center animate-fadeIn">
+                                        <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left">
+                                          Base
+                                        </span>
+                                      </div>
+                                      
+                                      {/* Aligns with B2Auth */}
+                                      <div className="h-11 flex items-center animate-fadeIn">
+                                        <span className="coming-soon-badge !ml-0">
+                                          Coming Soon
+                                        </span>
+                                      </div>
+                                      
+                                      {/* Aligns with Bit-Tool */}
+                                      <div className="h-11 flex items-center animate-fadeIn">
+                                        <span className="coming-soon-badge !ml-0">
+                                          Coming Soon
+                                        </span>
+                                      </div>
+                                      
+                                      {/* Aligns with Cliks */}
+                                      <div className="h-11 flex items-center animate-fadeIn">
+                                        <span className="coming-soon-badge !ml-0">
+                                          Coming Soon
+                                        </span>
+                                      </div>
                                     </div>
                                   )}
                                 </td>
@@ -294,7 +318,7 @@ export default function Navbar() {
                                         href="https://www.bnxmail.com/login"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                       >
                                         <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                           <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
@@ -309,16 +333,13 @@ export default function Navbar() {
                                         href="https://www.b2auth.com/"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                       >
                                         <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                           <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm flex items-center">
-                                            B2Auth
-                                            <span className="coming-soon-badge">Coming Soon</span>
-                                          </p>
+                                          <p className="font-semibold text-slate-800 text-sm">B2Auth</p>
                                           <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
                                         </div>
                                       </a>
@@ -327,16 +348,13 @@ export default function Navbar() {
                                         href="https://bittool.beta-softnet.com/"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                       >
                                         <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                           <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm flex items-center">
-                                            Bit-Tool
-                                            <span className="coming-soon-badge">Coming Soon</span>
-                                          </p>
+                                          <p className="font-semibold text-slate-800 text-sm">Bit-Tool</p>
                                           <p className="text-xs text-slate-450 font-medium">Developer utility assistant</p>
                                         </div>
                                       </a>
@@ -345,16 +363,13 @@ export default function Navbar() {
                                         href="https://cliks.beta-softnet.com/"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                       >
                                         <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
                                           <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm flex items-center">
-                                            Cliks
-                                            <span className="coming-soon-badge">Coming Soon</span>
-                                          </p>
+                                          <p className="font-semibold text-slate-800 text-sm">Cliks</p>
                                           <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
                                         </div>
                                       </a>
