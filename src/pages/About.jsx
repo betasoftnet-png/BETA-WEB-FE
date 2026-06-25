@@ -70,17 +70,17 @@ export default function About() {
 
   const milestones = [
     {
-      year: '2022',
+      year: '2023',
       title: 'Company Founded',
       desc: 'Beta was established in Tiruvallur, India, by a core team of 5 engineers aiming to redefine enterprise software.'
     },
     {
-      year: '2023',
+      year: '2024',
       title: 'BNX Mail Launch',
       desc: 'Released our collaborative email dashboard concept, securing our first 100 enterprise clients.'
     },
     {
-      year: '2024',
+      year: '2025',
       title: 'Series A Funding',
       desc: 'Secured $12M in Series A funding to expand our security-first auth frameworks and database clustering.'
     },
@@ -317,14 +317,14 @@ export default function About() {
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Innovating with Passion</h2>
             <p className="text-slate-400 leading-relaxed text-base">
-              Founded in 2022, Beta set out to build a platform that respects developer focus and enterprise scale. We believe that enterprise software doesn't need to be sluggish or fragmented.
+              Founded in 2023, Beta set out to build a platform that respects developer focus and enterprise scale. We believe that enterprise software doesn't need to be sluggish or fragmented.
             </p>
             <p className="text-slate-400 leading-relaxed text-base">
               Over the years, we have scaled our modules from a basic SMTP group inbox to a complete suite of services including **BNX Mail** for collaborative messaging, **B2 Auth Security** for multi-factor validations, and **Cliks** for sprint workflow collaboration.
             </p>
             <div className="pt-2 flex items-center space-x-8">
               <div>
-                <span className="text-2xl font-extrabold text-white">2022</span>
+                <span className="text-2xl font-extrabold text-white">2023</span>
                 <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Founded</p>
               </div>
               <div className="h-8 w-px bg-slate-200" />
