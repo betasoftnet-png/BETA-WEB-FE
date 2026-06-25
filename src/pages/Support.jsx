@@ -177,7 +177,7 @@ export default function Support() {
         </div>
 
         {/* Product Support Section */}
-        <div className="space-y-6 bg-gradient-to-br from-orange-50 via-red-50 to-rose-100 border border-orange-200/40 p-8 rounded-3xl shadow-sm">
+        <div className="space-y-6 bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-100 border border-blue-200/40 p-8 rounded-3xl shadow-sm">
           <div className="text-left space-y-1.5">
             <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Ecosystem Product Support</h2>
             <p className="text-sm text-slate-955 font-semibold">Guides, diagnostic links, and configuration standards for our primary suites.</p>

@@ -25,7 +25,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="custom-site-footer bg-[#E9F4FF] border-t border-slate-200 pt-16 pb-8 text-[#64748B]">
+    <footer className="custom-site-footer bg-[#E9F4FF] border-t border-slate-200 pt-16 pb-0 text-[#64748B]">
       <style>{`
         footer.custom-site-footer,
         footer.custom-site-footer p,
@@ -61,6 +61,15 @@ export default function Footer() {
         }
         footer.custom-site-footer input {
           color: #0F172A !important;
+        }
+        footer.custom-site-footer .footer-bottom-bar,
+        footer.custom-site-footer .footer-bottom-bar p,
+        footer.custom-site-footer .footer-bottom-bar a,
+        footer.custom-site-footer .footer-bottom-bar span {
+          color: #ffffff !important;
+        }
+        footer.custom-site-footer .footer-bottom-bar a:hover {
+          color: #cbd5e1 !important;
         }
       `}</style>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -163,9 +172,11 @@ export default function Footer() {
             )}
           </div>
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 font-medium">
+      {/* Bottom Bar */}
+      <div className="w-full bg-gradient-to-r from-[#0A3161] to-[#0F4DB8] border-t border-blue-800 py-6 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between text-xs text-white font-medium footer-bottom-bar">
+        <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8">
           <p>&copy; {new Date().getFullYear()} Beta Private Limited. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="hover:text-slate-800 transition">Privacy Policy</a>
