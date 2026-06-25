@@ -580,14 +580,18 @@ export default function Navbar() {
                 </button>
               </div>
             )}
-            <div className="h-6 w-px bg-slate-300 self-center" />
-            <button
-              onClick={() => setIsBitToolOpen(true)}
-              className="p-1 rounded-xl hover:bg-slate-100 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent ml-2"
-              title="Bit Tool"
-            >
-              <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-7 w-7 object-contain rounded-lg shadow-sm" />
-            </button>
+            {user && (
+              <>
+                <div className="h-6 w-px bg-slate-300 self-center" />
+                <button
+                  onClick={() => setIsBitToolOpen(true)}
+                  className="p-1 rounded-xl hover:bg-slate-100 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent ml-2"
+                  title="Bit Tool"
+                >
+                  <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-7 w-7 object-contain rounded-lg shadow-sm" />
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
