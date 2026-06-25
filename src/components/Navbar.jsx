@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Box, LogOut, LayoutDashboard, LogIn, ChevronDown, ChevronRight, Mail, Shield, User, Briefcase, Search, UserPlus, Lock, CheckCircle2, AlertCircle, HelpCircle, MessageSquare, Download, Phone, Activity, MapPin, Check, Copy, Clock, Send, RefreshCw, Calendar, Calculator, Contact, ShieldCheck, Plus, SquarePen, Sliders } from 'lucide-react';
+import { Menu, X, Box, LogOut, LayoutDashboard, LogIn, ChevronDown, ChevronRight, Mail, Shield, User, Briefcase, Search, UserPlus, Lock, CheckCircle2, AlertCircle, HelpCircle, MessageSquare, Download, Phone, Activity, MapPin, Check, Copy, Clock, Send, RefreshCw, Calendar, Calculator, Contact, ShieldCheck, Plus, SquarePen, Sliders, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api';
@@ -11,6 +11,7 @@ export default function Navbar() {
   const [isDropdownCategoryOpen, setIsDropdownCategoryOpen] = useState(true);
   const [isDropdownPublicOpen, setIsDropdownPublicOpen] = useState(true);
   const [isDropdownBusinessOpen, setIsDropdownBusinessOpen] = useState(true);
+  const [showComingSoonAnimation, setShowComingSoonAnimation] = useState(false);
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const [isMobileCategoryOpen, setIsMobileCategoryOpen] = useState(true);
   const [isMobilePublicOpen, setIsMobilePublicOpen] = useState(true);
@@ -289,9 +290,25 @@ export default function Navbar() {
 
                                       {/* Aligns with B2Auth */}
                                       <div className="h-[60px] flex items-center animate-fadeIn">
-                                        <span className="coming-soon-badge !ml-0">
-                                          Coming Soon
-                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => setShowComingSoonAnimation(!showComingSoonAnimation)}
+                                          className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
+                                          title="Toggle Coming Soon products list"
+                                        >
+                                          {showComingSoonAnimation ? (
+                                            <span 
+                                              className="inline-flex items-center justify-center text-[8px] font-extrabold uppercase tracking-wider px-2.5 py-1.5 rounded-md bg-amber-600 text-white border border-amber-700 shadow-sm animate-pulse"
+                                              style={{ lineHeight: 1 }}
+                                            >
+                                              Coming Soon
+                                            </span>
+                                          ) : (
+                                            <span className="coming-soon-badge !ml-0 hover:bg-amber-500/20 transition-colors">
+                                              Coming Soon
+                                            </span>
+                                          )}
+                                        </button>
                                       </div>
                                     </div>
                                   )}
@@ -317,50 +334,90 @@ export default function Navbar() {
                                         </div>
                                       </a>
 
-                                      <a
-                                        href="https://www.b2auth.com/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                      >
-                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                          <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
-                                        </div>
-                                        <div>
-                                          <p className="font-semibold text-slate-800 text-xs">B2Auth</p>
-                                          <p className="text-[10px] text-slate-450 font-medium">MFA & SSO Gateway</p>
-                                        </div>
-                                      </a>
+                                      {showComingSoonAnimation ? (
+                                        <motion.div
+                                          initial={{ opacity: 0, scale: 0.95 }}
+                                          animate={{ opacity: 1, scale: 1 }}
+                                          exit={{ opacity: 0, scale: 0.95 }}
+                                          className="h-[180px] rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center p-4 text-center space-y-2.5 overflow-hidden relative"
+                                        >
+                                          {/* Glowing background */}
+                                          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-violet-500/5 to-emerald-500/5 animate-pulse pointer-events-none" />
+                                          
+                                          {/* Icon */}
+                                          <motion.div
+                                            animate={{ 
+                                              y: [0, -4, 0],
+                                              rotate: [0, 4, -4, 0]
+                                            }}
+                                            transition={{ 
+                                              repeat: Infinity, 
+                                              duration: 2.5, 
+                                              ease: "easeInOut" 
+                                            }}
+                                            className="p-2.5 bg-amber-50 text-amber-600 rounded-full border border-amber-100 shadow-xs relative z-10"
+                                          >
+                                            <Sparkles className="h-4.5 w-4.5 animate-pulse" />
+                                          </motion.div>
+                                          
+                                          <div className="space-y-1 relative z-10">
+                                            <h5 className="font-extrabold text-slate-800 text-[10px] tracking-wider uppercase">Beta Labs Innovation</h5>
+                                            <p className="text-[9px] text-slate-400 font-medium max-w-[190px] leading-relaxed">
+                                              We are refining next-gen secure authentication gateways, advanced developer assistant utilities, and offline-first personal organizers.
+                                            </p>
+                                          </div>
+                                          
+                                          {/* Shimmer line */}
+                                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 via-indigo-500 to-emerald-400 opacity-60" />
+                                        </motion.div>
+                                      ) : (
+                                        <>
+                                          <a
+                                            href="https://www.b2auth.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                          >
+                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                              <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
+                                            </div>
+                                            <div>
+                                              <p className="font-semibold text-slate-800 text-xs">B2Auth</p>
+                                              <p className="text-[10px] text-slate-450 font-medium">MFA & SSO Gateway</p>
+                                            </div>
+                                          </a>
 
-                                      <a
-                                        href="https://bittool.beta-softnet.com/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                      >
-                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                          <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
-                                        </div>
-                                        <div>
-                                          <p className="font-semibold text-slate-800 text-xs">Bit-Tool</p>
-                                          <p className="text-[10px] text-slate-450 font-medium">Developer utility assistant</p>
-                                        </div>
-                                      </a>
+                                          <a
+                                            href="https://bittool.beta-softnet.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                          >
+                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                              <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
+                                            </div>
+                                            <div>
+                                              <p className="font-semibold text-slate-800 text-xs">Bit-Tool</p>
+                                              <p className="text-[10px] text-slate-450 font-medium">Developer utility assistant</p>
+                                            </div>
+                                          </a>
 
-                                      <a
-                                        href="https://cliks.beta-softnet.com/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                      >
-                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                          <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
-                                        </div>
-                                        <div>
-                                          <p className="font-semibold text-slate-800 text-xs">Cliks</p>
-                                          <p className="text-[10px] text-slate-450 font-medium">Notes & calendars</p>
-                                        </div>
-                                      </a>
+                                          <a
+                                            href="https://cliks.beta-softnet.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                          >
+                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                              <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
+                                            </div>
+                                            <div>
+                                              <p className="font-semibold text-slate-800 text-xs">Cliks</p>
+                                              <p className="text-[10px] text-slate-450 font-medium">Notes & calendars</p>
+                                            </div>
+                                          </a>
+                                        </>
+                                      )}
 
                                       <div className="border-t border-slate-100 pt-2.5 mt-1 flex justify-center">
                                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider select-none">

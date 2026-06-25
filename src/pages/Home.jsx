@@ -30,7 +30,7 @@ export default function Home() {
   const products = [
     {
       name: 'BNX MAIL',
-      description: 'WhatsApp-style collaborative email platform for modern teams to manage group inboxes together.',
+      description: 'A WhatsApp-style collaborative group email inbox that allows modern teams to unify SMTP and IMAP box configurations, delegate incoming messages, coordinate live thread assignments, and reply concurrently in real time.',
       icon: Mail,
       color: 'bg-blue-500/10 border-blue-500/20 text-[#004AAD]',
       features: ['SMTP & IMAP', 'Shared Threads', 'Live WebSockets', 'Group Inbox'],
@@ -38,7 +38,7 @@ export default function Home() {
     },
     {
       name: 'CLIKS BUSINESS',
-      description: 'All-in-one team collaboration and agile sprint engine for task management and chat.',
+      description: 'An all-in-one corporate collaboration workspace that fuels task delegation and agile sprint releases with dynamic boards, active team discussion threads, interactive doc collaboration, and billing analytics.',
       icon: Briefcase,
       color: 'bg-violet-500/10 border-violet-500/20 text-violet-600',
       features: ['Agile Sprints', 'Workspace Chat', 'Analytical Reports', 'Doc Collaborator'],
@@ -173,62 +173,61 @@ export default function Home() {
               </span>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-4">
               {products.map((product, idx) => {
                 const Icon = product.icon;
                 return (
                   <motion.div
                     key={product.name}
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: idx * 0.1 }}
-                    className="h-full"
                   >
                     <a
                       href={product.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="glass-card glass-card-hover p-5 rounded-2xl border border-slate-200/80 bg-white shadow-sm flex flex-col justify-between group text-left h-full transition-all duration-200 hover:shadow-md hover:border-[#004AAD]/30 block"
+                      className="glass-card glass-card-hover p-4 rounded-2xl border border-slate-200/80 bg-white shadow-sm flex flex-col justify-between group text-left transition-all duration-200 hover:shadow-md hover:border-[#004AAD]/30 block"
                     >
-                      <div className="space-y-3.5">
+                      <div className="space-y-2">
                         {/* Header Row: Logo, Name & Tag (horizontally aligned) */}
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
+                          <div className="flex items-center space-x-2.5">
                             {product.name === 'BNX MAIL' ? (
-                              <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                              <div className="h-8 w-8 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
                                 <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                               </div>
                             ) : product.name === 'CLIKS BUSINESS' ? (
-                              <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                              <div className="h-8 w-8 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
                                 <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                               </div>
                             ) : (
-                              <div className={`h-10 w-10 rounded-xl flex items-center justify-center border flex-shrink-0 group-hover:scale-105 transition-transform duration-300 ${product.color}`}>
-                                <Icon className="h-4.5 w-4.5" />
+                              <div className={`h-8 w-8 rounded-lg flex items-center justify-center border flex-shrink-0 group-hover:scale-105 transition-transform duration-300 ${product.color}`}>
+                                <Icon className="h-4 w-4" />
                               </div>
                             )}
-                            <h4 className="text-base font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                            <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                               {product.name}
                             </h4>
                           </div>
-                          <span className="px-1.5 py-0.2 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 border border-slate-250/50 text-slate-500 flex-shrink-0">
+                          <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-100 border border-slate-250/50 text-slate-500 flex-shrink-0">
                             Suite
                           </span>
                         </div>
                         
-                        {/* Description: Starts below the logo-name header and aligns to left edge */}
+                        {/* Description */}
                         <p className="text-slate-500 text-sm leading-relaxed font-medium">
                           {product.description}
                         </p>
                       </div>
-
+                      
                       {/* Bottom: Feature Badges */}
-                      <div className="flex flex-wrap gap-1 mt-4 pt-3 border-t border-slate-100/60">
-                        {product.features.slice(0, 3).map((feat) => (
+                      <div className="flex flex-wrap gap-1 mt-3 pt-2.5 border-t border-slate-100/60">
+                        {product.features.map((feat) => (
                           <span
                             key={feat}
-                            className="px-1.5 py-0.5 rounded bg-slate-50 border border-slate-150 text-slate-500 text-[10px] font-semibold"
+                            className="px-1.5 py-0.5 rounded bg-slate-50 border border-slate-150 text-slate-500 text-[9px] font-semibold"
                           >
                             {feat}
                           </span>
