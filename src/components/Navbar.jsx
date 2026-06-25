@@ -277,32 +277,18 @@ export default function Navbar() {
                             <tbody className="divide-y divide-slate-100 text-slate-750 text-xs">
                               {/* Row 1: Base */}
                               <tr className="bg-transparent hover:bg-slate-50/40 transition-colors">
-                                <td className="py-3 px-2 align-top pt-3 w-1/5">
+                                <td className="py-3 px-2 align-top pt-3 w-1/5 border-r border-slate-200">
                                   {isDropdownCategoryOpen && (
                                     <div className="flex flex-col gap-3 pt-1 pb-1">
                                       {/* Aligns with BNXmail */}
-                                      <div className="h-11 flex items-center animate-fadeIn">
+                                      <div className="h-[60px] flex items-center animate-fadeIn">
                                         <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left">
                                           Base
                                         </span>
                                       </div>
-                                      
+
                                       {/* Aligns with B2Auth */}
-                                      <div className="h-11 flex items-center animate-fadeIn">
-                                        <span className="coming-soon-badge !ml-0">
-                                          Coming Soon
-                                        </span>
-                                      </div>
-                                      
-                                      {/* Aligns with Bit-Tool */}
-                                      <div className="h-11 flex items-center animate-fadeIn">
-                                        <span className="coming-soon-badge !ml-0">
-                                          Coming Soon
-                                        </span>
-                                      </div>
-                                      
-                                      {/* Aligns with Cliks */}
-                                      <div className="h-11 flex items-center animate-fadeIn">
+                                      <div className="h-[60px] flex items-center animate-fadeIn">
                                         <span className="coming-soon-badge !ml-0">
                                           Coming Soon
                                         </span>
@@ -320,12 +306,14 @@ export default function Navbar() {
                                         rel="noopener noreferrer"
                                         className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                       >
-                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                           <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">BNXmail</p>
-                                          <p className="text-xs text-slate-450 font-medium">Collaborative group inbox</p>
+                                          <p className="font-semibold text-slate-800 text-xs">BNXmail</p>
+                                          <p className="text-[10px] text-slate-450 font-medium">
+                                            Collaborative group inbox
+                                          </p>
                                         </div>
                                       </a>
 
@@ -335,12 +323,12 @@ export default function Navbar() {
                                         rel="noopener noreferrer"
                                         className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                       >
-                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                           <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">B2Auth</p>
-                                          <p className="text-xs text-slate-450 font-medium">MFA & SSO Gateway</p>
+                                          <p className="font-semibold text-slate-800 text-xs">B2Auth</p>
+                                          <p className="text-[10px] text-slate-450 font-medium">MFA & SSO Gateway</p>
                                         </div>
                                       </a>
 
@@ -350,12 +338,12 @@ export default function Navbar() {
                                         rel="noopener noreferrer"
                                         className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                       >
-                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                           <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">Bit-Tool</p>
-                                          <p className="text-xs text-slate-450 font-medium">Developer utility assistant</p>
+                                          <p className="font-semibold text-slate-800 text-xs">Bit-Tool</p>
+                                          <p className="text-[10px] text-slate-450 font-medium">Developer utility assistant</p>
                                         </div>
                                       </a>
 
@@ -365,14 +353,20 @@ export default function Navbar() {
                                         rel="noopener noreferrer"
                                         className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                       >
-                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                           <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">Cliks</p>
-                                          <p className="text-xs text-slate-450 font-medium">Notes & calendars</p>
+                                          <p className="font-semibold text-slate-800 text-xs">Cliks</p>
+                                          <p className="text-[10px] text-slate-450 font-medium">Notes & calendars</p>
                                         </div>
                                       </a>
+
+                                      <div className="border-t border-slate-100 pt-2.5 mt-1 flex justify-center">
+                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider select-none">
+                                          Beta ecosystem
+                                        </span>
+                                      </div>
                                     </div>
                                   )}
                                 </td>
@@ -386,12 +380,12 @@ export default function Navbar() {
                                         rel="noopener noreferrer"
                                         className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
                                       >
-                                        <div className="h-7 w-7 flex-shrink-0 flex items-center justify-center">
+                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                           <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                                         </div>
                                         <div>
-                                          <p className="font-semibold text-slate-800 text-sm">CliksBusiness</p>
-                                          <p className="text-xs text-slate-450 font-medium">Team project chats</p>
+                                          <p className="font-semibold text-slate-800 text-xs">CliksBusiness</p>
+                                          <p className="text-[10px] text-slate-450 font-medium">Team project chats</p>
                                         </div>
                                       </a>
                                     </div>
@@ -686,6 +680,11 @@ export default function Navbar() {
                                 <span className="coming-soon-badge">Coming Soon</span>
                               </span>
                             </a>
+                          </div>
+                          <div className="border-t border-slate-100 pt-2 flex justify-center">
+                            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider select-none">
+                              Beta ecosystem
+                            </span>
                           </div>
                         </div>
 
