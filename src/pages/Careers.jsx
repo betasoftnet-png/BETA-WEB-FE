@@ -333,82 +333,186 @@ export default function Careers() {
 
 
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-36">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-32">
+        {/* COMBINED HERO & OPEN ROLES GROUP */}
+        <div className="space-y-12">
+          {/* HERO SECTION */}
+          <div className="text-center max-w-3xl mx-auto pt-8 pb-4 space-y-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Join Our Team</span>
+            </motion.div>
+            
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-slate-900"
+            >
+              Shape Tomorrow
+              <span className="block bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-purple-600 bg-clip-text text-transparent mt-1">
+                With Us
+              </span>
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.15 }}
+              className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+            >
+              At Beta, we design and deliver high-performance real-time enterprise software. We respect developer focus, async workflow, and premium user experience design.
+            </motion.p>
 
-
-        {/* SECTION 3: OPEN ROLES SECTION */}
-        <div id="search-roles" className="space-y-6">
-          <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
-              <Briefcase className="h-3.5 w-3.5" />
-              <span>Current Openings</span>
-            </div>
-            <div className="inline-flex items-center space-x-2 text-xs text-purple-700 bg-purple-50 px-4 py-2.5 rounded-2xl border border-purple-200 select-none">
-              <MapPin className="h-4 w-4 text-[#EC4899]" />
-              <span>Office: Chennai, India</span>
-            </div>
+            {/* Search Bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="max-w-md mx-auto relative mt-6"
+            >
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by role, skills, department, or location..."
+                  className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-2xl py-3.5 pl-11 pr-4 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-sm shadow-md shadow-purple-500/5 transition duration-300"
+                />
+                <Search className="absolute left-4 h-5 w-5 text-slate-400 pointer-events-none" />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-4 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            </motion.div>
           </div>
 
+          {/* SECTION 3: OPEN ROLES SECTION */}
+          <div id="search-roles" className="space-y-6">
+            <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
+                <Briefcase className="h-3.5 w-3.5" />
+                <span>Current Openings</span>
+              </div>
+            </div>
 
-
-          {/* Job list */}
-          <div className="flex flex-col gap-6 w-full max-w-5xl mr-auto">
-            <AnimatePresence>
-              {filteredJobs.length > 0 ? (
-                filteredJobs.map((job) => (
-                  <motion.div
-                    key={job.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3 }}
-                    className="hacker-layout-box p-6 rounded-2xl text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:border-[#8B5CF6] hover:shadow-lg hover:shadow-purple-500/10 group"
-                  >
-                    <div className="space-y-4 flex-grow">
-                      <div>
-                        <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300">
-                          {job.title}
-                        </h3>
-                        <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
-                          {job.team}
-                        </span>
-                      </div>
-
-                      <div className="space-y-2 border-t border-b border-purple-500/10 py-3 text-xs text-slate-600 font-medium">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-[#EC4899]">•</span>
-                          <span>{job.location} • {job.type}</span>
+            {/* Job list */}
+            <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
+              <AnimatePresence>
+                {filteredJobs.length > 0 ? (
+                  filteredJobs.map((job) => (
+                    <motion.div
+                      key={job.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3 }}
+                      className="hacker-layout-box p-6 rounded-2xl text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:border-[#8B5CF6] hover:shadow-lg hover:shadow-purple-500/10 group"
+                    >
+                      <div className="space-y-4 flex-grow">
+                        <div>
+                          <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300">
+                            {job.title}
+                          </h3>
+                          <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
+                            {job.team}
+                          </span>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-[#EC4899]">•</span>
-                          <span>{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
-                        </div>
-                        {job.description && (
-                          <div className="flex items-start space-x-2">
-                            <span className="text-[#EC4899] select-none">•</span>
-                            <span className="text-slate-500 leading-relaxed">{job.description}</span>
+
+                        <div className="space-y-2 border-t border-b border-purple-500/10 py-3 text-xs text-slate-600 font-medium">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-[#EC4899]">•</span>
+                            <span>{job.location} • {job.type}</span>
                           </div>
-                        )}
+                          <div className="flex items-center space-x-2">
+                            <span className="text-[#EC4899]">•</span>
+                            <span>{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
+                          </div>
+                          {job.description && (
+                            <div className="flex items-start space-x-2">
+                              <span className="text-[#EC4899] select-none">•</span>
+                              <span className="text-slate-500 leading-relaxed">{job.description}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex-shrink-0 w-full sm:w-auto">
-                      <button
-                        onClick={() => setSelectedJob(job)}
-                        className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
-                      >
-                        Apply Now
-                      </button>
+                      <div className="flex-shrink-0 w-full sm:w-auto">
+                        <button
+                          onClick={() => setSelectedJob(job)}
+                          className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
+                        >
+                          Apply Now
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12 text-slate-400 italic text-sm">
+                    No open positions found. Try adjusting filters or search keywords.
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 6: HIRING PROCESS */}
+        <div className="space-y-16">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
+              <CheckSquare className="h-3.5 w-3.5" />
+              <span>Hiring Pipeline</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-extrabold">Our Hiring Process</h2>
+            <p className="text-slate-500 text-sm">A quick outline of how we validate core competencies and welcome new team members.</p>
+          </div>
+
+          {/* Connected Glowing Nodes Timeline */}
+          <div className="relative max-w-4xl mx-auto pt-6 flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-between gap-8 md:gap-4">
+            {processSteps.map((step, idx) => {
+              const Icon = step.icon;
+              return (
+                <React.Fragment key={step.id}>
+                  {/* Glowing Node Circle */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                    className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-full md:w-[18%] group relative"
+                  >
+                    <div className={`h-12 w-12 rounded-full flex items-center justify-center border ${step.bg} mb-3 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105`}>
+                      <Icon className={`h-5.5 w-5.5 ${step.color}`} />
                     </div>
+                    <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest mb-1">
+                      Step {step.id}
+                    </span>
+                    <h4 className="text-xs font-black group-hover:text-[#EC4899] transition-colors">
+                      {step.title}
+                    </h4>
+                    <p className="text-[10px] text-slate-500 leading-relaxed mt-1 font-medium">
+                      {step.desc}
+                    </p>
                   </motion.div>
-                ))
-              ) : (
-                <div className="col-span-full text-center py-12 text-slate-400 italic text-sm">
-                  No open positions found. Try adjusting filters or search keywords.
-                </div>
-              )}
-            </AnimatePresence>
+
+                  {/* Node Connector Line */}
+                  {idx < processSteps.length - 1 && (
+                    <div className="hidden md:block h-[2px] flex-grow bg-gradient-to-r from-[#8B5CF6]/50 to-[#EC4899]/50 relative z-0 mx-2" />
+                  )}
+                </React.Fragment>
+              );
+            })}
           </div>
         </div>
 
@@ -539,55 +643,6 @@ export default function Careers() {
                     {ben.desc}
                   </p>
                 </motion.div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* SECTION 6: HIRING PROCESS */}
-        <div className="space-y-16">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
-              <CheckSquare className="h-3.5 w-3.5" />
-              <span>Hiring Pipeline</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold">Our Hiring Process</h2>
-            <p className="text-slate-500 text-sm">A quick outline of how we validate core competencies and welcome new team members.</p>
-          </div>
-
-          {/* Connected Glowing Nodes Timeline */}
-          <div className="relative max-w-4xl mx-auto pt-6 flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-between gap-8 md:gap-4">
-            {processSteps.map((step, idx) => {
-              const Icon = step.icon;
-              return (
-                <React.Fragment key={step.id}>
-                  {/* Glowing Node Circle */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-full md:w-[18%] group relative"
-                  >
-                    <div className={`h-12 w-12 rounded-full flex items-center justify-center border ${step.bg} mb-3 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105`}>
-                      <Icon className={`h-5.5 w-5.5 ${step.color}`} />
-                    </div>
-                    <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest mb-1">
-                      Step {step.id}
-                    </span>
-                    <h4 className="text-xs font-black group-hover:text-[#EC4899] transition-colors">
-                      {step.title}
-                    </h4>
-                    <p className="text-[10px] text-slate-500 leading-relaxed mt-1 font-medium">
-                      {step.desc}
-                    </p>
-                  </motion.div>
-
-                  {/* Node Connector Line */}
-                  {idx < processSteps.length - 1 && (
-                    <div className="hidden md:block h-[2px] flex-grow bg-gradient-to-r from-[#8B5CF6]/50 to-[#EC4899]/50 relative z-0 mx-2" />
-                  )}
-                </React.Fragment>
               );
             })}
           </div>

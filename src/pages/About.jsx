@@ -532,7 +532,7 @@ export default function About() {
               <Users className="h-3.5 w-3.5" />
               <span>Leadership</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white">Leadership Team</h2>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white">TrailBlazers</h2>
             <p className="text-slate-400 text-sm">Meet the innovators guiding our engineering and product vision.</p>
           </div>
 
