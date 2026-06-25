@@ -339,35 +339,33 @@ export default function Navbar() {
                                           initial={{ opacity: 0, scale: 0.95 }}
                                           animate={{ opacity: 1, scale: 1 }}
                                           exit={{ opacity: 0, scale: 0.95 }}
-                                          className="h-[180px] rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center p-4 text-center space-y-2.5 overflow-hidden relative"
+                                          className="h-[180px] rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center p-4 text-center overflow-hidden relative select-none"
                                         >
                                           {/* Glowing background */}
                                           <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-violet-500/5 to-emerald-500/5 animate-pulse pointer-events-none" />
                                           
-                                          {/* Icon */}
+                                          {/* Text container */}
                                           <motion.div
                                             animate={{ 
-                                              y: [0, -4, 0],
-                                              rotate: [0, 4, -4, 0]
+                                              scale: [1, 1.05, 1],
                                             }}
                                             transition={{ 
                                               repeat: Infinity, 
-                                              duration: 2.5, 
+                                              duration: 2, 
                                               ease: "easeInOut" 
                                             }}
-                                            className="p-2.5 bg-amber-50 text-amber-600 rounded-full border border-amber-100 shadow-xs relative z-10"
+                                            className="relative z-10 space-y-2 flex flex-col items-center justify-center"
                                           >
-                                            <Sparkles className="h-4.5 w-4.5 animate-pulse" />
+                                            <Sparkles className="h-6 w-6 text-amber-500 animate-pulse mb-1" />
+                                            <h2 className="text-xl font-extrabold tracking-widest bg-gradient-to-r from-amber-500 via-violet-600 to-emerald-500 bg-clip-text text-transparent uppercase animate-pulse">
+                                              Coming Soon
+                                            </h2>
+                                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
+                                              Beta Labs Release
+                                            </p>
                                           </motion.div>
                                           
-                                          <div className="space-y-1 relative z-10">
-                                            <h5 className="font-extrabold text-slate-800 text-[10px] tracking-wider uppercase">Beta Labs Innovation</h5>
-                                            <p className="text-[9px] text-slate-400 font-medium max-w-[190px] leading-relaxed">
-                                              We are refining next-gen secure authentication gateways, advanced developer assistant utilities, and offline-first personal organizers.
-                                            </p>
-                                          </div>
-                                          
-                                          {/* Shimmer line */}
+                                          {/* Bottom Shimmer line */}
                                           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 via-indigo-500 to-emerald-400 opacity-60" />
                                         </motion.div>
                                       ) : (
