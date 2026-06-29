@@ -15,7 +15,8 @@ import {
   Users,
   MapPin,
   CheckSquare,
-  FileText
+  FileText,
+  SlidersHorizontal
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -106,6 +107,15 @@ export default function Careers() {
 
   // Live Job Search & Filters State
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedType, setSelectedType] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Extract unique filter options dynamically from jobsList
+  const teams = Array.from(new Set(jobsList.map(job => job.team).filter(Boolean)));
+  const locations = Array.from(new Set(jobsList.map(job => job.location).filter(Boolean)));
+  const types = Array.from(new Set(jobsList.map(job => job.type).filter(Boolean)));
 
   // Fetch active job openings from API
   useEffect(() => {
@@ -145,9 +155,17 @@ export default function Careers() {
 
   // Filter logic
   const filteredJobs = jobsList.filter(job => {
-    return job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch = !searchQuery || 
+      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()));
+      (job.skills && job.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+      (job.team && job.team.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    const matchesTeam = !selectedTeam || job.team === selectedTeam;
+    const matchesLocation = !selectedLocation || job.location === selectedLocation;
+    const matchesType = !selectedType || job.type === selectedType;
+
+    return matchesSearch && matchesTeam && matchesLocation && matchesType;
   });
 
   const handleApply = async (e, jobOverride = null) => {
@@ -329,6 +347,9 @@ export default function Careers() {
           border: 1px solid rgba(236, 72, 153, 0.12);
           pointer-events: none;
         }
+        .unified-openings-box {
+          background: linear-gradient(135deg, rgba(209, 250, 229, 0.55) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+        }
       `}</style>
 
 
@@ -346,7 +367,7 @@ export default function Careers() {
               <Sparkles className="h-3.5 w-3.5" />
               <span>Join Our Team</span>
             </motion.div>
-            
+
             <motion.h1
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -357,7 +378,7 @@ export default function Careers() {
                 With Us
               </span>
             </motion.h1>
-            
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -367,102 +388,228 @@ export default function Careers() {
               At Beta, we design and deliver high-performance real-time enterprise software. We respect developer focus, async workflow, and premium user experience design.
             </motion.p>
 
-            {/* Search Bar */}
+            {/* Search & Filters */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
-              className="max-w-md mx-auto relative mt-6"
+              className="max-w-xl mx-auto mt-6 px-4"
             >
-              <div className="relative flex items-center">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by role, skills, department, or location..."
-                  className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-2xl py-3.5 pl-11 pr-4 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-sm shadow-md shadow-purple-500/5 transition duration-300"
-                />
-                <Search className="absolute left-4 h-5 w-5 text-slate-400 pointer-events-none" />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-4 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
+              <div className="flex items-center gap-3">
+                <div className="relative flex-grow flex items-center">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by role, skills, department..."
+                    className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-2xl py-3.5 pl-11 pr-10 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-sm shadow-md shadow-purple-500/5 transition duration-300"
+                  />
+                  <Search className="absolute left-4 h-5 w-5 text-slate-400 pointer-events-none" />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-4 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={`flex items-center gap-2 px-4 py-3.5 rounded-2xl border transition-all duration-300 text-sm font-semibold shadow-md cursor-pointer ${
+                    showFilters
+                      ? 'bg-[#8B5CF6] border-transparent text-white shadow-[#8B5CF6]/20'
+                      : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 shadow-purple-500/5'
+                  }`}
+                >
+                  <SlidersHorizontal className="h-5 w-5" />
+                  <span className="hidden sm:inline">Filters</span>
+                  {(selectedTeam || selectedLocation || selectedType) && (
+                    <span className="flex h-2 w-2 rounded-full bg-[#EC4899] animate-pulse"></span>
+                  )}
+                </button>
               </div>
+
+              {/* Expandable Filter Panel */}
+              <AnimatePresence>
+                {showFilters && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                    animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="overflow-hidden"
+                  >
+                    <div className="bg-white/85 backdrop-blur-md border border-purple-500/20 rounded-2xl p-5 shadow-lg flex flex-col gap-4 text-left">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {/* Department Filter */}
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Department</label>
+                          <select
+                            value={selectedTeam}
+                            onChange={(e) => setSelectedTeam(e.target.value)}
+                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2.5 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                          >
+                            <option value="">All Departments</option>
+                            {teams.map(team => (
+                              <option key={team} value={team}>{team}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* Location Filter */}
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Location</label>
+                          <select
+                            value={selectedLocation}
+                            onChange={(e) => setSelectedLocation(e.target.value)}
+                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2.5 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                          >
+                            <option value="">All Locations</option>
+                            {locations.map(loc => (
+                              <option key={loc} value={loc}>{loc}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* Job Type Filter */}
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Job Type</label>
+                          <select
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2.5 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                          >
+                            <option value="">All Types</option>
+                            {types.map(type => (
+                              <option key={type} value={type}>{type}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Active Filter Pills and Clear Button */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-purple-500/10 pt-4">
+                        <div className="flex flex-wrap gap-2">
+                          {selectedTeam && (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-700 text-[10px] font-semibold">
+                              Dept: {selectedTeam}
+                              <button onClick={() => setSelectedTeam('')} className="hover:text-purple-900 cursor-pointer">
+                                <X className="h-3 w-3" />
+                              </button>
+                            </span>
+                          )}
+                          {selectedLocation && (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-700 text-[10px] font-semibold">
+                              Loc: {selectedLocation}
+                              <button onClick={() => setSelectedLocation('')} className="hover:text-pink-900 cursor-pointer">
+                                <X className="h-3 w-3" />
+                              </button>
+                            </span>
+                          )}
+                          {selectedType && (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 text-[10px] font-semibold">
+                              Type: {selectedType}
+                              <button onClick={() => setSelectedType('')} className="hover:text-amber-900 cursor-pointer">
+                                <X className="h-3 w-3" />
+                              </button>
+                            </span>
+                          )}
+                        </div>
+
+                        {(selectedTeam || selectedLocation || selectedType) && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedTeam('');
+                              setSelectedLocation('');
+                              setSelectedType('');
+                            }}
+                            className="text-xs font-semibold text-[#EC4899] hover:underline cursor-pointer"
+                          >
+                            Clear All Filters
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           </div>
 
           {/* SECTION 3: OPEN ROLES SECTION */}
           <div id="search-roles" className="space-y-6">
             <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
-                <Briefcase className="h-3.5 w-3.5" />
-                <span>Current Openings</span>
-              </div>
+
+
+
+
             </div>
 
-            {/* Job list */}
-            <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
-              <AnimatePresence>
-                {filteredJobs.length > 0 ? (
-                  filteredJobs.map((job) => (
-                    <motion.div
-                      key={job.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.3 }}
-                      className="hacker-layout-box p-6 rounded-2xl text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:border-[#8B5CF6] hover:shadow-lg hover:shadow-purple-500/10 group"
-                    >
-                      <div className="space-y-4 flex-grow">
-                        <div>
-                          <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300">
-                            {job.title}
-                          </h3>
-                          <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
-                            {job.team}
-                          </span>
-                        </div>
+            {/* Job list inside a single unified container */}
+            <div className="w-full max-w-5xl mx-auto hacker-layout-box unified-openings-box p-6 sm:p-8 rounded-2xl shadow-xl shadow-purple-500/5">
+              <div className="flex flex-col gap-4">
+                <AnimatePresence>
+                  {filteredJobs.length > 0 ? (
+                    filteredJobs.map((job) => (
+                      <motion.div
+                        key={job.id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-5 rounded-xl border border-amber-500/10 bg-[#FEFCE8]/70 hover:bg-[#FEFCE8]/90 hover:border-amber-500/25 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
+                      >
+                        <div className="space-y-4 flex-grow">
+                          <div>
+                            <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300">
+                              {job.title}
+                            </h3>
+                            <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
+                              {job.team}
+                            </span>
+                          </div>
 
-                        <div className="space-y-2 border-t border-b border-purple-500/10 py-3 text-xs text-slate-600 font-medium">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-[#EC4899]">•</span>
-                            <span>{job.location} • {job.type}</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-[#EC4899]">•</span>
-                            <span>{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
-                          </div>
-                          {job.description && (
-                            <div className="flex items-start space-x-2">
-                              <span className="text-[#EC4899] select-none">•</span>
-                              <span className="text-slate-500 leading-relaxed">{job.description}</span>
+                          <div className="space-y-2 border-t border-b border-amber-500/10 py-3 text-xs text-slate-600 font-medium">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-[#EC4899]">•</span>
+                              <span>{job.location} • {job.type}</span>
                             </div>
-                          )}
+                            <div className="flex items-center space-x-2">
+                              <span className="text-[#EC4899]">•</span>
+                              <span>{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
+                            </div>
+                            {job.description && (
+                              <div className="flex items-start space-x-2">
+                                <span className="text-[#EC4899] select-none">•</span>
+                                <span className="text-slate-500 leading-relaxed">{job.description}</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex-shrink-0 w-full sm:w-auto">
-                        <button
-                          onClick={() => setSelectedJob(job)}
-                          className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
-                        >
-                          Apply Now
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <div className="col-span-full text-center py-12 text-slate-400 italic text-sm">
-                    No open positions found. Try adjusting filters or search keywords.
-                  </div>
-                )}
-              </AnimatePresence>
+                        <div className="flex-shrink-0 w-full sm:w-auto">
+                          <button
+                            onClick={() => setSelectedJob(job)}
+                            className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
+                          >
+                            Apply Now
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12 text-slate-400 italic text-sm">
+                      No open positions found. Try adjusting filters or search keywords.
+                    </div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>
