@@ -412,8 +412,8 @@ export default function Careers() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 w-full">
-                  <div className="relative flex-grow flex items-center">
+                <div className="flex items-center justify-center gap-3 w-full">
+                  <div className="relative flex-grow max-w-md flex items-center">
                     <input
                       type="text"
                       value={searchQuery}

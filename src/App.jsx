@@ -6,7 +6,6 @@ import api from './api';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import Products from './pages/Products';
 import About from './pages/About';
 import Careers from './pages/Careers';
 import Partners from './pages/Partners';
@@ -164,7 +163,6 @@ function AppContent() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
           <Route path="/about" element={<About />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/partners" element={<Partners />} />

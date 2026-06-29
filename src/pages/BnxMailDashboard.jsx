@@ -125,7 +125,7 @@ export default function BnxMailDashboard() {
         
         {/* Brand Logo */}
         <div className="flex items-center space-x-3">
-          <Link to="/products" className="p-1.5 hover:bg-white/10 rounded-lg text-white transition">
+          <Link to="/" className="p-1.5 hover:bg-white/10 rounded-lg text-white transition">
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-[#004AAD] font-black text-xl shadow-inner">

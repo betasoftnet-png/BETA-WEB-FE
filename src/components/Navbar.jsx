@@ -115,14 +115,14 @@ export default function Navbar() {
       const query = searchQuery.toLowerCase().trim();
       setSearchQuery('');
       if (query.includes('mail') || query.includes('smtp') || query.includes('imap')) {
-        navigate('/products#bnx-mail');
+        navigate('/');
       } else if (query.includes('auth') || query.includes('security') || query.includes('sso') || query.includes('mfa')) {
-        navigate('/products#b2auth-security');
+        navigate('/');
       } else if (query.includes('personal') || query.includes('note') || query.includes('task') || query.includes('clik')) {
         if (query.includes('business')) {
           navigate('/cliks-business/dashboard');
         } else {
-          navigate('/products#cliks');
+          navigate('/');
         }
       } else if (query.includes('business') || query.includes('team') || query.includes('project') || query.includes('chat')) {
         navigate('/cliks-business/dashboard');
@@ -135,13 +135,13 @@ export default function Navbar() {
       } else if (query.includes('login') || query.includes('admin') || query.includes('dashboard') || query.includes('portal')) {
         navigate('/login');
       } else {
-        navigate('/products');
+        navigate('/');
       }
     }
   };
 
   const navLinks = [
-    { name: 'Products', path: '/products' },
+    { name: 'Products', path: '/' },
     { name: 'Partners', path: '/partners' },
     { name: 'Careers', path: '/careers' },
     { name: 'About', path: '/about' },
@@ -310,7 +310,7 @@ export default function Navbar() {
                                           title="Show Coming Soon products list"
                                         >
                                           {activeCategory === 'comingsoon' ? (
-                                            <span 
+                                            <span
                                               className="inline-flex items-center justify-center text-[8px] font-extrabold uppercase tracking-wider px-2.5 py-1.5 rounded-md bg-amber-600 text-white border border-amber-700 shadow-sm animate-pulse"
                                               style={{ lineHeight: 1 }}
                                             >
@@ -344,12 +344,12 @@ export default function Navbar() {
                                           <div>
                                             <p className="font-semibold text-slate-800 text-xs">BNXmail</p>
                                             <p className="text-[10px] text-slate-450 font-medium">
-                                              Collaborative group inbox
+                                              Real time mail,always in sync.
                                             </p>
                                           </div>
                                         </a>
                                       )}
- 
+
                                       {/* Coming Soon items (Shown in Coming Soon view) */}
                                       {activeCategory === 'comingsoon' && (
                                         <>
@@ -367,7 +367,7 @@ export default function Navbar() {
                                               <p className="text-[10px] text-slate-450 font-medium">MFA & SSO Gateway</p>
                                             </div>
                                           </a>
- 
+
                                           <a
                                             href="https://bittool.beta-softnet.com/"
                                             target="_blank"
@@ -382,7 +382,7 @@ export default function Navbar() {
                                               <p className="text-[10px] text-slate-450 font-medium">Developer utility assistant</p>
                                             </div>
                                           </a>
- 
+
                                           <a
                                             href="https://cliks.beta-softnet.com/"
                                             target="_blank"

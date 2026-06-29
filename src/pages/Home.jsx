@@ -99,6 +99,11 @@ export default function Home() {
         .cta-colored-section p {
           color: rgba(241, 245, 249, 0.95) !important;
         }
+        .showcase-white-text h3, 
+        .showcase-white-text p, 
+        .showcase-white-text span {
+          color: #ffffff !important;
+        }
       `}</style>
 
       {/* HERO SECTION: SIDE-BY-SIDE LAYOUT */}
@@ -168,13 +173,54 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                {/* Left Side inside Box: Illustration Image */}
-                <div className="w-full flex items-center justify-center p-3 bg-slate-50/50 rounded-2xl border border-slate-100/80">
-                  <img
-                    src="/bnx_product_showcase.png"
-                    alt="Featured App Showcase"
-                    className="max-h-[190px] w-auto object-contain select-none transition-transform duration-500 hover:scale-[1.03]"
-                  />
+                {/* Left Side inside Box: Styled BNX Showcase Card */}
+                <div 
+                  className="w-full rounded-2xl p-6 text-center overflow-hidden relative select-none flex flex-col items-center justify-between min-h-[300px] showcase-white-text"
+                  style={{
+                    background: 'linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
+                    backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
+                    backgroundSize: '24px 24px, 24px 24px, 100% 100%',
+                    border: '1px solid rgba(139, 92, 246, 0.2)'
+                  }}
+                >
+                  {/* Subtle top/bottom glowing gradients */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-fuchsia-500/5 to-cyan-500/5 pointer-events-none" />
+                   {/* Icon Block */}
+                  <div className="relative mt-2">
+                    <div className="bg-[#0e0620] border border-violet-500/40 w-16 h-16 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] transition-all duration-300 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-violet-600/20 to-cyan-400/10 pointer-events-none" />
+                      <img src="/logo.png" alt="Beta Logo" className="h-10 w-10 object-contain relative z-10" />
+                    </div>
+                    {/* Small sparkles */}
+                    <div className="absolute -top-2.5 -right-2.5 text-amber-300 animate-pulse">
+                      <Sparkles className="h-4 w-4 fill-amber-300/30" />
+                    </div>
+                  </div>
+
+                  {/* Text Stack */}
+                  <div className="space-y-1.5 z-10 my-4">
+                    <span className="text-[10px] uppercase tracking-widest text-white font-black">
+                      Introducing
+                    </span>
+                    <h3 className="text-2xl font-black text-white tracking-wide">
+                      Beta Products
+                    </h3>
+                    <p className="text-[10px] font-extrabold tracking-widest uppercase text-white mb-1">
+                      Real-Time Enterprise Apps
+                    </p>
+                    <p className="text-[11px] text-white font-medium leading-relaxed px-2">
+                      Consolidate your SMTP mail threads, live authentication protocols, and collaborative workspaces under a single unified dashboard.
+                    </p>
+                  </div>
+
+                  {/* Explorable Button */}
+                  <Link
+                    to="/login"
+                    className="inline-flex items-center px-6 py-2.5 rounded-full border border-violet-500/40 bg-violet-950/20 text-white text-[10px] font-extrabold uppercase tracking-wider hover:bg-violet-600 hover:border-violet-400 hover:shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all duration-300 mb-2 group cursor-pointer"
+                  >
+                    Explore Beta Apps
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5 transform transition-transform group-hover:translate-x-0.5" />
+                  </Link>
                 </div>
 
                 {/* Right Side inside Box: vertical stack list */}
@@ -189,7 +235,7 @@ export default function Home() {
                     <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                       <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                     </div>
-                    <div className="space-y-1 flex-grow">
+                    <div className="space-y-1 flex-grow pt-1">
                       <h4 className="text-xl font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200 leading-none">
                         BNXmail
                       </h4>
@@ -211,7 +257,7 @@ export default function Home() {
                     </div>
                     <div className="space-y-1 flex-grow">
                       <h4 className="text-xl font-bold text-slate-900 group-hover:text-violet-650 transition-colors duration-200 leading-none">
-                        Cliks
+                        Cliks Business
                       </h4>
                       <p className="text-slate-500 text-xs leading-relaxed font-semibold">
                         All in one workspace for collaboration and agile tasks.
