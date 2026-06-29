@@ -134,22 +134,15 @@ export default function Home() {
             </h1>
 
           </motion.div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          {/* Left Column: Heading, description */}
-          <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+        </div>        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          {/* Left Column: Heading and description */}
+          <div className="w-full lg:w-[35%] flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
             <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
               className="space-y-6"
             >
-              {/* <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Product Suite</span>
-              </motion.div> */}
-
               <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
                 Unified Software for a
                 <span className="block text-black mt-1">
@@ -157,25 +150,25 @@ export default function Home() {
                 </span>
               </motion.h2>
 
-              <motion.p variants={itemVariants} className="text-slate-600 text-base md:text-lg leading-relaxed max-w-2xl">
+              <motion.p variants={itemVariants} className="text-slate-600 text-base md:text-lg leading-relaxed">
                 Beta builds secure, real-time corporate applications. Consolidation is here: SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
             </motion.div>
           </div>
 
           {/* Right Column: Featured Apps Box */}
-          <div className="w-full lg:w-1/2 flex flex-col justify-center text-left lg:pl-12">
-            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-8 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
+          <div className="w-full lg:w-[65%] flex flex-col justify-center text-left">
+            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 sm:p-8 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-3.5 w-full mb-6">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
                   Featured Apps
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
                 <div 
-                  className="w-full rounded-2xl p-6 text-center overflow-hidden relative select-none flex flex-col items-center justify-between min-h-[300px] showcase-white-text"
+                  className="lg:col-span-1 w-full rounded-2xl p-6 text-center overflow-hidden relative select-none flex flex-col items-center justify-between min-h-[300px] showcase-white-text"
                   style={{
                     background: 'linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
                     backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
@@ -223,24 +216,24 @@ export default function Home() {
                   </Link>
                 </div>
 
-                {/* Right Side inside Box: vertical stack list */}
-                <div className="flex flex-col gap-6">
+                {/* Right Side: Horizontal stack list inside a grid */}
+                <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* BNX MAIL Card */}
                   <a
                     href="https://www.bnxmail.com/login"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-4 group cursor-pointer"
+                    className="flex flex-col items-start p-6 rounded-2xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer h-full text-left"
                   >
-                    <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                    <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 mb-4">
                       <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                     </div>
-                    <div className="space-y-1 flex-grow pt-1">
-                      <h4 className="text-xl font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200 leading-none">
+                    <div className="space-y-2 flex-grow">
+                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                         BNXmail
                       </h4>
-                      <p className="text-slate-500 text-xs leading-relaxed font-semibold">
-                        Instant updates across devices — no reloads needed
+                      <p className="text-slate-550 text-xs leading-relaxed font-semibold">
+                        Instant updates across devices — no reloads needed.
                       </p>
                     </div>
                   </a>
@@ -250,16 +243,16 @@ export default function Home() {
                     href="https://www.cliksbusiness.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-4 group cursor-pointer"
+                    className="flex flex-col items-start p-6 rounded-2xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer h-full text-left"
                   >
-                    <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                    <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 mb-4">
                       <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                     </div>
-                    <div className="space-y-1 flex-grow">
-                      <h4 className="text-xl font-bold text-slate-900 group-hover:text-violet-650 transition-colors duration-200 leading-none">
+                    <div className="space-y-2 flex-grow">
+                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-violet-600 transition-colors duration-200">
                         Cliks Business
                       </h4>
-                      <p className="text-slate-500 text-xs leading-relaxed font-semibold">
+                      <p className="text-slate-550 text-xs leading-relaxed font-semibold">
                         All in one workspace for collaboration and agile tasks.
                       </p>
                     </div>

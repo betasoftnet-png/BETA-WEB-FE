@@ -59,6 +59,7 @@ export default function AdminDashboard() {
   const [externalApplications, setExternalApplications] = useState([]);
   const [activeSubTab, setActiveSubTab] = useState('appsList');
   const [selectedJobFilter, setSelectedJobFilter] = useState('All');
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState('All');
   const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
 
   // Application details/status/interview states
@@ -518,12 +519,55 @@ export default function AdminDashboard() {
 
           <nav className="space-y-1 px-3">
             <button
-              className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition bg-[#004AAD] text-white!"
-              style={{ color: '#ffffff' }}
+              onClick={() => {
+                setSelectedStatusFilter('All');
+                setActiveSubTab('jobsList');
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer text-left ${
+                activeSubTab === 'jobsList' 
+                  ? 'bg-[#004AAD] text-white' 
+                  : 'text-slate-400 hover:bg-slate-800/20 hover:text-white'
+              }`}
+              style={activeSubTab === 'jobsList' ? { color: '#ffffff' } : {}}
             >
-              <Briefcase className="h-4.5 w-4.5 text-blue-200" />
-              <span className="text-white font-bold">Job Board</span>
+              <Briefcase className="h-4 w-4 text-blue-200" />
+              <span className="font-bold">Job Board</span>
             </button>
+
+            {/* Pipeline Stage Filters */}
+            <div className="pt-4 mt-4 border-t border-slate-800/80 space-y-1 max-h-[60vh] overflow-y-auto admin-scrollbar">
+              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">
+                Candidate Pipeline
+              </p>
+              {['All', 'Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => {
+                const isActive = activeSubTab === 'appsList' && selectedStatusFilter === status;
+                const count = status === 'All' 
+                  ? externalApplications.length 
+                  : externalApplications.filter(app => app.status === status).length;
+                
+                return (
+                  <button
+                    key={status}
+                    onClick={() => {
+                      setSelectedStatusFilter(status);
+                      setActiveSubTab('appsList');
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${
+                      isActive 
+                        ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20' 
+                        : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
+                    }`}
+                  >
+                    <span>{status}</span>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
+                      isActive ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </nav>
         </div>
 
@@ -715,11 +759,11 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between p-4 rounded-xl bg-white border border-slate-200">
                   <div className="text-slate-600 text-xs font-medium">
                     Showing {
-                      (selectedJobFilter === 'All'
-                        ? externalApplications
-                        : externalApplications.filter(app => app.jobTitle === selectedJobFilter)
-                      ).length
-                    } applications {selectedJobFilter !== 'All' && `for "${selectedJobFilter}"`}
+                      externalApplications
+                        .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
+                        .filter(app => selectedStatusFilter === 'All' || app.status === selectedStatusFilter)
+                        .length
+                    } applications {selectedJobFilter !== 'All' && `for "${selectedJobFilter}"`}{selectedStatusFilter !== 'All' && ` marked as "${selectedStatusFilter}"`}
                   </div>
                   <div className="flex items-center space-x-2">
                     <label className="text-[10px] font-bold text-slate-500 uppercase">Filter by Job:</label>
@@ -751,18 +795,22 @@ export default function AdminDashboard() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 text-slate-700 text-xs">
-                        {(selectedJobFilter === 'All'
-                          ? externalApplications
-                          : externalApplications.filter(app => app.jobTitle === selectedJobFilter)
-                        ).length === 0 ? (
-                          <tr>
-                            <td colSpan={6} className="py-8 text-center text-slate-400 italic">No external applications found.</td>
-                          </tr>
-                        ) : (
-                          (selectedJobFilter === 'All'
-                            ? externalApplications
-                            : externalApplications.filter(app => app.jobTitle === selectedJobFilter)
-                          ).map(app => (
+                        {(() => {
+                          const filtered = externalApplications
+                            .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
+                            .filter(app => selectedStatusFilter === 'All' || app.status === selectedStatusFilter);
+
+                          if (filtered.length === 0) {
+                            return (
+                              <tr>
+                                <td colSpan={7} className="py-8 text-center text-slate-400 italic">
+                                  No external applications found matching the selected filters.
+                                </td>
+                              </tr>
+                            );
+                          }
+
+                          return filtered.map(app => (
                             <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
                               <td className="py-4 px-6">
                                 <div className="font-bold text-slate-900">{app.fullName}</div>
@@ -778,6 +826,7 @@ export default function AdminDashboard() {
                                   app.status === 'Under Review' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                                   app.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                                   app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                                  app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
                                   app.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                                   app.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
                                   app.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
@@ -855,7 +904,7 @@ export default function AdminDashboard() {
                               </td>
                             </tr>
                           ))
-                        )}
+                        })()}
                       </tbody>
                     </table>
                   </div>
@@ -1094,9 +1143,9 @@ export default function AdminDashboard() {
               {/* Stepper / Progress Tracking */}
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Candidate Hiring Progress</div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-                  {['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Selected', 'Joined'].map((step, idx) => {
-                    const order = ['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Selected', 'Joined'];
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                  {['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
+                    const order = ['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
                     const curIdx = order.indexOf(selectedApplication.status);
                     const isCompleted = curIdx >= idx && selectedApplication.status !== 'Rejected';
                     const isCurrent = selectedApplication.status === step;
@@ -1152,12 +1201,13 @@ export default function AdminDashboard() {
                   <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-3">Dept & Location</label>
                   <p className="text-xs font-semibold text-slate-700 mt-0.5">{selectedApplication.jobDepartment} • {selectedApplication.jobLocation}</p>
 
-                  <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-3">Current Status</label>
+                  <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Current Status</label>
                   <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold capitalize mt-1 ${
                     selectedApplication.status === 'Applied' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
                     selectedApplication.status === 'Under Review' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                     selectedApplication.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                     selectedApplication.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                    selectedApplication.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
                     selectedApplication.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                     selectedApplication.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
                     selectedApplication.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
@@ -1184,12 +1234,12 @@ export default function AdminDashboard() {
               <div className="border-t border-slate-100 pt-4">
                 <label className="text-xs font-bold uppercase block mb-2">Update Application Status</label>
                 <div className="flex flex-wrap gap-2">
-                  {['Applied', 'Under Review', 'Shortlisted', 'Selected', 'Rejected', 'Joined'].map((status) => (
+                  {['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
                     <button
                       key={status}
                       type="button"
                       onClick={() => handleUpdateStatus(selectedApplication.id, status)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition cursor-pointer capitalize ${
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold border transition cursor-pointer capitalize ${
                         selectedApplication.status === status
                           ? 'bg-slate-900 border-transparent text-white'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
