@@ -115,6 +115,11 @@ export default function Home() {
               <Sparkles className="h-3.5 w-3.5" />
               <span>Vision</span>
             </span> */}
+            <h1 style={{ fontFamily: '"Saira Stencil One", sans-serif' }}
+              className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">
+              BETA
+            </h1>
+
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-blue-700 tracking-tight leading-tight max-w-4xl mx-auto">
               Where Technology Meets{" "}
               <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">

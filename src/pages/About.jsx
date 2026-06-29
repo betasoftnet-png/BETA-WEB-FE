@@ -541,27 +541,28 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="max-w-4xl mr-auto founder-grid pt-4 text-left md:-ml-8 lg:-ml-12 leader-card"
+            className="max-w-5xl mx-auto p-6 md:p-10 rounded-3xl border border-[#0A3161]/12 shadow-xl leader-card flex flex-col md:flex-row items-stretch gap-8 md:gap-10 text-left relative overflow-hidden"
           >
-            {/* Left Column: Image (Row 1, Col 1) */}
-            <div className="md:col-start-1 md:row-start-1 md:self-start flex flex-col items-center shrink-0">
-              <div className="h-48 w-48 rounded-2xl overflow-hidden border-2 border-slate-200/80 shadow-md relative group">
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#FF6325]/5 to-transparent opacity-30 pointer-events-none" />
+ 
+            {/* Left Column: Profile (Image, Name, Title, Info Button) */}
+            <div className="w-full md:w-52 flex-shrink-0 flex flex-col items-center justify-center text-center space-y-4 border-b md:border-b-0 md:border-r border-[#0A3161]/10 pb-6 md:pb-0 md:pr-8 relative z-10">
+              <div className="h-48 w-48 rounded-2xl overflow-hidden border-2 border-slate-200/80 shadow-md relative group shrink-0">
                 <img
                   src={leadership[0].avatar}
                   alt={leadership[0].name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-            </div>
-
-            {/* Left Column: Metadata (Name, Title, Info Button) stacked & centered below the image (Row 2, Col 1) */}
-            <div className="md:col-start-1 md:row-start-2 flex flex-col items-center text-center space-y-3 w-48">
+ 
               <div className="space-y-1">
                 <h3 className="text-2xl font-black text-slate-800">{leadership[0].name}</h3>
                 <p className="text-sm font-bold text-[#FF6325] uppercase tracking-widest">
                   Founder & CEO
                 </p>
               </div>
+ 
               <div>
                 <a
                   href={leadership[0].infoLink}
@@ -573,39 +574,27 @@ export default function About() {
                 </a>
               </div>
             </div>
-
-            {/* Right Column: Envisioned content (Row 1, Col 2 - centered vertically with the image) */}
-            <div className="md:col-start-2 md:row-start-1 md:self-center flex-grow flex flex-col justify-center max-w-4xl">
-              <p className="text-lg md:text-xl text-slate-650 leading-relaxed font-semibold">
-                Our founder envisioned Beta as a platform that empowers businesses through innovative and reliable technology solutions. With a strong focus on quality, simplicity, and customer success, the company was built to solve real-world business challenges. Today, that vision continues to drive our products, culture, and commitment to excellence.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Vision Statement Section */}
-          <div className="glass-card p-8 md:p-12 rounded-3xl border border-[#0A3161]/12 shadow-xl max-w-4xl mx-auto mt-16 relative overflow-hidden group">
-            {/* Background Glow */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#FF6325]/5 to-transparent opacity-30 pointer-events-none" />
-
-            <div className="relative z-10 flex flex-col md:flex-row gap-8 items-stretch justify-between text-left">
-              {/* Left Column */}
+ 
+            {/* Right Column: Vision Content */}
+            <div className="flex-grow flex flex-col md:flex-row gap-6 md:gap-8 items-stretch justify-between relative z-10 text-left">
+              {/* Vision Left Column */}
               <div className="md:w-1/2 flex flex-col justify-center space-y-4 border-b md:border-b-0 md:border-r border-[#0A3161]/10 pb-6 md:pb-0 md:pr-8">
-                <p className="text-slate-400 text-sm leading-relaxed font-medium">
+                <p className="text-slate-700 text-sm md:text-base leading-relaxed font-semibold">
                   My work is driven by the belief that progress has meaning only when it uplifts people across borders, cultures, and communities. I am committed to building organizations that operate with purpose—where innovation, responsibility, and humanity go hand in hand.
                 </p>
               </div>
-
-              {/* Right Column */}
-              <div className="md:w-1/2 flex flex-col justify-center space-y-6 md:pl-8">
-                <p className="text-slate-400 text-sm leading-relaxed font-medium">
+ 
+              {/* Vision Right Column */}
+              <div className="md:w-1/2 flex flex-col justify-center space-y-4 md:pl-2">
+                <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-medium">
                   Through my ventures, I strive to create a society where individuals from every country are treated with dignity and equality, free from discrimination and division.
                 </p>
-                <div className="border-l-4 border-[#FF6325] pl-4 py-2 italic font-semibold text-black text-sm bg-[#FF6325]/5 rounded-r-lg">
+                <div className="border-l-4 border-[#FF6325] pl-4 py-2 italic font-semibold text-black text-xs md:text-sm bg-[#FF6325]/5 rounded-r-lg">
                   "This vision is not just an idea; it is the foundation on which every company I lead is built."
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* SECTION 8: CALL TO ACTION */}
