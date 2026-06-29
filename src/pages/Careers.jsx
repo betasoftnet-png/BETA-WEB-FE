@@ -48,7 +48,7 @@ const fallbackJobs = [
   {
     id: 'mock-1',
     title: 'Senior Full Stack Engineer',
-    team: 'Engineering',
+
     location: 'Chennai, India (Hybrid)',
     type: 'Full-Time',
     experience: '3+ Years',
@@ -58,7 +58,7 @@ const fallbackJobs = [
   {
     id: 'mock-2',
     title: 'UI/UX Designer & Developer',
-    team: 'Design',
+    t,
     location: 'Chennai, India (Hybrid)',
     type: 'Full-Time',
     experience: '2+ Years',

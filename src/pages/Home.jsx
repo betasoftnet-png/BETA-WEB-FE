@@ -38,7 +38,7 @@ export default function Home() {
     },
     {
       title: 'Instant WebSocket Sync',
-      description: 'Real-time state sharing across devices. Experience 0ms manual reloads when emails arrive or boards update.',
+      description: 'Instant updates across devices — no reloads needed.',
       icon: Zap,
       bg: 'bg-amber-50 text-amber-600 border-amber-100'
     },
@@ -111,10 +111,10 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="space-y-4"
           >
-            <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+            {/* <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
               <Sparkles className="h-3.5 w-3.5" />
               <span>Vision</span>
-            </span>
+            </span> */}
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-blue-700 tracking-tight leading-tight max-w-4xl mx-auto">
               Where Technology Meets{" "}
               <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
@@ -126,108 +126,96 @@ export default function Home() {
           </motion.div>
         </div>
 
-        <div className="w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Left Column: Heading, description */}
-          <div
-            className="w-full lg:w-1/2 px-4 sm:px-6 lg:pr-12 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6"
-            style={{
-              paddingLeft: 'max(1.5rem, calc((100vw - 1280px) / 2 + 2rem))'
-            }}
-          >
+          <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
             <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
               className="space-y-6"
             >
-              {/* <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+              <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
                 <Sparkles className="h-3.5 w-3.5" />
-                <span></span>
-              </motion.div> */}
-
-              <motion.h2
-                variants={itemVariants}
-                className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight"
-              >
+                <span>Product Suite</span>
+              </motion.div>
+ 
+              <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
                 Unified Software for a
                 <span className="block text-black mt-1">
                   Connected Generation
                 </span>
               </motion.h2>
-
-
+ 
               <motion.p variants={itemVariants} className="text-slate-600 text-base md:text-lg leading-relaxed max-w-2xl">
                 Beta builds secure, real-time corporate applications. Consolidation is here: SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
             </motion.div>
           </div>
-
-          {/* Right Column: Product Cards */}
-          <div className="w-full lg:w-1/2 flex justify-end pl-4 lg:pl-0">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-col gap-6 w-full max-w-2xl text-left"
-            >
-              {/* BNX MAIL Card */}
-              <a
-                href="https://www.bnxmail.com/login"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-card bg-white/70 hover:bg-white/90 border border-r-0 border-slate-200/80 p-6 md:p-8 rounded-l-3xl rounded-r-none shadow-sm hover:shadow-lg hover:border-[#004AAD]/30 transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-250">
-                          BNX MAIL
-                        </h4>
-                        <span className="text-[9px] font-extrabold text-[#004AAD] uppercase tracking-wider">
-                          Real-time Mail Inbox
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-slate-500 text-sm leading-relaxed font-medium">
-                    A WhatsApp-style collaborative group email inbox that allows modern teams to unify SMTP and IMAP box configurations, delegate incoming messages, coordinate live thread assignments, and reply concurrently in real time.
-                  </p>
+ 
+          {/* Right Column: Featured Apps Box */}
+          <div className="w-full lg:w-1/2 flex flex-col justify-center text-left lg:pl-12">
+            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-8 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
+              <div className="border-b border-slate-100 pb-3.5 w-full mb-6">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
+                  Featured Apps
+                </span>
+              </div>
+ 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                {/* Left Side inside Box: Illustration Image */}
+                <div className="w-full flex items-center justify-center p-3 bg-slate-50/50 rounded-2xl border border-slate-100/80">
+                  <img
+                    src="/bnx_product_showcase.png"
+                    alt="Featured App Showcase"
+                    className="max-h-[190px] w-auto object-contain select-none transition-transform duration-500 hover:scale-[1.03]"
+                  />
                 </div>
-              </a>
-
-              {/* CLIKS BUSINESS Card */}
-              <a
-                href="https://www.cliksbusiness.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-card bg-white/70 hover:bg-white/90 border border-r-0 border-slate-200/80 p-6 md:p-8 rounded-l-3xl rounded-r-none shadow-sm hover:shadow-lg hover:border-violet-500/30 transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-bold text-slate-900 group-hover:text-violet-650 transition-colors duration-250">
-                          CLIKS BUSINESS
-                        </h4>
-                        <span className="text-[9px] font-extrabold text-violet-650 uppercase tracking-wider">
-                          Team Workspace & Sprints
-                        </span>
-                      </div>
+ 
+                {/* Right Side inside Box: vertical stack list */}
+                <div className="flex flex-col gap-6">
+                  {/* BNX MAIL Card */}
+                  <a
+                    href="https://www.bnxmail.com/login"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-4 group cursor-pointer"
+                  >
+                    <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                      <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                     </div>
-                  </div>
-                  <p className="text-slate-500 text-sm leading-relaxed font-medium">
-                    An all-in-one corporate collaboration workspace that fuels task delegation and agile sprint releases with dynamic boards, active team discussion threads, interactive doc collaboration, and billing analytics.
-                  </p>
+                    <div className="space-y-1 flex-grow">
+                      <h4 className="text-xl font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200 leading-none">
+                        BNX Mail
+                      </h4>
+                      <p className="text-slate-500 text-xs leading-relaxed font-semibold">
+                        Instant updates across devices — no reloads needed
+                      </p>
+                    </div>
+                  </a>
+ 
+                  {/* CLIKS BUSINESS Card */}
+                  <a
+                    href="https://www.cliksbusiness.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-4 group cursor-pointer"
+                  >
+                    <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                      <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
+                    </div>
+                    <div className="space-y-1 flex-grow">
+                      <h4 className="text-xl font-bold text-slate-900 group-hover:text-violet-650 transition-colors duration-200 leading-none">
+                        Cliks
+                      </h4>
+                      <p className="text-slate-500 text-xs leading-relaxed font-semibold">
+                        All in one workspace for collaboration and agile tasks.
+                      </p>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

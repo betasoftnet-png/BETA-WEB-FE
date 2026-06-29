@@ -71,17 +71,17 @@ export default function About() {
   const milestones = [
     {
       year: '2023',
-      title: 'Company Founded',
+      title: 'Planning Phase',
       desc: 'Beta was established in Tiruvallur, India, by a core team of 5 engineers aiming to redefine enterprise software.'
     },
     {
       year: '2024',
-      title: 'BNX Mail Launch',
+      title: 'Execution Phase',
       desc: 'Released our collaborative email dashboard concept, securing our first 100 enterprise clients.'
     },
     {
       year: '2025',
-      title: 'Series A Funding',
+      title: 'Brand Launch',
       desc: 'Secured $12M in Series A funding to expand our security-first auth frameworks and database clustering.'
     },
     {
