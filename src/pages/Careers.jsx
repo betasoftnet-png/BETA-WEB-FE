@@ -155,7 +155,7 @@ export default function Careers() {
 
   // Filter logic
   const filteredJobs = jobsList.filter(job => {
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (job.skills && job.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))) ||
@@ -359,14 +359,14 @@ export default function Careers() {
         <div className="space-y-12">
           {/* HERO SECTION */}
           <div className="text-center max-w-3xl mx-auto pt-8 pb-4 space-y-6">
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider"
             >
               <Sparkles className="h-3.5 w-3.5" />
               <span>Join Our Team</span>
-            </motion.div>
+            </motion.div> */}
 
             <motion.h1
               initial={{ opacity: 0, y: -20 }}
@@ -419,11 +419,10 @@ export default function Careers() {
                 <button
                   type="button"
                   onClick={() => setShowFilters(!showFilters)}
-                  className={`flex items-center gap-2 px-4 py-3.5 rounded-2xl border transition-all duration-300 text-sm font-semibold shadow-md cursor-pointer ${
-                    showFilters
-                      ? 'bg-[#8B5CF6] border-transparent text-white shadow-[#8B5CF6]/20'
-                      : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 shadow-purple-500/5'
-                  }`}
+                  className={`flex items-center gap-2 px-4 py-3.5 rounded-2xl border transition-all duration-300 text-sm font-semibold shadow-md cursor-pointer ${showFilters
+                    ? 'bg-[#8B5CF6] border-transparent text-white shadow-[#8B5CF6]/20'
+                    : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 shadow-purple-500/5'
+                    }`}
                 >
                   <SlidersHorizontal className="h-5 w-5" />
                   <span className="hidden sm:inline">Filters</span>
