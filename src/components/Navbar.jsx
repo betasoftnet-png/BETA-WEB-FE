@@ -330,29 +330,26 @@ export default function Navbar() {
                                   {/* Public Products */}
                                   {isDropdownPublicOpen && (
                                     <div className="flex flex-col gap-3 pt-1 pb-1">
-                                      {/* BNXmail (Shown in Base view) */}
+                                      {/* Shown in Base view */}
                                       {activeCategory === 'base' && (
-                                        <a
-                                          href="https://www.bnxmail.com/login"
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                        >
-                                          <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                            <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
-                                          </div>
-                                          <div>
-                                            <p className="font-semibold text-slate-800 text-xs">BNXmail</p>
-                                            <p className="text-[10px] text-slate-450 font-medium">
-                                              Real time mail,always in sync.
-                                            </p>
-                                          </div>
-                                        </a>
-                                      )}
-
-                                      {/* Coming Soon items (Shown in Coming Soon view) */}
-                                      {activeCategory === 'comingsoon' && (
                                         <>
+                                          <a
+                                            href="https://www.bnxmail.com/login"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                          >
+                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                                            </div>
+                                            <div>
+                                              <p className="font-semibold text-slate-800 text-xs">BNXmail</p>
+                                              <p className="text-[10px] text-slate-450 font-medium">
+                                                Real time mail,always in sync.
+                                              </p>
+                                            </div>
+                                          </a>
+
                                           <a
                                             href="https://www.b2auth.com/"
                                             target="_blank"
@@ -398,6 +395,43 @@ export default function Navbar() {
                                             </div>
                                           </a>
                                         </>
+                                      )}
+
+                                      {/* Coming Soon card (Only shown in Coming Soon view) */}
+                                      {activeCategory === 'comingsoon' && (
+                                        <motion.div
+                                          initial={{ opacity: 0, scale: 0.95 }}
+                                          animate={{ opacity: 1, scale: 1 }}
+                                          exit={{ opacity: 0, scale: 0.95 }}
+                                          className="h-[180px] rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center p-4 text-center overflow-hidden relative select-none"
+                                        >
+                                          {/* Glowing background */}
+                                          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-violet-500/5 to-emerald-500/5 animate-pulse pointer-events-none" />
+                                          
+                                          {/* Text container */}
+                                          <motion.div
+                                            animate={{ 
+                                              scale: [1, 1.05, 1],
+                                            }}
+                                            transition={{ 
+                                              repeat: Infinity, 
+                                              duration: 2, 
+                                              ease: "easeInOut" 
+                                            }}
+                                            className="relative z-10 space-y-2 flex flex-col items-center justify-center"
+                                          >
+                                            <Sparkles className="h-6 w-6 text-amber-500 animate-pulse mb-1" />
+                                            <h2 className="text-xl font-extrabold tracking-widest bg-gradient-to-r from-amber-500 via-violet-600 to-emerald-500 bg-clip-text text-transparent uppercase animate-pulse">
+                                              Coming Soon
+                                            </h2>
+                                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
+                                              Beta Labs Release
+                                            </p>
+                                          </motion.div>
+                                          
+                                          {/* Bottom Shimmer line */}
+                                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 via-indigo-500 to-emerald-400 opacity-60" />
+                                        </motion.div>
                                       )}
                                     </div>
                                   )}
