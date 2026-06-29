@@ -134,9 +134,10 @@ export default function Home() {
             </h1>
 
           </motion.div>
-        </div>        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Left Column: Heading and description */}
-          <div className="w-full lg:w-[35%] flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+          <div className="w-full lg:w-[42%] flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
             <motion.div
               variants={containerVariants}
               initial="hidden"
@@ -157,18 +158,18 @@ export default function Home() {
           </div>
 
           {/* Right Column: Featured Apps Box */}
-          <div className="w-full lg:w-[65%] flex flex-col justify-center text-left">
-            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 sm:p-8 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
+          <div className="w-full lg:w-[58%] max-w-2xl flex flex-col justify-center text-left">
+            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-3.5 w-full mb-6">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
                   Featured Apps
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
                 <div 
-                  className="lg:col-span-1 w-full rounded-2xl p-6 text-center overflow-hidden relative select-none flex flex-col items-center justify-between min-h-[300px] showcase-white-text"
+                  className="lg:col-span-1 w-full rounded-2xl p-6 text-center overflow-hidden relative select-none flex flex-col items-center justify-between min-h-[260px] showcase-white-text"
                   style={{
                     background: 'linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
                     backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
@@ -195,65 +196,65 @@ export default function Home() {
                     <span className="text-[10px] uppercase tracking-widest text-white font-black">
                       Introducing
                     </span>
-                    <h3 className="text-2xl font-black text-white tracking-wide">
+                    <h3 className="text-xl font-black text-white tracking-wide">
                       Beta Products
                     </h3>
                     <p className="text-[10px] font-extrabold tracking-widest uppercase text-white mb-1">
-                      Real-Time Enterprise Apps
+                      Enterprise Apps
                     </p>
-                    <p className="text-[11px] text-white font-medium leading-relaxed px-2">
-                      Consolidate your SMTP mail threads, live authentication protocols, and collaborative workspaces under a single unified dashboard.
+                    <p className="text-[10px] text-white/90 font-medium leading-relaxed">
+                      Unified dashboard for live authentication, SMTP mail, and tasks.
                     </p>
                   </div>
 
                   {/* Explorable Button */}
                   <Link
                     to="/login"
-                    className="inline-flex items-center px-6 py-2.5 rounded-full border border-violet-500/40 bg-violet-950/20 text-white text-[10px] font-extrabold uppercase tracking-wider hover:bg-violet-600 hover:border-violet-400 hover:shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all duration-300 mb-2 group cursor-pointer"
+                    className="inline-flex items-center px-4 py-2 rounded-full border border-violet-500/40 bg-violet-950/20 text-white text-[9px] font-extrabold uppercase tracking-wider hover:bg-violet-600 hover:border-violet-400 hover:shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all duration-300 mb-2 group cursor-pointer"
                   >
-                    Explore Beta Apps
-                    <ArrowRight className="ml-1.5 h-3.5 w-3.5 transform transition-transform group-hover:translate-x-0.5" />
+                    Explore Apps
+                    <ArrowRight className="ml-1 h-3 w-3 transform transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </div>
 
-                {/* Right Side: Horizontal stack list inside a grid */}
-                <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* BNX MAIL Card */}
+                {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
+                <div className="lg:col-span-2 flex flex-col gap-4 flex-grow justify-center">
+                  {/* BNXmail */}
                   <a
                     href="https://www.bnxmail.com/login"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-col items-start p-6 rounded-2xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer h-full text-left"
+                    className="flex items-center gap-3.5 p-4 rounded-2xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left"
                   >
-                    <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 mb-4">
+                    <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                       <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
                     </div>
-                    <div className="space-y-2 flex-grow">
-                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                    <div className="space-y-0.5 flex-grow">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                         BNXmail
                       </h4>
-                      <p className="text-slate-550 text-xs leading-relaxed font-semibold">
-                        Instant updates across devices — no reloads needed.
+                      <p className="text-slate-550 text-[10px] leading-relaxed font-semibold">
+                        Real time mail, always in sync.
                       </p>
                     </div>
                   </a>
 
-                  {/* CLIKS BUSINESS Card */}
+                  {/* Cliks Business */}
                   <a
                     href="https://www.cliksbusiness.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-col items-start p-6 rounded-2xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer h-full text-left"
+                    className="flex items-center gap-3.5 p-4 rounded-2xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left"
                   >
-                    <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 mb-4">
+                    <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                       <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
                     </div>
-                    <div className="space-y-2 flex-grow">
-                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-violet-600 transition-colors duration-200">
+                    <div className="space-y-0.5 flex-grow">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-violet-600 transition-colors duration-200">
                         Cliks Business
                       </h4>
-                      <p className="text-slate-550 text-xs leading-relaxed font-semibold">
-                        All in one workspace for collaboration and agile tasks.
+                      <p className="text-slate-550 text-[10px] leading-relaxed font-semibold">
+                        Work together, faster.
                       </p>
                     </div>
                   </a>
