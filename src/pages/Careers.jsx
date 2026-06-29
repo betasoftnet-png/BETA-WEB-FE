@@ -348,9 +348,7 @@ export default function Careers() {
           pointer-events: none;
         }
         .unified-openings-box {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6b8dd6 100%) !important;
-
-
+          background: linear-gradient(135deg, #FFF0F6 0%, #FFE4ED 100%) !important;
         }
       `}</style>
 
