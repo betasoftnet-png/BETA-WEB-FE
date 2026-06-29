@@ -58,7 +58,7 @@ const fallbackJobs = [
   {
     id: 'mock-2',
     title: 'UI/UX Designer & Developer',
-    t,
+
     location: 'Chennai, India (Hybrid)',
     type: 'Full-Time',
     experience: '2+ Years',
@@ -68,7 +68,7 @@ const fallbackJobs = [
   {
     id: 'mock-3',
     title: 'DevOps & Infrastructure Lead',
-    team: 'Platform',
+
     location: 'Chennai, India (Hybrid)',
     type: 'Full-Time',
     experience: '4+ Years',
@@ -78,7 +78,7 @@ const fallbackJobs = [
   {
     id: 'mock-4',
     title: 'QA Automation Engineer',
-    team: 'Quality Assurance',
+
     location: 'Chennai, India (Hybrid)',
     type: 'Full-Time',
     experience: '2+ Years',
@@ -348,7 +348,7 @@ export default function Careers() {
           pointer-events: none;
         }
         .unified-openings-box {
-          background: linear-gradient(135deg, rgba(209, 250, 229, 0.55) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+          background: linear-gradient(135deg, rgba(245, 243, 255, 0.7) 0%, rgba(239, 246, 255, 0.8) 50%, rgba(253, 242, 248, 0.75) 100%) !important;
         }
       `}</style>
 
@@ -387,62 +387,79 @@ export default function Careers() {
             >
               At Beta, we design and deliver high-performance real-time enterprise software. We respect developer focus, async workflow, and premium user experience design.
             </motion.p>
+          </div>
 
-            {/* Search & Filters */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
-              className="max-w-xl mx-auto mt-6 px-4"
-            >
-              <div className="flex items-center gap-3">
-                <div className="relative flex-grow flex items-center">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by role, skills, department..."
-                    className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-2xl py-3.5 pl-11 pr-10 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-sm shadow-md shadow-purple-500/5 transition duration-300"
-                  />
-                  <Search className="absolute left-4 h-5 w-5 text-slate-400 pointer-events-none" />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-4 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
+          {/* SECTION 3: OPEN ROLES SECTION */}
+          <div id="search-roles" className="space-y-6">
+            <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
+
+
+
+
+            </div>
+
+            {/* Job list inside a single unified container */}
+            <div className="w-full max-w-5xl mx-auto hacker-layout-box unified-openings-box p-6 sm:p-8 rounded-2xl shadow-xl shadow-purple-500/5 text-left space-y-6">
+              {/* Header inside Box with Title, Search Bar and Filter Button */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-purple-500/10 pb-6">
+                <div>
+                  <h3 className="text-xl font-black tracking-tight text-slate-900">
+                    Open Roles
+                  </h3>
+                  <span className="text-[10px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
+                    Explore Opportunities
+                  </span>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setShowFilters(!showFilters)}
-                  className={`flex items-center gap-2 px-4 py-3.5 rounded-2xl border transition-all duration-300 text-sm font-semibold shadow-md cursor-pointer ${showFilters
-                    ? 'bg-[#8B5CF6] border-transparent text-white shadow-[#8B5CF6]/20'
-                    : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 shadow-purple-500/5'
-                    }`}
-                >
-                  <SlidersHorizontal className="h-5 w-5" />
-                  <span className="hidden sm:inline">Filters</span>
-                  {(selectedTeam || selectedLocation || selectedType) && (
-                    <span className="flex h-2 w-2 rounded-full bg-[#EC4899] animate-pulse"></span>
-                  )}
-                </button>
+                <div className="flex items-center gap-3 w-full md:w-auto md:max-w-md flex-grow justify-end">
+                  <div className="relative flex-grow max-w-xs md:max-w-sm flex items-center">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search roles or skills..."
+                      className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-xl py-2 px-9 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-xs shadow-sm transition duration-300"
+                    />
+                    <Search className="absolute left-3 h-4 w-4 text-slate-400 pointer-events-none" />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap ${showFilters
+                      ? 'bg-[#8B5CF6] border-transparent text-white shadow-[#8B5CF6]/20'
+                      : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 shadow-purple-500/5'
+                      }`}
+                  >
+                    <SlidersHorizontal className="h-4 w-4" />
+                    <span>Filters</span>
+                    {(selectedTeam || selectedLocation || selectedType) && (
+                      <span className="flex h-1.5 w-1.5 rounded-full bg-[#EC4899] animate-pulse"></span>
+                    )}
+                  </button>
+                </div>
               </div>
 
-              {/* Expandable Filter Panel */}
+              {/* Expandable Filter Panel inside Box */}
               <AnimatePresence>
                 {showFilters && (
                   <motion.div
                     initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                    animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                    animate={{ opacity: 1, height: 'auto', marginTop: 0 }}
                     exit={{ opacity: 0, height: 0, marginTop: 0 }}
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className="overflow-hidden"
+                    className="overflow-hidden w-full border-b border-purple-500/10 pb-6"
                   >
-                    <div className="bg-white/85 backdrop-blur-md border border-purple-500/20 rounded-2xl p-5 shadow-lg flex flex-col gap-4 text-left">
+                    <div className="bg-white/80 border border-purple-500/10 rounded-xl p-4 shadow-sm flex flex-col gap-4">
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {/* Department Filter */}
                         <div className="space-y-1.5">
@@ -450,7 +467,7 @@ export default function Careers() {
                           <select
                             value={selectedTeam}
                             onChange={(e) => setSelectedTeam(e.target.value)}
-                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2.5 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
                           >
                             <option value="">All Departments</option>
                             {teams.map(team => (
@@ -465,7 +482,7 @@ export default function Careers() {
                           <select
                             value={selectedLocation}
                             onChange={(e) => setSelectedLocation(e.target.value)}
-                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2.5 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
                           >
                             <option value="">All Locations</option>
                             {locations.map(loc => (
@@ -480,7 +497,7 @@ export default function Careers() {
                           <select
                             value={selectedType}
                             onChange={(e) => setSelectedType(e.target.value)}
-                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2.5 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
                           >
                             <option value="">All Types</option>
                             {types.map(type => (
@@ -491,7 +508,7 @@ export default function Careers() {
                       </div>
 
                       {/* Active Filter Pills and Clear Button */}
-                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-purple-500/10 pt-4">
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-purple-500/10 pt-3">
                         <div className="flex flex-wrap gap-2">
                           {selectedTeam && (
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-700 text-[10px] font-semibold">
@@ -537,21 +554,9 @@ export default function Careers() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </motion.div>
-          </div>
 
-          {/* SECTION 3: OPEN ROLES SECTION */}
-          <div id="search-roles" className="space-y-6">
-            <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
-
-
-
-
-            </div>
-
-            {/* Job list inside a single unified container */}
-            <div className="w-full max-w-5xl mx-auto hacker-layout-box unified-openings-box p-6 sm:p-8 rounded-2xl shadow-xl shadow-purple-500/5">
-              <div className="flex flex-col gap-4">
+              {/* Job list inside container */}
+              <div className="flex flex-col gap-4 w-full">
                 <AnimatePresence>
                   {filteredJobs.length > 0 ? (
                     filteredJobs.map((job) => (

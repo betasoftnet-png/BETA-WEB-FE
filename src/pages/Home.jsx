@@ -51,9 +51,9 @@ export default function Home() {
   ];
 
   const stats = [
-    { label: 'Active Users', value: '1.2M+', icon: Users, color: 'text-blue-600' },
+    { label: 'Active Users', value: '10', icon: Users, color: 'text-blue-600' },
     { label: 'Uptime SLA', value: '99.99%', icon: Activity, color: 'text-emerald-600' },
-    { label: 'Enterprise Clients', value: '500+', icon: Globe, color: 'text-indigo-600' },
+    { label: 'Enterprise Clients', value: '50+', icon: Globe, color: 'text-indigo-600' },
     { label: 'Data Protected', value: '25 PB', icon: Shield, color: 'text-cyan-600' },
   ];
 
@@ -135,24 +135,24 @@ export default function Home() {
               animate="visible"
               className="space-y-6"
             >
-              <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+              {/* <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Product Suite</span>
-              </motion.div>
- 
+              </motion.div> */}
+
               <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
                 Unified Software for a
                 <span className="block text-black mt-1">
                   Connected Generation
                 </span>
               </motion.h2>
- 
+
               <motion.p variants={itemVariants} className="text-slate-600 text-base md:text-lg leading-relaxed max-w-2xl">
                 Beta builds secure, real-time corporate applications. Consolidation is here: SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
             </motion.div>
           </div>
- 
+
           {/* Right Column: Featured Apps Box */}
           <div className="w-full lg:w-1/2 flex flex-col justify-center text-left lg:pl-12">
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-8 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
@@ -161,7 +161,7 @@ export default function Home() {
                   Featured Apps
                 </span>
               </div>
- 
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 {/* Left Side inside Box: Illustration Image */}
                 <div className="w-full flex items-center justify-center p-3 bg-slate-50/50 rounded-2xl border border-slate-100/80">
@@ -171,7 +171,7 @@ export default function Home() {
                     className="max-h-[190px] w-auto object-contain select-none transition-transform duration-500 hover:scale-[1.03]"
                   />
                 </div>
- 
+
                 {/* Right Side inside Box: vertical stack list */}
                 <div className="flex flex-col gap-6">
                   {/* BNX MAIL Card */}
@@ -193,7 +193,7 @@ export default function Home() {
                       </p>
                     </div>
                   </a>
- 
+
                   {/* CLIKS BUSINESS Card */}
                   <a
                     href="https://www.cliksbusiness.com/"
