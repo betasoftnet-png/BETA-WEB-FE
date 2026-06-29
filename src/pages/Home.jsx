@@ -140,17 +140,21 @@ export default function Home() {
               animate="visible"
               className="space-y-6"
             >
-              <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+              {/* <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>Product Suite</span>
-              </motion.div>
+                <span></span>
+              </motion.div> */}
 
-              <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
+              <motion.h2
+                variants={itemVariants}
+                className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight"
+              >
                 Unified Software for a
-                <span className="block bg-gradient-to-r from-[#004AAD] to-indigo-600 bg-clip-text text-transparent mt-1">
+                <span className="block text-black mt-1">
                   Connected Generation
                 </span>
               </motion.h2>
+
 
               <motion.p variants={itemVariants} className="text-slate-600 text-base md:text-lg leading-relaxed max-w-2xl">
                 Beta builds secure, real-time corporate applications. Consolidation is here: SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.

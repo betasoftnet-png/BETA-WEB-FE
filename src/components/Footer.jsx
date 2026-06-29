@@ -102,7 +102,7 @@ export default function Footer() {
               </li>
               <li>
                 <a href="https://cliks.beta-softnet.com/" target="_blank" rel="noopener noreferrer" className="footer-product-link block">
-                  <span className="font-bold block">Cliks Personal</span>
+                  <span className="font-bold block">Cliks</span>
                   <span className="footer-product-desc">Personal productivity suite with notes & calendars.</span>
                 </a>
               </li>
