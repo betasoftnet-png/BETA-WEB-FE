@@ -11,7 +11,7 @@ export default function Navbar() {
   const [isDropdownCategoryOpen, setIsDropdownCategoryOpen] = useState(true);
   const [isDropdownPublicOpen, setIsDropdownPublicOpen] = useState(true);
   const [isDropdownBusinessOpen, setIsDropdownBusinessOpen] = useState(true);
-  const [showComingSoonAnimation, setShowComingSoonAnimation] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('base'); // 'base' or 'comingsoon'
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const [isMobileCategoryOpen, setIsMobileCategoryOpen] = useState(true);
   const [isMobilePublicOpen, setIsMobilePublicOpen] = useState(true);
@@ -248,26 +248,26 @@ export default function Navbar() {
                       </button>
 
                       {isDropdownOpen && (
-                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 z-50 text-left text-slate-800">
+                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl pt-4 px-0 pb-0 overflow-hidden z-50 text-left text-slate-800">
                           <table className="w-full text-left border-collapse">
                             <thead>
                               <tr className="bg-emerald-50 border-b border-emerald-100/30 text-emerald-800 text-xs uppercase tracking-wider font-extrabold select-none">
                                 <th
-                                  className="py-2.5 px-4 rounded-l-lg text-emerald-800 w-1/5 select-none"
+                                  className="py-2.5 pl-6 pr-2 rounded-l-lg text-emerald-800 w-1/5 select-none"
                                 >
                                   <div className="flex items-center space-x-1">
                                     <span>Category</span>
                                   </div>
                                 </th>
                                 <th
-                                  className="py-2.5 px-4 text-emerald-800 w-2/5 select-none"
+                                  className="py-2.5 px-6 text-emerald-800 w-2/5 select-none"
                                 >
                                   <div className="flex items-center space-x-1">
                                     <span>Public</span>
                                   </div>
                                 </th>
                                 <th
-                                  className="py-2.5 px-4 rounded-r-lg text-emerald-800 w-2/5 select-none"
+                                  className="py-2.5 pl-4 pr-6 rounded-r-lg text-emerald-800 w-2/5 select-none"
                                 >
                                   <div className="flex items-center space-x-1">
                                     <span>Business</span>
@@ -278,25 +278,38 @@ export default function Navbar() {
                             <tbody className="divide-y divide-slate-100 text-slate-750 text-xs">
                               {/* Row 1: Base */}
                               <tr className="bg-transparent hover:bg-slate-50/40 transition-colors">
-                                <td className="py-3 px-2 align-top pt-3 w-1/5 border-r border-slate-200">
+                                <td className="py-3 pl-6 pr-2 align-top pt-3 w-1/5 border-r border-slate-200">
                                   {isDropdownCategoryOpen && (
                                     <div className="flex flex-col gap-3 pt-1 pb-1">
                                       {/* Aligns with BNXmail */}
                                       <div className="h-[60px] flex items-center animate-fadeIn">
-                                        <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left">
-                                          Base
-                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => setActiveCategory('base')}
+                                          className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
+                                          title="Show Base products list"
+                                        >
+                                          {activeCategory === 'base' ? (
+                                            <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-600 text-white text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm">
+                                              Base
+                                            </span>
+                                          ) : (
+                                            <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left hover:bg-emerald-100 transition-colors">
+                                              Base
+                                            </span>
+                                          )}
+                                        </button>
                                       </div>
 
                                       {/* Aligns with B2Auth */}
                                       <div className="h-[60px] flex items-center animate-fadeIn">
                                         <button
                                           type="button"
-                                          onClick={() => setShowComingSoonAnimation(!showComingSoonAnimation)}
+                                          onClick={() => setActiveCategory('comingsoon')}
                                           className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
-                                          title="Toggle Coming Soon products list"
+                                          title="Show Coming Soon products list"
                                         >
-                                          {showComingSoonAnimation ? (
+                                          {activeCategory === 'comingsoon' ? (
                                             <span 
                                               className="inline-flex items-center justify-center text-[8px] font-extrabold uppercase tracking-wider px-2.5 py-1.5 rounded-md bg-amber-600 text-white border border-amber-700 shadow-sm animate-pulse"
                                               style={{ lineHeight: 1 }}
@@ -313,62 +326,32 @@ export default function Navbar() {
                                     </div>
                                   )}
                                 </td>
-                                <td className="py-3 px-4 align-top w-2/5 border-r border-slate-200">
+                                <td className="py-3 px-6 align-top w-2/5 border-r border-slate-200">
                                   {/* Public Products */}
                                   {isDropdownPublicOpen && (
                                     <div className="flex flex-col gap-3 pt-1 pb-1">
-                                      <a
-                                        href="https://www.bnxmail.com/login"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                      >
-                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                          <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
-                                        </div>
-                                        <div>
-                                          <p className="font-semibold text-slate-800 text-xs">BNXmail</p>
-                                          <p className="text-[10px] text-slate-450 font-medium">
-                                            Collaborative group inbox
-                                          </p>
-                                        </div>
-                                      </a>
-
-                                      {showComingSoonAnimation ? (
-                                        <motion.div
-                                          initial={{ opacity: 0, scale: 0.95 }}
-                                          animate={{ opacity: 1, scale: 1 }}
-                                          exit={{ opacity: 0, scale: 0.95 }}
-                                          className="h-[180px] rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center p-4 text-center overflow-hidden relative select-none"
+                                      {/* BNXmail (Shown in Base view) */}
+                                      {activeCategory === 'base' && (
+                                        <a
+                                          href="https://www.bnxmail.com/login"
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                         >
-                                          {/* Glowing background */}
-                                          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-violet-500/5 to-emerald-500/5 animate-pulse pointer-events-none" />
-                                          
-                                          {/* Text container */}
-                                          <motion.div
-                                            animate={{ 
-                                              scale: [1, 1.05, 1],
-                                            }}
-                                            transition={{ 
-                                              repeat: Infinity, 
-                                              duration: 2, 
-                                              ease: "easeInOut" 
-                                            }}
-                                            className="relative z-10 space-y-2 flex flex-col items-center justify-center"
-                                          >
-                                            <Sparkles className="h-6 w-6 text-amber-500 animate-pulse mb-1" />
-                                            <h2 className="text-xl font-extrabold tracking-widest bg-gradient-to-r from-amber-500 via-violet-600 to-emerald-500 bg-clip-text text-transparent uppercase animate-pulse">
-                                              Coming Soon
-                                            </h2>
-                                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
-                                              Beta Labs Release
+                                          <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                            <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                                          </div>
+                                          <div>
+                                            <p className="font-semibold text-slate-800 text-xs">BNXmail</p>
+                                            <p className="text-[10px] text-slate-450 font-medium">
+                                              Collaborative group inbox
                                             </p>
-                                          </motion.div>
-                                          
-                                          {/* Bottom Shimmer line */}
-                                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 via-indigo-500 to-emerald-400 opacity-60" />
-                                        </motion.div>
-                                      ) : (
+                                          </div>
+                                        </a>
+                                      )}
+ 
+                                      {/* Coming Soon items (Shown in Coming Soon view) */}
+                                      {activeCategory === 'comingsoon' && (
                                         <>
                                           <a
                                             href="https://www.b2auth.com/"
@@ -384,7 +367,7 @@ export default function Navbar() {
                                               <p className="text-[10px] text-slate-450 font-medium">MFA & SSO Gateway</p>
                                             </div>
                                           </a>
-
+ 
                                           <a
                                             href="https://bittool.beta-softnet.com/"
                                             target="_blank"
@@ -399,7 +382,7 @@ export default function Navbar() {
                                               <p className="text-[10px] text-slate-450 font-medium">Developer utility assistant</p>
                                             </div>
                                           </a>
-
+ 
                                           <a
                                             href="https://cliks.beta-softnet.com/"
                                             target="_blank"
@@ -416,19 +399,13 @@ export default function Navbar() {
                                           </a>
                                         </>
                                       )}
-
-                                      <div className="border-t border-slate-100 pt-2.5 mt-1 flex justify-center">
-                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider select-none">
-                                          Beta ecosystem
-                                        </span>
-                                      </div>
                                     </div>
                                   )}
                                 </td>
-                                <td className="py-3 px-4 align-top w-2/5">
+                                <td className="py-3 pl-4 pr-6 align-top w-2/5">
                                   {/* Business Products */}
-                                  {isDropdownBusinessOpen && (
-                                    <div className="flex flex-col gap-3 pt-1 pb-1">
+                                  {isDropdownBusinessOpen && activeCategory === 'base' && (
+                                    <div className="flex flex-col gap-3 pt-1 pb-1 animate-fadeIn">
                                       <a
                                         href="https://www.cliksbusiness.com/"
                                         target="_blank"
@@ -446,6 +423,16 @@ export default function Navbar() {
                                     </div>
                                   )}
                                 </td>
+                              </tr>
+                              {/* Row 2: Beta Ecosystem footer bar */}
+                              <tr className="border-t border-slate-200">
+                                <td className="bg-slate-50 border-t border-slate-200 border-r border-slate-200 rounded-bl-xl pl-6 pr-2"></td>
+                                <td className="pt-4.5 pb-2.5 pl-10 pr-6 text-left select-none bg-slate-50 border-t border-slate-200 border-r border-slate-200">
+                                  <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest">
+                                    Beta Ecosystem
+                                  </span>
+                                </td>
+                                <td className="bg-slate-50 border-t border-slate-200 rounded-br-xl pl-4 pr-6"></td>
                               </tr>
                             </tbody>
                           </table>

@@ -78,7 +78,7 @@ const successStories = [
   { id: 1, name: 'Apex Cloud Systems', category: 'Cloud Infrastructure', metric: '+180% Latency Reduction', desc: 'Powers Beta distributed cloud deployments with ultra-low latency compute clusters globally.', logo: 'APEX', logoColor: 'from-blue-500 to-indigo-500' },
   { id: 2, name: 'Nova Core Cyber', category: 'Security Integration', metric: '99.99% Hardened MFA Gates', desc: 'Co-development partner for B2 Auth Security protocols, auditing and hardening SSO & MFA gateways.', logo: 'NOVA', logoColor: 'from-cyan-500 to-teal-500' },
   { id: 3, name: 'Vertex Solutions', category: 'System Integration', metric: '10K+ Client Migrations', desc: 'Specialized consulting partner orchestrating large-scale enterprise migrations onto the Cliks Business suite.', logo: 'VERTEX', logoColor: 'from-purple-500 to-indigo-500' },
-  { id: 4, name: 'Vanguard Networks', category: 'Network Services', metric: '100% Encrypted Transport', desc: 'Collaborator on encrypted transport pipes ensuring secure and private network routing for BNX Mail nodes.', logo: 'VANGUARD', logoColor: 'from-blue-500 to-cyan-500' }
+  { id: 4, name: 'Vanguard Networks', category: 'Network Services', metric: '100% Encrypted Transport', desc: 'Collaborator on encrypted transport pipes ensuring secure and private network routing for BNXmail nodes.', logo: 'VANGUARD', logoColor: 'from-blue-500 to-cyan-500' }
 ];
 
 const journeyRoadmap = [

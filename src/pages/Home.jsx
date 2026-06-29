@@ -191,7 +191,7 @@ export default function Home() {
                     </div>
                     <div className="space-y-1 flex-grow">
                       <h4 className="text-xl font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200 leading-none">
-                        BNX Mail
+                        BNXmail
                       </h4>
                       <p className="text-slate-500 text-xs leading-relaxed font-semibold">
                         Instant updates across devices — no reloads needed

@@ -192,7 +192,7 @@ export default function Support() {
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <h3 className="font-extrabold text-slate-800 text-sm tracking-wide uppercase">BNX MAIL</h3>
+                    <h3 className="font-extrabold text-slate-800 text-sm tracking-wide uppercase">BNXmail</h3>
                     <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100 text-[8px] font-bold uppercase tracking-wider">Product Support</span>
                   </div>
                   <p className="text-xs text-slate-400 font-semibold mt-1">Shared Inbox & SMTP setup</p>

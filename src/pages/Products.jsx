@@ -14,7 +14,7 @@ const iconMap = {
 const defaultProducts = [
   {
     id: 1,
-    name: 'BNX MAIL',
+    name: 'BNXmail',
     description: 'WhatsApp-style collaborative email platform. Unify SMTP/IMAP boxes and resolve client threads together.',
     icon: 'Mail',
     status: 'ACTIVE',
@@ -110,13 +110,13 @@ export default function Products() {
     const isCliksBusiness = product.name.toUpperCase().includes('CLIKS BUSINESS');
 
     return (
-      <div 
+      <div
         id={product.name.toLowerCase().replace(/\s+/g, '-')}
         className="space-y-4 p-6 rounded-2xl glass-card glass-card-hover border border-slate-200 shadow-sm transition-all duration-300 scroll-mt-24 text-left"
       >
         {/* Icon & Name */}
         <div className="flex items-center space-x-3">
-          {product.name.toUpperCase().includes('BNX MAIL') ? (
+          {product.name.toUpperCase().includes('BNXmail') ? (
             <div className="h-11 w-11 flex-shrink-0 flex items-center justify-center">
               <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
             </div>
@@ -166,10 +166,10 @@ export default function Products() {
           <a
             href={
               product.name.toUpperCase().includes('BNX MAIL') ? 'https://www.bnxmail.com/login' :
-              product.name.toUpperCase().includes('CLIKS BUSINESS') ? 'https://www.cliksbusiness.com/' :
-              product.name.toUpperCase().includes('CLIKS') ? 'https://cliks.beta-softnet.com/' :
-              product.name.toUpperCase().includes('B2AUTH') || product.name.toUpperCase().includes('B2 AUTH') ? 'https://www.b2auth.com/' :
-              '/partners'
+                product.name.toUpperCase().includes('CLIKS BUSINESS') ? 'https://www.cliksbusiness.com/' :
+                  product.name.toUpperCase().includes('CLIKS') ? 'https://cliks.beta-softnet.com/' :
+                    product.name.toUpperCase().includes('B2AUTH') || product.name.toUpperCase().includes('B2 AUTH') ? 'https://www.b2auth.com/' :
+                      '/partners'
             }
             target="_blank"
             rel="noopener noreferrer"
@@ -185,7 +185,7 @@ export default function Products() {
 
   const bnxMail = products.find(p => p.name.toUpperCase().includes('BNX MAIL'));
   const b2Auth = products.find(p => p.name.toUpperCase().includes('B2AUTH') || p.name.toUpperCase().includes('B2 AUTH'));
-  const cliksPersonal = products.find(p => 
+  const cliksPersonal = products.find(p =>
     p.name.toUpperCase().includes('CLIKS') && !p.name.toUpperCase().includes('BUSINESS')
   );
   const cliksBusiness = products.find(p => p.name.toUpperCase().includes('CLIKS BUSINESS'));
@@ -247,7 +247,7 @@ export default function Products() {
             <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider font-extrabold select-none">
-                  <th 
+                  <th
                     className="py-5 px-6 md:px-8 text-slate-600 w-1/5 cursor-pointer hover:bg-slate-100/60 transition duration-200 rounded-tl-3xl"
                     onClick={() => setIsCategoryOpen(!isCategoryOpen)}
                   >
@@ -256,14 +256,14 @@ export default function Products() {
                       <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform duration-200 ${isCategoryOpen ? 'rotate-180' : ''}`} />
                     </div>
                   </th>
-                  <th 
+                  <th
                     className="py-5 px-6 md:px-8 text-slate-600 w-2/5 select-none"
                   >
                     <div className="flex items-center space-x-1.5">
                       <span>Public</span>
                     </div>
                   </th>
-                  <th 
+                  <th
                     className="py-5 px-6 md:px-8 text-slate-600 w-2/5 rounded-tr-3xl select-none"
                   >
                     <div className="flex items-center space-x-1.5">
