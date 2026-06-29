@@ -379,7 +379,7 @@ export default function Navbar() {
                                             </div>
                                             <div>
                                               <p className="font-semibold text-slate-800 text-xs">Bit-Tool</p>
-                                              <p className="text-[10px] text-slate-450 font-medium">Developer utility assistant</p>
+                                              <p className="text-[10px] text-slate-450 font-medium">User's daily utility assistant</p>
                                             </div>
                                           </a>
 
@@ -394,7 +394,7 @@ export default function Navbar() {
                                             </div>
                                             <div>
                                               <p className="font-semibold text-slate-800 text-xs">Cliks</p>
-                                              <p className="text-[10px] text-slate-450 font-medium">Notes & calendars</p>
+                                              <p className="text-[10px] text-slate-450 font-medium">Make your Money</p>
                                             </div>
                                           </a>
                                         </>
@@ -417,7 +417,7 @@ export default function Navbar() {
                                         </div>
                                         <div>
                                           <p className="font-semibold text-slate-800 text-xs">CliksBusiness</p>
-                                          <p className="text-[10px] text-slate-450 font-medium">Team project chats</p>
+                                          <p className="text-[10px] text-slate-450 font-medium">Work together, faster</p>
                                         </div>
                                       </a>
                                     </div>
