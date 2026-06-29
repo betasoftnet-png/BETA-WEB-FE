@@ -400,49 +400,48 @@ export default function Careers() {
 
             </div>
 
-            {/* Job list inside a single unified container */}
             <div className="w-full max-w-5xl mx-auto hacker-layout-box unified-openings-box p-6 sm:p-8 rounded-2xl shadow-xl shadow-purple-500/5 text-left space-y-6">
-              {/* Header inside Box with Title, Search Bar and Filter Button */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-purple-500/10 pb-6">
-                <div>
-                  <h3 className="text-xl font-black tracking-tight text-slate-900">
+              {/* Header inside Box with Centered Title, and Search Bar + Filter Button */}
+              <div className="flex flex-col items-center justify-center gap-4 border-b border-purple-500/10 pb-6 w-full">
+                <div className="text-center">
+                  <h3 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">
                     Open Roles
                   </h3>
-                  <span className="text-[10px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
+                  <span className="text-xs md:text-sm font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-1">
                     Explore Opportunities
                   </span>
                 </div>
-
-                <div className="flex items-center gap-3 w-full md:w-auto md:max-w-md flex-grow justify-end">
-                  <div className="relative flex-grow max-w-xs md:max-w-sm flex items-center">
+ 
+                <div className="flex items-center justify-center gap-3 w-full max-w-sm mx-auto">
+                  <div className="relative flex-grow max-w-[200px] flex items-center">
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search roles or skills..."
-                      className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-xl py-2 px-9 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-xs shadow-sm transition duration-300"
+                      placeholder="Search roles..."
+                      className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-xl py-1.5 pl-8 pr-7 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-sm shadow-sm transition duration-300"
                     />
-                    <Search className="absolute left-3 h-4 w-4 text-slate-400 pointer-events-none" />
+                    <Search className="absolute left-2.5 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
                     {searchQuery && (
                       <button
                         type="button"
                         onClick={() => setSearchQuery('')}
-                        className="absolute right-3 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
+                        className="absolute right-2.5 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-2.5 w-2.5" />
                       </button>
                     )}
                   </div>
-
+ 
                   <button
                     type="button"
                     onClick={() => setShowFilters(!showFilters)}
-                    className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap ${showFilters
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap ${showFilters
                       ? 'bg-[#8B5CF6] border-transparent text-white shadow-[#8B5CF6]/20'
                       : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 shadow-purple-500/5'
                       }`}
                   >
-                    <SlidersHorizontal className="h-4 w-4" />
+                    <SlidersHorizontal className="h-3.5 w-3.5" />
                     <span>Filters</span>
                     {(selectedTeam || selectedLocation || selectedType) && (
                       <span className="flex h-1.5 w-1.5 rounded-full bg-[#EC4899] animate-pulse"></span>
