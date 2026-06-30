@@ -312,7 +312,7 @@ export default function Careers() {
 
         /* Purple glowing cards */
         .glass-card-purple {
-          background: rgba(255, 255, 255, 0.75) !important;
+          background: rgba(255, 255, 255, 1) !important;
           backdrop-filter: blur(12px) !important;
           border: 1px solid rgba(139, 92, 246, 0.2) !important;
           box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06) !important;
@@ -335,11 +335,11 @@ export default function Careers() {
         }
 
         /* Hacker-style double borders for jobs */
-        .hacker-layout-box {
-          background: rgba(255, 255, 255, 0.75) !important;
-          border: 1px solid rgba(139, 92, 246, 0.25) !important;
-          position: relative;
-        }
+        // .hacker-layout-box {
+        //   background: rgba(255, 255, 255, 0.75) !important;
+        //   border: 1px solid rgba(139, 92, 246, 0.25) !important;
+        //   position: relative;
+        // }
         .hacker-layout-box::before {
           content: '';
           position: absolute;
@@ -348,7 +348,7 @@ export default function Careers() {
           pointer-events: none;
         }
         .unified-openings-box {
-          background: linear-gradient(135deg, #FFF0F6 0%, #FFE4ED 100%) !important;
+          background: white !important;
         }
       `}</style>
 

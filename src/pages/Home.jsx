@@ -135,30 +135,33 @@ export default function Home() {
 
           </motion.div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="w-full px-4 sm:px-6 lg:px-12 flex flex-col md:flex-row items-start md:items-center gap-6 lg:gap-12">
+
           {/* Left Column: Heading and description */}
-          <div className="w-full lg:w-[42%] flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+          <div className="w-full md:w-[42%] flex flex-col items-start text-left space-y-6">
+
             <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="space-y-6"
+              className="space-y-6 w-full flex flex-col items-start text-left"
             >
-              <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
+              <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight text-left w-full">
                 Unified Software for a
-                <span className="block text-black mt-1">
+                <span className="block text-black mt-1 text-left">
                   Connected Generation
                 </span>
               </motion.h2>
 
-              <motion.p variants={itemVariants} className="text-slate-600 text-base md:text-lg leading-relaxed">
-                Beta builds secure, real-time corporate applications. Consolidation is here: SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
+              <motion.p variants={itemVariants} className="text-slate-600 text-base md:text-lg leading-relaxed text-left w-full">
+                Beta builds secure, real-time corporate applications.SMTP mail threads,live authentication protocols,and agile sprints under one dashboard.
               </motion.p>
             </motion.div>
           </div>
 
           {/* Right Column: Featured Apps Box */}
-          <div className="w-full lg:w-[58%] max-w-2xl flex flex-col justify-center text-left">
+          <div className="w-full md:w-[54%] max-w-2xl flex flex-col justify-center text-left -ml-4">
+
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-3.5 w-full mb-6">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
@@ -166,12 +169,13 @@ export default function Home() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
-                <div 
-                  className="lg:col-span-1 w-full rounded-2xl p-6 text-center overflow-hidden relative select-none flex flex-col items-center justify-between min-h-[260px] showcase-white-text"
+                <div
+                  className="lg:col-span-3 w-full aspect-square rounded-2xl p-8 text-center overflow-hidden relative select-none flex flex-col items-center justify-center space-y-5 showcase-white-text"
                   style={{
-                    background: 'linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
+                    background: 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)'
+                    ,
                     backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
                     backgroundSize: '24px 24px, 24px 24px, 100% 100%',
                     border: '1px solid rgba(139, 92, 246, 0.2)'
@@ -179,30 +183,27 @@ export default function Home() {
                 >
                   {/* Subtle top/bottom glowing gradients */}
                   <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-fuchsia-500/5 to-cyan-500/5 pointer-events-none" />
-                   {/* Icon Block */}
-                  <div className="relative mt-2">
-                    <div className="bg-[#0e0620] border border-violet-500/40 w-16 h-16 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] transition-all duration-300 relative overflow-hidden group">
+                  {/* Icon Block */}
+                  <div className="relative">
+                    <div className="bg-[#0e0620] border border-violet-500/40 w-24 h-24 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] transition-all duration-300 relative overflow-hidden group">
                       <div className="absolute inset-0 bg-gradient-to-tr from-violet-600/20 to-cyan-400/10 pointer-events-none" />
-                      <img src="/logo.png" alt="Beta Logo" className="h-10 w-10 object-contain relative z-10" />
+                      <img src="/logo.png" alt="Beta Logo" className="h-16 w-16 object-contain relative z-10" />
                     </div>
                     {/* Small sparkles */}
-                    <div className="absolute -top-2.5 -right-2.5 text-amber-300 animate-pulse">
-                      <Sparkles className="h-4 w-4 fill-amber-300/30" />
+                    <div className="absolute -top-3 -right-3 text-amber-300 animate-pulse">
+                      <Sparkles className="h-5 w-5 fill-amber-300/30" />
                     </div>
                   </div>
 
                   {/* Text Stack */}
-                  <div className="space-y-1.5 z-10 my-4">
-                    <span className="text-[10px] uppercase tracking-widest text-white font-black">
+                  <div className="space-y-1.5 z-10">
+                    <span className="text-[11px] uppercase tracking-widest text-violet-300 font-black">
                       Introducing
                     </span>
-                    <h3 className="text-xl font-black text-white tracking-wide">
+                    <h3 className="text-2xl font-black text-white tracking-wide">
                       Beta Products
                     </h3>
-                    <p className="text-[10px] font-extrabold tracking-widest uppercase text-white mb-1">
-                      Enterprise Apps
-                    </p>
-                    <p className="text-[10px] text-white/90 font-medium leading-relaxed">
+                    <p className="text-xs text-slate-300/90 font-medium leading-relaxed max-w-[220px] mx-auto mt-0.5">
                       Unified dashboard for live authentication, SMTP mail, and tasks.
                     </p>
                   </div>
@@ -210,10 +211,10 @@ export default function Home() {
                   {/* Explorable Button */}
                   <Link
                     to="/login"
-                    className="inline-flex items-center px-4 py-2 rounded-full border border-violet-500/40 bg-violet-950/20 text-white text-[9px] font-extrabold uppercase tracking-wider hover:bg-violet-600 hover:border-violet-400 hover:shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all duration-300 mb-2 group cursor-pointer"
+                    className="inline-flex items-center px-6 py-2.5 rounded-full border border-violet-500/40 bg-violet-950/20 text-white text-[10px] font-extrabold uppercase tracking-wider hover:bg-violet-600 hover:border-violet-400 hover:shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all duration-300 group cursor-pointer"
                   >
                     Explore Apps
-                    <ArrowRight className="ml-1 h-3 w-3 transform transition-transform group-hover:translate-x-0.5" />
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5 transform transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </div>
 
@@ -226,17 +227,19 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-3.5 p-4 rounded-2xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left"
                   >
-                    <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                      <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                    <div className="h-16 w-16 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                      <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-16 w-16 object-contain" />
+
                     </div>
                     <div className="space-y-0.5 flex-grow">
-                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                         BNXmail
                       </h4>
-                      <p className="text-slate-550 text-[10px] leading-relaxed font-semibold">
+                      <p className="text-slate-550 text-sm leading-relaxed font-semibold">
                         Real time mail, always in sync.
                       </p>
                     </div>
+
                   </a>
 
                   {/* Cliks Business */}
@@ -246,14 +249,14 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-3.5 p-4 rounded-2xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left"
                   >
-                    <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                      <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
+                    <div className="h-16 w-16 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                      <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-16 w-16 object-contain" />
                     </div>
                     <div className="space-y-0.5 flex-grow">
-                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-violet-600 transition-colors duration-200">
+                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                         Cliks Business
                       </h4>
-                      <p className="text-slate-550 text-[10px] leading-relaxed font-semibold">
+                      <p className="text-slate-550 text-sm leading-relaxed font-semibold">
                         Work together, faster.
                       </p>
                     </div>
@@ -384,19 +387,19 @@ export default function Home() {
 
       {/* SECTION 6: CALL TO ACTION */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="cta-colored-section animated-gradient-bg relative rounded-3xl p-8 md:p-16 border border-blue-500/20 overflow-hidden text-center shadow-2xl">
+        <div className="cta-colored-section animated-gradient-bg relative rounded-3xl p-8 md:p-16 border border-blue-500/20 overflow-hidden text-left shadow-2xl">
           {/* Decorative patterns */}
           <div className="absolute inset-0 bg-mesh-pattern bg-mesh opacity-10 pointer-events-none" />
           <div className="absolute inset-0 bg-white/5 backdrop-blur-[1px] pointer-events-none" />
 
-          <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
+          <div className="relative z-10 space-y-6 max-w-2xl mr-auto">
             <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">
               Ready to Upgrade Your Corporate Software?
             </h2>
-            <p className="text-slate-200 max-w-xl mx-auto text-sm md:text-base">
+            <p className="text-slate-200 max-w-xl mr-auto text-sm md:text-base">
               Unify your group mailbox, auth logs, dashboard notes, and project backlogs under one centralized and secure portal.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-4 pt-6">
               <button
                 type="button"
                 className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white text-[#004AAD] cursor-pointer"
