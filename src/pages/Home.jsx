@@ -210,7 +210,7 @@ export default function Home() {
 
                   {/* Explorable Button */}
                   <Link
-                    to="/login"
+                    to="/Support"
                     className="inline-flex items-center px-6 py-2.5 rounded-full border border-violet-500/40 bg-violet-950/20 text-white text-[10px] font-extrabold uppercase tracking-wider hover:bg-violet-600 hover:border-violet-400 hover:shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all duration-300 group cursor-pointer"
                   >
                     Explore Apps

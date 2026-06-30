@@ -5,20 +5,23 @@ import { AuthContext } from '../context/AuthContext';
 import {
   Plus, Edit, Trash, FileText, Briefcase, LogOut,
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
-  Lock, Mail
+  Lock, Mail, Calculator, Brain, BookOpen, BarChart3,
+  Upload, Download, ChevronRight, Calendar
 } from 'lucide-react';
 import axios from 'axios';
 
 const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
-  if (s === 'pending' || s === 'applied') return 'Applied';
-  if (s === 'reviewed' || s === 'under review' || s === 'underreview') return 'Under Review';
+  if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Candidates';
+  if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 Aptitude';
+  if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 2 Technical';
+  if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 3 Brand Awareness';
   if (s === 'shortlisted') return 'Shortlisted';
   if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
   if (s === 'approved' || s === 'selected') return 'Selected';
   if (s === 'rejected') return 'Rejected';
   if (s === 'joined') return 'Joined';
-  return 'Applied';
+  return 'Candidates';
 };
 
 const fallbackApps = [
@@ -29,7 +32,7 @@ const fallbackApps = [
     phone: '+91 98765 43210',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'I am excited to apply for the Senior Systems Engineer position at Beta. I have over 5 years of experience in distributed systems design, React, Node.js, and scaling high-availability architectures.',
-    status: 'Applied',
+    status: 'Candidates',
     createdAt: new Date().toISOString(),
     jobTitle: 'Senior Full Stack Engineer',
     jobDepartment: 'Engineering',
@@ -47,6 +50,70 @@ const fallbackApps = [
     jobTitle: 'UI/UX Designer & Developer',
     jobDepartment: 'Design',
     jobLocation: 'Chennai, India (Hybrid)'
+  },
+  {
+    id: 'app-mock-round1-1',
+    fullName: 'John Doe',
+    email: 'john.doe@example.com',
+    phone: '+91 99999 88888',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'A highly competent React developer with 3 years of frontend expertise.',
+    status: 'Round 1 Aptitude',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'React Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    interviewDate: '02-Jul-2026',
+    interviewTime: '10 AM',
+    aptitudeStatus: 'Scheduled'
+  },
+  {
+    id: 'app-mock-round1-2',
+    fullName: 'Priya S',
+    email: 'priya.s@example.com',
+    phone: '+91 88888 77777',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Java backend specialist focusing on Spring Boot microservices.',
+    status: 'Round 1 Aptitude',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Java Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    interviewDate: '02-Jul-2026',
+    interviewTime: '11 AM',
+    aptitudeStatus: 'Scheduled'
+  },
+  {
+    id: 'app-mock-round1-3',
+    fullName: 'Arun K',
+    email: 'arun.k@example.com',
+    phone: '+91 77777 66666',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Creative designer and UI developer expert with Tailwind and CSS.',
+    status: 'Round 1 Aptitude',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'UI Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    interviewDate: '03-Jul-2026',
+    interviewTime: '02 PM',
+    aptitudeStatus: 'Completed'
+  },
+  {
+    id: 'app-mock-round1-4',
+    fullName: 'Rahul M',
+    email: 'rahul.m@example.com',
+    phone: '+91 66666 55555',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Node.js developer with database indexing expertise.',
+    status: 'Round 1 Aptitude',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Backend Dev',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    interviewDate: 'Not Selected',
+    interviewTime: '--',
+    aptitudeStatus: 'Pending'
   }
 ];
 
@@ -58,13 +125,14 @@ export default function AdminDashboard() {
   const [externalJobs, setExternalJobs] = useState([]);
   const [externalApplications, setExternalApplications] = useState([]);
   const [activeSubTab, setActiveSubTab] = useState('appsList');
+  const [aptitudeSubTab, setAptitudeSubTab] = useState('dashboard');
   const [selectedJobFilter, setSelectedJobFilter] = useState('All');
-  const [selectedStatusFilter, setSelectedStatusFilter] = useState('All');
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState('Candidates');
   const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
 
   // Application details/status/interview states
   const [selectedApplication, setSelectedApplication] = useState(null);
-  const [candidateStatus, setCandidateStatus] = useState('Applied');
+  const [candidateStatus, setCandidateStatus] = useState('Candidates');
   const [interviewDate, setInterviewDate] = useState('');
   const [interviewTime, setInterviewTime] = useState('');
   const [interviewLink, setInterviewLink] = useState('https://meet.google.com/abc-defg-hij');
@@ -145,7 +213,10 @@ export default function AdminDashboard() {
           createdAt: app.createdAt || app.createdat || '',
           jobTitle: app.jobTitle || app.jobtitle || '',
           jobDepartment: app.jobDepartment || app.jobdepartment || '',
-          jobLocation: app.jobLocation || app.joblocation || ''
+          jobLocation: app.jobLocation || app.joblocation || '',
+          interviewDate: app.interviewDate || app.interviewdate || '',
+          interviewTime: app.interviewTime || app.interviewtime || '',
+          aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || ''
         }));
         setExternalApplications(normalizedApps);
       }
@@ -520,7 +591,7 @@ export default function AdminDashboard() {
           <nav className="space-y-1 px-3">
             <button
               onClick={() => {
-                setSelectedStatusFilter('All');
+                setSelectedStatusFilter('Candidates');
                 setActiveSubTab('jobsList');
               }}
               className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer text-left ${
@@ -539,11 +610,9 @@ export default function AdminDashboard() {
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">
                 Candidate Pipeline
               </p>
-              {['All', 'Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => {
+              {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => {
                 const isActive = activeSubTab === 'appsList' && selectedStatusFilter === status;
-                const count = status === 'All' 
-                  ? externalApplications.length 
-                  : externalApplications.filter(app => app.status === status).length;
+                const count = externalApplications.filter(app => app.status === status).length;
                 
                 return (
                   <button
@@ -645,22 +714,24 @@ export default function AdminDashboard() {
         ) : (
           <div className="space-y-6">
             {/* Sub Tab Controls */}
-            <div className="flex space-x-6 border-b border-slate-200 pb-3">
-              <button
-                onClick={() => setActiveSubTab('jobsList')}
-                className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${activeSubTab === 'jobsList' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'
-                  }`}
-              >
-                Active Jobs ({externalJobs.length})
-              </button>
-              <button
-                onClick={() => setActiveSubTab('appsList')}
-                className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${activeSubTab === 'appsList' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'
-                  }`}
-              >
-                Candidate Applications ({externalApplications.length})
-              </button>
-            </div>
+            {selectedStatusFilter !== 'Round 1 Aptitude' && (
+              <div className="flex space-x-6 border-b border-slate-200 pb-3">
+                <button
+                  onClick={() => setActiveSubTab('jobsList')}
+                  className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${activeSubTab === 'jobsList' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'
+                    }`}
+                >
+                  Active Jobs ({externalJobs.length})
+                </button>
+                <button
+                  onClick={() => setActiveSubTab('appsList')}
+                  className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${activeSubTab === 'appsList' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'
+                    }`}
+                >
+                  Candidate Applications ({externalApplications.length})
+                </button>
+              </div>
+            )}
 
             {/* Sub Tab 1: Jobs list */}
             {activeSubTab === 'jobsList' && (
@@ -754,16 +825,298 @@ export default function AdminDashboard() {
 
             {/* Sub Tab 2: Applications list */}
             {activeSubTab === 'appsList' && (
-              <div className="space-y-4">
+              selectedStatusFilter === 'Round 1 Aptitude' ? (
+                <div className="space-y-6 animate-fadeIn">
+                  {/* Local Tabs for Dashboard vs Questions */}
+                  <div className="flex space-x-6 border-b border-slate-200 pb-3">
+                    <button
+                      onClick={() => setAptitudeSubTab('dashboard')}
+                      className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${aptitudeSubTab === 'dashboard' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => setAptitudeSubTab('questions')}
+                      className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${aptitudeSubTab === 'questions' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+                    >
+                      Assessment Questions
+                    </button>
+                  </div>
+
+                  {aptitudeSubTab === 'dashboard' ? (
+                    <div className="space-y-6">
+                      {/* Round 1 - Aptitude Dashboard Header */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div>
+                          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                            Round 1 - Aptitude Dashboard
+                          </h2>
+                          <p className="text-slate-500 text-sm mt-1">
+                            Overview of candidate assessment metrics and test schedules
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Metrics cards grid */}
+                      {(() => {
+                        const round1Apps = externalApplications.filter(app => app.status === 'Round 1 Aptitude');
+                        const selectedCount = round1Apps.length;
+                        const scheduledCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Scheduled').length;
+                        const completedCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Completed').length;
+                        const pendingCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Pending').length;
+
+                        return (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {/* Selected */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Selected</span>
+                                <span className="text-3xl font-black text-[#004AAD]">{selectedCount}</span>
+                              </div>
+                              <div className="p-3 bg-blue-50 text-[#004AAD] rounded-2xl">
+                                <Users className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Scheduled */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Scheduled</span>
+                                <span className="text-3xl font-black text-amber-600">{scheduledCount}</span>
+                              </div>
+                              <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
+                                <Calendar className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Completed */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Completed</span>
+                                <span className="text-3xl font-black text-emerald-600">{completedCount}</span>
+                              </div>
+                              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
+                                <CheckCircle className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Pending Slots */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Pending Slots</span>
+                                <span className="text-3xl font-black text-slate-600">{pendingCount}</span>
+                              </div>
+                              <div className="p-3 bg-slate-50 text-slate-500 rounded-2xl">
+                                <AlertCircle className="h-6 w-6" />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Selected Candidates Table */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div className="mb-4">
+                          <h3 className="text-lg font-black text-slate-900 tracking-tight">Selected Candidates for Round 1</h3>
+                          <p className="text-slate-550 text-xs mt-0.5">Evaluation schedules and round completion logging</p>
+                        </div>
+
+                        <div className="overflow-x-auto rounded-xl border border-slate-200">
+                          <table className="w-full text-left text-xs">
+                            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase tracking-wider font-bold">
+                              <tr>
+                                <th className="py-3 px-4 font-bold">Candidate Name</th>
+                                <th className="py-3 px-4 font-bold">Position Applied</th>
+                                <th className="py-3 px-4 font-bold">Interview Date</th>
+                                <th className="py-3 px-4 font-bold">Time</th>
+                                <th className="py-3 px-4 font-bold">Status</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 text-slate-700">
+                              {externalApplications
+                                .filter(app => app.status === 'Round 1 Aptitude')
+                                .map((app) => {
+                                  const dateVal = app.interviewDate || 'Not Selected';
+                                  const timeVal = app.interviewTime || '--';
+                                  const statusVal = app.aptitudeStatus || 'Pending';
+
+                                  return (
+                                    <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
+                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
+                                      <td className="py-3.5 px-4">{app.jobTitle}</td>
+                                      <td className="py-3.5 px-4">
+                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${
+                                          dateVal === 'Not Selected' ? 'bg-slate-50 text-slate-500 border border-slate-200' : 'bg-blue-50 text-blue-700 border border-blue-200'
+                                        }`}>
+                                          {dateVal}
+                                        </span>
+                                      </td>
+                                      <td className="py-3.5 px-4 font-semibold text-slate-900">{timeVal}</td>
+                                      <td className="py-3.5 px-4">
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold ${
+                                          statusVal === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                                          statusVal === 'Scheduled' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                                          'bg-slate-50 text-slate-500 border border-slate-200'
+                                        }`}>
+                                          {statusVal}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  );
+                                })
+                              }
+                              {externalApplications.filter(app => app.status === 'Round 1 Aptitude').length === 0 && (
+                                <tr>
+                                  <td colSpan={5} className="py-8 text-center text-slate-400 italic">
+                                    No candidates currently in Round 1 Aptitude.
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-6 animate-fadeIn">
+                      {/* Round 1 - Aptitude Questions Header */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                          <div>
+                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                              Round 1 - Aptitude Questions
+                            </h2>
+                            <p className="text-slate-500 text-sm mt-1">
+                              Manage aptitude assessment questions for candidates
+                            </p>
+                          </div>
+                          
+                          {/* Stats */}
+                          <div className="flex items-center gap-3">
+                            <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-blue-600 font-bold block">Total Questions</span>
+                              <span className="text-lg font-black text-blue-700">50</span>
+                            </div>
+                            <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold block">Active</span>
+                              <span className="text-lg font-black text-emerald-700">45</span>
+                            </div>
+                            <div className="bg-slate-50 border border-slate-250 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold block">Draft</span>
+                              <span className="text-lg font-black text-slate-650">5</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex flex-wrap items-center gap-3 mt-6 pt-6 border-t border-slate-100">
+                          <button className="flex items-center gap-2 bg-[#004AAD] hover:bg-[#003c8f] text-white font-bold py-2 px-4 rounded-xl text-xs shadow-sm hover:shadow transition duration-200 cursor-pointer">
+                            <Plus className="h-4 w-4" />
+                            Add Question
+                          </button>
+                          <button className="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs border border-slate-250 transition duration-200 cursor-pointer">
+                            <Upload className="h-4 w-4 text-slate-500" />
+                            Import Excel
+                          </button>
+                          <button className="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs border border-slate-250 transition duration-200 cursor-pointer">
+                            <Download className="h-4 w-4 text-slate-500" />
+                            Export
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Categories Grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {/* Quant */}
+                        <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer">
+                          <div className="flex items-start justify-between">
+                            <div className="p-2.5 bg-blue-50 rounded-xl text-blue-600">
+                              <Calculator className="h-5 w-5" />
+                            </div>
+                            <span className="text-xs font-bold text-slate-450 bg-slate-50 border border-slate-150 px-2 py-0.5 rounded-full">
+                              Category 1
+                            </span>
+                          </div>
+                          <div className="mt-4">
+                            <h4 className="text-base font-bold text-slate-900">Quant</h4>
+                            <p className="text-slate-500 text-xs mt-0.5">20 Questions</p>
+                          </div>
+                          <div className="flex items-center text-xs font-bold text-[#004AAD] mt-3 group-hover:translate-x-1 transition-transform duration-200">
+                            Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
+                          </div>
+                        </div>
+
+                        {/* Logical */}
+                        <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer">
+                          <div className="flex items-start justify-between">
+                            <div className="p-2.5 bg-purple-50 rounded-xl text-purple-600">
+                              <Brain className="h-5 w-5" />
+                            </div>
+                            <span className="text-xs font-bold text-slate-455 bg-slate-50 border border-slate-150 px-2 py-0.5 rounded-full">
+                              Category 2
+                            </span>
+                          </div>
+                          <div className="mt-4">
+                            <h4 className="text-base font-bold text-slate-900">Logical</h4>
+                            <p className="text-slate-550 text-xs mt-0.5">15 Questions</p>
+                          </div>
+                          <div className="flex items-center text-xs font-bold text-purple-600 mt-3 group-hover:translate-x-1 transition-transform duration-200">
+                            Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
+                          </div>
+                        </div>
+
+                        {/* Verbal */}
+                        <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-amber-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer">
+                          <div className="flex items-start justify-between">
+                            <div className="p-2.5 bg-amber-50 rounded-xl text-amber-600">
+                              <BookOpen className="h-5 w-5" />
+                            </div>
+                            <span className="text-xs font-bold text-slate-455 bg-slate-50 border border-slate-150 px-2 py-0.5 rounded-full">
+                              Category 3
+                            </span>
+                          </div>
+                          <div className="mt-4">
+                            <h4 className="text-base font-bold text-slate-900">Verbal</h4>
+                            <p className="text-slate-555 text-xs mt-0.5">10 Questions</p>
+                          </div>
+                          <div className="flex items-center text-xs font-bold text-amber-600 mt-3 group-hover:translate-x-1 transition-transform duration-200">
+                            Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
+                          </div>
+                        </div>
+
+                        {/* Data Int. */}
+                        <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-emerald-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer">
+                          <div className="flex items-start justify-between">
+                            <div className="p-2.5 bg-emerald-50 rounded-xl text-emerald-600">
+                              <BarChart3 className="h-5 w-5" />
+                            </div>
+                            <span className="text-xs font-bold text-slate-455 bg-slate-50 border border-slate-150 px-2 py-0.5 rounded-full">
+                              Category 4
+                            </span>
+                          </div>
+                          <div className="mt-4">
+                            <h4 className="text-base font-bold text-slate-900">Data Int.</h4>
+                            <p className="text-slate-555 text-xs mt-0.5">5 Questions</p>
+                          </div>
+                          <div className="flex items-center text-xs font-bold text-emerald-600 mt-3 group-hover:translate-x-1 transition-transform duration-200">
+                            Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-4">
                 {/* Filtering header */}
                 <div className="flex items-center justify-between p-4 rounded-xl bg-white border border-slate-200">
                   <div className="text-slate-600 text-xs font-medium">
                     Showing {
                       externalApplications
                         .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
-                        .filter(app => selectedStatusFilter === 'All' || app.status === selectedStatusFilter)
+                        .filter(app => selectedStatusFilter === 'Candidates' ? app.status === 'Candidates' : app.status === selectedStatusFilter)
                         .length
-                    } applications {selectedJobFilter !== 'All' && `for "${selectedJobFilter}"`}{selectedStatusFilter !== 'All' && ` marked as "${selectedStatusFilter}"`}
+                    } applications {selectedJobFilter !== 'All' && `for "${selectedJobFilter}"`}{selectedStatusFilter !== 'Candidates' && ` marked as "${selectedStatusFilter}"`}
                   </div>
                   <div className="flex items-center space-x-2">
                     <label className="text-[10px] font-bold text-slate-500 uppercase">Filter by Job:</label>
@@ -798,7 +1151,7 @@ export default function AdminDashboard() {
                         {(() => {
                           const filtered = externalApplications
                             .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
-                            .filter(app => selectedStatusFilter === 'All' || app.status === selectedStatusFilter);
+                            .filter(app => selectedStatusFilter === 'Candidates' ? app.status === 'Candidates' : app.status === selectedStatusFilter);
 
                           if (filtered.length === 0) {
                             return (
@@ -822,8 +1175,10 @@ export default function AdminDashboard() {
                               </td>
                               <td className="py-4 px-6">
                                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap ${
-                                  app.status === 'Applied' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                                  app.status === 'Under Review' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+                                  app.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+                                  app.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                                  app.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                                  app.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
                                   app.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                                   app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                                   app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
@@ -887,7 +1242,7 @@ export default function AdminDashboard() {
                                   <button
                                     onClick={() => {
                                       setSelectedApplication(app);
-                                      setCandidateStatus(app.status || 'Applied');
+                                      setCandidateStatus(app.status || 'Candidates');
                                     }}
                                     className="px-2.5 py-1.5 rounded bg-purple-50 hover:bg-purple-100 text-[#8B5CF6] border border-purple-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
                                   >
@@ -909,7 +1264,8 @@ export default function AdminDashboard() {
                     </table>
                   </div>
                 </div>
-              </div>
+                </div>
+              )
             )}
           </div>
         )}
@@ -1144,8 +1500,8 @@ export default function AdminDashboard() {
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Candidate Hiring Progress</div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                  {['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
-                    const order = ['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
+                  {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
+                    const order = ['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
                     const curIdx = order.indexOf(selectedApplication.status);
                     const isCompleted = curIdx >= idx && selectedApplication.status !== 'Rejected';
                     const isCurrent = selectedApplication.status === step;
@@ -1203,8 +1559,10 @@ export default function AdminDashboard() {
 
                   <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Current Status</label>
                   <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold capitalize mt-1 ${
-                    selectedApplication.status === 'Applied' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                    selectedApplication.status === 'Under Review' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+                    selectedApplication.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+                    selectedApplication.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                    selectedApplication.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                    selectedApplication.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
                     selectedApplication.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                     selectedApplication.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                     selectedApplication.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
@@ -1234,7 +1592,7 @@ export default function AdminDashboard() {
               <div className="border-t border-slate-100 pt-4">
                 <label className="text-xs font-bold uppercase block mb-2">Update Application Status</label>
                 <div className="flex flex-wrap gap-2">
-                  {['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
+                  {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
                     <button
                       key={status}
                       type="button"
