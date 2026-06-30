@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import {
   Plus, Edit, Trash, FileText, Briefcase, LogOut,
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
   Lock, Mail, Calculator, Brain, BookOpen, BarChart3,
-  Upload, Download, ChevronRight, Calendar
+  Upload, Download, ChevronRight, Calendar, Sliders
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -114,25 +113,529 @@ const fallbackApps = [
     interviewDate: 'Not Selected',
     interviewTime: '--',
     aptitudeStatus: 'Pending'
-  }
+  },
+  {
+    id: 'r2-fe-1',
+    fullName: 'Sarah Connor',
+    email: 'sarah.c@example.com',
+    phone: '+91 95432 10987',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'React expert focusing on clean UI rendering.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'React Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '5 Years'
+  },
+  {
+    id: 'r2-fe-2',
+    fullName: 'Alex Rivera',
+    email: 'alex.r@example.com',
+    phone: '+91 95432 10988',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'UI developer specialized in HTML5, CSS3, and responsive design systems.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'UI Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-fe-3',
+    fullName: 'Daniel Lee',
+    email: 'daniel.l@example.com',
+    phone: '+91 95432 10989',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Frontend developer focusing on React and Redux architectures.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'React Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '4 Years'
+  },
+  {
+    id: 'r2-fe-4',
+    fullName: 'John Baker',
+    email: 'john.b@example.com',
+    phone: '+91 95432 10990',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'High-end UI design systems builder.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'UI/UX Designer & Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-fe-5',
+    fullName: 'Lily Chen',
+    email: 'lily.c@example.com',
+    phone: '+91 95432 10991',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'React framework expert with state handling experience.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'React Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '5 Years'
+  },
+  {
+    id: 'r2-fe-6',
+    fullName: 'Marcus Aurelius',
+    email: 'marcus.a@example.com',
+    phone: '+91 95432 10992',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'CSS, layout design, and design system focus.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'UI Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '6 Years'
+  },
+  {
+    id: 'r2-fe-7',
+    fullName: 'Sophia Patel',
+    email: 'sophia.p@example.com',
+    phone: '+91 95432 10993',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'React Hooks and context provider developer.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'React Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '4 Years'
+  },
+  {
+    id: 'r2-fe-8',
+    fullName: 'Jack Ryan',
+    email: 'jack.r@example.com',
+    phone: '+91 95432 10994',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'CSS keyframe details and transitions.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'UI Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-fe-9',
+    fullName: 'Anna Kowalski',
+    email: 'anna.k@example.com',
+    phone: '+91 95432 10995',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'React applications modular setups.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'React Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '2 Years'
+  },
+  {
+    id: 'r2-fe-10',
+    fullName: 'Oliver Twist',
+    email: 'oliver.t@example.com',
+    phone: '+91 95432 10996',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Clean CSS systems builder.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'UI Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-fe-11',
+    fullName: 'Emily Bronte',
+    email: 'emily.b@example.com',
+    phone: '+91 95432 10997',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Advanced React component patterns.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'React Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '4 Years'
+  },
+  {
+    id: 'r2-fe-12',
+    fullName: 'Robert Frost',
+    email: 'robert.f@example.com',
+    phone: '+91 95432 10998',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'UI focus, performance scoring developer.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'UI Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '5 Years'
+  },
+
+  // Backend Candidates (8)
+  {
+    id: 'r2-be-1',
+    fullName: 'David Miller',
+    email: 'david.m@example.com',
+    phone: '+91 84321 09876',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Java Developer focused on core optimization.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Java Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '4 Years'
+  },
+  {
+    id: 'r2-be-2',
+    fullName: 'Karen Smith',
+    email: 'karen.s@example.com',
+    phone: '+91 73210 98765',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Spring Boot REST microservices specialist.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Spring Boot Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '6 Years'
+  },
+  {
+    id: 'r2-be-3',
+    fullName: 'Michael Johnson',
+    email: 'michael.j@example.com',
+    phone: '+91 62109 87654',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Node.js/Express backend architect.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Node.js Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-be-4',
+    fullName: 'Suresh R',
+    email: 'suresh.r@example.com',
+    phone: '+91 51098 76543',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Python/Django backend developer.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Python Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '4 Years'
+  },
+  {
+    id: 'r2-be-5',
+    fullName: 'Diana Prince',
+    email: 'diana.p@example.com',
+    phone: '+91 84321 09877',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Core Java specialist.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Java Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '5 Years'
+  },
+  {
+    id: 'r2-be-6',
+    fullName: 'Clark Kent',
+    email: 'clark.k@example.com',
+    phone: '+91 84321 09878',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Node/Koa/Express coder.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Node.js Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-be-7',
+    fullName: 'Bruce Wayne',
+    email: 'bruce.w@example.com',
+    phone: '+91 84321 09879',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Python scripts, Django security.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Python Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '6 Years'
+  },
+  {
+    id: 'r2-be-8',
+    fullName: 'Barry Allen',
+    email: 'barry.a@example.com',
+    phone: '+91 84321 09880',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Java concurrency and threading Developer.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Java Developer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '2 Years'
+  },
+
+  // Full Stack Candidates (5)
+  {
+    id: 'r2-fs-1',
+    fullName: 'Tony Stark',
+    email: 'tony.s@example.com',
+    phone: '+91 30987 54322',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Senior React/Node systems engineer.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Senior Full Stack Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '6 Years'
+  },
+  {
+    id: 'r2-fs-2',
+    fullName: 'Peter Parker',
+    email: 'peter.p@example.com',
+    phone: '+91 30987 54323',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'MERN stack specialist.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Senior Full Stack Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-fs-3',
+    fullName: 'Steve Rogers',
+    email: 'steve.r@example.com',
+    phone: '+91 30987 54324',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Full stack web architectures.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Senior Full Stack Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '5 Years'
+  },
+  {
+    id: 'r2-fs-4',
+    fullName: 'Natasha Romanoff',
+    email: 'natasha.r@example.com',
+    phone: '+91 30987 54325',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'React, Node, Postgres architect.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Senior Full Stack Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '4 Years'
+  },
+  {
+    id: 'r2-fs-5',
+    fullName: 'Wanda Maximoff',
+    email: 'wanda.m@example.com',
+    phone: '+91 30987 54326',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'MERN stack coding.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'Senior Full Stack Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+
+  // Testing Candidates (4)
+  {
+    id: 'r2-qa-1',
+    fullName: 'Jessica A',
+    email: 'jessica.a@example.com',
+    phone: '+91 40987 65432',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Selenium and Cypress test structures.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'QA Automation Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '5 Years'
+  },
+  {
+    id: 'r2-qa-2',
+    fullName: 'Arthur Dent',
+    email: 'arthur.d@example.com',
+    phone: '+91 40987 65433',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Integration testing developer.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'QA Automation Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-qa-3',
+    fullName: 'Ford Prefect',
+    email: 'ford.p@example.com',
+    phone: '+91 40987 65434',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Automation suite builder.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'QA Automation Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '4 Years'
+  },
+  {
+    id: 'r2-qa-4',
+    fullName: 'Tricia McMillan',
+    email: 'tricia.m@example.com',
+    phone: '+91 40987 65435',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'API load and automation tests.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'QA Automation Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '5 Years'
+  },
+
+  // DevOps Candidates (2)
+  {
+    id: 'r2-do-1',
+    fullName: 'Devin K',
+    email: 'devin.k@example.com',
+    phone: '+91 30987 54321',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Docker, AWS deployments, Kubernetes.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'DevOps Cloud Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '3 Years'
+  },
+  {
+    id: 'r2-do-2',
+    fullName: 'Linus Torvalds',
+    email: 'linus.t@example.com',
+    phone: '+91 30987 54327',
+    resumeUrl: '/mock_resume.pdf',
+    coverLetter: 'Linux kernel deployments, systems optimization.',
+    status: 'Round 2 Technical',
+    createdAt: new Date().toISOString(),
+    jobTitle: 'DevOps Cloud Engineer',
+    jobDepartment: 'Engineering',
+    jobLocation: 'Chennai, India (Hybrid)',
+    experience: '10 Years'
+  },
+
+  // Round 3 - Brand Awareness (BNX Mail - 12)
+  { id: 'r3-bm-1', fullName: 'Lucas Scott', email: 'lucas.s@example.com', phone: '+91 91111 22221', resumeUrl: '/mock_resume.pdf', coverLetter: 'Email advocate.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bm-2', fullName: 'Nathan Scott', email: 'nathan.s@example.com', phone: '+91 91111 22222', resumeUrl: '/mock_resume.pdf', coverLetter: 'SMTP expert.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-bm-3', fullName: 'Haley James', email: 'haley.j@example.com', phone: '+91 91111 22223', resumeUrl: '/mock_resume.pdf', coverLetter: 'Customer messaging.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-bm-4', fullName: 'Peyton Sawyer', email: 'peyton.s@example.com', phone: '+91 91111 22224', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand PR.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bm-5', fullName: 'Brooke Davis', email: 'brooke.d@example.com', phone: '+91 91111 22225', resumeUrl: '/mock_resume.pdf', coverLetter: 'Product placement.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
+  { id: 'r3-bm-6', fullName: 'Dan Scott', email: 'dan.s@example.com', phone: '+91 91111 22226', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise outreach.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '8 Years' },
+  { id: 'r3-bm-7', fullName: 'Mouth McFadden', email: 'mouth.m@example.com', phone: '+91 91111 22227', resumeUrl: '/mock_resume.pdf', coverLetter: 'Communications expert.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bm-8', fullName: 'Skills Taylor', email: 'skills.t@example.com', phone: '+91 91111 22228', resumeUrl: '/mock_resume.pdf', coverLetter: 'Promotions lead.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-bm-9', fullName: 'Keith Scott', email: 'keith.s@example.com', phone: '+91 91111 22229', resumeUrl: '/mock_resume.pdf', coverLetter: 'CTO engagement.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-bm-10', fullName: 'Karen Roe', email: 'karen.r@example.com', phone: '+91 91111 22230', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand design.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-bm-11', fullName: 'Whitey Durham', email: 'whitey.d@example.com', phone: '+91 91111 22231', resumeUrl: '/mock_resume.pdf', coverLetter: 'Branding legacy.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '12 Years' },
+  { id: 'r3-bm-12', fullName: 'Deb Scott', email: 'deb.s@example.com', phone: '+91 91111 22232', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise outreach.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
+
+  // Cliks Business - 8
+  { id: 'r3-cb-1', fullName: 'Julian Baker', email: 'julian.b@example.com', phone: '+91 92222 33331', resumeUrl: '/mock_resume.pdf', coverLetter: 'SaaS pitch.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-cb-2', fullName: 'Clay Evans', email: 'clay.e@example.com', phone: '+91 92222 33332', resumeUrl: '/mock_resume.pdf', coverLetter: 'Acquisition strategy.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-cb-3', fullName: 'Quinn James', email: 'quinn.j@example.com', phone: '+91 92222 33333', resumeUrl: '/mock_resume.pdf', coverLetter: 'Workflow design.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-cb-4', fullName: 'Chase Adams', email: 'chase.a@example.com', phone: '+91 92222 33334', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise licensing.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-cb-5', fullName: 'Chris Keller', email: 'chris.k@example.com', phone: '+91 92222 33335', resumeUrl: '/mock_resume.pdf', coverLetter: 'Client outreach.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
+  { id: 'r3-cb-6', fullName: 'Mia Catalano', email: 'mia.c@example.com', phone: '+91 92222 33336', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand messaging.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' },
+  { id: 'r3-cb-7', fullName: 'Alex Dupre', email: 'alex.d@example.com', phone: '+91 92222 33337', resumeUrl: '/mock_resume.pdf', coverLetter: 'Product demos.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-cb-8', fullName: 'Victoria Davis', email: 'victoria.d@example.com', phone: '+91 92222 33338', resumeUrl: '/mock_resume.pdf', coverLetter: 'Executive relations.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '7 Years' },
+
+  // Company Core Values - 5
+  { id: 'r3-bs-1', fullName: 'Rachel Gatina', email: 'rachel.g@example.com', phone: '+91 93333 44441', resumeUrl: '/mock_resume.pdf', coverLetter: 'Values advocate.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bs-2', fullName: 'Bevin Mirskey', email: 'bevin.m@example.com', phone: '+91 93333 44442', resumeUrl: '/mock_resume.pdf', coverLetter: 'Corporate communication.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-bs-3', fullName: 'Cooper Lee', email: 'cooper.l@example.com', phone: '+91 93333 44443', resumeUrl: '/mock_resume.pdf', coverLetter: 'Ethics strategy.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
+  { id: 'r3-bs-4', fullName: 'Gigi Silveri', email: 'gigi.s@example.com', phone: '+91 93333 44444', resumeUrl: '/mock_resume.pdf', coverLetter: 'Identity alignment.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bs-5', fullName: 'Shelly Simon', email: 'shelly.s@example.com', phone: '+91 93333 44445', resumeUrl: '/mock_resume.pdf', coverLetter: 'Corporate culture.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+
+  // Public Relations - 4
+  { id: 'r3-cr-1', fullName: 'Millicent Huxtable', email: 'millie.h@example.com', phone: '+91 94444 55551', resumeUrl: '/mock_resume.pdf', coverLetter: 'PR strategist.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-cr-2', fullName: 'Chuck Scolnik', email: 'chuck.s@example.com', phone: '+91 94444 55552', resumeUrl: '/mock_resume.pdf', coverLetter: 'Media outreach.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-cr-3', fullName: 'Marvin McFadden', email: 'marvin.m@example.com', phone: '+91 94444 55553', resumeUrl: '/mock_resume.pdf', coverLetter: 'Event branding.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-cr-4', fullName: 'Mouth McFadden Jr', email: 'mouth.jr@example.com', phone: '+91 94444 55554', resumeUrl: '/mock_resume.pdf', coverLetter: 'Social channels.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' }
+];
+
+const technicalQuestionsData = [
+  { id: 'q-r2-1', category: 'React', title: 'Debounced State Hook', difficulty: 'Medium', time: '20 mins', description: 'Implement a custom hook `useDebounce(value, delay)` that returns a debounced version of the input value. Provide clean optimization handles for dependency arrays.', codeSnippet: 'function useDebounce(value, delay) {\n  const [debouncedValue, setDebouncedValue] = useState(value);\n  useEffect(() => {\n    const handler = setTimeout(() => setDebouncedValue(value), delay);\n    return () => clearTimeout(handler);\n  }, [value, delay]);\n  return debouncedValue;\n}' },
+  { id: 'q-r2-2', category: 'React', title: 'Fiber Reconciliation Internals', difficulty: 'Hard', time: '15 mins', description: 'Explain the difference between Stack Reconciler and Fiber Reconciler in React. Detail how the render phase and commit phase cooperate asynchronously.', codeSnippet: '// Conceptual explanation: Stack is synchronous & blocking. Fiber splits work into chunks using RequestIdleCallback.' },
+  { id: 'q-r2-3', category: 'Java', title: 'Thread-safe Singleton Pattern', difficulty: 'Medium', time: '15 mins', description: 'Write a thread-safe Singleton class implementation in Java using double-checked locking pattern. Explain why the `volatile` keyword is critical here.', codeSnippet: 'public class Singleton {\n  private static volatile Singleton instance;\n  private Singleton() {}\n  public static Singleton getInstance() {\n    if (instance == null) {\n      synchronized (Singleton.class) {\n        if (instance == null) {\n          instance = new Singleton();\n        }\n      }\n    }\n    return instance;\n  }\n}' },
+  { id: 'q-r2-4', category: 'Java', title: 'Hotspot JVM GC comparison', difficulty: 'Hard', time: '20 mins', description: 'Compare G1 GC with ZGC collector. Detail the latency characteristics and memory layout differences under high allocation rates.', codeSnippet: '// Conceptual explanation: ZGC executes phases concurrently with application threads, keeping stop-the-world pauses below 1ms.' },
+  { id: 'q-r2-5', category: 'Spring Boot', title: 'Security Filter Chain setup', difficulty: 'Hard', time: '30 mins', description: 'Design a custom JWT verification filter chain and register it in SecurityFilterChain configuration. Exclude public endpoints from context verification.', codeSnippet: '@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n  http.csrf(csrf -> csrf.disable())\n      .authorizeHttpRequests(auth -> auth\n          .requestMatchers("/api/auth/**").permitAll()\n          .anyRequest().authenticated()\n      )\n      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);\n  return http.build();\n}' },
+  { id: 'q-r2-6', category: 'Spring Boot', title: 'Bean Initialization sequence', difficulty: 'Easy', time: '10 mins', description: 'Describe the differences between `@PostConstruct`, `InitializingBean`, and custom `init-method` lifecycle declarations.', codeSnippet: '// PostConstruct executes first, then afterPropertiesSet from InitializingBean, followed by custom XML/Java configuration init methods.' },
+  { id: 'q-r2-7', category: 'Node.js', title: 'Event Loop Bottleneck Resolution', difficulty: 'Hard', time: '25 mins', description: 'Identify how synchronous computation blocks the Event Loop. Implement a worker pool model or async partition process to free the main execution thread.', codeSnippet: 'const { Worker } = require(\'worker_threads\');\nfunction runWorker(workerData) {\n  return new Promise((resolve, reject) => {\n    const worker = new Worker(\'./worker.js\', { workerData });\n    worker.on(\'message\', resolve);\n    worker.on(\'error\', reject);\n  });\n}' },
+  { id: 'q-r2-8', category: 'Python', title: 'TTL Cache Decorator', difficulty: 'Medium', time: '20 mins', description: 'Build a custom python decorator `@ttl_cache(seconds=60)` that caches the returns of a function and invalidates cache entries older than the defined TTL.', codeSnippet: 'import time\ndef ttl_cache(seconds=60):\n    def decorator(func):\n        cache = {}\n        def wrapper(*args):\n            now = time.time()\n            if args in cache and (now - cache[args][1] < seconds):\n                return cache[args][0]\n            result = func(*args)\n            cache[args] = (result, now)\n            return result\n        return wrapper\n    return decorator' },
+  { id: 'q-r2-9', category: 'Testing', title: 'Dynamic Session Testing', difficulty: 'Medium', time: '15 mins', description: 'Write a Cypress automation script that bypasses multi-step login by injecting session cookies and directly navigates to administrative sub-routes.', codeSnippet: 'describe("Session Bypass", () => {\n  beforeEach(() => {\n    cy.setCookie("session_token", "mock_value_123");\n    cy.visit("/admin/dashboard");\n  });\n});' },
+  { id: 'q-r2-10', category: 'DevOps', title: 'Multi-stage Docker setup', difficulty: 'Easy', time: '15 mins', description: 'Write a multi-stage Dockerfile for a React application. Minimize the final production image footprint by using nginx as the hosting block.', codeSnippet: '# Stage 1\nFROM node:alpine AS builder\nWORKDIR /app\nCOPY . .\nRUN npm run build\n\n# Stage 2\nFROM nginx:alpine\nCOPY --from=builder /app/dist /usr/share/nginx/html' }
+];
+
+const brandQuestionsData = [
+  { id: 'q-r3-1', category: 'BNX Mail', title: 'SMTP Encryption Advocacy', difficulty: 'Medium', time: '15 mins', description: 'How does BNX Mail solve SMTP interception vulnerability? Write a brand messaging guide explaining this to a customer CTO who lacks cryptography context.', codeSnippet: 'BNX Mail encrypts every email segment using TLS/SMTP-over-SSL with Zero-knowledge architecture. No server caches raw message payloads, guaranteeing zero snooping.' },
+  { id: 'q-r3-2', category: 'BNX Mail', title: 'Microsoft 365 Migration Campaign', difficulty: 'Hard', time: '20 mins', description: 'Design a customer-facing brand campaign addressing migrating 10k enterprise mailboxes to BNX Mail with zero uptime disruption.', codeSnippet: 'Phase 1: Dual-delivery split delivery setup.\nPhase 2: SMTP connector synchronization.\nPhase 3: Final DNS MX pointer changeover with zero email loss.' },
+  { id: 'q-r3-3', category: 'Cliks Business', title: 'Team Task Velocity Strategy', difficulty: 'Easy', time: '10 mins', description: 'Detail the competitive messaging edge Cliks Business has over Slack/Trello. Highlight unified task nodes and real-time collaboration canvas.', codeSnippet: 'Tagline: "Work together, faster." Key points: No context switching, zero latency canvas sync, and deep files ecosystem integration.' },
+  { id: 'q-r3-4', category: 'Cliks Business', title: 'Target Enterprise Acquisition Pitch', difficulty: 'Medium', time: '25 mins', description: 'Draft a sales pitch targeting mid-size technology companies to migrate from multiple SaaS apps to a single Cliks Business subscription.', codeSnippet: 'Unified dashboards reduce operational licensing costs by 40% and eliminate time wasted on app context switching.' },
+  { id: 'q-r3-5', category: 'Company Core Values', title: 'Corporate Identity Core Values', difficulty: 'Easy', time: '10 mins', description: 'Explain the design significance of the BNX logo animation pulse and how it represents our mission to build deep connected infrastructures.', codeSnippet: 'The central pulse represents constant live-sync data stream, and the revolving orbits symbolize integrated SaaS applications.' },
+  { id: 'q-r3-6', category: 'Public Relations', title: 'Crisis Control Outage Communication', difficulty: 'Hard', time: '20 mins', description: 'Write an official brand response addressing a hypothetical 30-minute system outage in BNX Mail, maintaining public trust.', codeSnippet: 'Official Release: "Beta engineering quickly contained an edge CDN routing issue. All user mail payloads remained encrypted and secure. We value your business." ' },
+  { id: 'q-r3-7', category: 'Ecosystem Integration', title: 'Beta Single Sign-On Value Prop', difficulty: 'Medium', time: '15 mins', description: 'Outline a partner campaign highlighting Beta\'s single-sign-on (SSO) integration. How does it improve the security narrative of third-party apps?', codeSnippet: 'Single-Sign-On locks authentication to verified domain credentials, instantly protecting all third-party integrations from credential leaks.' }
 ];
 
 export default function AdminDashboard() {
   const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   // Job Board States
   const [externalJobs, setExternalJobs] = useState([]);
   const [externalApplications, setExternalApplications] = useState([]);
   const [activeSubTab, setActiveSubTab] = useState('appsList');
   const [aptitudeSubTab, setAptitudeSubTab] = useState('dashboard');
+  const [selectedDomainTab, setSelectedDomainTab] = useState('React');
+  const [technicalSubTab, setTechnicalSubTab] = useState('dashboard');
+  const [brandSubTab, setBrandSubTab] = useState('dashboard');
+  const [selectedBrandDomainTab, setSelectedBrandDomainTab] = useState('BNX Mail');
   const [selectedJobFilter, setSelectedJobFilter] = useState('All');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('Candidates');
   const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
 
   // Application details/status/interview states
   const [selectedApplication, setSelectedApplication] = useState(null);
-  const [candidateStatus, setCandidateStatus] = useState('Candidates');
   const [interviewDate, setInterviewDate] = useState('');
   const [interviewTime, setInterviewTime] = useState('');
   const [interviewLink, setInterviewLink] = useState('https://meet.google.com/abc-defg-hij');
@@ -174,19 +677,12 @@ export default function AdminDashboard() {
       if (!res.success) {
         setAdminError(res.message);
       }
-    } catch (err) {
+    } catch {
       setAdminError('Connection to security server failed.');
     } finally {
       setAdminLoading(false);
     }
   };
-
-  // Load data only if authenticated as admin
-  useEffect(() => {
-    if (user && user.role === 'ROLE_ADMIN') {
-      fetchData();
-    }
-  }, [user]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -216,17 +712,25 @@ export default function AdminDashboard() {
           jobLocation: app.jobLocation || app.joblocation || '',
           interviewDate: app.interviewDate || app.interviewdate || '',
           interviewTime: app.interviewTime || app.interviewtime || '',
-          aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || ''
+          aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
+          experience: app.experience || '3 Years'
         }));
         setExternalApplications(normalizedApps);
       }
-    } catch (err) {
+    } catch {
       console.warn('Failed to fetch from live API. Loading fallback local data.');
       setExternalApplications(fallbackApps);
     } finally {
       setLoading(false);
     }
   };
+
+  // Load data only if authenticated as admin
+  useEffect(() => {
+    if (user && user.role === 'ROLE_ADMIN') {
+      fetchData();
+    }
+  }, [user]);
 
   const handleArrayChange = (index, value, array, setArray) => {
     const newArray = [...array];
@@ -271,18 +775,18 @@ export default function AdminDashboard() {
     setJobDesc(job.description);
 
     // Parse arrays (handling both parsed arrays and raw string representations)
-    let resp = [''];
-    let reqs = [''];
-    let skillsList = [''];
+    let resp;
+    let reqs;
+    let skillsList;
     try {
       resp = Array.isArray(job.responsibilities) ? job.responsibilities : JSON.parse(job.responsibilities || '[]');
-    } catch (e) { resp = [job.responsibilities || '']; }
+    } catch { resp = [job.responsibilities || '']; }
     try {
       reqs = Array.isArray(job.requirements) ? job.requirements : JSON.parse(job.requirements || '[]');
-    } catch (e) { reqs = [job.requirements || '']; }
+    } catch { reqs = [job.requirements || '']; }
     try {
       skillsList = Array.isArray(job.skills) ? job.skills : JSON.parse(job.skills || '[]');
-    } catch (e) { skillsList = [job.skills || '']; }
+    } catch { skillsList = [job.skills || '']; }
 
     setJobResponsibilities(resp.length > 0 ? resp : ['']);
     setJobRequirements(reqs.length > 0 ? reqs : ['']);
@@ -354,7 +858,7 @@ export default function AdminDashboard() {
       setLoading(true);
       await axios.put(`https://apply.beta-softnet.com/api/applications/${appId}/status`, { status: newStatus });
       setSuccess(`Candidate status updated to ${newStatus}. Notification email sent.`);
-    } catch (err) {
+    } catch {
       console.warn('API update failed. Updating locally in state.');
       setSuccess(`Candidate status updated to ${newStatus}. (Candidate email notification sent)`);
     } finally {
@@ -389,7 +893,7 @@ export default function AdminDashboard() {
       // Try sending to the backend API as requested
       await axios.post(`https://apply.beta-softnet.com/api/applications/${selectedApplication.id}/schedule`, payload);
       setSuccess(`Interview scheduled for ${selectedApplication.fullName} successfully. Data saved to database.`);
-    } catch (err) {
+    } catch {
       console.warn('API schedule failed. Simulating successful scheduling locally.');
       setSuccess(`Interview scheduled successfully! Data sent to API: ${JSON.stringify(payload)}`);
     } finally {
@@ -714,7 +1218,7 @@ export default function AdminDashboard() {
         ) : (
           <div className="space-y-6">
             {/* Sub Tab Controls */}
-            {selectedStatusFilter !== 'Round 1 Aptitude' && (
+            {selectedStatusFilter !== 'Round 1 Aptitude' && selectedStatusFilter !== 'Round 2 Technical' && selectedStatusFilter !== 'Round 3 Brand Awareness' && (
               <div className="flex space-x-6 border-b border-slate-200 pb-3">
                 <button
                   onClick={() => setActiveSubTab('jobsList')}
@@ -1101,6 +1605,638 @@ export default function AdminDashboard() {
                           <div className="flex items-center text-xs font-bold text-emerald-600 mt-3 group-hover:translate-x-1 transition-transform duration-200">
                             Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : selectedStatusFilter === 'Round 2 Technical' ? (
+                <div className="space-y-6 animate-fadeIn">
+                  {/* Local Tabs for Dashboard vs Questions */}
+                  <div className="flex space-x-6 border-b border-slate-200 pb-3">
+                    <button
+                      onClick={() => setTechnicalSubTab('dashboard')}
+                      className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${technicalSubTab === 'dashboard' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => setTechnicalSubTab('questions')}
+                      className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${technicalSubTab === 'questions' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+                    >
+                      Assessment Questions
+                    </button>
+                  </div>
+
+                  {technicalSubTab === 'dashboard' ? (
+                    <div className="space-y-6">
+                      {/* Round 2 - Technical Header */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div>
+                          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                            Round 2 - Technical Dashboard
+                          </h2>
+                          <p className="text-slate-555 text-sm mt-1 font-semibold">
+                            Manage code reviews, programming assessments, and domain fits
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Metrics Cards Row */}
+                      {(() => {
+                        const r2Apps = externalApplications.filter(app => app.status === 'Round 2 Technical');
+                        const getCount = (keywords) => r2Apps.filter(app => 
+                          keywords.some(kw => (app.jobTitle || '').toLowerCase().includes(kw))
+                        ).length;
+                        
+                        const feCount = getCount(['react', 'frontend', 'ui', 'ux']);
+                        const beCount = getCount(['java', 'spring', 'node', 'python', 'backend']);
+                        const fsCount = getCount(['full stack', 'fullstack']);
+                        const qaCount = getCount(['testing', 'qa', 'automation']);
+
+                        return (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {/* Frontend */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Frontend</span>
+                                <span className="text-3xl font-black text-blue-600">{feCount} Candidates</span>
+                              </div>
+                              <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
+                                <Sliders className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Backend */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Backend</span>
+                                <span className="text-3xl font-black text-emerald-600">{beCount} Candidates</span>
+                              </div>
+                              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
+                                <Sliders className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Full Stack */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Full Stack</span>
+                                <span className="text-3xl font-black text-purple-600">{fsCount} Candidates</span>
+                              </div>
+                              <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl">
+                                <Sliders className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Testing */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Testing</span>
+                                <span className="text-3xl font-black text-amber-600">{qaCount} Candidates</span>
+                              </div>
+                              <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
+                                <Sliders className="h-6 w-6" />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Domain Tabs selection */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div className="mb-6">
+                          <h3 className="text-base font-bold text-slate-900">Domain Assessment Tabs</h3>
+                          <p className="text-slate-450 text-xs mt-0.5 font-semibold">Filter candidates based on technical specialization</p>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 border-b border-slate-100 pb-4 mb-6">
+                          {['React', 'Java', 'Spring Boot', 'Node.js', 'Python', 'Testing', 'DevOps'].map((domain) => (
+                            <button
+                              key={domain}
+                              onClick={() => setSelectedDomainTab(domain)}
+                              className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                                selectedDomainTab === domain
+                                  ? 'bg-[#004AAD] text-white border-[#004AAD] shadow-sm'
+                                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                              }`}
+                            >
+                              {domain}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Filtered Candidate Table */}
+                        {(() => {
+                          const r2Apps = externalApplications.filter(app => app.status === 'Round 2 Technical');
+                          
+                          const filteredApps = r2Apps.filter(app => {
+                            const title = (app.jobTitle || '').toLowerCase();
+                            if (selectedDomainTab === 'React') return title.includes('react') || title.includes('frontend') || title.includes('ui') || title.includes('ux');
+                            if (selectedDomainTab === 'Java') return title.includes('java') && !title.includes('spring');
+                            if (selectedDomainTab === 'Spring Boot') return title.includes('spring') || (title.includes('java') && title.includes('boot'));
+                            if (selectedDomainTab === 'Node.js') return title.includes('node') || title.includes('backend') || title.includes('express');
+                            if (selectedDomainTab === 'Python') return title.includes('python') || title.includes('django') || title.includes('data');
+                            if (selectedDomainTab === 'Testing') return title.includes('testing') || title.includes('qa') || title.includes('test');
+                            if (selectedDomainTab === 'DevOps') return title.includes('devops') || title.includes('cloud') || title.includes('aws') || title.includes('docker');
+                            return true;
+                          });
+
+                          return (
+                            <div className="overflow-x-auto rounded-xl border border-slate-200">
+                              <table className="w-full text-left text-xs">
+                                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase tracking-wider font-bold">
+                                  <tr>
+                                    <th className="py-3 px-4 font-bold">Candidate Name</th>
+                                    <th className="py-3 px-4 font-bold">Position</th>
+                                    <th className="py-3 px-4 font-bold">Email</th>
+                                    <th className="py-3 px-4 font-bold">Experience</th>
+                                    <th className="py-3 px-4 font-bold">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 text-slate-700">
+                                  {filteredApps.map((app) => (
+                                    <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
+                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
+                                      <td className="py-3.5 px-4 font-medium text-slate-600">{app.jobTitle}</td>
+                                      <td className="py-3.5 px-4 text-slate-500">{app.email}</td>
+                                      <td className="py-3.5 px-4 font-semibold text-slate-700">
+                                        {app.experience || '3 Years'}
+                                      </td>
+                                      <td className="py-3.5 px-4">
+                                        <button
+                                          onClick={() => setSelectedApplication(app)}
+                                          className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-[#004AAD] hover:text-[#003882] rounded-lg font-bold transition text-[11px] cursor-pointer"
+                                        >
+                                          Review
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                  {filteredApps.length === 0 && (
+                                    <tr>
+                                      <td colSpan={5} className="py-8 text-center text-slate-400 italic">
+                                        No candidates found for {selectedDomainTab} in Round 2 Technical.
+                                      </td>
+                                    </tr>
+                                  )}
+                                </tbody>
+                              </table>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {/* Round 2 - Technical Questions Header */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                          <div className="text-left">
+                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                              Round 2 - Technical Questions
+                            </h2>
+                            <p className="text-slate-500 text-sm mt-1 font-semibold">
+                              Manage domain coding challenges, system design prompts, and automation assessments
+                            </p>
+                          </div>
+                          
+                          {/* Stats */}
+                          <div className="flex items-center gap-3">
+                            <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-blue-600 font-bold block">Total Questions</span>
+                              <span className="text-lg font-black text-blue-700">{technicalQuestionsData.length}</span>
+                            </div>
+                            <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold block">Active</span>
+                              <span className="text-lg font-black text-emerald-700">{technicalQuestionsData.length}</span>
+                            </div>
+                            <div className="bg-slate-50 border border-slate-250 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold block">Draft</span>
+                              <span className="text-lg font-black text-slate-655">0</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex flex-wrap items-center gap-3 mt-6 pt-6 border-t border-slate-100">
+                          <button className="flex items-center gap-2 bg-[#004AAD] hover:bg-[#003c8f] text-white font-bold py-2 px-4 rounded-xl text-xs shadow-sm hover:shadow transition duration-200 cursor-pointer">
+                            <Plus className="h-4 w-4" />
+                            Add Question
+                          </button>
+                          <button className="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs border border-slate-250 transition duration-200 cursor-pointer">
+                            <Upload className="h-4 w-4 text-slate-500" />
+                            Import JSON
+                          </button>
+                          <button className="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs border border-slate-250 transition duration-200 cursor-pointer">
+                            <Download className="h-4 w-4 text-slate-500" />
+                            Export
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Domain category cards */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {['React', 'Java', 'Spring Boot', 'Node.js', 'Python', 'Testing', 'DevOps'].map((domain) => {
+                          const count = technicalQuestionsData.filter(q => q.category === domain).length;
+                          let iconBg = 'bg-blue-50 text-blue-600';
+                          if (domain === 'Java') iconBg = 'bg-amber-50 text-amber-600';
+                          if (domain === 'Spring Boot') iconBg = 'bg-emerald-50 text-emerald-600';
+                          if (domain === 'Node.js') iconBg = 'bg-violet-50 text-violet-600';
+                          if (domain === 'Python') iconBg = 'bg-indigo-50 text-indigo-600';
+                          if (domain === 'Testing') iconBg = 'bg-rose-50 text-rose-600';
+                          if (domain === 'DevOps') iconBg = 'bg-cyan-50 text-cyan-600';
+
+                          return (
+                            <div
+                              key={domain}
+                              onClick={() => setSelectedDomainTab(domain)}
+                              className={`p-5 rounded-2xl shadow-sm border transition-all duration-300 flex flex-col justify-between min-h-[120px] group cursor-pointer ${
+                                selectedDomainTab === domain
+                                  ? 'bg-white border-[#004AAD] ring-2 ring-[#004AAD]/10'
+                                  : 'bg-white border-slate-200 hover:border-[#004AAD]/40 hover:shadow-md'
+                              }`}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className={`p-2.5 rounded-xl ${iconBg}`}>
+                                  <Sliders className="h-5 w-5" />
+                                </div>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                  selectedDomainTab === domain ? 'bg-[#004AAD] text-white' : 'bg-slate-50 text-slate-550 border border-slate-200'
+                                }`}>
+                                  Category
+                                </span>
+                              </div>
+                              <div className="mt-3 text-left">
+                                <h4 className="text-sm font-bold text-slate-900">{domain}</h4>
+                                <p className="text-slate-500 text-[11px] mt-0.5 font-semibold">{count} Questions</p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Filtered coding questions list */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div className="mb-6 flex items-center justify-between">
+                          <div className="text-left">
+                            <h3 className="text-base font-bold text-slate-900">Assessment challenges: {selectedDomainTab}</h3>
+                            <p className="text-slate-450 text-xs mt-0.5 font-semibold">Coding problems presented to candidates during technical evaluation</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          {technicalQuestionsData
+                            .filter(q => q.category === selectedDomainTab)
+                            .map((question, idx) => (
+                              <div key={question.id} className="border border-slate-200 rounded-xl p-5 hover:border-slate-350 transition-colors text-left bg-slate-50/20">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                    <span className="h-5 w-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
+                                      {idx + 1}
+                                    </span>
+                                    {question.title}
+                                  </h4>
+                                  <div className="flex items-center gap-2">
+                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${
+                                      question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
+                                      question.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-250' :
+                                      'bg-rose-50 text-rose-700 border-rose-250'
+                                    }`}>
+                                      {question.difficulty}
+                                    </span>
+                                    <span className="text-[10px] text-slate-400 font-semibold">{question.time} limit</span>
+                                  </div>
+                                </div>
+                                
+                                <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold">
+                                  {question.description}
+                                </p>
+
+                                <div className="bg-[#0f172a] text-slate-300 font-mono text-[11px] rounded-lg p-4 overflow-x-auto whitespace-pre leading-relaxed border border-slate-900 shadow-inner">
+                                  {question.codeSnippet}
+                                </div>
+                              </div>
+                            ))}
+                          {technicalQuestionsData.filter(q => q.category === selectedDomainTab).length === 0 && (
+                            <div className="py-8 text-center text-slate-455 italic text-xs">
+                              No questions set for the {selectedDomainTab} specialization domain.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : selectedStatusFilter === 'Round 3 Brand Awareness' ? (
+                <div className="space-y-6 animate-fadeIn">
+                  {/* Local Tabs for Dashboard vs Questions */}
+                  <div className="flex space-x-6 border-b border-slate-200 pb-3">
+                    <button
+                      onClick={() => setBrandSubTab('dashboard')}
+                      className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${brandSubTab === 'dashboard' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => setBrandSubTab('questions')}
+                      className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${brandSubTab === 'questions' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
+                    >
+                      Assessment Questions
+                    </button>
+                  </div>
+
+                  {brandSubTab === 'dashboard' ? (
+                    <div className="space-y-6">
+                      {/* Header */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div>
+                          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                            Round 3 - Brand Awareness Dashboard
+                          </h2>
+                          <p className="text-slate-555 text-sm mt-1 font-semibold">
+                            Evaluate candidate alignment with BNX products, brand messaging, and user advocacy
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Metrics Cards */}
+                      {(() => {
+                        const r3Apps = externalApplications.filter(app => app.status === 'Round 3 Brand Awareness');
+                        const getCount = (keywords) => r3Apps.filter(app => 
+                          keywords.some(kw => (app.jobTitle || '').toLowerCase().includes(kw))
+                        ).length;
+
+                        const mailCount = getCount(['mail', 'smtp']);
+                        const cliksCount = getCount(['cliks', 'business']);
+                        const valuesCount = getCount(['values', 'core']);
+                        const prCount = getCount(['relations', 'representative']);
+
+                        return (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {/* BNX Mail */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">BNX Mail</span>
+                                <span className="text-3xl font-black text-blue-600">{mailCount} Candidates</span>
+                              </div>
+                              <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
+                                <Mail className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Cliks Business */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Cliks Business</span>
+                                <span className="text-3xl font-black text-emerald-600">{cliksCount} Candidates</span>
+                              </div>
+                              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
+                                <Briefcase className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Company Core Values */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Company Core Values</span>
+                                <span className="text-3xl font-black text-purple-600">{valuesCount} Candidates</span>
+                              </div>
+                              <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl">
+                                <Brain className="h-6 w-6" />
+                              </div>
+                            </div>
+
+                            {/* Public Relations */}
+                            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                              <div className="space-y-1">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Public Relations</span>
+                                <span className="text-3xl font-black text-amber-600">{prCount} Candidates</span>
+                              </div>
+                              <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
+                                <Users className="h-6 w-6" />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Domain Tabs selection */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div className="mb-6">
+                          <h3 className="text-base font-bold text-slate-900">Brand Specialist domains</h3>
+                          <p className="text-slate-450 text-xs mt-0.5 font-semibold">Filter candidates based on product focus area</p>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 border-b border-slate-100 pb-4 mb-6">
+                          {['BNX Mail', 'Cliks Business', 'Company Core Values', 'Public Relations', 'Ecosystem Integration'].map((domain) => (
+                            <button
+                              key={domain}
+                              onClick={() => setSelectedBrandDomainTab(domain)}
+                              className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                                selectedBrandDomainTab === domain
+                                  ? 'bg-[#004AAD] text-white border-[#004AAD] shadow-sm'
+                                  : 'bg-slate-50 text-slate-655 border-slate-200 hover:bg-slate-100'
+                              }`}
+                            >
+                              {domain}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Candidate Table */}
+                        {(() => {
+                          const r3Apps = externalApplications.filter(app => app.status === 'Round 3 Brand Awareness');
+                          
+                          const filteredApps = r3Apps.filter(app => {
+                            const title = (app.jobTitle || '').toLowerCase();
+                            if (selectedBrandDomainTab === 'BNX Mail') return title.includes('mail') || title.includes('smtp');
+                            if (selectedBrandDomainTab === 'Cliks Business') return title.includes('cliks') || title.includes('business');
+                            if (selectedBrandDomainTab === 'Company Core Values') return title.includes('values') || title.includes('core');
+                            if (selectedBrandDomainTab === 'Public Relations') return title.includes('relations') || title.includes('representative');
+                            if (selectedBrandDomainTab === 'Ecosystem Integration') return title.includes('ecosystem') || title.includes('partner') || title.includes('integration');
+                            return true;
+                          });
+
+                          return (
+                            <div className="overflow-x-auto rounded-xl border border-slate-200">
+                              <table className="w-full text-left text-xs">
+                                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase tracking-wider font-bold">
+                                  <tr>
+                                    <th className="py-3 px-4 font-bold">Candidate Name</th>
+                                    <th className="py-3 px-4 font-bold">Focus Area</th>
+                                    <th className="py-3 px-4 font-bold">Email</th>
+                                    <th className="py-3 px-4 font-bold">Experience</th>
+                                    <th className="py-3 px-4 font-bold">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 text-slate-700">
+                                  {filteredApps.map((app) => (
+                                    <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
+                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
+                                      <td className="py-3.5 px-4 font-medium text-slate-600">{app.jobTitle}</td>
+                                      <td className="py-3.5 px-4 text-slate-500">{app.email}</td>
+                                      <td className="py-3.5 px-4 font-semibold text-slate-700">
+                                        {app.experience || '3 Years'}
+                                      </td>
+                                      <td className="py-3.5 px-4">
+                                        <button
+                                          onClick={() => setSelectedApplication(app)}
+                                          className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-[#004AAD] hover:text-[#003882] rounded-lg font-bold transition text-[11px] cursor-pointer"
+                                        >
+                                          Review
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                  {filteredApps.length === 0 && (
+                                    <tr>
+                                      <td colSpan={5} className="py-8 text-center text-slate-400 italic">
+                                        No candidates found for {selectedBrandDomainTab} in Round 3 Brand Awareness.
+                                      </td>
+                                    </tr>
+                                  )}
+                                </tbody>
+                              </table>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {/* Questions Header */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                          <div className="text-left">
+                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                              Round 3 - Brand & Product Questions
+                            </h2>
+                            <p className="text-slate-555 text-sm mt-1 font-semibold">
+                              Assess candidate awareness of BNX products, SMTP mail systems, task workspaces, and Beta brand messaging
+                            </p>
+                          </div>
+
+                          {/* Stats */}
+                          <div className="flex items-center gap-3">
+                            <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-blue-600 font-bold block">Total Questions</span>
+                              <span className="text-lg font-black text-blue-700">{brandQuestionsData.length}</span>
+                            </div>
+                            <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold block">Active</span>
+                              <span className="text-lg font-black text-emerald-700">{brandQuestionsData.length}</span>
+                            </div>
+                            <div className="bg-slate-50 border border-slate-250 rounded-xl px-4 py-2 text-center">
+                              <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold block">Draft</span>
+                              <span className="text-lg font-black text-slate-655">0</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex flex-wrap items-center gap-3 mt-6 pt-6 border-t border-slate-100">
+                          <button className="flex items-center gap-2 bg-[#004AAD] hover:bg-[#003c8f] text-white font-bold py-2 px-4 rounded-xl text-xs shadow-sm hover:shadow transition duration-200 cursor-pointer">
+                            <Plus className="h-4 w-4" />
+                            Add Question
+                          </button>
+                          <button className="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs border border-slate-250 transition duration-200 cursor-pointer">
+                            <Upload className="h-4 w-4 text-slate-500" />
+                            Import JSON
+                          </button>
+                          <button className="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs border border-slate-250 transition duration-200 cursor-pointer">
+                            <Download className="h-4 w-4 text-slate-500" />
+                            Export
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Domain cards */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                        {['BNX Mail', 'Cliks Business', 'Company Core Values', 'Public Relations', 'Ecosystem Integration'].map((domain) => {
+                          const count = brandQuestionsData.filter(q => q.category === domain).length;
+                          let iconBg = 'bg-blue-50 text-blue-600';
+                          if (domain === 'Cliks Business') iconBg = 'bg-emerald-50 text-emerald-600';
+                          if (domain === 'Company Core Values') iconBg = 'bg-purple-50 text-purple-600';
+                          if (domain === 'Public Relations') iconBg = 'bg-amber-50 text-amber-600';
+                          if (domain === 'Ecosystem Integration') iconBg = 'bg-rose-50 text-rose-600';
+
+                          return (
+                            <div
+                              key={domain}
+                              onClick={() => setSelectedBrandDomainTab(domain)}
+                              className={`p-5 rounded-2xl shadow-sm border transition-all duration-300 flex flex-col justify-between min-h-[120px] group cursor-pointer ${
+                                selectedBrandDomainTab === domain
+                                  ? 'bg-white border-[#004AAD] ring-2 ring-[#004AAD]/10'
+                                  : 'bg-white border-slate-200 hover:border-[#004AAD]/40 hover:shadow-md'
+                              }`}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className={`p-2.5 rounded-xl ${iconBg}`}>
+                                  {domain === 'BNX Mail' ? <Mail className="h-5 w-5" /> : <Sliders className="h-5 w-5" />}
+                                </div>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                  selectedBrandDomainTab === domain ? 'bg-[#004AAD] text-white' : 'bg-slate-50 text-slate-555 border border-slate-200'
+                                }`}>
+                                  Category
+                                </span>
+                              </div>
+                              <div className="mt-3 text-left">
+                                <h4 className="text-sm font-bold text-slate-900">{domain}</h4>
+                                <p className="text-slate-555 text-[11px] mt-0.5 font-semibold">{count} Questions</p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Brand questions list */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div className="mb-6 flex items-center justify-between">
+                          <div className="text-left">
+                            <h3 className="text-base font-bold text-slate-900">Brand awareness challenges: {selectedBrandDomainTab}</h3>
+                            <p className="text-slate-455 text-xs mt-0.5 font-semibold">Brand fit questions and expected positioning answers</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          {brandQuestionsData
+                            .filter(q => q.category === selectedBrandDomainTab)
+                            .map((question, idx) => (
+                              <div key={question.id} className="border border-slate-200 rounded-xl p-5 hover:border-slate-350 transition-colors text-left bg-slate-50/20">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                    <span className="h-5 w-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
+                                      {idx + 1}
+                                    </span>
+                                    {question.title}
+                                  </h4>
+                                  <div className="flex items-center gap-2">
+                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${
+                                      question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
+                                      question.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-250' :
+                                      'bg-rose-50 text-rose-700 border-rose-250'
+                                    }`}>
+                                      {question.difficulty}
+                                    </span>
+                                    <span className="text-[10px] text-slate-400 font-semibold">{question.time} limit</span>
+                                  </div>
+                                </div>
+
+                                <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold">
+                                  {question.description}
+                                </p>
+
+                                <div className="bg-[#0f172a] text-slate-300 font-mono text-[11px] rounded-lg p-4 overflow-x-auto whitespace-pre leading-relaxed border border-slate-900 shadow-inner">
+                                  {question.codeSnippet}
+                                </div>
+                              </div>
+                            ))}
+                          {brandQuestionsData.filter(q => q.category === selectedBrandDomainTab).length === 0 && (
+                            <div className="py-8 text-center text-slate-400 italic text-xs">
+                              No questions set for the {selectedBrandDomainTab} branding category.
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

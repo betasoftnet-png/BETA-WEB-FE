@@ -51,7 +51,7 @@ export default function Home() {
   ];
 
   const stats = [
-    { label: 'Active Users', value: '10', icon: Users, color: 'text-blue-600' },
+    { label: 'Active Users', value: '1000', icon: Users, color: 'text-blue-600' },
     { label: 'Uptime SLA', value: '99.99%', icon: Activity, color: 'text-emerald-600' },
     { label: 'Enterprise Clients', value: '50+', icon: Globe, color: 'text-indigo-600' },
     { label: 'Data Protected', value: '25 PB', icon: Shield, color: 'text-cyan-600' },
@@ -82,10 +82,92 @@ export default function Home() {
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
+        @keyframes gradientSwirl {
+          0% { background-position: 0% 0%; }
+          50% { background-position: 100% 100%; }
+          100% { background-position: 0% 0%; }
+        }
+        @keyframes rotateOrbit1 {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes rotateOrbit2 {
+          0% { transform: rotate(360deg); }
+          100% { transform: rotate(0deg); }
+        }
+        @keyframes logoPulseGlow {
+          0% { transform: scale(1); box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(59, 130, 246, 0.2); }
+          50% { transform: scale(1.04); box-shadow: 0 0 45px rgba(6, 182, 212, 0.7), inset 0 0 25px rgba(6, 182, 212, 0.4); }
+          100% { transform: scale(1); box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(59, 130, 246, 0.2); }
+        }
+        @keyframes floatParticle {
+          0% { transform: translateY(0) scale(0.5); opacity: 0; }
+          20% { opacity: 0.8; }
+          80% { opacity: 0.8; }
+          100% { transform: translateY(-160px) scale(1.2); opacity: 0; }
+        }
         .animated-gradient-bg {
           background: linear-gradient(-45deg, #004AAD, #0b66c2, #1e3a8a, #4f46e5);
           background-size: 400% 400%;
           animation: gradientShift 15s ease infinite;
+        }
+        .swirling-showcase-bg {
+          background: radial-gradient(circle at 50% 50%, #061033 0%, #01040f 70%, #000105 100%);
+          background-size: 150% 150%;
+          animation: gradientSwirl 10s ease infinite;
+          position: relative;
+        }
+        .orbit-ring-1 {
+          position: absolute;
+          width: 130px;
+          height: 130px;
+          border: 1px dashed rgba(59, 130, 246, 0.2);
+          border-radius: 50%;
+          animation: rotateOrbit1 15s linear infinite;
+        }
+        .orbit-ring-2 {
+          position: absolute;
+          width: 170px;
+          height: 170px;
+          border: 1px dashed rgba(6, 182, 212, 0.15);
+          border-radius: 50%;
+          animation: rotateOrbit2 20s linear infinite;
+        }
+        .orbit-node-1 {
+          position: absolute;
+          top: -5px;
+          left: 50%;
+          margin-left: -5px;
+          width: 10px;
+          height: 10px;
+          background: #3b82f6;
+          border-radius: 50%;
+          box-shadow: 0 0 8px #3b82f6, 0 0 16px #3b82f6;
+        }
+        .orbit-node-2 {
+          position: absolute;
+          bottom: -5px;
+          left: 50%;
+          margin-left: -5px;
+          width: 10px;
+          height: 10px;
+          background: #06b6d4;
+          border-radius: 50%;
+          box-shadow: 0 0 8px #06b6d4, 0 0 16px #06b6d4;
+        }
+        .orbit-node-3 {
+          position: absolute;
+          right: -5px;
+          top: 50%;
+          margin-top: -5px;
+          width: 9px;
+          height: 9px;
+          background: #a855f7;
+          border-radius: 50%;
+          box-shadow: 0 0 8px #a855f7, 0 0 16px #a855f7;
+        }
+        .bnx-logo-pulse-premium {
+          animation: logoPulseGlow 3.5s ease-in-out infinite;
         }
         .hero-blue-banner h1, .hero-blue-banner h2, .hero-blue-banner h3 {
           color: #ffffff !important;
@@ -107,9 +189,9 @@ export default function Home() {
       `}</style>
 
       {/* HERO SECTION: SIDE-BY-SIDE LAYOUT */}
-      <div className="w-full mb-20 pt-8 md:pt-16 overflow-hidden">
+      <div className="w-full mb-20 pt-4 md:pt-8 overflow-hidden">
         {/* Central main title */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -120,10 +202,12 @@ export default function Home() {
               <Sparkles className="h-3.5 w-3.5" />
               <span>Vision</span>
             </span> */}
-            <h1 style={{ fontFamily: '"Saira Stencil One", sans-serif' }}
-              className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">
+            <h1
+              style={{ fontFamily: '"Saira Stencil One", sans-serif', color: '#034cacbf' }}
+              className="text-3xl md:text-4xl font-black tracking-tight">
               BETA
             </h1>
+
 
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-blue-700 tracking-tight leading-tight max-w-4xl mx-auto">
               Where Technology Meets{" "}
@@ -160,86 +244,72 @@ export default function Home() {
           </div>
 
           {/* Right Column: Featured Apps Box */}
-          <div className="w-full md:w-[54%] max-w-2xl flex flex-col justify-center text-left -ml-4">
+          <div className="w-full md:w-[48%] max-w-xl flex flex-col justify-center text-left">
 
-            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
+            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-3.5 w-full mb-6">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
-                  Featured Apps
+                  Enterprise Suite
                 </span>
+                {/* Horizontal line below heading
+                <div className="border-t border-slate-300 w-full my-4"></div> */}
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-stretch">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
-                <div
-                  className="lg:col-span-3 w-full aspect-square rounded-2xl p-8 text-center overflow-hidden relative select-none flex flex-col items-center justify-center space-y-5 showcase-white-text"
-                  style={{
-                    background: 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)'
-                    ,
-                    backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(135deg, #180a30 0%, #0f0420 50%, #15072d 100%)',
-                    backgroundSize: '24px 24px, 24px 24px, 100% 100%',
-                    border: '1px solid rgba(139, 92, 246, 0.2)'
-                  }}
-                >
-                  {/* Subtle top/bottom glowing gradients */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-fuchsia-500/5 to-cyan-500/5 pointer-events-none" />
-                  {/* Icon Block */}
-                  <div className="relative">
-                    <div className="bg-[#0e0620] border border-violet-500/40 w-24 h-24 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] transition-all duration-300 relative overflow-hidden group">
-                      <div className="absolute inset-0 bg-gradient-to-tr from-violet-600/20 to-cyan-400/10 pointer-events-none" />
-                      <img src="/logo.png" alt="Beta Logo" className="h-16 w-16 object-contain relative z-10" />
-                    </div>
-                    {/* Small sparkles */}
-                    <div className="absolute -top-3 -right-3 text-amber-300 animate-pulse">
-                      <Sparkles className="h-5 w-5 fill-amber-300/30" />
-                    </div>
+                <div className="lg:col-span-3 w-full aspect-square rounded-3xl text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg">
+                  {/* Deep Glowing Tech Starfield Particles */}
+                  <div className="absolute w-2.5 h-2.5 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
+                  <div className="absolute w-1.5 h-1.5 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
+                  <div className="absolute w-3 h-3 bg-indigo-500/20 rounded-full blur-[1.5px]" style={{ bottom: '10%', left: '75%', animation: 'floatParticle 6s linear infinite', animationDelay: '1.2s' }} />
+                  <div className="absolute w-2 h-2 bg-purple-400/35 rounded-full blur-[1px]" style={{ bottom: '5%', left: '60%', animation: 'floatParticle 4.5s linear infinite', animationDelay: '3.3s' }} />
+
+                  {/* Glowing Orbit Rings */}
+                  <div className="orbit-ring-1 pointer-events-none">
+                    <div className="orbit-node-1" />
+                  </div>
+                  <div className="orbit-ring-2 pointer-events-none">
+                    <div className="orbit-node-2" />
+                    <div className="orbit-node-3" />
                   </div>
 
-                  {/* Text Stack */}
-                  <div className="space-y-1.5 z-10">
-                    <span className="text-[11px] uppercase tracking-widest text-violet-300 font-black">
-                      Introducing
-                    </span>
-                    <h3 className="text-2xl font-black text-white tracking-wide">
-                      Beta Products
-                    </h3>
-                    <p className="text-xs text-slate-300/90 font-medium leading-relaxed max-w-[220px] mx-auto mt-0.5">
-                      Unified dashboard for live authentication, SMTP mail, and tasks.
-                    </p>
-                  </div>
+                  {/* Tech Aura Glow behind Logo */}
+                  <div className="absolute w-36 h-36 bg-blue-500/10 rounded-full blur-2xl pointer-events-none animate-pulse" />
 
-                  {/* Explorable Button */}
-                  <Link
-                    to="/Support"
-                    className="inline-flex items-center px-6 py-2.5 rounded-full border border-violet-500/40 bg-violet-950/20 text-white text-[10px] font-extrabold uppercase tracking-wider hover:bg-violet-600 hover:border-violet-400 hover:shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all duration-300 group cursor-pointer"
-                  >
-                    Explore Apps
-                    <ArrowRight className="ml-1.5 h-3.5 w-3.5 transform transition-transform group-hover:translate-x-0.5" />
-                  </Link>
+                  {/* Pulsating Premium Logo Container */}
+                  <div className="relative z-10 transition-transform duration-300 hover:scale-105">
+                    <div className="bg-[#020512] border border-blue-500/45 w-24 h-24 rounded-3xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/25 via-cyan-500/10 to-transparent pointer-events-none" />
+                      <img src="/logo.png" alt="Beta Logo" className="h-14 w-14 object-contain relative z-10 animate-pulse" />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
-                <div className="lg:col-span-2 flex flex-col gap-4 flex-grow justify-center">
+                <div className="lg:col-span-2 flex flex-col gap-4 h-full justify-between items-stretch">
                   {/* BNXmail */}
                   <a
                     href="https://www.bnxmail.com/login"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3.5 p-4 rounded-2xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left"
+                    className="flex-1 flex flex-col justify-center p-4 rounded-2xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-2"
                   >
-                    <div className="h-16 w-16 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                      <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-16 w-16 object-contain" />
+                    <div className="flex items-center gap-3">
+                      {/* Logo */}
+                      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-12 w-12 object-contain" />
+                      </div>
 
-                    </div>
-                    <div className="space-y-0.5 flex-grow">
-                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                      {/* Heading */}
+                      <h4 className="text-base font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                         BNXmail
                       </h4>
-                      <p className="text-slate-550 text-sm leading-relaxed font-semibold">
-                        Real time mail, always in sync.
-                      </p>
                     </div>
 
+                    {/* Description below logo/heading */}
+                    <p className="text-slate-500 text-xs leading-relaxed font-semibold">
+                      Real time mail, always in sync.
+                    </p>
                   </a>
 
                   {/* Cliks Business */}
@@ -247,19 +317,24 @@ export default function Home() {
                     href="https://www.cliksbusiness.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3.5 p-4 rounded-2xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left"
+                    className="flex-1 flex flex-col justify-center p-4 rounded-2xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-2"
                   >
-                    <div className="h-16 w-16 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                      <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-16 w-16 object-contain" />
-                    </div>
-                    <div className="space-y-0.5 flex-grow">
-                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                    <div className="flex items-center gap-3">
+                      {/* Logo */}
+                      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-12 w-12 object-contain" />
+                      </div>
+
+                      {/* Heading */}
+                      <h4 className="text-base font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                         Cliks Business
                       </h4>
-                      <p className="text-slate-550 text-sm leading-relaxed font-semibold">
-                        Work together, faster.
-                      </p>
                     </div>
+
+                    {/* Description below logo/heading */}
+                    <p className="text-slate-500 text-xs leading-relaxed font-semibold">
+                      Work together, faster.
+                    </p>
                   </a>
                 </div>
               </div>

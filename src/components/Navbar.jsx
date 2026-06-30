@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Box, LogOut, LayoutDashboard, LogIn, ChevronDown, ChevronRight, Mail, Shield, User, Briefcase, Search, UserPlus, Lock, CheckCircle2, AlertCircle, HelpCircle, MessageSquare, Download, Phone, Activity, MapPin, Check, Copy, Clock, Send, RefreshCw, Calendar, Calculator, Contact, ShieldCheck, Plus, SquarePen, Sliders, Sparkles } from 'lucide-react';
+import { Menu, X, Box, LogOut, LayoutDashboard, LogIn, ChevronDown, ChevronRight, Mail, Shield, User, Briefcase, Search, UserPlus, Lock, CheckCircle2, AlertCircle, HelpCircle, MessageSquare, Download, Phone, Activity, MapPin, Check, Copy, Clock, Send, RefreshCw, Calendar, Calculator, Contact, ShieldCheck, Plus, SquarePen, Sliders, Sparkles, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api';
@@ -33,6 +33,13 @@ export default function Navbar() {
   const [isDetecting, setIsDetecting] = useState(false);
   const [detectionError, setDetectionError] = useState(null);
   const [isBitToolOpen, setIsBitToolOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const notificationsRef = useRef(null);
+  const [notifications, setNotifications] = useState([
+    { id: 1, title: 'New Application Received', message: 'John Doe applied for React Developer role.', time: '5m ago', read: false },
+    { id: 2, title: 'Interview Scheduled', message: 'Round 1 Aptitude for Priya S is scheduled for 02-Jul.', time: '1h ago', read: false },
+    { id: 3, title: 'System Notice', message: 'Your login session is secure and active.', time: '2h ago', read: true }
+  ]);
 
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -96,6 +103,9 @@ export default function Navbar() {
       }
       if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
         setIsSearchExpanded(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+        setIsNotificationsOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -496,14 +506,14 @@ export default function Navbar() {
             {/* Header Search Bar */}
             <div ref={searchContainerRef} className="mr-2 flex items-center justify-center">
               {isSearchExpanded ? (
-                <div className="relative w-36 lg:w-44 xl:w-52 nav-search-container animate-fadeIn">
+                <div className="relative w-28 lg:w-36 xl:w-40 nav-search-container animate-fadeIn">
                   <button
                     type="button"
                     onClick={() => setIsSearchExpanded(false)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 p-0.5 hover:bg-slate-200/30 rounded-full transition cursor-pointer z-10 flex items-center justify-center border-none bg-transparent"
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 p-0.5 hover:bg-slate-200/30 rounded-full transition cursor-pointer z-10 flex items-center justify-center border-none bg-transparent"
                     title="Close Search"
                   >
-                    <Search className="h-4 w-4 text-blue-305 nav-search-icon" />
+                    <Search className="h-3.5 w-3.5 text-blue-305 nav-search-icon" />
                   </button>
                   <input
                     ref={searchInputRef}
@@ -512,7 +522,7 @@ export default function Navbar() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={handleSearch}
                     placeholder="Search..."
-                    className="w-full bg-[#002b5c]/60 border border-blue-800/40 rounded-full py-1.5 pl-9 pr-4 text-sm text-white focus:outline-none focus:border-white focus:bg-[#002b5c]/90 transition shadow-inner nav-search-input"
+                    className="w-full bg-[#002b5c]/60 border border-blue-800/40 rounded-full py-1 pl-8 pr-3 text-xs text-white focus:outline-none focus:border-white focus:bg-[#002b5c]/90 transition shadow-inner nav-search-input"
                   />
                 </div>
               ) : (
@@ -526,6 +536,88 @@ export default function Navbar() {
                 </button>
               )}
             </div>
+
+            {/* Header Notification Icon Bell Dropdown */}
+            <div className="relative" ref={notificationsRef}>
+              <button
+                type="button"
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent"
+                title="Notifications"
+              >
+                <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
+                {/* Notification Count Badge */}
+                {notifications.filter(n => !n.read).length > 0 && (
+                  <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                  </span>
+                )}
+              </button>
+
+              {/* Notifications Dropdown Panel */}
+              <AnimatePresence>
+                {isNotificationsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden text-left"
+                  >
+                    <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                      <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Notifications</span>
+                      {notifications.filter(n => !n.read).length > 0 && (
+                        <button
+                          onClick={() => {
+                            setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+                          }}
+                          className="text-[10px] text-[#004AAD] font-extrabold hover:underline border-none bg-transparent cursor-pointer p-0"
+                        >
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+                      {notifications.length > 0 ? (
+                        notifications.map(notif => (
+                          <div
+                            key={notif.id}
+                            onClick={() => {
+                              setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read: true } : n));
+                            }}
+                            className={`p-4 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/20' : ''}`}
+                          >
+                            <div className="mt-0.5">
+                              {notif.title.includes('Interview') ? (
+                                <Calendar className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                              ) : notif.title.includes('Application') ? (
+                                <User className="h-4 w-4 text-[#004AAD] flex-shrink-0" />
+                              ) : (
+                                <Bell className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                              )}
+                            </div>
+                            <div className="space-y-0.5 flex-grow min-w-0">
+                              <div className="flex items-center justify-between gap-2">
+                                <p className={`text-xs font-bold truncate ${!notif.read ? 'text-slate-900' : 'text-slate-700'}`}>{notif.title}</p>
+                                <span className="text-[9px] text-slate-400 font-medium flex-shrink-0">{notif.time}</span>
+                              </div>
+                              <p className="text-[11px] text-slate-500 leading-normal font-semibold line-clamp-2">{notif.message}</p>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="py-8 text-center text-slate-400 italic text-xs">
+                          No new notifications.
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {user ? (
               <div className="relative" ref={profileRef}>
                 <button
