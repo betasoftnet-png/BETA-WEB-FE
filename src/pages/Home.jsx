@@ -286,7 +286,7 @@ export default function Home() {
                 </div>
 
                 {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
-                <div className="lg:col-span-2 flex flex-col gap-4 h-full justify-between items-stretch">
+                <div className="lg:col-span-2 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
                   {/* BNXmail */}
                   <a
                     href="https://www.bnxmail.com/login"
