@@ -1114,7 +1114,7 @@ export default function AdminDashboard() {
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">
                 Candidate Pipeline
               </p>
-              {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => {
+              {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness'].map((status) => {
                 const isActive = activeSubTab === 'appsList' && selectedStatusFilter === status;
                 const count = externalApplications.filter(app => app.status === status).length;
                 

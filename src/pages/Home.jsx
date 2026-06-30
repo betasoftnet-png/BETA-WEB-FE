@@ -296,8 +296,8 @@ export default function Home() {
                   >
                     <div className="flex items-center gap-3">
                       {/* Logo */}
-                      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-12 w-12 object-contain" />
+                      <div className="h-20 w-20 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-20 w-20 object-contain" />
                       </div>
 
                       {/* Heading */}
@@ -307,9 +307,10 @@ export default function Home() {
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-xs leading-relaxed font-semibold">
+                    <p className="text-slate-550 text-lg leading-relaxed font-semibold">
                       Real time mail, always in sync.
                     </p>
+
                   </a>
 
                   {/* Cliks Business */}
@@ -321,8 +322,8 @@ export default function Home() {
                   >
                     <div className="flex items-center gap-3">
                       {/* Logo */}
-                      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-12 w-12 object-contain" />
+                      <div className="h-20 w-20 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-20 w-20 object-contain" />
                       </div>
 
                       {/* Heading */}
@@ -332,7 +333,7 @@ export default function Home() {
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-xs leading-relaxed font-semibold">
+                    <p className="text-slate-550 text-lg leading-relaxed font-semibold">
                       Work together, faster.
                     </p>
                   </a>
