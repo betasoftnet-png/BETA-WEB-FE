@@ -5,9 +5,11 @@ import {
   Plus, Edit, Trash, FileText, Briefcase, LogOut,
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
   Lock, Mail, Calculator, Brain, BookOpen, BarChart3,
-  Upload, Download, ChevronRight, Calendar, Sliders
+  Upload, Download, ChevronRight, Calendar, Sliders,
+  Handshake
 } from 'lucide-react';
 import axios from 'axios';
+import api from '../api';
 
 const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
@@ -618,6 +620,367 @@ const brandQuestionsData = [
   { id: 'q-r3-7', category: 'Ecosystem Integration', title: 'Beta Single Sign-On Value Prop', difficulty: 'Medium', time: '15 mins', description: 'Outline a partner campaign highlighting Beta\'s single-sign-on (SSO) integration. How does it improve the security narrative of third-party apps?', codeSnippet: 'Single-Sign-On locks authentication to verified domain credentials, instantly protecting all third-party integrations from credential leaks.' }
 ];
 
+const fallbackPartnerships = [
+  {
+    id: 'partner-mock-1',
+    name: 'Jane Doe',
+    email: 'jane.doe@globaltech.com',
+    company: 'Global Tech Solutions',
+    partnerType: 'Technology Partner',
+    website: 'https://globaltech.com',
+    companySize: '500-1000',
+    marketFocus: 'Enterprise Cloud Infrastructure',
+    proposal: 'We would like to integrate BNX Mail into our corporate dashboard suite to provide our clients with zero-knowledge encrypted mail channels.',
+    phone: '+1 (555) 321-9876',
+    createdAt: new Date(Date.now() - 3 * 86400000).toISOString()
+  },
+  {
+    id: 'partner-mock-2',
+    name: 'Sophia Loren',
+    email: 'sophia@fintechpulse.io',
+    company: 'Fintech Pulse Inc',
+    partnerType: 'Strategic Alliance',
+    website: 'https://fintechpulse.io',
+    companySize: '100-250',
+    marketFocus: 'Financial Data Analytics',
+    proposal: 'Seeking an integration with B2Auth for single-sign-on MFA across our customer trading desks. We want to co-market this solution to compliance officers.',
+    phone: '+44 20 7946 0192',
+    createdAt: new Date(Date.now() - 5 * 86400000).toISOString()
+  }
+];
+
+const parsePartnerMessage = (msg, name, email, company, id, date) => {
+  if (!msg) return null;
+  const isPartner = msg.includes('[Futuristic Partner Request]') || msg.includes('Partner Type:');
+  if (!isPartner) return null;
+
+  const getValue = (label) => {
+    const regex = new RegExp(`${label}:\\s*(.*)`);
+    const match = msg.match(regex);
+    return match ? match[1].trim() : '';
+  };
+
+  return {
+    id: id || Math.random().toString(),
+    name: name || '',
+    email: email || '',
+    company: company || '',
+    partnerType: getValue('Partner Type') || 'Technology Partner',
+    website: getValue('Website') || 'N/A',
+    companySize: getValue('Company Size') || 'N/A',
+    marketFocus: getValue('Market Focus') || 'N/A',
+    proposal: getValue('Proposal Summary') || msg,
+    phone: getValue('Phone') || 'N/A',
+    createdAt: date || new Date().toISOString()
+  };
+};
+
+const fallbackSupports = [
+  {
+    id: 'support-mock-1',
+    name: 'Michael Scott',
+    email: 'michael.scott@dundermifflin.com',
+    product: 'BNX Mail',
+    message: 'We are facing issue when synchronization with SMTP connector is delayed. It takes about 2 minutes to show up on active conversations. Please check latency on our dedicated endpoint.',
+    createdAt: new Date(Date.now() - 1 * 86400000).toISOString()
+  },
+  {
+    id: 'support-mock-2',
+    name: 'Pam Beesly',
+    email: 'pam@dundermifflin.com',
+    product: 'Cliks Business',
+    message: 'Can you guide me on how to delegate user administration permissions? We want to assign 3 secondary team leads with edit rights on the canvas.',
+    createdAt: new Date(Date.now() - 2 * 86400000).toISOString()
+  }
+];
+
+const parseSupportMessage = (msg, name, email, company, id, date) => {
+  if (!msg) return null;
+  const isPartner = msg.includes('[Futuristic Partner Request]') || msg.includes('Partner Type:');
+  if (isPartner) return null;
+
+  return {
+    id: id || Math.random().toString(),
+    name: name || '',
+    email: email || '',
+    product: (company || '').replace('Support Request - ', '').trim() || 'General Enquiry',
+    message: msg,
+    createdAt: date || new Date().toISOString()
+  };
+};
+
+const generateAptitudeQuestions = (category) => {
+  const list = [];
+  
+  const vocabSynonyms = [
+    { word: 'Loquacious', options: 'Talkative, Quiet, Angry, Happy', ans: 'Talkative' },
+    { word: 'Ephemeral', options: 'Short-lived, Eternal, Internal, Bright', ans: 'Short-lived' },
+    { word: 'Capricious', options: 'Unpredictable, Steady, Intelligent, Fearful', ans: 'Unpredictable' },
+    { word: 'Aberration', options: 'Deviation, Standard, Consequence, Alignment', ans: 'Deviation' },
+    { word: 'Gregarious', options: 'Sociable, Introverted, Aggressive, Calm', ans: 'Sociable' },
+    { word: 'Taciturn', options: 'Reserved, Loud, Creative, Hostile', ans: 'Reserved' },
+    { word: 'Obdurate', options: 'Stubborn, Flexible, Caring, Wise', ans: 'Stubborn' },
+    { word: 'Mitigate', options: 'Alleviate, Aggravate, Connect, Enhance', ans: 'Alleviate' },
+    { word: 'Pragmatic', options: 'Practical, Dreamy, Reckless, Logical', ans: 'Practical' },
+    { word: 'Apathy', options: 'Indifference, Empathy, Enthusiasm, Clarity', ans: 'Indifference' }
+  ];
+
+  const verbalErrors = [
+    "Neither the manager nor his employees [was/were] present at the launch.",
+    "She has been working in the branding department [since/for] five years.",
+    "The client was angry because the software had [many/much] bugs.",
+    "If he [would have/had] studied the core values, he would have cleared the interview.",
+    "Every one of the applicants [have/has] submitted their respective documents."
+  ];
+
+  if (category === 'Quant') {
+    for (let i = 1; i <= 50; i++) {
+      const type = i % 8;
+      let title = "";
+      let description = "";
+      let codeSnippet = "";
+
+      if (type === 0) {
+        title = `Simple Interest & Growth Q${i}`;
+        const sum = i * 200 + 1000;
+        const rate = (i % 5) + 4;
+        const years = (i % 3) + 2;
+        description = `Calculate the Simple Interest on a principal sum of $${sum} at a rate of ${rate}% per annum for ${years} years.`;
+        codeSnippet = `Formula: SI = (P * R * T) / 100\nP = $${sum}, R = ${rate}%, T = ${years} years\nResult: $${(sum * rate * years) / 100}`;
+      } else if (type === 1) {
+        title = `Train & Platform Speed Q${i}`;
+        const speedKmh = 45 + (i % 5) * 9;
+        const trainLen = 150 + (i % 4) * 50;
+        const timeSec = 20 + (i % 3) * 10;
+        description = `A train traveling at ${speedKmh} km/h passes a platform in ${timeSec} seconds. If the length of the train is ${trainLen} meters, find the length of the platform in meters.`;
+        codeSnippet = `Speed: ${speedKmh} km/h = ${((speedKmh * 5) / 18).toFixed(2)} m/s\nTotal Distance = Speed * Time\nPlatform Length = Total Distance - Train Length`;
+      } else if (type === 2) {
+        title = `Algebraic Equations Q${i}`;
+        const coeff1 = (i % 4) + 2;
+        const coeff2 = (i % 5) + 5;
+        const result = coeff1 * (i + 3) + coeff2;
+        description = `Solve the algebraic equation for x: Find the value of x if ${coeff1}x + ${coeff2} = ${result}.`;
+        codeSnippet = `Equation: ${coeff1}x + ${coeff2} = ${result}\nStep 1: ${coeff1}x = ${result - coeff2}\nStep 2: x = ${(result - coeff2) / coeff1}`;
+      } else if (type === 3) {
+        title = `Probability Distribution Q${i}`;
+        const red = (i % 5) + 3;
+        const blue = (i % 4) + 4;
+        const green = (i % 3) + 5;
+        const total = red + blue + green;
+        description = `A box contains ${red} red, ${blue} blue, and ${green} green marbles. If one marble is drawn at random, what is the probability that it is NOT green?`;
+        codeSnippet = `Total Marbles: ${total}\nTarget Marbles (Red + Blue): ${red + blue}\nProbability: ${(red + blue)}/${total}`;
+      } else if (type === 4) {
+        title = `Ages & Ratios Q${i}`;
+        const r1 = (i % 3) + 2;
+        const r2 = (i % 3) + 3;
+        const multiplier = (i % 4) + 3;
+        const sum = (r1 + r2) * multiplier;
+        description = `The ratio of the current ages of Alice and Bob is ${r1}:${r2}. If the sum of their ages is ${sum} years, what will be Bob's age in 5 years?`;
+        codeSnippet = `Ratio: ${r1}x + ${r2}x = ${sum}\n${r1 + r2}x = ${sum} => x = ${multiplier}\nBob's Age = ${r2} * ${multiplier} = ${r2 * multiplier}\nIn 5 years: ${r2 * multiplier + 5}`;
+      } else if (type === 5) {
+        title = `Profit and Loss Q${i}`;
+        const markup = 15 + (i % 5) * 5;
+        const discount = 5 + (i % 3) * 2;
+        description = `A retail merchant marks his inventory ${markup}% above cost price and then offers a customer discount of ${discount}%. What is the net profit percentage?`;
+        codeSnippet = `Let Cost Price = 100\nMarked Price = ${100 + markup}\nSelling Price = ${100 + markup} * (1 - ${discount}/100) = ${((100 + markup) * (1 - discount / 100)).toFixed(2)}\nProfit = ${(((100 + markup) * (1 - discount / 100)) - 100).toFixed(2)}%`;
+      } else if (type === 6) {
+        title = `Time and Work Q${i}`;
+        const daysA = 10 + (i % 4) * 2;
+        const daysB = 15 + (i % 3) * 5;
+        description = `If Operator A can process a pipeline segment in ${daysA} hours and Operator B can complete the same segment in ${daysB} hours, how long will they take if they collaborate?`;
+        codeSnippet = `Rate A: 1/${daysA}, Rate B: 1/${daysB}\nCombined Rate: (1/${daysA}) + (1/${daysB}) = ${(daysA + daysB)}/${daysA * daysB}\nTime: ${(daysA * daysB) / (daysA + daysB)} hours`;
+      } else {
+        title = `Partnership Capital Share Q${i}`;
+        const capA = 1000 * ((i % 5) + 2);
+        const capB = 1500 * ((i % 4) + 3);
+        const profit = 500 * ((i % 6) + 5);
+        description = `Partners X and Y start a business. Partner X invests $${capA} and Partner Y invests $${capB}. Out of a total profit of $${profit}, what is Partner Y's share?`;
+        codeSnippet = `Investment Ratio X:Y = ${capA}:${capB}\nTotal shares = ${capA + capB}\nPartner Y Share = ($${capB} / $${capA + capB}) * $${profit}`;
+      }
+
+      list.push({
+        id: `q-quant-${i}`,
+        title,
+        difficulty: i % 15 === 0 ? 'Hard' : i % 5 === 0 ? 'Medium' : 'Easy',
+        time: i % 8 === 1 || i % 8 === 6 ? '3 mins' : '2 mins',
+        description,
+        codeSnippet
+      });
+    }
+  } else if (category === 'Logical') {
+    for (let i = 1; i <= 50; i++) {
+      const type = i % 7;
+      let title = "";
+      let description = "";
+      let codeSnippet = "";
+
+      if (type === 0) {
+        title = `Alphanumeric Coding Q${i}`;
+        const words = ['DESIGN', 'SYSTEM', 'CODING', 'AUTHENTICATION', 'SECURITY'];
+        const word = words[i % words.length];
+        description = `In a logical coding pattern, if '${word}' is encrypted by shifting all consonants by +1 and vowels by -1, decode the encrypted pattern code.`;
+        codeSnippet = `Word: ${word}\nRule: Consonants +1, Vowels -1\nVerify character ASCII transformation arrays.`;
+      } else if (type === 1) {
+        title = `Blood Relations Tree Q${i}`;
+        description = `Pointing to a photo, a project lead says: "His mother is the only daughter-in-law of my father's wife." How is the lead related to the person in the photo?`;
+        codeSnippet = `Variables: Father's Wife = Mother\nOnly daughter-in-law of mother = Lead's wife (or brother's wife)\nPerson = Lead's child (or nephew).`;
+      } else if (type === 2) {
+        title = `Directions & Coords Q${i}`;
+        const d1 = 5 + (i % 5) * 2;
+        const d2 = 4 + (i % 3) * 3;
+        description = `A delivery agent travels ${d1} km North, turns right and drives ${d2} km, then turns right again and travels ${d1} km. How far is the agent from the starting coordinate?`;
+        codeSnippet = `Path vectors: (+0, +${d1}) -> (+${d2}, +${d1}) -> (+${d2}, +0)\nNet coordinate change: (+${d2}, 0)\nDistance: ${d2} km East.`;
+      } else if (type === 3) {
+        title = `Row Ordering Alignment Q${i}`;
+        const total = 20 + (i % 6) * 5;
+        const rank = 5 + (i % 4) * 3;
+        description = `In a candidate ranking row of ${total} designers, Sarah is ranked ${rank}th from the top. What is her rank position counted from the bottom?`;
+        codeSnippet = `Formula: Bottom Position = (Total - Top Position) + 1\nCalculation: (${total} - ${rank}) + 1 = ${total - rank + 1}`;
+      } else if (type === 4) {
+        title = `Deductive Syllogisms Q${i}`;
+        description = `Statements: 1. All networks are secure. 2. Some secure systems are nodes. Decide which conclusions follow logically: (A) Some nodes are networks. (B) No system is a network.`;
+        codeSnippet = `Venn diagram bounds: Networks ⊆ Secure. Systems ∩ Secure ≠ Ø. No direct overlap forced between Networks and Systems.`;
+      } else if (type === 5) {
+        title = `Number Series Completion Q${i}`;
+        const base = (i % 5) + 2;
+        const diff = (i % 4) + 3;
+        description = `Complete the numerical sequencing pattern: ${base}, ${base + diff}, ${base + diff * 2}, ${base + diff * 3}, ?`;
+        codeSnippet = `Difference pattern is constant: +${diff}\nNext term: ${base + diff * 4}`;
+      } else {
+        title = `Mathematical Operators Q${i}`;
+        const val1 = 12 + (i % 3) * 2;
+        const val2 = 3 + (i % 2) * 2;
+        description = `If '+' represents multiplication, '-' represents division, '*' represents addition, and '/' represents subtraction, compute the value of: ${val1} - ${val2} * 10 / 2.`;
+        codeSnippet = `Substitute operations: (${val1} / ${val2}) + 10 - 2\nCalculation: ${(val1 / val2).toFixed(2)} + 8 = ${(val1 / val2 + 8).toFixed(2)}`;
+      }
+
+      list.push({
+        id: `q-logical-${i}`,
+        title,
+        difficulty: i % 12 === 0 ? 'Hard' : i % 4 === 0 ? 'Medium' : 'Easy',
+        time: '2 mins',
+        description,
+        codeSnippet
+      });
+    }
+  } else if (category === 'Verbal') {
+    for (let i = 1; i <= 50; i++) {
+      const type = i % 5;
+      let title = "";
+      let description = "";
+      let codeSnippet = "";
+
+      if (type === 0) {
+        const item = vocabSynonyms[i % vocabSynonyms.length];
+        title = `Synonyms & Vocabulary Q${i}`;
+        description = `Choose the word which is closest in meaning to the highlighted term: "${item.word}". Options: ${item.options}.`;
+        codeSnippet = `Correct Synonym: ${item.ans}\nContext usage: The ${item.word.toLowerCase()} speech was noteworthy.`;
+      } else if (type === 1) {
+        const errText = verbalErrors[i % verbalErrors.length];
+        title = `Sentence Error Detection Q${i}`;
+        description = `Identify the segment containing grammatical error or choose correct options: "${errText}"`;
+        codeSnippet = `Rule: Subject-verb agreement, coordinate conjunctions, or correct preposition usage constraints.`;
+      } else if (type === 2) {
+        title = `Antonyms & Contrast Q${i}`;
+        const antonyms = [
+          { word: 'Benevolent', ans: 'Malevolent' },
+          { word: 'Candid', ans: 'Deceptive' },
+          { word: 'Meticulous', ans: 'Careless' },
+          { word: 'Frugal', ans: 'Extravagant' },
+          { word: 'Diligent', ans: 'Lazy' }
+        ];
+        const item = antonyms[i % antonyms.length];
+        description = `Select the word which is most opposite in meaning to the word: "${item.word}".`;
+        codeSnippet = `Word: ${item.word} <=> Antonym: ${item.ans}`;
+      } else if (type === 3) {
+        title = `Prepositions & Phrasals Q${i}`;
+        const verbs = [
+          { sentence: "The executive was accused ____ breach of contract.", ans: "of" },
+          { sentence: "He had to comply ____ the compliance guidelines.", ans: "with" },
+          { sentence: "She persists ____ recommending code splitting.", ans: "in" },
+          { sentence: "They are responsible ____ configuring DNS routes.", ans: "for" }
+        ];
+        const item = verbs[i % verbs.length];
+        description = `Fill in the blank with the appropriate preposition: "${item.sentence}"`;
+        codeSnippet = `Verb-Preposition Collocation: ${item.ans}`;
+      } else {
+        title = `Idioms context usage Q${i}`;
+        description = `Select the correct meaning of the idiom: "Bite the bullet". Options: (A) Evade responsibilities. (B) Face a difficult situation with courage. (C) Start a dispute. (D) Spend wastefully.`;
+        codeSnippet = `Idiom meaning: Face a difficult or painful situation with courage and endurance. Correct answer is (B).`;
+      }
+
+      list.push({
+        id: `q-verbal-${i}`,
+        title,
+        difficulty: i % 10 === 0 ? 'Hard' : i % 5 === 0 ? 'Medium' : 'Easy',
+        time: '1 min',
+        description,
+        codeSnippet
+      });
+    }
+  } else if (category === 'Data Int.') {
+    for (let i = 1; i <= 50; i++) {
+      const type = i % 6;
+      let title = "";
+      let description = "";
+      let codeSnippet = "";
+
+      if (type === 0) {
+        title = `Bar Chart YoY Revenue Q${i}`;
+        const rev21 = 200 + (i % 5) * 50;
+        const rev24 = 300 + (i % 4) * 80;
+        description = `The bar chart shows Company revenues. 2021 Revenue = $${rev21}k. 2024 Revenue = $${rev24}k. Calculate the percentage growth in revenue from 2021 to 2024.`;
+        codeSnippet = `Increase: $${rev24 - rev21}k\nFormula: (Increase / Initial) * 100\nGrowth: (( ${rev24 - rev21} / ${rev21} ) * 100).toFixed(2)%`;
+      } else if (type === 1) {
+        title = `Pie Chart Budget share Q${i}`;
+        const total = 100000 + (i % 4) * 50000;
+        const pct = 10 + (i % 3) * 5;
+        description = `A corporate pie chart segments expenditure. If the total annual budget is $${total}, find the raw amount spent on R&D if it represents ${pct}% of total share.`;
+        codeSnippet = `Total: $${total}\nR&D Share: ${pct}%\nR&D budget: $${(total * pct) / 100}`;
+      } else if (type === 2) {
+        title = `Line Graph Profit Ratios Q${i}`;
+        const rev = 500 + (i % 5) * 100;
+        const ratio = 100 - (10 + (i % 3) * 5);
+        description = `The line graph displays revenue vs expenditures. Profit margin is ${ratio}%. If the sales revenue is $${rev}k, what is the expenditure in $?`;
+        codeSnippet = `Revenue: $${rev}k\nProfit: $${(rev * ratio) / 100}k\nExpenditure = Revenue - Profit = $${rev - (rev * ratio) / 100}k`;
+      } else if (type === 3) {
+        title = `Tabular Sales Report Q${i}`;
+        const q1 = 40 + (i % 3) * 10;
+        const q2 = 50 + (i % 4) * 10;
+        const q3 = 45 + (i % 3) * 5;
+        const q4 = 60 + (i % 5) * 10;
+        const avg = (q1 + q2 + q3 + q4) / 4;
+        description = `A table lists quarterly sales of product B: Q1 = ${q1} units, Q2 = ${q2} units, Q3 = ${q3} units, Q4 = ${q4} units. Calculate the average quarterly sales.`;
+        codeSnippet = `Total sales: ${q1 + q2 + q3 + q4}\nAverage = Total / 4 = ${avg} units`;
+      } else if (type === 4) {
+        title = `Venn Diagram User overlap Q${i}`;
+        const total = 500;
+        const mail = 250 + (i % 5) * 20;
+        const business = 200 + (i % 4) * 15;
+        const both = 80 + (i % 3) * 10;
+        description = `In a survey of ${total} clients, ${mail} use BNX Mail, ${business} use Cliks Business, and ${both} use both. How many clients use neither product?`;
+        codeSnippet = `Union = Mail + Business - Both = ${mail + business - both}\nNeither = Total - Union = ${total - (mail + business - both)}`;
+      } else {
+        title = `Ratio Trend Data Q${i}`;
+        const ratio1 = (i % 3) + 2;
+        const ratio2 = (i % 2) + 3;
+        description = `The ratio of frontend developers to backend developers in team is ${ratio1}:${ratio2}. If the total headcount of developers is ${ (ratio1 + ratio2) * 8 }, find the number of frontend developers.`;
+        codeSnippet = `Total: ${ratio1}x + ${ratio2}x = ${(ratio1 + ratio2) * 8}\nx = 8\nFrontend Count = ${ratio1} * 8 = ${ratio1 * 8}`;
+      }
+
+      list.push({
+        id: `q-dataint-${i}`,
+        title,
+        difficulty: i % 15 === 0 ? 'Hard' : i % 5 === 0 ? 'Medium' : 'Easy',
+        time: i % 6 === 0 ? '4 mins' : '3 mins',
+        description,
+        codeSnippet
+      });
+    }
+  }
+  return list;
+};
+
 export default function AdminDashboard() {
   const { user, logout } = useContext(AuthContext);
 
@@ -633,6 +996,15 @@ export default function AdminDashboard() {
   const [selectedJobFilter, setSelectedJobFilter] = useState('All');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('Candidates');
   const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
+  const [partnerships, setPartnerships] = useState([]);
+  const [supports, setSupports] = useState([]);
+  const [selectedAptitudeCategory, setSelectedAptitudeCategory] = useState(null);
+  const [selectedAptitudeQuestionIds, setSelectedAptitudeQuestionIds] = useState([]);
+
+  const updateAppsAndSync = (newApps) => {
+    setExternalApplications(newApps);
+    localStorage.setItem('beta_applications', JSON.stringify(newApps));
+  };
 
   // Application details/status/interview states
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -696,7 +1068,13 @@ export default function AdminDashboard() {
 
       const apps = appsRes.data.data || appsRes.data || [];
       if (apps.length === 0) {
-        setExternalApplications(fallbackApps);
+        const stored = localStorage.getItem('beta_applications');
+        if (stored) {
+          setExternalApplications(JSON.parse(stored));
+        } else {
+          setExternalApplications(fallbackApps);
+          localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
+        }
       } else {
         const normalizedApps = apps.map(app => ({
           id: app.id,
@@ -713,16 +1091,59 @@ export default function AdminDashboard() {
           interviewDate: app.interviewDate || app.interviewdate || '',
           interviewTime: app.interviewTime || app.interviewtime || '',
           aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
+          aptitudeScore: app.aptitudeScore || app.aptitudescore || '',
           experience: app.experience || '3 Years'
         }));
         setExternalApplications(normalizedApps);
+        localStorage.setItem('beta_applications', JSON.stringify(normalizedApps));
       }
     } catch {
       console.warn('Failed to fetch from live API. Loading fallback local data.');
-      setExternalApplications(fallbackApps);
-    } finally {
-      setLoading(false);
+      const stored = localStorage.getItem('beta_applications');
+      if (stored) {
+        setExternalApplications(JSON.parse(stored));
+      } else {
+        setExternalApplications(fallbackApps);
+        localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
+      }
     }
+
+    try {
+      const contactRes = await api.get('/api/contact');
+      const list = contactRes.data.data || contactRes.data || [];
+      
+      const parsedPartners = list
+        .map(item => parsePartnerMessage(item.message, item.name, item.email, item.company, item.id || item._id, item.createdAt))
+        .filter(Boolean);
+      setPartnerships(parsedPartners.length > 0 ? parsedPartners : fallbackPartnerships);
+
+      const parsedSupports = list
+        .map(item => parseSupportMessage(item.message, item.name, item.email, item.company, item.id || item._id, item.createdAt))
+        .filter(Boolean);
+      setSupports(parsedSupports.length > 0 ? parsedSupports : fallbackSupports);
+    } catch (err) {
+      console.warn('Failed to fetch contact requests from /api/contact. Trying /api/contacts...', err);
+      try {
+        const contactRes = await api.get('/api/contacts');
+        const list = contactRes.data.data || contactRes.data || [];
+        
+        const parsedPartners = list
+          .map(item => parsePartnerMessage(item.message, item.name, item.email, item.company, item.id || item._id, item.createdAt))
+          .filter(Boolean);
+        setPartnerships(parsedPartners.length > 0 ? parsedPartners : fallbackPartnerships);
+
+        const parsedSupports = list
+          .map(item => parseSupportMessage(item.message, item.name, item.email, item.company, item.id || item._id, item.createdAt))
+          .filter(Boolean);
+        setSupports(parsedSupports.length > 0 ? parsedSupports : fallbackSupports);
+      } catch (err2) {
+        console.warn('Failed to fetch from live contact APIs. Loading fallbacks.', err2);
+        setPartnerships(fallbackPartnerships);
+        setSupports(fallbackSupports);
+      }
+    }
+
+    setLoading(false);
   };
 
   // Load data only if authenticated as admin
@@ -851,7 +1272,80 @@ export default function AdminDashboard() {
     }
   };
 
+  const handlePartnerDismiss = async (id) => {
+    if (!window.confirm('Are you sure you want to dismiss this partnership request?')) return;
+    setError('');
+    setSuccess('');
+    try {
+      setLoading(true);
+      try {
+        await api.delete(`/api/contact/${id}`);
+      } catch {
+        await api.delete(`/api/contacts/${id}`);
+      }
+      setSuccess('Partnership request dismissed successfully.');
+    } catch (err) {
+      console.warn('API deletion failed. Dismissing locally.', err);
+      setSuccess('Partnership request dismissed.');
+    } finally {
+      setPartnerships(prev => prev.filter(p => p.id !== id));
+      setLoading(false);
+      setTimeout(() => setSuccess(''), 3000);
+    }
+  };
+
+  const handleSupportDismiss = async (id) => {
+    if (!window.confirm('Are you sure you want to resolve / dismiss this support request?')) return;
+    setError('');
+    setSuccess('');
+    try {
+      setLoading(true);
+      try {
+        await api.delete(`/api/contact/${id}`);
+      } catch {
+        await api.delete(`/api/contacts/${id}`);
+      }
+      setSuccess('Support ticket resolved successfully.');
+    } catch (err) {
+      console.warn('API deletion failed. Dismissing locally.', err);
+      setSuccess('Support ticket resolved.');
+    } finally {
+      setSupports(prev => prev.filter(s => s.id !== id));
+      setLoading(false);
+      setTimeout(() => setSuccess(''), 3000);
+    }
+  };
+
+  const handleAssignQuestions = (appId) => {
+    const candidate = externalApplications.find(app => app.id === appId);
+    if (!candidate) return;
+
+    if (selectedAptitudeQuestionIds.length === 0) {
+      alert('Please select at least one question first!');
+      return;
+    }
+
+    const assignedKey = `assessment_questions_${appId}`;
+    const selectedQuestions = generateAptitudeQuestions(selectedAptitudeCategory)
+      .filter(q => selectedAptitudeQuestionIds.includes(q.id));
+    
+    localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
+
+    const updatedApps = externalApplications.map(app => 
+      app.id === appId ? { ...app, aptitudeStatus: 'Scheduled' } : app
+    );
+    updateAppsAndSync(updatedApps);
+
+    setSuccess(`Assigned ${selectedAptitudeQuestionIds.length} questions to ${candidate.fullName}. Candidate status set to Scheduled.`);
+    setSelectedAptitudeQuestionIds([]);
+    setSelectedAptitudeCategory(null);
+    setTimeout(() => setSuccess(''), 4000);
+  };
+
   const handleUpdateStatus = async (appId, newStatus) => {
+    if (newStatus === 'Rejected') {
+      if (!window.confirm('Are you sure you want to reject this candidate?')) return;
+    }
     setError('');
     setSuccess('');
     try {
@@ -862,10 +1356,9 @@ export default function AdminDashboard() {
       console.warn('API update failed. Updating locally in state.');
       setSuccess(`Candidate status updated to ${newStatus}. (Candidate email notification sent)`);
     } finally {
-      // Always update locally
-      setExternalApplications(prev =>
-        prev.map(app => app.id === appId ? { ...app, status: newStatus } : app)
-      );
+      // Always update locally and sync
+      const updated = externalApplications.map(app => app.id === appId ? { ...app, status: newStatus } : app);
+      updateAppsAndSync(updated);
       if (selectedApplication) {
         setSelectedApplication(prev => ({ ...prev, status: newStatus }));
       }
@@ -1140,6 +1633,47 @@ export default function AdminDashboard() {
                   </button>
                 );
               })}
+
+              {/* Separator line */}
+              <div className="border-t border-slate-800/80 my-2" />
+
+              {/* Partnership Requests under Round 3 Brand Awareness */}
+              <button
+                onClick={() => {
+                  setActiveSubTab('partnerships');
+                }}
+                className={`w-full flex items-center justify-between px-3 py-1.5 mt-2 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${
+                  activeSubTab === 'partnerships' 
+                    ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20' 
+                    : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
+                }`}
+              >
+                <span>Partnership Requests</span>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
+                  activeSubTab === 'partnerships' ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                }`}>
+                  {partnerships.length}
+                </span>
+              </button>
+
+              {/* Support Requests under Partnership Requests */}
+              <button
+                onClick={() => {
+                  setActiveSubTab('support');
+                }}
+                className={`w-full flex items-center justify-between px-3 py-1.5 mt-1 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${
+                  activeSubTab === 'support' 
+                    ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20' 
+                    : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
+                }`}
+              >
+                <span>Support Requests</span>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
+                  activeSubTab === 'support' ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                }`}>
+                  {supports.length}
+                </span>
+              </button>
             </div>
           </nav>
         </div>
@@ -1218,7 +1752,7 @@ export default function AdminDashboard() {
         ) : (
           <div className="space-y-6">
             {/* Sub Tab Controls */}
-            {selectedStatusFilter !== 'Round 1 Aptitude' && selectedStatusFilter !== 'Round 2 Technical' && selectedStatusFilter !== 'Round 3 Brand Awareness' && (
+            {selectedStatusFilter !== 'Round 1 Aptitude' && selectedStatusFilter !== 'Round 2 Technical' && selectedStatusFilter !== 'Round 3 Brand Awareness' && activeSubTab !== 'partnerships' && activeSubTab !== 'support' && (
               <div className="flex space-x-6 border-b border-slate-200 pb-3">
                 <button
                   onClick={() => setActiveSubTab('jobsList')}
@@ -1434,6 +1968,7 @@ export default function AdminDashboard() {
                                 <th className="py-3 px-4 font-bold">Interview Date</th>
                                 <th className="py-3 px-4 font-bold">Time</th>
                                 <th className="py-3 px-4 font-bold">Status</th>
+                                <th className="py-3 px-4 font-bold">Actions</th>
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -1465,13 +2000,34 @@ export default function AdminDashboard() {
                                           {statusVal}
                                         </span>
                                       </td>
+                                      <td className="py-3.5 px-4">
+                                        <div className="flex items-center space-x-2">
+                                          {(statusVal === 'Scheduled' || statusVal === 'Pending') && (
+                                            <button
+                                              onClick={() => {
+                                                const url = `${window.location.origin}/careers/assessment?id=${app.id}`;
+                                                navigator.clipboard.writeText(url);
+                                                alert(`Test Link copied to clipboard:\n${url}`);
+                                              }}
+                                              className="px-2.5 py-1 rounded bg-blue-50 hover:bg-blue-100 text-[#004AAD] border border-blue-200 text-[10px] font-bold transition cursor-pointer"
+                                            >
+                                              Copy Test Link
+                                            </button>
+                                          )}
+                                          {statusVal === 'Completed' && (
+                                            <span className="text-[10px] font-bold text-emerald-600">
+                                              Score: {app.aptitudeScore || '85'}%
+                                            </span>
+                                          )}
+                                        </div>
+                                      </td>
                                     </tr>
                                   );
                                 })
                               }
                               {externalApplications.filter(app => app.status === 'Round 1 Aptitude').length === 0 && (
                                 <tr>
-                                  <td colSpan={5} className="py-8 text-center text-slate-400 italic">
+                                  <td colSpan={6} className="py-8 text-center text-slate-400 italic">
                                     No candidates currently in Round 1 Aptitude.
                                   </td>
                                 </tr>
@@ -1499,15 +2055,15 @@ export default function AdminDashboard() {
                           <div className="flex items-center gap-3">
                             <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2 text-center">
                               <span className="text-[10px] uppercase tracking-widest text-blue-600 font-bold block">Total Questions</span>
-                              <span className="text-lg font-black text-blue-700">50</span>
+                              <span className="text-lg font-black text-blue-700">200</span>
                             </div>
                             <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2 text-center">
                               <span className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold block">Active</span>
-                              <span className="text-lg font-black text-emerald-700">45</span>
+                              <span className="text-lg font-black text-emerald-700">180</span>
                             </div>
                             <div className="bg-slate-50 border border-slate-250 rounded-xl px-4 py-2 text-center">
                               <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold block">Draft</span>
-                              <span className="text-lg font-black text-slate-650">5</span>
+                              <span className="text-lg font-black text-slate-650">20</span>
                             </div>
                           </div>
                         </div>
@@ -1532,7 +2088,10 @@ export default function AdminDashboard() {
                       {/* Categories Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {/* Quant */}
-                        <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer">
+                        <div
+                          onClick={() => setSelectedAptitudeCategory('Quant')}
+                          className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer"
+                        >
                           <div className="flex items-start justify-between">
                             <div className="p-2.5 bg-blue-50 rounded-xl text-blue-600">
                               <Calculator className="h-5 w-5" />
@@ -1543,7 +2102,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="mt-4">
                             <h4 className="text-base font-bold text-slate-900">Quant</h4>
-                            <p className="text-slate-500 text-xs mt-0.5">20 Questions</p>
+                            <p className="text-slate-500 text-xs mt-0.5">50 Questions</p>
                           </div>
                           <div className="flex items-center text-xs font-bold text-[#004AAD] mt-3 group-hover:translate-x-1 transition-transform duration-200">
                             Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
@@ -1551,7 +2110,10 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Logical */}
-                        <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer">
+                        <div
+                          onClick={() => setSelectedAptitudeCategory('Logical')}
+                          className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer"
+                        >
                           <div className="flex items-start justify-between">
                             <div className="p-2.5 bg-purple-50 rounded-xl text-purple-600">
                               <Brain className="h-5 w-5" />
@@ -1562,7 +2124,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="mt-4">
                             <h4 className="text-base font-bold text-slate-900">Logical</h4>
-                            <p className="text-slate-550 text-xs mt-0.5">15 Questions</p>
+                            <p className="text-slate-550 text-xs mt-0.5">50 Questions</p>
                           </div>
                           <div className="flex items-center text-xs font-bold text-purple-600 mt-3 group-hover:translate-x-1 transition-transform duration-200">
                             Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
@@ -1570,7 +2132,10 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Verbal */}
-                        <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-amber-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer">
+                        <div
+                          onClick={() => setSelectedAptitudeCategory('Verbal')}
+                          className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-amber-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer"
+                        >
                           <div className="flex items-start justify-between">
                             <div className="p-2.5 bg-amber-50 rounded-xl text-amber-600">
                               <BookOpen className="h-5 w-5" />
@@ -1581,7 +2146,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="mt-4">
                             <h4 className="text-base font-bold text-slate-900">Verbal</h4>
-                            <p className="text-slate-555 text-xs mt-0.5">10 Questions</p>
+                            <p className="text-slate-555 text-xs mt-0.5">50 Questions</p>
                           </div>
                           <div className="flex items-center text-xs font-bold text-amber-600 mt-3 group-hover:translate-x-1 transition-transform duration-200">
                             Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
@@ -1589,7 +2154,10 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Data Int. */}
-                        <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-emerald-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer">
+                        <div
+                          onClick={() => setSelectedAptitudeCategory('Data Int.')}
+                          className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-emerald-500/25 transition-all duration-300 flex flex-col justify-between min-h-[140px] group cursor-pointer"
+                        >
                           <div className="flex items-start justify-between">
                             <div className="p-2.5 bg-emerald-50 rounded-xl text-emerald-600">
                               <BarChart3 className="h-5 w-5" />
@@ -1600,7 +2168,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="mt-4">
                             <h4 className="text-base font-bold text-slate-900">Data Int.</h4>
-                            <p className="text-slate-555 text-xs mt-0.5">5 Questions</p>
+                            <p className="text-slate-555 text-xs mt-0.5">50 Questions</p>
                           </div>
                           <div className="flex items-center text-xs font-bold text-emerald-600 mt-3 group-hover:translate-x-1 transition-transform duration-200">
                             Manage <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
@@ -2403,6 +2971,148 @@ export default function AdminDashboard() {
                 </div>
               )
             )}
+
+            {/* Sub Tab 3: Partnership Requests */}
+            {activeSubTab === 'partnerships' && (
+              <div className="space-y-6 animate-fadeIn text-left">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900 font-sans">Partnership Proposals</h2>
+                    <p className="text-xs text-slate-500 mt-1">Review strategic ecosystem partner requests and integration proposals.</p>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-250 text-[#004AAD] text-xs font-extrabold uppercase select-none">
+                    Total: {partnerships.length}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6">
+                  {partnerships.length === 0 ? (
+                    <div className="admin-glass-card p-12 text-center text-slate-500 rounded-2xl bg-white border border-slate-200">
+                      No partnership requests found.
+                    </div>
+                  ) : (
+                    partnerships.map((partner) => (
+                      <div key={partner.id} className="admin-glass-card p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between text-left space-y-4">
+                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <h3 className="text-lg font-bold text-slate-900 leading-snug">{partner.company}</h3>
+                              <span className="px-2.5 py-0.5 rounded bg-blue-50 border border-blue-150 text-[#004AAD] text-[10px] font-bold uppercase tracking-wider">
+                                {partner.partnerType}
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-500 font-semibold mt-1">
+                              Contact: <span className="text-slate-700 font-bold">{partner.name}</span> &lt;{partner.email}&gt;
+                            </p>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-2 text-[10px] md:text-right">
+                            <span className="px-2.5 py-1 rounded bg-slate-50 border border-slate-200 text-slate-650 font-bold uppercase select-none">
+                              Size: {partner.companySize}
+                            </span>
+                            <span className="px-2.5 py-1 rounded bg-slate-50 border border-slate-200 text-slate-650 font-bold uppercase select-none">
+                              Market: {partner.marketFocus}
+                            </span>
+                            <button
+                              onClick={() => handlePartnerDismiss(partner.id)}
+                              className="px-2.5 py-1 rounded bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold uppercase transition flex items-center space-x-1 cursor-pointer select-none"
+                              title="Dismiss Request"
+                            >
+                              <Trash className="h-3 w-3 text-red-500" />
+                              <span>Dismiss</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+                          <div className="text-[10px] font-bold text-slate-400 uppercase mb-2">Proposal Details</div>
+                          <p className="text-slate-700 text-xs leading-relaxed whitespace-pre-line font-medium">
+                            {partner.proposal}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-slate-100 pt-4 text-xs font-semibold text-slate-500">
+                          <div className="flex flex-col sm:flex-row sm:space-x-4">
+                            <span>Phone: <span className="text-slate-800 font-bold">{partner.phone}</span></span>
+                            {partner.website && partner.website !== 'N/A' && (
+                              <span>Website: <a href={partner.website} target="_blank" rel="noopener noreferrer" className="text-[#004AAD] hover:underline font-bold">{partner.website}</a></span>
+                            )}
+                          </div>
+                          <span className="text-[10px] text-slate-450 font-bold uppercase tracking-wider self-start sm:self-auto">
+                            Received {new Date(partner.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Sub Tab 4: Support Requests */}
+            {activeSubTab === 'support' && (
+              <div className="space-y-6 animate-fadeIn text-left">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900 font-sans">Support Tickets</h2>
+                    <p className="text-xs text-slate-500 mt-1">Manage and respond to product setup inquiries and diagnostic tickets.</p>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-250 text-[#004AAD] text-xs font-extrabold uppercase select-none">
+                    Total: {supports.length}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6">
+                  {supports.length === 0 ? (
+                    <div className="admin-glass-card p-12 text-center text-slate-500 rounded-2xl bg-white border border-slate-200">
+                      No support requests found.
+                    </div>
+                  ) : (
+                    supports.map((ticket) => (
+                      <div key={ticket.id} className="admin-glass-card p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between text-left space-y-4">
+                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <h3 className="text-lg font-bold text-slate-900 leading-snug">{ticket.name}</h3>
+                              <span className="px-2.5 py-0.5 rounded bg-emerald-50 border border-emerald-150 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
+                                {ticket.product}
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-500 font-semibold mt-1">
+                              Email: <a href={`mailto:${ticket.email}`} className="text-[#004AAD] hover:underline font-bold">{ticket.email}</a>
+                            </p>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-2 text-[10px] md:text-right">
+                            <button
+                              onClick={() => handleSupportDismiss(ticket.id)}
+                              className="px-2.5 py-1 rounded bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold uppercase transition flex items-center space-x-1 cursor-pointer select-none"
+                              title="Resolve / Dismiss Ticket"
+                            >
+                              <Trash className="h-3 w-3 text-red-500" />
+                              <span>Resolve</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+                          <div className="text-[10px] font-bold text-slate-400 uppercase mb-2">Message / Issue description</div>
+                          <p className="text-slate-700 text-xs leading-relaxed whitespace-pre-line font-medium">
+                            {ticket.message}
+                          </p>
+                        </div>
+
+                        <div className="flex sm:items-center justify-between gap-3 border-t border-slate-100 pt-4 text-xs font-semibold text-slate-500">
+                          <span className="text-[10px] text-slate-450 font-bold uppercase tracking-wider">
+                            Received {new Date(ticket.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -2841,6 +3551,176 @@ export default function AdminDashboard() {
               <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap no-override">
                 {selectedCoverLetter.text}
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Aptitude Category Questions */}
+      {selectedAptitudeCategory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-4xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 admin-scrollbar overflow-y-auto max-h-[90vh]">
+            <button
+              onClick={() => {
+                setSelectedAptitudeCategory(null);
+                setSelectedAptitudeQuestionIds([]);
+              }}
+              className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="flex items-center space-x-3 mb-6">
+              <div className={`p-3 rounded-2xl ${
+                selectedAptitudeCategory === 'Quant' ? 'bg-blue-50 text-blue-600' :
+                selectedAptitudeCategory === 'Logical' ? 'bg-purple-50 text-purple-600' :
+                selectedAptitudeCategory === 'Verbal' ? 'bg-amber-50 text-amber-600' :
+                'bg-emerald-50 text-emerald-600'
+              }`}>
+                {selectedAptitudeCategory === 'Quant' && <Calculator className="h-6 w-6" />}
+                {selectedAptitudeCategory === 'Logical' && <Brain className="h-6 w-6" />}
+                {selectedAptitudeCategory === 'Verbal' && <BookOpen className="h-6 w-6" />}
+                {selectedAptitudeCategory === 'Data Int.' && <BarChart3 className="h-6 w-6" />}
+              </div>
+              <div>
+                <h3 className="text-xl font-extrabold text-slate-900 leading-snug">
+                  {selectedAptitudeCategory} Assessment Library
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold mt-1">
+                  Manage the 50 standard screening questions configured for this category.
+                </p>
+              </div>
+            </div>
+
+            {/* Bulk Actions Alert */}
+            {selectedAptitudeQuestionIds.length > 0 && (
+              <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fadeIn text-xs font-bold text-slate-700 text-left">
+                <div className="space-y-1.5">
+                  <span className="text-[#004AAD] font-extrabold text-sm block">
+                    {selectedAptitudeQuestionIds.length} Screening Question(s) Selected
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-450 uppercase tracking-widest text-[9px] font-bold">Assign to Candidate:</span>
+                    <select
+                      onChange={(e) => {
+                        const appId = e.target.value;
+                        if (!appId) return;
+                        handleAssignQuestions(appId);
+                        e.target.value = '';
+                      }}
+                      className="bg-white border border-slate-300 rounded-lg py-1 px-2.5 focus:outline-none text-[11px] transition cursor-pointer font-bold"
+                    >
+                      <option value="">Choose Candidate...</option>
+                      {externalApplications
+                        .filter(app => app.status === 'Round 1 Aptitude')
+                        .map(app => (
+                          <option key={app.id} value={app.id}>
+                            {app.fullName} ({app.jobTitle})
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="flex gap-2 self-end md:self-auto">
+                  <button
+                    onClick={() => {
+                      if (window.confirm(`Are you sure you want to delete these ${selectedAptitudeQuestionIds.length} question(s)?`)) {
+                        setSuccess(`${selectedAptitudeQuestionIds.length} question(s) deleted successfully.`);
+                        setSelectedAptitudeQuestionIds([]);
+                        setTimeout(() => setSuccess(''), 3000);
+                      }
+                    }}
+                    className="px-3.5 py-2 bg-red-50 text-red-650 hover:bg-red-100 rounded-xl font-bold border border-red-200 transition cursor-pointer"
+                  >
+                    Delete Selected
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSuccess(`${selectedAptitudeQuestionIds.length} question(s) marked as active.`);
+                      setSelectedAptitudeQuestionIds([]);
+                      setTimeout(() => setSuccess(''), 3000);
+                    }}
+                    className="px-3.5 py-2 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl font-bold transition cursor-pointer"
+                  >
+                    Mark as Active
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Questions Table */}
+            <div className="overflow-x-auto rounded-xl border border-slate-200 max-h-[55vh] overflow-y-auto admin-scrollbar">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase tracking-wider font-bold sticky top-0 z-10">
+                  <tr>
+                    <th className="py-3 px-4 font-bold w-10">
+                      <input
+                        type="checkbox"
+                        checked={selectedAptitudeQuestionIds.length === 50}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const allIds = generateAptitudeQuestions(selectedAptitudeCategory).map(q => q.id);
+                            setSelectedAptitudeQuestionIds(allIds);
+                          } else {
+                            setSelectedAptitudeQuestionIds([]);
+                          }
+                        }}
+                        className="h-4 w-4 rounded border-slate-300 text-[#004AAD] focus:ring-[#004AAD] cursor-pointer"
+                      />
+                    </th>
+                    <th className="py-3 px-4 font-bold">ID</th>
+                    <th className="py-3 px-4 font-bold">Title</th>
+                    <th className="py-3 px-4 font-bold">Difficulty</th>
+                    <th className="py-3 px-4 font-bold">Time Limit</th>
+                    <th className="py-3 px-4 font-bold">Description / Concept</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                  {generateAptitudeQuestions(selectedAptitudeCategory).map((q) => (
+                    <tr key={q.id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="py-3.5 px-4 w-10">
+                        <input
+                          type="checkbox"
+                          checked={selectedAptitudeQuestionIds.includes(q.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedAptitudeQuestionIds(prev => [...prev, q.id]);
+                            } else {
+                              setSelectedAptitudeQuestionIds(prev => prev.filter(id => id !== q.id));
+                            }
+                          }}
+                          className="h-4 w-4 rounded border-slate-300 text-[#004AAD] focus:ring-[#004AAD] cursor-pointer"
+                        />
+                      </td>
+                      <td className="py-3.5 px-4 font-mono font-bold text-[#004AAD]">{q.id.toUpperCase()}</td>
+                      <td className="py-3.5 px-4 font-bold text-slate-900">{q.title}</td>
+                      <td className="py-3.5 px-4">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${
+                          q.difficulty === 'Hard' ? 'bg-red-50 text-red-700 border border-red-200' :
+                          q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                          'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        }`}>
+                          {q.difficulty}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 font-bold text-slate-900">{q.time}</td>
+                      <td className="py-3.5 px-4 max-w-sm truncate" title={q.description}>{q.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
+              <button
+                onClick={() => {
+                  setSelectedAptitudeCategory(null);
+                  setSelectedAptitudeQuestionIds([]);
+                }}
+                className="px-5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition cursor-pointer"
+              >
+                Close Library
+              </button>
             </div>
           </div>
         </div>

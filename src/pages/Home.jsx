@@ -236,16 +236,24 @@ export default function Home() {
               animate="visible"
               className="space-y-6 w-full flex flex-col items-start text-left"
             >
-              <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight text-left w-full">
-                Unified Software for a
-                <span className="block text-black mt-1 text-left">
-                  Connected Generation
-                </span>
+              <motion.h2
+                variants={itemVariants}
+                className="text-3xl md:text-4xl lg:text-5xl font-extrabold 
+             text-slate-900 leading-tight -ml-20 
+             bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              >
+                Unified Software for a Connected Generation
               </motion.h2>
 
-              <motion.p variants={itemVariants} className="text-slate-600 text-base md:text-lg leading-relaxed text-left w-full">
-                Beta builds secure, real-time corporate applications.SMTP mail threads,live authentication protocols,and agile sprints under one dashboard.
+              <motion.p
+                variants={itemVariants}
+                className="mt-4 text-slate-600 text-base md:text-lg leading-relaxed 
+             text-left w-full -ml-20 max-w-xl 
+             tracking-wide"
+              >
+                Beta builds secure, real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
+
             </motion.div>
           </div>
 

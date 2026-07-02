@@ -167,7 +167,7 @@ export default function Support() {
             </div>
             <div>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">App Clients</p>
-              <Link to="/" className="text-xs font-bold text-[#004AAD] hover:underline flex items-center mt-1">
+              <Link to="#" className="text-xs font-bold text-[#004AAD] hover:underline flex items-center mt-1">
                 <span>Downloads Portal</span>
                 <ExternalLink className="h-3 w-3 ml-1" />
               </Link>

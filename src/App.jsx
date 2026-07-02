@@ -15,6 +15,7 @@ import Support from './pages/Support';
 import CliksBusinessDashboard from './pages/CliksBusinessDashboard';
 import BnxMailDashboard from './pages/BnxMailDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import Assessment from './pages/Assessment';
 import { AuthProvider } from './context/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -92,7 +93,7 @@ function AppContent() {
   }, [navigate, loginWithSSO]);
 
   // Don't render the site-wide navbar and footer on the admin dashboard, cliks business dashboard, bnx mail dashboard, or during SSO verification
-  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/admincarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || verifyingSSO || !!ssoError;
+  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/admincarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || location.pathname.startsWith('/careers/assessment') || verifyingSSO || !!ssoError;
 
   if (verifyingSSO || ssoError) {
     return (
@@ -174,6 +175,7 @@ function AppContent() {
           <Route path="/cliks-business" element={<CliksBusinessDashboard />} />
           <Route path="/cliks-business/dashboard" element={<CliksBusinessDashboard />} />
           <Route path="/bnx-mail/dashboard" element={<BnxMailDashboard />} />
+          <Route path="/careers/assessment" element={<Assessment />} />
         </Routes>
       </main>
       {!isDashboardMode && <Footer />}
