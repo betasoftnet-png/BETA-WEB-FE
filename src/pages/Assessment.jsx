@@ -111,24 +111,24 @@ export default function Assessment() {
       return;
     }
 
-    // Calculate a mock score (e.g. correct inputs vs random)
-    let correctCount = 0;
-    questions.forEach((q, idx) => {
-      const selected = answers[q.id];
-      // If the question has a correctIndex, compare, otherwise assign a random but realistic pass
-      if (q.correctIndex !== undefined) {
-        if (selected === q.correctIndex) correctCount++;
-      } else {
-        // Fallback score generation based on odd/even indices
-        if (selected !== undefined && (selected + idx) % 2 === 0) {
-          correctCount++;
-        }
+    // Calculate a mock score based on answered questions count
+    let answeredCount = 0;
+    questions.forEach((q) => {
+      const answerVal = answers[q.id];
+      if (answerVal && answerVal.trim().length > 0) {
+        answeredCount++;
       }
     });
 
-    const calculatedScore = Math.round((correctCount / questions.length) * 100) || 80;
+    const calculatedScore = questions.length > 0
+      ? Math.min(100, Math.max(40, Math.round((answeredCount / questions.length) * 100)))
+      : 80;
+
     setScore(calculatedScore);
     setSubmitted(true);
+
+    // Save full typed answers in localStorage
+    localStorage.setItem(`assessment_answers_${candidateId}`, JSON.stringify(answers));
 
     // Save submission results to global localStorage
     const storedApps = localStorage.getItem('beta_applications');
@@ -252,29 +252,16 @@ export default function Assessment() {
                   {q.description}
                 </p>
 
-                {/* Option selection inputs */}
-                <div className="grid grid-cols-1 gap-2.5 pt-2">
-                  {options.map((opt, optIdx) => {
-                    const isSelected = answers[q.id] === optIdx;
-                    return (
-                      <button
-                        key={optIdx}
-                        onClick={() => handleSelectOption(q.id, optIdx)}
-                        className={`w-full text-left p-3.5 rounded-xl border text-xs font-bold transition flex items-center space-x-3 cursor-pointer ${
-                          isSelected
-                            ? 'bg-blue-50 border-blue-400 text-blue-800'
-                            : 'bg-white border-slate-200 hover:bg-slate-50 text-slate-700'
-                        }`}
-                      >
-                        <div className={`h-4 w-4 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                          isSelected ? 'border-blue-500 bg-blue-500 text-white' : 'border-slate-300 bg-white'
-                        }`}>
-                          {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
-                        </div>
-                        <span>{opt}</span>
-                      </button>
-                    );
-                  })}
+                {/* Text answer input box */}
+                <div className="pt-2">
+                  <label className="text-[10px] uppercase tracking-wider font-bold text-slate-450 block mb-1.5">Your Response:</label>
+                  <textarea
+                    rows={3}
+                    value={answers[q.id] || ''}
+                    onChange={(e) => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
+                    placeholder="Type your final calculated answer, reasoning, or response here..."
+                    className="w-full border border-slate-200 rounded-xl py-3.5 px-4 focus:outline-none focus:border-[#004AAD] text-xs font-semibold bg-slate-50/50 transition duration-200"
+                  />
                 </div>
               </div>
             );

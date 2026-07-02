@@ -1153,6 +1153,14 @@ export default function AdminDashboard() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (selectedApplication) {
+      setRemarks(selectedApplication.remarks || '');
+    } else {
+      setRemarks('');
+    }
+  }, [selectedApplication]);
+
   const handleArrayChange = (index, value, array, setArray) => {
     const newArray = [...array];
     newArray[index] = value;
@@ -1332,11 +1340,11 @@ export default function AdminDashboard() {
     localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
 
     const updatedApps = externalApplications.map(app => 
-      app.id === appId ? { ...app, aptitudeStatus: 'Scheduled' } : app
+      app.id === appId ? { ...app, aptitudeStatus: 'Assessment Sent' } : app
     );
     updateAppsAndSync(updatedApps);
 
-    setSuccess(`Assigned ${selectedAptitudeQuestionIds.length} questions to ${candidate.fullName}. Candidate status set to Scheduled.`);
+    setSuccess(`Assessment successfully sent to ${candidate.fullName}. Status updated to "Assessment Sent".`);
     setSelectedAptitudeQuestionIds([]);
     setSelectedAptitudeCategory(null);
     setTimeout(() => setSuccess(''), 4000);
@@ -1899,7 +1907,7 @@ export default function AdminDashboard() {
                       {(() => {
                         const round1Apps = externalApplications.filter(app => app.status === 'Round 1 Aptitude');
                         const selectedCount = round1Apps.length;
-                        const scheduledCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Scheduled').length;
+                        const scheduledCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Assessment Sent' || (app.aptitudeStatus || 'Pending') === 'Scheduled').length;
                         const completedCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Completed').length;
                         const pendingCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Pending').length;
 
@@ -1916,10 +1924,10 @@ export default function AdminDashboard() {
                               </div>
                             </div>
 
-                            {/* Scheduled */}
+                            {/* Assessment Sent */}
                             <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
                               <div className="space-y-1">
-                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Scheduled</span>
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Assessment Sent</span>
                                 <span className="text-3xl font-black text-amber-600">{scheduledCount}</span>
                               </div>
                               <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
@@ -1994,15 +2002,15 @@ export default function AdminDashboard() {
                                       <td className="py-3.5 px-4">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold ${
                                           statusVal === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                                          statusVal === 'Scheduled' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                                          statusVal === 'Assessment Sent' || statusVal === 'Scheduled' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
                                           'bg-slate-50 text-slate-500 border border-slate-200'
                                         }`}>
-                                          {statusVal}
+                                          {statusVal === 'Scheduled' ? 'Assessment Sent' : statusVal}
                                         </span>
                                       </td>
                                       <td className="py-3.5 px-4">
                                         <div className="flex items-center space-x-2">
-                                          {(statusVal === 'Scheduled' || statusVal === 'Pending') && (
+                                          {(statusVal === 'Assessment Sent' || statusVal === 'Scheduled' || statusVal === 'Pending') && (
                                             <button
                                               onClick={() => {
                                                 const url = `${window.location.origin}/careers/assessment?id=${app.id}`;
@@ -2901,13 +2909,12 @@ export default function AdminDashboard() {
                                 {app.resumeUrl ? (
                                   <a
                                     href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `https://apply.beta-softnet.com${app.resumeUrl}`}
-                                    download
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold"
                                   >
                                     <FileText className="h-3.5 w-3.5 text-[#004AAD]" />
-                                    <span>Download</span>
+                                    <span>View Resume</span>
                                   </a>
                                 ) : (
                                   <span className="text-slate-400 italic">No resume</span>
@@ -2927,22 +2934,6 @@ export default function AdminDashboard() {
                               </td>
                               <td className="py-4 px-6 text-center">
                                 <div className="flex items-center justify-center gap-1.5">
-                                  {app.resumeUrl ? (
-                                    <button
-                                      onClick={() => window.open(app.resumeUrl.startsWith('http') ? app.resumeUrl : `https://apply.beta-softnet.com${app.resumeUrl}`, '_blank')}
-                                      className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-[#004AAD] border border-blue-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
-                                    >
-                                      View Resume
-                                    </button>
-                                  ) : (
-                                    <button
-                                      disabled
-                                      className="px-2.5 py-1.5 rounded bg-slate-50 text-slate-400 border border-slate-205 text-[10px] font-bold opacity-50 cursor-not-allowed whitespace-nowrap"
-                                    >
-                                      No Resume
-                                    </button>
-                                  )}
-
                                   <button
                                     onClick={() => {
                                       setSelectedApplication(app);
@@ -2952,7 +2943,7 @@ export default function AdminDashboard() {
                                   >
                                     Schedule Interview
                                   </button>
-
+                                  
                                   <button
                                     onClick={() => handleUpdateStatus(app.id, 'Rejected')}
                                     className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
@@ -3425,7 +3416,7 @@ export default function AdminDashboard() {
               {/* Cover Letter */}
               {selectedApplication.coverLetter && (
                 <div>
-                  <label className="text-xs font-bold uppercase">Cover Letter</label>
+                  <label className="text-xs font-bold uppercase text-slate-800">Cover Letter</label>
                   <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl max-h-[140px] overflow-y-auto mt-1.5">
                     <p className="text-slate-700 text-xs leading-relaxed whitespace-pre-wrap">
                       {selectedApplication.coverLetter}
@@ -3433,6 +3424,76 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               )}
+
+              {/* View Candidate Answers */}
+              {(() => {
+                const assignedQuestionsKey = `assessment_questions_${selectedApplication.id}`;
+                const answersKey = `assessment_answers_${selectedApplication.id}`;
+                const storedQuestions = localStorage.getItem(assignedQuestionsKey);
+                const storedAnswers = localStorage.getItem(answersKey);
+
+                if (storedQuestions && storedAnswers) {
+                  const qList = JSON.parse(storedQuestions);
+                  const aList = JSON.parse(storedAnswers);
+
+                  return (
+                    <div className="border-t border-slate-100 pt-4">
+                      <label className="text-xs font-bold uppercase block mb-2.5 text-slate-800">
+                        View Candidate Assessment Answers (Score: {selectedApplication.aptitudeScore || '0'}%)
+                      </label>
+                      <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-4 max-h-[220px] overflow-y-auto admin-scrollbar">
+                        {qList.map((q, qidx) => {
+                          const candAnswer = aList[q.id];
+                          return (
+                            <div key={q.id} className="space-y-1.5 border-b border-slate-200/60 pb-3 last:border-b-0 last:pb-0 text-xs">
+                              <div className="font-bold text-slate-900">
+                                Q{qidx + 1}. {q.title}
+                              </div>
+                              <p className="text-slate-500 italic">
+                                {q.description}
+                              </p>
+                              <div className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-800">
+                                <span className="text-slate-400 block text-[9px] uppercase font-bold mb-0.5">Candidate Response:</span>
+                                <span className="font-semibold text-slate-900 whitespace-pre-wrap">{candAnswer !== undefined ? candAnswer : "No response entered."}</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+
+              {/* Recruiter Evaluation Notes & Remarks */}
+              <div className="border-t border-slate-100 pt-4 space-y-2">
+                <label className="text-xs font-bold uppercase block text-slate-800">Evaluation Remarks</label>
+                <textarea
+                  rows={2}
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                  placeholder="Enter interviewer evaluation notes, feedback remarks, or notes..."
+                  className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-xs transition"
+                />
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const updatedApps = externalApplications.map(app => 
+                        app.id === selectedApplication.id ? { ...app, remarks: remarks } : app
+                      );
+                      updateAppsAndSync(updatedApps);
+                      setSelectedApplication(prev => ({ ...prev, remarks: remarks }));
+                      setSuccess('Remarks updated successfully.');
+                      setTimeout(() => setSuccess(''), 3000);
+                    }}
+                    className="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#004AAD] text-xs font-bold rounded-lg transition cursor-pointer font-sans"
+                  >
+                    Save Remarks
+                  </button>
+                </div>
+              </div>
 
               {/* Status Update Actions */}
               <div className="border-t border-slate-100 pt-4">
@@ -3600,7 +3661,7 @@ export default function AdminDashboard() {
                     {selectedAptitudeQuestionIds.length} Screening Question(s) Selected
                   </span>
                   <div className="flex items-center gap-2">
-                    <span className="text-slate-450 uppercase tracking-widest text-[9px] font-bold">Assign to Candidate:</span>
+                    <span className="text-slate-450 uppercase tracking-widest text-[9px] font-bold">Send Assessment:</span>
                     <select
                       onChange={(e) => {
                         const appId = e.target.value;

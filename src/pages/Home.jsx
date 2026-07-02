@@ -203,15 +203,50 @@ export default function Home() {
               <span>Vision</span>
             </span> */}
             <motion.h1
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.15, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              style={{ fontFamily: '"Saira Stencil One", sans-serif', color: '#034cacbf' }}
-              className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight cursor-pointer inline-block select-none"
+              className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter cursor-pointer select-none flex items-center justify-center gap-0 my-4"
+              style={{ fontFamily: '"Saira Stencil One", sans-serif' }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.15,
+                  }
+                }
+              }}
+              initial="hidden"
+              animate="visible"
             >
-              BETA
+              {['B', 'E', 'T', 'A'].map((letter, idx) => (
+                <motion.span
+                  key={idx}
+                  variants={{
+                    hidden: { opacity: 0, y: 50, scale: 0.3 },
+                    visible: { 
+                      opacity: 1, 
+                      y: 0, 
+                      scale: 1,
+                      transition: { type: 'spring', damping: 8, stiffness: 100 }
+                    }
+                  }}
+                  whileHover={{ 
+                    scale: 1.25, 
+                    y: -12, 
+                    rotate: idx % 2 === 0 ? 6 : -6,
+                    color: '#005be3',
+                    filter: 'drop-shadow(0 12px 20px rgba(0, 74, 173, 0.4))'
+                  }}
+                  whileTap={{ scale: 0.9 }}
+                  className="inline-block transition-all duration-300 ease-out"
+                  style={{
+                    color: '#004AAD',
+                    textShadow: '0px 0px 30px rgba(0, 74, 173, 0.12)',
+                    padding: '0'
+                  }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
             </motion.h1>
 
 
@@ -228,7 +263,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 lg:gap-12">
 
           {/* Left Column: Heading and description */}
-          <div className="w-full md:w-[40%] flex flex-col items-start text-left space-y-6">
+          <div className="w-full md:w-[32%] flex flex-col items-start text-left space-y-6">
 
             <motion.div
               variants={containerVariants}
@@ -260,7 +295,7 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full h-full flex flex-col justify-center text-left">
+          <div className="w-full md:w-[68%] h-full flex flex-col justify-center text-left">
 
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-3.5 w-full mb-6">
@@ -271,9 +306,9 @@ export default function Home() {
                 <div className="border-t border-slate-300 w-full my-4"></div> */}
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
-                <div className="lg:col-span-1 w-full h-80   text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg">
+                <div className="lg:col-span-2 w-full h-80   text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg">
                   {/* Deep Glowing Tech Starfield Particles */}
                   <div className="absolute w-2.5 h-2.5 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
                   <div className="absolute w-1.5 h-1.5 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
@@ -303,7 +338,7 @@ export default function Home() {
                 </div>
 
                 {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
-                <div className="lg:col-span-1 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
+                <div className="lg:col-span-3 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
                   {/* BNXmail */}
                   <a
                     href="https://www.bnxmail.com/login"
@@ -325,8 +360,8 @@ export default function Home() {
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-sm font-medium mt-1 whitespace-nowrap">
-                      Real time mail, always <span className="whitespace-nowrap">in sync.</span>
+                    <p className="text-slate-500 text-sm font-medium mt-1">
+                      Real time mail, always <span className="whitespace-nowrap">in sync.</span> “Instant mail, Connected work.”
                     </p>
 
 
@@ -353,8 +388,8 @@ export default function Home() {
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-sm font-medium mt-1 whitespace-nowrap">
-                      Work together, faster.
+                    <p className="text-slate-500 text-sm font-medium mt-1">
+                      "Connecting businesses, creating opportunities, and enabling growth."
                     </p>
                   </a>
                 </div>
