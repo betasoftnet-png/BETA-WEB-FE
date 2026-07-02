@@ -566,7 +566,7 @@ export default function Careers() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3 }}
-                        className="p-5 rounded-xl border border-amber-500/10 bg-[#FEFCE8]/70 hover:bg-[#FEFCE8]/90 hover:border-amber-500/25 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
+                        className="p-5 rounded-xl border border-blue-500/20 bg-[#dbeafe]/60 hover:bg-[#dbeafe]/85 hover:border-blue-500/35 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
                       >
                         <div className="space-y-4 flex-grow">
                           <div>
@@ -578,7 +578,7 @@ export default function Careers() {
                             </span>
                           </div>
 
-                          <div className="space-y-2 border-t border-b border-amber-500/10 py-3 text-xs text-slate-600 font-medium">
+                          <div className="space-y-2 border-t border-b border-blue-500/15 py-3 text-xs text-slate-600 font-medium">
                             <div className="flex items-center space-x-2">
                               <span className="text-[#EC4899]">•</span>
                               <span>{job.location} • {job.type}</span>

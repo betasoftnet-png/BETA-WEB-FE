@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  BarChart2, FileText, ShoppingBag, Briefcase, TrendingUp, ArrowUpRight, 
-  Plus, Search, Settings, HelpCircle, ChevronRight, X, Sparkles, Check, 
+import {
+  BarChart2, FileText, ShoppingBag, Briefcase, TrendingUp, ArrowUpRight,
+  Plus, Search, Settings, HelpCircle, ChevronRight, X, Sparkles, Check,
   Coins, User, Calendar, CreditCard, Users, Shield, Receipt, DollarSign,
   Tag, Clock, Layers, Award, Percent, LayoutGrid, RotateCcw, Building2,
   MessageSquare, Send
@@ -51,13 +51,13 @@ export default function CliksBusinessDashboard() {
     e.preventDefault();
     const amt = parseFloat(invoiceAmount);
     if (isNaN(amt) || amt <= 0) return;
-    
+
     setSalesRevenue(prev => prev + amt);
     setTransactions(prev => [
       { id: Date.now(), type: 'INVOICE', desc: `Invoice to ${invoiceClient || 'Walk-in Client'}`, amount: amt, date: new Date().toLocaleDateString() },
       ...prev
     ]);
-    
+
     setIsInvoiceModalOpen(false);
     setInvoiceAmount('');
     setInvoiceClient('');
@@ -119,10 +119,10 @@ export default function CliksBusinessDashboard() {
 
   return (
     <div className="min-h-screen bg-[#f3f7f5] flex flex-col text-slate-800 antialiased font-sans select-none">
-      
+
       {/* 1. TOP NAVBAR (Header) */}
       <header className="bg-[#004AAD] text-white px-4 h-16 flex items-center justify-between shadow-md z-40">
-        
+
         {/* Brand Logo */}
         <div className="flex items-center space-x-3">
           <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-[#004AAD] font-black text-xl shadow-inner">
@@ -139,11 +139,10 @@ export default function CliksBusinessDashboard() {
             <button
               key={seg}
               onClick={() => setActiveSegment(seg)}
-              className={`px-6 py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${
-                activeSegment === seg 
-                  ? 'bg-[#003B8C] text-white shadow-inner' 
+              className={`px-6 py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${activeSegment === seg
+                  ? 'bg-[#003B8C] text-white shadow-inner'
                   : 'text-slate-300 hover:text-white'
-              }`}
+                }`}
             >
               {seg}
             </button>
@@ -181,23 +180,22 @@ export default function CliksBusinessDashboard() {
 
       {/* 2. MAIN LAYOUT: Sidebar + Content */}
       <div className="flex-1 flex overflow-hidden">
-        
+
         {/* SIDEBAR */}
         <aside className="w-64 bg-white border-r border-[#e0e7e3] flex flex-col justify-between py-6 shrink-0 overflow-y-auto">
-          
+
           <div className="space-y-6">
-            
+
             <div className="px-4 space-y-2">
               <button
                 onClick={() => {
                   setActiveView('dashboard');
                   setActiveShowcaseModule(null);
                 }}
-                className={`w-full px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-3 border transition cursor-pointer ${
-                  activeView === 'dashboard'
+                className={`w-full px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-3 border transition cursor-pointer ${activeView === 'dashboard'
                     ? 'bg-[#e2f0e8]/80 text-[#0f5132] border-emerald-100'
                     : 'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 border-transparent'
-                }`}
+                  }`}
               >
                 <LayoutGrid className={`h-4.5 w-4.5 ${activeView === 'dashboard' ? 'text-emerald-700' : 'text-slate-400'}`} />
                 <span>Dashboard</span>
@@ -237,7 +235,7 @@ export default function CliksBusinessDashboard() {
 
           {/* Premium Plan Banner + Bottom buttons */}
           <div className="px-4 space-y-4 pt-6 border-t border-slate-100">
-            
+
             {/* Free Plan card */}
             <div className="bg-[#131e3d] text-white rounded-2xl p-4 relative overflow-hidden shadow-md">
               <div className="absolute -right-3 -bottom-3 w-16 h-16 bg-blue-500/10 rounded-full blur-xl" />
@@ -257,7 +255,7 @@ export default function CliksBusinessDashboard() {
             </div>
 
             <div className="space-y-1">
-              <button 
+              <button
                 onClick={() => setCustomiseOpen(true)}
                 className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
               >
@@ -267,16 +265,15 @@ export default function CliksBusinessDashboard() {
                 </div>
                 <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
               </button>
-              <button 
+              <button
                 onClick={() => {
                   setActiveView('support');
                   setActiveShowcaseModule(null);
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
-                  activeView === 'support'
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${activeView === 'support'
                     ? 'bg-[#e2f0e8]/80 text-[#0f5132] border-emerald-100'
                     : 'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 border-transparent'
-                }`}
+                  }`}
               >
                 <div className="flex items-center space-x-3">
                   <HelpCircle className={`h-4.5 w-4.5 ${activeView === 'support' ? 'text-emerald-700' : 'text-slate-400'}`} />
@@ -291,7 +288,7 @@ export default function CliksBusinessDashboard() {
 
         {/* 3. MAIN DASHBOARD CONTENT AREA */}
         <main className="flex-1 p-6 md:p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto w-full">
-          
+
           {activeView === 'dashboard' ? (
             <>
               {/* Main Title Header */}
@@ -398,13 +395,12 @@ export default function CliksBusinessDashboard() {
                       {transactions.map(tx => (
                         <tr key={tx.id} className="hover:bg-slate-50">
                           <td className="py-3 px-5">
-                            <span className={`px-2 py-0.5 rounded font-bold text-[9px] uppercase ${
-                              tx.type === 'INVOICE' 
-                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' 
+                            <span className={`px-2 py-0.5 rounded font-bold text-[9px] uppercase ${tx.type === 'INVOICE'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                                 : tx.type === 'EXPENSE'
-                                ? 'bg-rose-50 text-rose-700 border border-rose-100'
-                                : 'bg-blue-50 text-blue-700 border border-blue-100'
-                            }`}>
+                                  ? 'bg-rose-50 text-rose-700 border border-rose-100'
+                                  : 'bg-blue-50 text-blue-700 border border-blue-100'
+                              }`}>
                               {tx.type}
                             </span>
                           </td>
@@ -429,7 +425,7 @@ export default function CliksBusinessDashboard() {
 
       {/* 7. MODALS AND INTERACTIVE OVERLAYS */}
       <AnimatePresence>
-        
+
         {/* Generate Invoice Modal */}
         {isInvoiceModalOpen && (
           <motion.div
@@ -758,7 +754,7 @@ function HelpSupportView() {
 
       {/* Grid container */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-        
+
         {/* Left Column: Ticket Form */}
         <div className="bg-white border border-[#e2e9e5] p-6 rounded-3xl shadow-sm space-y-6 flex flex-col min-h-[460px]">
           <div className="flex items-center space-x-3 border-b border-slate-100 pb-4">
