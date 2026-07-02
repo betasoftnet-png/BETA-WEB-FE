@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import {
   Plus, Edit, Trash, FileText, Briefcase, LogOut,
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
-  Lock, Mail, Calculator, Brain, BookOpen, BarChart3,
+  Lock, Mail, Calculator, Brain, BookOpen, BarChart3, Bell,
   Upload, Download, ChevronRight, Calendar, Sliders,
   Handshake
 } from 'lucide-react';
@@ -1003,6 +1003,16 @@ export default function AdminDashboard() {
   const [selectedResumeUrl, setSelectedResumeUrl] = useState(null);
   const [selectedResumeCandidate, setSelectedResumeCandidate] = useState(null);
 
+  // Search & Filters State
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  // Notifications State
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
   const updateAppsAndSync = (newApps) => {
     setExternalApplications(newApps);
     localStorage.setItem('beta_applications', JSON.stringify(newApps));
@@ -1162,6 +1172,48 @@ export default function AdminDashboard() {
       setRemarks('');
     }
   }, [selectedApplication]);
+
+  useEffect(() => {
+    if (externalApplications.length > 0) {
+      const newApps = externalApplications.filter(app => app.status === 'Candidates').slice(0, 3);
+      const scheduled = externalApplications.filter(app => app.status === 'Interview Scheduled' || app.aptitudeStatus === 'Assessment Sent').slice(0, 2);
+
+      const list = [
+        {
+          id: 'sys-1',
+          type: 'system',
+          title: 'Database connection online',
+          message: 'Local mock storage sync complete.',
+          time: 'Just now',
+          unread: true
+        }
+      ];
+
+      newApps.forEach((app, idx) => {
+        list.push({
+          id: `newapp-${app.id}-${idx}`,
+          type: 'application',
+          title: 'New Candidate Application',
+          message: `${app.fullName} applied for ${app.jobTitle}`,
+          time: '1 hour ago',
+          unread: true
+        });
+      });
+
+      scheduled.forEach((app, idx) => {
+        list.push({
+          id: `sch-${app.id}-${idx}`,
+          type: 'reminder',
+          title: 'Upcoming Assessment / Interview',
+          message: `Interview reminder for ${app.fullName} (${app.jobTitle})`,
+          time: app.interviewDate ? `${app.interviewDate} at ${app.interviewTime || '10:00'}` : 'Scheduled soon',
+          unread: true
+        });
+      });
+
+      setNotifications(list);
+    }
+  }, [externalApplications]);
 
   const handleArrayChange = (index, value, array, setArray) => {
     const newArray = [...array];
@@ -1612,6 +1664,21 @@ export default function AdminDashboard() {
               <span className="font-bold">Job Board</span>
             </button>
 
+            <button
+              onClick={() => {
+                setActiveSubTab('analytics');
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-2.5 mt-1 rounded-xl text-xs font-semibold transition cursor-pointer text-left ${
+                activeSubTab === 'analytics' 
+                  ? 'bg-[#004AAD] text-white font-bold' 
+                  : 'text-slate-400 hover:bg-slate-800/20 hover:text-white'
+              }`}
+              style={activeSubTab === 'analytics' ? { color: '#ffffff' } : {}}
+            >
+              <BarChart3 className="h-4 w-4 text-blue-200" />
+              <span className="font-bold">Analytics Panel</span>
+            </button>
+
             {/* Pipeline Stage Filters */}
             <div className="pt-4 mt-4 border-t border-slate-800/80 space-y-1 max-h-[60vh] overflow-y-auto admin-scrollbar">
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">
@@ -1744,6 +1811,55 @@ export default function AdminDashboard() {
             >
               <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
             </button>
+
+            {/* Notification Bell Icon */}
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(prev => !prev)}
+                className="p-2.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-slate-700 transition relative cursor-pointer"
+              >
+                <Bell className="h-5 w-5" />
+                {notifications.some(n => n.unread) && (
+                  <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 border border-white animate-pulse" />
+                )}
+              </button>
+
+              {showNotifications && (
+                <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 p-4 space-y-3 animate-fadeIn text-left">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <span className="text-xs font-bold text-slate-900">System Notifications</span>
+                    <button
+                      onClick={() => {
+                        setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+                        setShowNotifications(false);
+                      }}
+                      className="text-[10px] text-blue-600 hover:underline font-bold bg-transparent border-none p-0 cursor-pointer"
+                    >
+                      Mark all read
+                    </button>
+                  </div>
+                  <div className="space-y-2 max-h-[250px] overflow-y-auto admin-scrollbar">
+                    {notifications.length === 0 ? (
+                      <p className="text-slate-400 text-xs italic text-center py-4">No new alerts.</p>
+                    ) : (
+                      notifications.map(n => (
+                        <div key={n.id} className="p-2.5 bg-slate-50 border border-slate-150 rounded-xl space-y-1 text-left relative">
+                          {n.unread && <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-[#004AAD]" />}
+                          <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5 pr-3">
+                            {n.type === 'system' && <Shield className="h-3.5 w-3.5 text-emerald-600" />}
+                            {n.type === 'reminder' && <Calendar className="h-3.5 w-3.5 text-amber-500" />}
+                            {n.type === 'application' && <Briefcase className="h-3.5 w-3.5 text-[#004AAD]" />}
+                            <span>{n.title}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-650 font-semibold leading-normal">{n.message}</p>
+                          <div className="text-[9px] text-slate-400 font-bold">{n.time}</div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
             {((activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates') || activeSubTab === 'jobBoard') && (
               <button
                 onClick={openAddJobModal}
@@ -2824,28 +2940,92 @@ export default function AdminDashboard() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                {/* Filtering header */}
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white border border-slate-200">
-                  <div className="text-slate-600 text-xs font-medium">
-                    Showing {
-                      externalApplications
-                        .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
-                        .filter(app => selectedStatusFilter === 'Candidates' ? app.status === 'Candidates' : app.status === selectedStatusFilter)
-                        .length
-                    } applications {selectedJobFilter !== 'All' && `for "${selectedJobFilter}"`}{selectedStatusFilter !== 'Candidates' && ` marked as "${selectedStatusFilter}"`}
+                {/* Advanced Search & Filtering Bar */}
+                <div className="bg-white border border-slate-200 p-5 rounded-2xl space-y-4 text-left shadow-sm">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {/* Search bar */}
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Search Candidate / Job</label>
+                      <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Search name or position..."
+                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
+                      />
+                    </div>
+
+                    {/* Status filter */}
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filter by Status</label>
+                      <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
+                      >
+                        <option value="All">All Statuses</option>
+                        <option value="Pending">Pending (Candidates)</option>
+                        <option value="Interview Scheduled">Interview Scheduled</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </div>
+
+                    {/* Job Filter */}
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filter by Job Posting</label>
+                      <select
+                        value={selectedJobFilter}
+                        onChange={(e) => setSelectedJobFilter(e.target.value)}
+                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
+                      >
+                        <option value="All">All Jobs</option>
+                        {Array.from(new Set(externalApplications.map(app => app.jobTitle))).map(title => (
+                          <option key={title} value={title}>{title}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Clear button */}
+                    <div className="flex items-end justify-end">
+                      {(searchTerm || statusFilter !== 'All' || selectedJobFilter !== 'All' || startDate || endDate) && (
+                        <button
+                          onClick={() => {
+                            setSearchTerm('');
+                            setStatusFilter('All');
+                            setSelectedJobFilter('All');
+                            setStartDate('');
+                            setEndDate('');
+                          }}
+                          className="px-4 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold transition cursor-pointer"
+                        >
+                          Clear Filters
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase">Filter by Job:</label>
-                    <select
-                      value={selectedJobFilter}
-                      onChange={(e) => setSelectedJobFilter(e.target.value)}
-                      className="bg-white text-slate-850 border border-slate-250 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
-                    >
-                      <option value="All">All Jobs</option>
-                      {Array.from(new Set(externalApplications.map(app => app.jobTitle))).map(title => (
-                        <option key={title} value={title}>{title}</option>
-                      ))}
-                    </select>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-3">
+                    {/* Date range - Start Date */}
+                    <div className="flex items-center space-x-2">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">From Date:</label>
+                      <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
+                      />
+                    </div>
+
+                    {/* Date range - End Date */}
+                    <div className="flex items-center space-x-2">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">To Date:</label>
+                      <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -2867,7 +3047,29 @@ export default function AdminDashboard() {
                         {(() => {
                           const filtered = externalApplications
                             .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
-                            .filter(app => selectedStatusFilter === 'Candidates' ? app.status === 'Candidates' : app.status === selectedStatusFilter);
+                            .filter(app => {
+                              if (statusFilter === 'All') {
+                                return selectedStatusFilter === 'Candidates' ? app.status === 'Candidates' : app.status === selectedStatusFilter;
+                              }
+                              if (statusFilter === 'Pending') return app.status === 'Candidates';
+                              return app.status === statusFilter;
+                            })
+                            .filter(app => {
+                              if (!searchTerm) return true;
+                              const query = searchTerm.toLowerCase();
+                              return app.fullName.toLowerCase().includes(query) || app.jobTitle.toLowerCase().includes(query);
+                            })
+                            .filter(app => {
+                              if (!startDate && !endDate) return true;
+                              const appDate = new Date(app.createdAt);
+                              if (startDate && appDate < new Date(startDate)) return false;
+                              if (endDate) {
+                                const adjustedEnd = new Date(endDate);
+                                adjustedEnd.setHours(23, 59, 59, 999);
+                                if (appDate > adjustedEnd) return false;
+                              }
+                              return true;
+                            });
 
                           if (filtered.length === 0) {
                             return (
@@ -3106,6 +3308,169 @@ export default function AdminDashboard() {
                       </div>
                     ))
                   )}
+                </div>
+              </div>
+            )}
+
+            {/* Sub Tab 5: Analytics Dashboard */}
+            {activeSubTab === 'analytics' && (
+              <div className="space-y-6 animate-fadeIn text-left">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900 font-sans">Analytics Overview</h2>
+                    <p className="text-xs text-slate-500 mt-1">Real-time statistics, conversion pipelines, and candidate demographic data.</p>
+                  </div>
+                </div>
+
+                {/* Main Stats Cards Grid */}
+                {(() => {
+                  const totalApps = externalApplications.length;
+                  const hiredCount = externalApplications.filter(app => app.status === 'Selected' || app.status === 'Joined').length;
+                  const interviewedCount = externalApplications.filter(app => app.status === 'Interview Scheduled' || app.status === 'Interview Completed').length;
+                  const conversionRate = totalApps > 0 ? Math.round((hiredCount / totalApps) * 100) : 0;
+                  const interviewRate = totalApps > 0 ? Math.round((interviewedCount / totalApps) * 100) : 0;
+
+                  return (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm space-y-1">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Total Applications</span>
+                        <span className="text-3xl font-black text-[#004AAD]">{totalApps}</span>
+                      </div>
+                      <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm space-y-1">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Interview Progression Rate</span>
+                        <span className="text-3xl font-black text-amber-600">{interviewRate}%</span>
+                      </div>
+                      <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm space-y-1">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Final Placement Conversion</span>
+                        <span className="text-3xl font-black text-emerald-600">{conversionRate}%</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Left Column: Applications per role Progress Bar Chart */}
+                  <div className="lg:col-span-1 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col space-y-4">
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Applications per Role</h3>
+                      <p className="text-[10px] text-slate-450 font-semibold mt-0.5">Applicant distribution by posting title</p>
+                    </div>
+                    <div className="space-y-3.5 flex-grow flex flex-col justify-center">
+                      {Array.from(new Set(externalApplications.map(app => app.jobTitle))).slice(0, 4).map(role => {
+                        const count = externalApplications.filter(app => app.jobTitle === role).length;
+                        const total = externalApplications.length || 1;
+                        const pct = Math.round((count / total) * 100);
+                        return (
+                          <div key={role} className="space-y-1.5">
+                            <div className="flex justify-between text-xs font-bold text-slate-800">
+                              <span className="truncate max-w-[160px]" title={role}>{role}</span>
+                              <span>{count} ({pct}%)</span>
+                            </div>
+                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                              <div className="h-full bg-blue-600 rounded-full" style={{ width: `${pct}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Middle Column: Conversion rates funnel */}
+                  <div className="lg:col-span-1 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col space-y-4">
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Conversion Funnel</h3>
+                      <p className="text-[10px] text-slate-450 font-semibold mt-0.5">Progression from applied to placement</p>
+                    </div>
+                    <div className="space-y-4 flex-grow flex flex-col justify-center">
+                      {(() => {
+                        const total = externalApplications.length || 1;
+                        const interviewed = externalApplications.filter(app => app.status !== 'Candidates' && app.status !== 'Round 1 Aptitude').length;
+                        const hired = externalApplications.filter(app => app.status === 'Selected' || app.status === 'Joined').length;
+
+                        const intPct = Math.round((interviewed / total) * 100);
+                        const hiredPct = Math.round((hired / total) * 100);
+
+                        return (
+                          <>
+                            {/* Level 1: Applied */}
+                            <div className="space-y-1 text-center bg-slate-50 border border-slate-200/80 p-3 rounded-xl">
+                              <div className="text-xs font-bold text-slate-800">Applied (Total Intake)</div>
+                              <div className="text-sm font-black text-[#004AAD]">{total} Candidates</div>
+                            </div>
+                            {/* Arrow */}
+                            <div className="text-center text-slate-300 font-bold">&darr;</div>
+                            {/* Level 2: Interviewed */}
+                            <div className="space-y-1 text-center bg-amber-50/50 border border-amber-100 p-3 rounded-xl">
+                              <div className="text-xs font-bold text-amber-800">Assessed & Interviewed ({intPct}%)</div>
+                              <div className="text-sm font-black text-amber-700">{interviewed} Candidates</div>
+                            </div>
+                            {/* Arrow */}
+                            <div className="text-center text-slate-300 font-bold">&darr;</div>
+                            {/* Level 3: Hired */}
+                            <div className="space-y-1 text-center bg-emerald-50 border border-emerald-150 p-3 rounded-xl">
+                              <div className="text-xs font-bold text-emerald-800">Placements & Hired ({hiredPct}%)</div>
+                              <div className="text-sm font-black text-emerald-700">{hired} Offers</div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
+
+                  {/* Right Column: Location breakdown */}
+                  <div className="lg:col-span-1 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col space-y-4">
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Work Location Distribution</h3>
+                      <p className="text-[10px] text-slate-455 font-semibold mt-0.5">Where candidates are placed</p>
+                    </div>
+                    <div className="space-y-5 flex-grow flex flex-col justify-center">
+                      {(() => {
+                        const total = externalApplications.length || 1;
+                        const remote = externalApplications.filter(app => (app.jobLocation || '').toLowerCase().includes('remote')).length;
+                        const hybrid = externalApplications.filter(app => (app.jobLocation || '').toLowerCase().includes('hybrid')).length;
+                        const onsite = total - remote - hybrid;
+
+                        const remotePct = Math.round((remote / total) * 100) || 30;
+                        const hybridPct = Math.round((hybrid / total) * 100) || 50;
+                        const onsitePct = Math.round((onsite / total) * 100) || 20;
+
+                        return (
+                          <>
+                            {/* Remote */}
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-xs font-bold text-slate-800">
+                                <span>Remote Roles</span>
+                                <span>{remotePct}%</span>
+                              </div>
+                              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${remotePct}%` }} />
+                              </div>
+                            </div>
+                            {/* Hybrid */}
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-xs font-bold text-slate-800">
+                                <span>Hybrid Roles</span>
+                                <span>{hybridPct}%</span>
+                              </div>
+                              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-full bg-purple-500 rounded-full" style={{ width: `${hybridPct}%` }} />
+                              </div>
+                            </div>
+                            {/* Onsite */}
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-xs font-bold text-slate-800">
+                                <span>Onsite Roles</span>
+                                <span>{onsitePct}%</span>
+                              </div>
+                              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-full bg-amber-500 rounded-full" style={{ width: `${onsitePct}%` }} />
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
