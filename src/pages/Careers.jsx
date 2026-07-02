@@ -348,7 +348,7 @@ export default function Careers() {
           pointer-events: none;
         }
         .unified-openings-box {
-          background: white !important;
+          background:white !important;
         }
       `}</style>
 
