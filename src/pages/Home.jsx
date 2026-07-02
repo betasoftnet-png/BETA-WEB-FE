@@ -222,16 +222,16 @@ export default function Home() {
                   key={idx}
                   variants={{
                     hidden: { opacity: 0, y: 50, scale: 0.3 },
-                    visible: { 
-                      opacity: 1, 
-                      y: 0, 
+                    visible: {
+                      opacity: 1,
+                      y: 0,
                       scale: 1,
                       transition: { type: 'spring', damping: 8, stiffness: 100 }
                     }
                   }}
-                  whileHover={{ 
-                    scale: 1.25, 
-                    y: -12, 
+                  whileHover={{
+                    scale: 1.25,
+                    y: -12,
                     rotate: idx % 2 === 0 ? 6 : -6,
                     color: '#005be3',
                     filter: 'drop-shadow(0 12px 20px rgba(0, 74, 173, 0.4))'
@@ -241,7 +241,8 @@ export default function Home() {
                   style={{
                     color: '#004AAD',
                     textShadow: '0px 0px 30px rgba(0, 74, 173, 0.12)',
-                    padding: '0'
+                    padding: '0',
+                    marginLeft: letter === 'T' ? '5px' : '0px'
                   }}
                 >
                   {letter}
@@ -274,15 +275,16 @@ export default function Home() {
               <motion.h2
                 variants={itemVariants}
                 className="text-3xl md:text-4xl lg:text-5xl font-extrabold 
-             text-slate-900 leading-tight -ml-20 
-             bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+             text-slate-900 leading-tight -ml-20"
               >
-                Unified Software for a Connected Generation
+                Unified Software <span className="whitespace-nowrap">for <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline font-extrabold">Connected Generation</span></span>
               </motion.h2>
+
+
 
               <motion.p
                 variants={itemVariants}
-                className="mt-4 text-slate-600 text-base md:text-lg leading-relaxed 
+                className="mt-1 text-slate-600 text-base md:text-lg leading-relaxed 
              text-left w-full -ml-20 max-w-xl 
              tracking-wide"
               >
@@ -295,10 +297,10 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full md:w-[68%] h-full flex flex-col justify-center text-left">
+          <div className="w-full md:w-[55%] max-w-lg h-full flex flex-col justify-center text-left">
 
-            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
-              <div className="border-b border-slate-100 pb-3.5 w-full mb-6">
+            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-4 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
+              <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
                   Enterprise Suite
                 </span>
@@ -306,14 +308,13 @@ export default function Home() {
                 <div className="border-t border-slate-300 w-full my-4"></div> */}
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
-                <div className="lg:col-span-2 w-full h-80   text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg">
+                <div className="lg:col-span-1 w-full h-64 text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg rounded-2xl">
                   {/* Deep Glowing Tech Starfield Particles */}
-                  <div className="absolute w-2.5 h-2.5 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
-                  <div className="absolute w-1.5 h-1.5 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
-                  <div className="absolute w-3 h-3 bg-indigo-500/20 rounded-full blur-[1.5px]" style={{ bottom: '10%', left: '75%', animation: 'floatParticle 6s linear infinite', animationDelay: '1.2s' }} />
-                  <div className="absolute w-2 h-2 bg-purple-400/35 rounded-full blur-[1px]" style={{ bottom: '5%', left: '60%', animation: 'floatParticle 4.5s linear infinite', animationDelay: '3.3s' }} />
+                  <div className="absolute w-2 h-2 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
+                  <div className="absolute w-1 h-1 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
+                  <div className="absolute w-2 h-2 bg-indigo-500/20 rounded-full blur-[1.5px]" style={{ bottom: '10%', left: '75%', animation: 'floatParticle 6s linear infinite', animationDelay: '1.2s' }} />
 
                   {/* Glowing Orbit Rings */}
                   <div className="orbit-ring-1 pointer-events-none">
@@ -326,41 +327,41 @@ export default function Home() {
 
 
                   {/* Tech Aura Glow behind Logo */}
-                  <div className="absolute w-36 h-36 bg-blue-500/10 blur-2xl pointer-events-none animate-pulse" />
+                  <div className="absolute w-28 h-28 bg-blue-500/10 blur-xl pointer-events-none animate-pulse" />
 
                   {/* Pulsating Premium Logo Container */}
                   <div className="relative z-10 transition-transform duration-300 hover:scale-105">
-                    <div className="bg-white border border-blue-500/45 w-24 h-24 rounded-3xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
+                    <div className="bg-white border border-blue-500/45 w-20 h-20 rounded-2xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
                       <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/25 via-cyan-500/10 to-transparent pointer-events-none" />
-                      <img src="/logo.png" alt="Beta Logo" className="h-14 w-14 object-contain relative z-10 animate-pulse" />
+                      <img src="/logo.png" alt="Beta Logo" className="h-11 w-11 object-contain relative z-10 animate-pulse" />
                     </div>
                   </div>
                 </div>
 
                 {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
-                <div className="lg:col-span-3 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
+                <div className="lg:col-span-1 flex flex-col gap-3 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-3">
                   {/* BNXmail */}
                   <a
                     href="https://www.bnxmail.com/login"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex flex-col justify-center p-4 rounded-2xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-2"
+                    className="flex-1 flex flex-col justify-center p-3 rounded-xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-1"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       {/* Logo */}
 
-                      <div className="h-20 w-20 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-25 w-25 object-contain" />
+                      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-14 w-14 object-contain" />
                       </div>
 
                       {/* Heading */}
-                      <h4 className="text-base font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                         BNXmail
                       </h4>
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-sm font-medium mt-1">
+                    <p className="text-slate-500 text-[11px] font-medium leading-normal mt-0.5">
                       Real time mail, always <span className="whitespace-nowrap">in sync.</span> “Instant mail, Connected work.”
                     </p>
 
@@ -373,22 +374,22 @@ export default function Home() {
                     href="https://www.cliksbusiness.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex flex-col justify-center p-4 rounded-2xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-2"
+                    className="flex-1 flex flex-col justify-center p-3 rounded-xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-1"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       {/* Logo */}
-                      <div className="h-20 w-20 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-20 w-20 object-contain" />
+                      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-12 w-12 object-contain" />
                       </div>
 
                       {/* Heading */}
-                      <h4 className="text-base font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
                         Cliks Business
                       </h4>
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-sm font-medium mt-1">
+                    <p className="text-slate-500 text-[11px] font-medium leading-normal mt-0.5">
                       "Connecting businesses, creating opportunities, and enabling growth."
                     </p>
                   </a>

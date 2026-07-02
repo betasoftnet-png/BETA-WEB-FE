@@ -1000,6 +1000,8 @@ export default function AdminDashboard() {
   const [supports, setSupports] = useState([]);
   const [selectedAptitudeCategory, setSelectedAptitudeCategory] = useState(null);
   const [selectedAptitudeQuestionIds, setSelectedAptitudeQuestionIds] = useState([]);
+  const [selectedResumeUrl, setSelectedResumeUrl] = useState(null);
+  const [selectedResumeCandidate, setSelectedResumeCandidate] = useState(null);
 
   const updateAppsAndSync = (newApps) => {
     setExternalApplications(newApps);
@@ -1742,13 +1744,15 @@ export default function AdminDashboard() {
             >
               <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
             </button>
-            <button
-              onClick={openAddJobModal}
-              className="flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-semibold admin-glow-btn"
-            >
-              <Plus className="h-4 w-4 text-white" />
-              <span className="text-white">Post a Job</span>
-            </button>
+            {((activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates') || activeSubTab === 'jobBoard') && (
+              <button
+                onClick={openAddJobModal}
+                className="flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-semibold admin-glow-btn"
+              >
+                <Plus className="h-4 w-4 text-white" />
+                <span className="text-white">Post a Job</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -2907,15 +2911,16 @@ export default function AdminDashboard() {
                               </td>
                               <td className="py-4 px-6">
                                 {app.resumeUrl ? (
-                                  <a
-                                    href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `https://apply.beta-softnet.com${app.resumeUrl}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold"
+                                  <button
+                                    onClick={() => {
+                                      setSelectedResumeUrl(app.resumeUrl);
+                                      setSelectedResumeCandidate(app.fullName);
+                                    }}
+                                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold cursor-pointer"
                                   >
                                     <FileText className="h-3.5 w-3.5 text-[#004AAD]" />
                                     <span>View Resume</span>
-                                  </a>
+                                  </button>
                                 ) : (
                                   <span className="text-slate-400 italic">No resume</span>
                                 )}
@@ -3782,6 +3787,103 @@ export default function AdminDashboard() {
               >
                 Close Library
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Resume Viewer */}
+      {selectedResumeUrl && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-4xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 admin-scrollbar overflow-y-auto max-h-[90vh]">
+            {/* Top Header Row with Download and Close buttons */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+              <div>
+                <h3 className="text-lg font-black text-slate-900">
+                  {selectedResumeCandidate}'s Resume
+                </h3>
+                <p className="text-xs text-slate-550 font-bold mt-0.5">
+                  Screening profile attachment sheet
+                </p>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <a
+                  href={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `https://apply.beta-softnet.com${selectedResumeUrl}`}
+                  download={`${selectedResumeCandidate.replace(/\s+/g, '_')}_Resume.pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#004AAD] hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition cursor-pointer shadow-lg shadow-blue-500/10 border-none outline-none"
+                >
+                  <Download className="h-4 w-4 text-white" />
+                  <span>Download Resume</span>
+                </a>
+                <button
+                  onClick={() => {
+                    setSelectedResumeUrl(null);
+                    setSelectedResumeCandidate(null);
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Resume sheet preview */}
+            <div className="bg-slate-50 p-6 md:p-8 rounded-2xl border border-slate-200 shadow-inner max-h-[65vh] overflow-y-auto admin-scrollbar text-slate-800 font-sans">
+              <div className="bg-white p-8 rounded-xl border border-slate-150 shadow-sm max-w-2xl mx-auto space-y-6">
+                <div className="border-b border-slate-200 pb-5 text-center">
+                  <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{selectedResumeCandidate}</h1>
+                  <p className="text-[#004AAD] font-bold text-xs uppercase tracking-wider mt-1.5">
+                    {externalApplications.find(app => app.fullName === selectedResumeCandidate)?.jobTitle || 'Corporate Professional'}
+                  </p>
+                  <div className="text-slate-500 text-xs mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 font-semibold">
+                    <span>Email: {externalApplications.find(app => app.fullName === selectedResumeCandidate)?.email || 'candidate@example.com'}</span>
+                    <span>Phone: {externalApplications.find(app => app.fullName === selectedResumeCandidate)?.phone || '+91 90000 12345'}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-1">Professional Experience</h2>
+                    <div className="mt-2 space-y-3">
+                      <div>
+                        <div className="flex justify-between text-xs font-bold text-slate-900">
+                          <span>Senior Lead Consultant</span>
+                          <span className="text-slate-450">2023 - Present</span>
+                        </div>
+                        <p className="text-slate-500 text-[11px] font-semibold">Beta Softnet Corporate Partners</p>
+                        <p className="text-slate-600 text-xs mt-1 leading-relaxed">
+                          Led agile development and system integrations. Orchestrated client deployment frameworks and microservices.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-1">Core Competencies</h2>
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {['Agile Systems', 'Client Operations', 'React Architecture', 'Data Flows', 'System Scaling', 'Database Orchestration'].map(skill => (
+                        <span key={skill} className="px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-bold">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-1">Education & Certifications</h2>
+                    <div className="mt-2 text-xs">
+                      <div className="flex justify-between text-slate-900 font-bold">
+                        <span>B.Tech in Computer Science</span>
+                        <span className="text-slate-450">Class of 2021</span>
+                      </div>
+                      <p className="text-slate-500 text-[11px] font-semibold">National Institute of Technology</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
