@@ -202,11 +202,17 @@ export default function Home() {
               <Sparkles className="h-3.5 w-3.5" />
               <span>Vision</span>
             </span> */}
-            <h1
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.15, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               style={{ fontFamily: '"Saira Stencil One", sans-serif', color: '#034cacbf' }}
-              className="text-3xl md:text-4xl font-black tracking-tight">
+              className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight cursor-pointer inline-block select-none"
+            >
               BETA
-            </h1>
+            </motion.h1>
 
 
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-blue-700 tracking-tight leading-tight max-w-4xl mx-auto">
@@ -219,10 +225,10 @@ export default function Home() {
 
           </motion.div>
         </div>
-        <div className="w-full px-4 sm:px-6 lg:px-12 flex flex-col md:flex-row items-start md:items-center gap-6 lg:gap-12">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 lg:gap-12">
 
           {/* Left Column: Heading and description */}
-          <div className="w-full md:w-[42%] flex flex-col items-start text-left space-y-6">
+          <div className="w-full md:w-[40%] flex flex-col items-start text-left space-y-6">
 
             <motion.div
               variants={containerVariants}
@@ -243,8 +249,10 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* Right Column: Featured Apps Box */}
-          <div className="w-full md:w-[48%] max-w-xl flex flex-col justify-center text-left">
+          {/* Right Column: Enterprise suite */}
+
+
+          <div className="w-full h-full flex flex-col justify-center text-left">
 
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-3.5 w-full mb-6">
@@ -255,9 +263,9 @@ export default function Home() {
                 <div className="border-t border-slate-300 w-full my-4"></div> */}
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
-                <div className="lg:col-span-3 w-full aspect-square rounded-3xl text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg">
+                <div className="lg:col-span-1 w-full h-80   text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg">
                   {/* Deep Glowing Tech Starfield Particles */}
                   <div className="absolute w-2.5 h-2.5 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
                   <div className="absolute w-1.5 h-1.5 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
@@ -273,12 +281,13 @@ export default function Home() {
                     <div className="orbit-node-3" />
                   </div>
 
+
                   {/* Tech Aura Glow behind Logo */}
-                  <div className="absolute w-36 h-36 bg-blue-500/10 rounded-full blur-2xl pointer-events-none animate-pulse" />
+                  <div className="absolute w-36 h-36 bg-blue-500/10 blur-2xl pointer-events-none animate-pulse" />
 
                   {/* Pulsating Premium Logo Container */}
                   <div className="relative z-10 transition-transform duration-300 hover:scale-105">
-                    <div className="bg-[#020512] border border-blue-500/45 w-24 h-24 rounded-3xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
+                    <div className="bg-white border border-blue-500/45 w-24 h-24 rounded-3xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
                       <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/25 via-cyan-500/10 to-transparent pointer-events-none" />
                       <img src="/logo.png" alt="Beta Logo" className="h-14 w-14 object-contain relative z-10 animate-pulse" />
                     </div>
@@ -286,7 +295,7 @@ export default function Home() {
                 </div>
 
                 {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
-                <div className="lg:col-span-2 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
+                <div className="lg:col-span-1 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
                   {/* BNXmail */}
                   <a
                     href="https://www.bnxmail.com/login"
@@ -296,8 +305,9 @@ export default function Home() {
                   >
                     <div className="flex items-center gap-3">
                       {/* Logo */}
+
                       <div className="h-20 w-20 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-20 w-20 object-contain" />
+                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-25 w-25 object-contain" />
                       </div>
 
                       {/* Heading */}
@@ -307,9 +317,11 @@ export default function Home() {
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-550 text-lg leading-relaxed font-semibold">
-                      Real time mail, always in sync.
+                    <p className="text-slate-500 text-sm font-medium mt-1 whitespace-nowrap">
+                      Real time mail, always <span className="whitespace-nowrap">in sync.</span>
                     </p>
+
+
 
                   </a>
 
@@ -333,7 +345,7 @@ export default function Home() {
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-550 text-lg leading-relaxed font-semibold">
+                    <p className="text-slate-500 text-sm font-medium mt-1 whitespace-nowrap">
                       Work together, faster.
                     </p>
                   </a>

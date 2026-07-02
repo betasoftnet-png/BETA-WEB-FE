@@ -336,7 +336,10 @@ export default function Navbar() {
                                     </div>
                                   )}
                                 </td>
-                                <td className="py-3 px-6 align-top w-2/5 border-r border-slate-200">
+                                <td
+                                  colSpan={activeCategory === 'comingsoon' ? 2 : 1}
+                                  className={`py-3 px-6 align-top ${activeCategory === 'comingsoon' ? 'w-4/5' : 'w-2/5 border-r border-slate-200'}`}
+                                >
                                   {/* Public Products */}
                                   {isDropdownPublicOpen && (
                                     <div className="flex flex-col gap-3 pt-1 pb-1">
@@ -446,27 +449,29 @@ export default function Navbar() {
                                     </div>
                                   )}
                                 </td>
-                                <td className="py-3 pl-4 pr-6 align-top w-2/5">
-                                  {/* Business Products */}
-                                  {isDropdownBusinessOpen && activeCategory === 'base' && (
-                                    <div className="flex flex-col gap-3 pt-1 pb-1 animate-fadeIn">
-                                      <a
-                                        href="https://www.cliksbusiness.com/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
-                                      >
-                                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                          <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
-                                        </div>
-                                        <div>
-                                          <p className="font-semibold text-slate-800 text-xs">CliksBusiness</p>
-                                          <p className="text-[10px] text-slate-450 font-medium">Work together, faster</p>
-                                        </div>
-                                      </a>
-                                    </div>
-                                  )}
-                                </td>
+                                {activeCategory === 'base' && (
+                                  <td className="py-3 pl-4 pr-6 align-top w-2/5">
+                                    {/* Business Products */}
+                                    {isDropdownBusinessOpen && (
+                                      <div className="flex flex-col gap-3 pt-1 pb-1 animate-fadeIn">
+                                        <a
+                                          href="https://www.cliksbusiness.com/"
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                        >
+                                          <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                            <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
+                                          </div>
+                                          <div>
+                                            <p className="font-semibold text-slate-800 text-xs">CliksBusiness</p>
+                                            <p className="text-[10px] text-slate-450 font-medium">Work together, faster</p>
+                                          </div>
+                                        </a>
+                                      </div>
+                                    )}
+                                  </td>
+                                )}
                               </tr>
                               {/* Row 2: Beta Ecosystem footer bar */}
                               <tr className="border-t border-slate-200">
