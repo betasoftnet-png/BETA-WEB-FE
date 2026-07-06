@@ -1073,7 +1073,7 @@ export default function AdminDashboard() {
     setError('');
     try {
       const [jobsRes, appsRes] = await Promise.all([
-        axios.get('https://apply.beta-softnet.com/api/jobs'),
+        axios.get('http://localhost:8080/api/jobs'),
         axios.get('https://apply.beta-softnet.com/api/applications')
       ]);
       setExternalJobs(jobsRes.data.data || jobsRes.data || []);
@@ -1301,10 +1301,10 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       if (editingJob) {
-        await axios.put(`https://apply.beta-softnet.com/api/jobs/${editingJob.id}`, payload);
+        await axios.put(`http://localhost:8080/api/jobs/${editingJob.id}`, payload);
         setSuccess('Job opening updated successfully.');
       } else {
-        await axios.post('https://apply.beta-softnet.com/api/jobs', payload);
+        await axios.post('http://localhost:8080/api/jobs', payload);
         setSuccess('Job opening posted successfully.');
       }
       setIsJobModalOpen(false);
@@ -1323,7 +1323,7 @@ export default function AdminDashboard() {
     setSuccess('');
     try {
       setLoading(true);
-      await axios.delete(`https://apply.beta-softnet.com/api/jobs/${id}`);
+      await axios.delete(`http://localhost:8080/api/jobs/${id}`);
       setSuccess('Job opening deleted successfully.');
       fetchData();
     } catch (err) {
@@ -1711,7 +1711,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center space-x-2 px-3 py-1 text-[9px] font-bold text-slate-550 uppercase tracking-wider">
                   <span>Round 1</span>
                 </div>
-                
+
                 <div className="pl-3 space-y-1 mt-1 border-l border-slate-800/60 ml-3.5">
                   {[
                     { key: 'Round 1 Aptitude', label: 'Stage 1 Aptitude' },
