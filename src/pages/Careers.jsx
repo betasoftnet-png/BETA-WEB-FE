@@ -25,9 +25,11 @@ import api from '../api';
 
 
 
-const JOB_BOARD_API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:5000'
-  : 'https://apply.beta-softnet.com';
+const JOB_BOARD_API_BASE =
+  window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8080'
+    : 'https://apply.beta-softnet.com';
 
 const benefits = [
   { emoji: '💰', title: 'Bonus', desc: 'Competitive base package with performance bonuses tied to milestones.' },
