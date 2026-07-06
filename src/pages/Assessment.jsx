@@ -136,11 +136,25 @@ export default function Assessment() {
       const apps = JSON.parse(storedApps);
       const updated = apps.map(app => {
         if (app.id === candidateId) {
-          return {
-            ...app,
-            aptitudeStatus: 'Completed',
-            aptitudeScore: calculatedScore
-          };
+          if (app.status === 'Round 1 Technical') {
+            return {
+              ...app,
+              technicalStatus: 'Completed',
+              technicalScore: calculatedScore
+            };
+          } else if (app.status === 'Round 2 Brand Awareness') {
+            return {
+              ...app,
+              brandStatus: 'Completed',
+              brandScore: calculatedScore
+            };
+          } else {
+            return {
+              ...app,
+              aptitudeStatus: 'Completed',
+              aptitudeScore: calculatedScore
+            };
+          }
         }
         return app;
       });
@@ -208,7 +222,11 @@ export default function Assessment() {
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-xs font-bold text-[#004AAD] uppercase tracking-wider">
               <Brain className="h-4 w-4" />
-              <span>Round 1: Aptitude Screening</span>
+              <span>
+                {candidate?.status === 'Round 1 Technical' ? 'Round 2: Technical Challenge' :
+                 candidate?.status === 'Round 2 Brand Awareness' ? 'Round 3: Brand Awareness Evaluation' :
+                 'Round 1: Aptitude Screening'}
+              </span>
             </div>
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">{candidateName}</h1>
             <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{jobTitle}</p>
@@ -252,15 +270,22 @@ export default function Assessment() {
                   {q.description}
                 </p>
 
+                {q.codeSnippet && (
+                  <div className="bg-[#0f172a] text-slate-350 font-mono text-[11px] rounded-lg p-4 overflow-x-auto whitespace-pre leading-relaxed border border-slate-900 shadow-inner">
+                    {q.codeSnippet}
+                  </div>
+                )}
+
                 {/* Text answer input box */}
                 <div className="pt-2">
                   <label className="text-[10px] uppercase tracking-wider font-bold text-slate-450 block mb-1.5">Your Response:</label>
                   <textarea
-                    rows={3}
+                    rows={q.codeSnippet ? 10 : 3}
                     value={answers[q.id] || ''}
                     onChange={(e) => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
-                    placeholder="Type your final calculated answer, reasoning, or response here..."
-                    className="w-full border border-slate-200 rounded-xl py-3.5 px-4 focus:outline-none focus:border-[#004AAD] text-xs font-semibold bg-slate-50/50 transition duration-200"
+                    placeholder={q.codeSnippet ? "Write your code, solution, or implementation here..." : "Type your final calculated answer, reasoning, or response here..."}
+                    className="w-full border border-slate-200 rounded-xl py-3.5 px-4 focus:outline-none focus:border-[#004AAD] text-xs font-semibold bg-slate-50/50 transition duration-250 font-mono"
+                    style={q.codeSnippet ? { fontFamily: 'Consolas, Monaco, monospace' } : {}}
                   />
                 </div>
               </div>

@@ -15,8 +15,8 @@ const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
   if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Candidates';
   if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 Aptitude';
-  if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 2 Technical';
-  if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 3 Brand Awareness';
+  if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 1 Technical';
+  if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 2 Brand Awareness';
   if (s === 'shortlisted') return 'Shortlisted';
   if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
   if (s === 'approved' || s === 'selected') return 'Selected';
@@ -123,7 +123,7 @@ const fallbackApps = [
     phone: '+91 95432 10987',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'React expert focusing on clean UI rendering.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'React Developer',
     jobDepartment: 'Engineering',
@@ -137,7 +137,7 @@ const fallbackApps = [
     phone: '+91 95432 10988',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'UI developer specialized in HTML5, CSS3, and responsive design systems.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'UI Developer',
     jobDepartment: 'Engineering',
@@ -151,7 +151,7 @@ const fallbackApps = [
     phone: '+91 95432 10989',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Frontend developer focusing on React and Redux architectures.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'React Developer',
     jobDepartment: 'Engineering',
@@ -165,7 +165,7 @@ const fallbackApps = [
     phone: '+91 95432 10990',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'High-end UI design systems builder.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'UI/UX Designer & Developer',
     jobDepartment: 'Engineering',
@@ -179,7 +179,7 @@ const fallbackApps = [
     phone: '+91 95432 10991',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'React framework expert with state handling experience.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'React Developer',
     jobDepartment: 'Engineering',
@@ -193,7 +193,7 @@ const fallbackApps = [
     phone: '+91 95432 10992',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'CSS, layout design, and design system focus.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'UI Developer',
     jobDepartment: 'Engineering',
@@ -207,7 +207,7 @@ const fallbackApps = [
     phone: '+91 95432 10993',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'React Hooks and context provider developer.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'React Developer',
     jobDepartment: 'Engineering',
@@ -221,7 +221,7 @@ const fallbackApps = [
     phone: '+91 95432 10994',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'CSS keyframe details and transitions.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'UI Developer',
     jobDepartment: 'Engineering',
@@ -235,7 +235,7 @@ const fallbackApps = [
     phone: '+91 95432 10995',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'React applications modular setups.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'React Developer',
     jobDepartment: 'Engineering',
@@ -249,7 +249,7 @@ const fallbackApps = [
     phone: '+91 95432 10996',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Clean CSS systems builder.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'UI Developer',
     jobDepartment: 'Engineering',
@@ -263,7 +263,7 @@ const fallbackApps = [
     phone: '+91 95432 10997',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Advanced React component patterns.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'React Developer',
     jobDepartment: 'Engineering',
@@ -277,7 +277,7 @@ const fallbackApps = [
     phone: '+91 95432 10998',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'UI focus, performance scoring developer.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'UI Developer',
     jobDepartment: 'Engineering',
@@ -293,7 +293,7 @@ const fallbackApps = [
     phone: '+91 84321 09876',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Java Developer focused on core optimization.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Java Developer',
     jobDepartment: 'Engineering',
@@ -307,7 +307,7 @@ const fallbackApps = [
     phone: '+91 73210 98765',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Spring Boot REST microservices specialist.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Spring Boot Developer',
     jobDepartment: 'Engineering',
@@ -321,7 +321,7 @@ const fallbackApps = [
     phone: '+91 62109 87654',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Node.js/Express backend architect.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Node.js Developer',
     jobDepartment: 'Engineering',
@@ -335,7 +335,7 @@ const fallbackApps = [
     phone: '+91 51098 76543',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Python/Django backend developer.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Python Developer',
     jobDepartment: 'Engineering',
@@ -349,7 +349,7 @@ const fallbackApps = [
     phone: '+91 84321 09877',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Core Java specialist.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Java Developer',
     jobDepartment: 'Engineering',
@@ -363,7 +363,7 @@ const fallbackApps = [
     phone: '+91 84321 09878',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Node/Koa/Express coder.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Node.js Developer',
     jobDepartment: 'Engineering',
@@ -377,7 +377,7 @@ const fallbackApps = [
     phone: '+91 84321 09879',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Python scripts, Django security.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Python Developer',
     jobDepartment: 'Engineering',
@@ -391,7 +391,7 @@ const fallbackApps = [
     phone: '+91 84321 09880',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Java concurrency and threading Developer.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Java Developer',
     jobDepartment: 'Engineering',
@@ -407,7 +407,7 @@ const fallbackApps = [
     phone: '+91 30987 54322',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Senior React/Node systems engineer.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Senior Full Stack Engineer',
     jobDepartment: 'Engineering',
@@ -421,7 +421,7 @@ const fallbackApps = [
     phone: '+91 30987 54323',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'MERN stack specialist.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Senior Full Stack Engineer',
     jobDepartment: 'Engineering',
@@ -435,7 +435,7 @@ const fallbackApps = [
     phone: '+91 30987 54324',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Full stack web architectures.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Senior Full Stack Engineer',
     jobDepartment: 'Engineering',
@@ -449,7 +449,7 @@ const fallbackApps = [
     phone: '+91 30987 54325',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'React, Node, Postgres architect.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Senior Full Stack Engineer',
     jobDepartment: 'Engineering',
@@ -463,7 +463,7 @@ const fallbackApps = [
     phone: '+91 30987 54326',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'MERN stack coding.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'Senior Full Stack Engineer',
     jobDepartment: 'Engineering',
@@ -479,7 +479,7 @@ const fallbackApps = [
     phone: '+91 40987 65432',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Selenium and Cypress test structures.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'QA Automation Engineer',
     jobDepartment: 'Engineering',
@@ -493,7 +493,7 @@ const fallbackApps = [
     phone: '+91 40987 65433',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Integration testing developer.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'QA Automation Engineer',
     jobDepartment: 'Engineering',
@@ -507,7 +507,7 @@ const fallbackApps = [
     phone: '+91 40987 65434',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Automation suite builder.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'QA Automation Engineer',
     jobDepartment: 'Engineering',
@@ -521,7 +521,7 @@ const fallbackApps = [
     phone: '+91 40987 65435',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'API load and automation tests.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'QA Automation Engineer',
     jobDepartment: 'Engineering',
@@ -537,7 +537,7 @@ const fallbackApps = [
     phone: '+91 30987 54321',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Docker, AWS deployments, Kubernetes.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'DevOps Cloud Engineer',
     jobDepartment: 'Engineering',
@@ -551,7 +551,7 @@ const fallbackApps = [
     phone: '+91 30987 54327',
     resumeUrl: '/mock_resume.pdf',
     coverLetter: 'Linux kernel deployments, systems optimization.',
-    status: 'Round 2 Technical',
+    status: 'Round 1 Technical',
     createdAt: new Date().toISOString(),
     jobTitle: 'DevOps Cloud Engineer',
     jobDepartment: 'Engineering',
@@ -560,41 +560,41 @@ const fallbackApps = [
   },
 
   // Round 3 - Brand Awareness (BNX Mail - 12)
-  { id: 'r3-bm-1', fullName: 'Lucas Scott', email: 'lucas.s@example.com', phone: '+91 91111 22221', resumeUrl: '/mock_resume.pdf', coverLetter: 'Email advocate.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bm-2', fullName: 'Nathan Scott', email: 'nathan.s@example.com', phone: '+91 91111 22222', resumeUrl: '/mock_resume.pdf', coverLetter: 'SMTP expert.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-bm-3', fullName: 'Haley James', email: 'haley.j@example.com', phone: '+91 91111 22223', resumeUrl: '/mock_resume.pdf', coverLetter: 'Customer messaging.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-bm-4', fullName: 'Peyton Sawyer', email: 'peyton.s@example.com', phone: '+91 91111 22224', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand PR.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bm-5', fullName: 'Brooke Davis', email: 'brooke.d@example.com', phone: '+91 91111 22225', resumeUrl: '/mock_resume.pdf', coverLetter: 'Product placement.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
-  { id: 'r3-bm-6', fullName: 'Dan Scott', email: 'dan.s@example.com', phone: '+91 91111 22226', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise outreach.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '8 Years' },
-  { id: 'r3-bm-7', fullName: 'Mouth McFadden', email: 'mouth.m@example.com', phone: '+91 91111 22227', resumeUrl: '/mock_resume.pdf', coverLetter: 'Communications expert.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bm-8', fullName: 'Skills Taylor', email: 'skills.t@example.com', phone: '+91 91111 22228', resumeUrl: '/mock_resume.pdf', coverLetter: 'Promotions lead.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-bm-9', fullName: 'Keith Scott', email: 'keith.s@example.com', phone: '+91 91111 22229', resumeUrl: '/mock_resume.pdf', coverLetter: 'CTO engagement.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-bm-10', fullName: 'Karen Roe', email: 'karen.r@example.com', phone: '+91 91111 22230', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand design.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-bm-11', fullName: 'Whitey Durham', email: 'whitey.d@example.com', phone: '+91 91111 22231', resumeUrl: '/mock_resume.pdf', coverLetter: 'Branding legacy.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '12 Years' },
-  { id: 'r3-bm-12', fullName: 'Deb Scott', email: 'deb.s@example.com', phone: '+91 91111 22232', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise outreach.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
+  { id: 'r3-bm-1', fullName: 'Lucas Scott', email: 'lucas.s@example.com', phone: '+91 91111 22221', resumeUrl: '/mock_resume.pdf', coverLetter: 'Email advocate.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bm-2', fullName: 'Nathan Scott', email: 'nathan.s@example.com', phone: '+91 91111 22222', resumeUrl: '/mock_resume.pdf', coverLetter: 'SMTP expert.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-bm-3', fullName: 'Haley James', email: 'haley.j@example.com', phone: '+91 91111 22223', resumeUrl: '/mock_resume.pdf', coverLetter: 'Customer messaging.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-bm-4', fullName: 'Peyton Sawyer', email: 'peyton.s@example.com', phone: '+91 91111 22224', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand PR.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bm-5', fullName: 'Brooke Davis', email: 'brooke.d@example.com', phone: '+91 91111 22225', resumeUrl: '/mock_resume.pdf', coverLetter: 'Product placement.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
+  { id: 'r3-bm-6', fullName: 'Dan Scott', email: 'dan.s@example.com', phone: '+91 91111 22226', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise outreach.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '8 Years' },
+  { id: 'r3-bm-7', fullName: 'Mouth McFadden', email: 'mouth.m@example.com', phone: '+91 91111 22227', resumeUrl: '/mock_resume.pdf', coverLetter: 'Communications expert.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bm-8', fullName: 'Skills Taylor', email: 'skills.t@example.com', phone: '+91 91111 22228', resumeUrl: '/mock_resume.pdf', coverLetter: 'Promotions lead.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-bm-9', fullName: 'Keith Scott', email: 'keith.s@example.com', phone: '+91 91111 22229', resumeUrl: '/mock_resume.pdf', coverLetter: 'CTO engagement.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-bm-10', fullName: 'Karen Roe', email: 'karen.r@example.com', phone: '+91 91111 22230', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand design.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-bm-11', fullName: 'Whitey Durham', email: 'whitey.d@example.com', phone: '+91 91111 22231', resumeUrl: '/mock_resume.pdf', coverLetter: 'Branding legacy.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '12 Years' },
+  { id: 'r3-bm-12', fullName: 'Deb Scott', email: 'deb.s@example.com', phone: '+91 91111 22232', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise outreach.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
 
   // Cliks Business - 8
-  { id: 'r3-cb-1', fullName: 'Julian Baker', email: 'julian.b@example.com', phone: '+91 92222 33331', resumeUrl: '/mock_resume.pdf', coverLetter: 'SaaS pitch.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-cb-2', fullName: 'Clay Evans', email: 'clay.e@example.com', phone: '+91 92222 33332', resumeUrl: '/mock_resume.pdf', coverLetter: 'Acquisition strategy.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-cb-3', fullName: 'Quinn James', email: 'quinn.j@example.com', phone: '+91 92222 33333', resumeUrl: '/mock_resume.pdf', coverLetter: 'Workflow design.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-cb-4', fullName: 'Chase Adams', email: 'chase.a@example.com', phone: '+91 92222 33334', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise licensing.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-cb-5', fullName: 'Chris Keller', email: 'chris.k@example.com', phone: '+91 92222 33335', resumeUrl: '/mock_resume.pdf', coverLetter: 'Client outreach.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
-  { id: 'r3-cb-6', fullName: 'Mia Catalano', email: 'mia.c@example.com', phone: '+91 92222 33336', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand messaging.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' },
-  { id: 'r3-cb-7', fullName: 'Alex Dupre', email: 'alex.d@example.com', phone: '+91 92222 33337', resumeUrl: '/mock_resume.pdf', coverLetter: 'Product demos.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-cb-8', fullName: 'Victoria Davis', email: 'victoria.d@example.com', phone: '+91 92222 33338', resumeUrl: '/mock_resume.pdf', coverLetter: 'Executive relations.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '7 Years' },
+  { id: 'r3-cb-1', fullName: 'Julian Baker', email: 'julian.b@example.com', phone: '+91 92222 33331', resumeUrl: '/mock_resume.pdf', coverLetter: 'SaaS pitch.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-cb-2', fullName: 'Clay Evans', email: 'clay.e@example.com', phone: '+91 92222 33332', resumeUrl: '/mock_resume.pdf', coverLetter: 'Acquisition strategy.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-cb-3', fullName: 'Quinn James', email: 'quinn.j@example.com', phone: '+91 92222 33333', resumeUrl: '/mock_resume.pdf', coverLetter: 'Workflow design.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-cb-4', fullName: 'Chase Adams', email: 'chase.a@example.com', phone: '+91 92222 33334', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise licensing.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-cb-5', fullName: 'Chris Keller', email: 'chris.k@example.com', phone: '+91 92222 33335', resumeUrl: '/mock_resume.pdf', coverLetter: 'Client outreach.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
+  { id: 'r3-cb-6', fullName: 'Mia Catalano', email: 'mia.c@example.com', phone: '+91 92222 33336', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand messaging.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' },
+  { id: 'r3-cb-7', fullName: 'Alex Dupre', email: 'alex.d@example.com', phone: '+91 92222 33337', resumeUrl: '/mock_resume.pdf', coverLetter: 'Product demos.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-cb-8', fullName: 'Victoria Davis', email: 'victoria.d@example.com', phone: '+91 92222 33338', resumeUrl: '/mock_resume.pdf', coverLetter: 'Executive relations.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '7 Years' },
 
   // Company Core Values - 5
-  { id: 'r3-bs-1', fullName: 'Rachel Gatina', email: 'rachel.g@example.com', phone: '+91 93333 44441', resumeUrl: '/mock_resume.pdf', coverLetter: 'Values advocate.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bs-2', fullName: 'Bevin Mirskey', email: 'bevin.m@example.com', phone: '+91 93333 44442', resumeUrl: '/mock_resume.pdf', coverLetter: 'Corporate communication.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-bs-3', fullName: 'Cooper Lee', email: 'cooper.l@example.com', phone: '+91 93333 44443', resumeUrl: '/mock_resume.pdf', coverLetter: 'Ethics strategy.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
-  { id: 'r3-bs-4', fullName: 'Gigi Silveri', email: 'gigi.s@example.com', phone: '+91 93333 44444', resumeUrl: '/mock_resume.pdf', coverLetter: 'Identity alignment.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bs-5', fullName: 'Shelly Simon', email: 'shelly.s@example.com', phone: '+91 93333 44445', resumeUrl: '/mock_resume.pdf', coverLetter: 'Corporate culture.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-bs-1', fullName: 'Rachel Gatina', email: 'rachel.g@example.com', phone: '+91 93333 44441', resumeUrl: '/mock_resume.pdf', coverLetter: 'Values advocate.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bs-2', fullName: 'Bevin Mirskey', email: 'bevin.m@example.com', phone: '+91 93333 44442', resumeUrl: '/mock_resume.pdf', coverLetter: 'Corporate communication.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-bs-3', fullName: 'Cooper Lee', email: 'cooper.l@example.com', phone: '+91 93333 44443', resumeUrl: '/mock_resume.pdf', coverLetter: 'Ethics strategy.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
+  { id: 'r3-bs-4', fullName: 'Gigi Silveri', email: 'gigi.s@example.com', phone: '+91 93333 44444', resumeUrl: '/mock_resume.pdf', coverLetter: 'Identity alignment.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-bs-5', fullName: 'Shelly Simon', email: 'shelly.s@example.com', phone: '+91 93333 44445', resumeUrl: '/mock_resume.pdf', coverLetter: 'Corporate culture.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
 
   // Public Relations - 4
-  { id: 'r3-cr-1', fullName: 'Millicent Huxtable', email: 'millie.h@example.com', phone: '+91 94444 55551', resumeUrl: '/mock_resume.pdf', coverLetter: 'PR strategist.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-cr-2', fullName: 'Chuck Scolnik', email: 'chuck.s@example.com', phone: '+91 94444 55552', resumeUrl: '/mock_resume.pdf', coverLetter: 'Media outreach.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-cr-3', fullName: 'Marvin McFadden', email: 'marvin.m@example.com', phone: '+91 94444 55553', resumeUrl: '/mock_resume.pdf', coverLetter: 'Event branding.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-cr-4', fullName: 'Mouth McFadden Jr', email: 'mouth.jr@example.com', phone: '+91 94444 55554', resumeUrl: '/mock_resume.pdf', coverLetter: 'Social channels.', status: 'Round 3 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' }
+  { id: 'r3-cr-1', fullName: 'Millicent Huxtable', email: 'millie.h@example.com', phone: '+91 94444 55551', resumeUrl: '/mock_resume.pdf', coverLetter: 'PR strategist.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
+  { id: 'r3-cr-2', fullName: 'Chuck Scolnik', email: 'chuck.s@example.com', phone: '+91 94444 55552', resumeUrl: '/mock_resume.pdf', coverLetter: 'Media outreach.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
+  { id: 'r3-cr-3', fullName: 'Marvin McFadden', email: 'marvin.m@example.com', phone: '+91 94444 55553', resumeUrl: '/mock_resume.pdf', coverLetter: 'Event branding.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
+  { id: 'r3-cr-4', fullName: 'Mouth McFadden Jr', email: 'mouth.jr@example.com', phone: '+91 94444 55554', resumeUrl: '/mock_resume.pdf', coverLetter: 'Social channels.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' }
 ];
 
 const technicalQuestionsData = [
@@ -1000,6 +1000,7 @@ export default function AdminDashboard() {
   const [supports, setSupports] = useState([]);
   const [selectedAptitudeCategory, setSelectedAptitudeCategory] = useState(null);
   const [selectedAptitudeQuestionIds, setSelectedAptitudeQuestionIds] = useState([]);
+  const [selectedTechnicalQuestionIds, setSelectedTechnicalQuestionIds] = useState([]);
   const [selectedResumeUrl, setSelectedResumeUrl] = useState(null);
   const [selectedResumeCandidate, setSelectedResumeCandidate] = useState(null);
 
@@ -1404,6 +1405,47 @@ export default function AdminDashboard() {
     setTimeout(() => setSuccess(''), 4000);
   };
 
+  const handleAssignTechnicalQuestions = async (appId) => {
+    const candidate = externalApplications.find(app => app.id === appId);
+    if (!candidate) return;
+
+    if (selectedTechnicalQuestionIds.length === 0) {
+      alert('Please select at least one question first!');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    const assignedKey = `assessment_questions_${appId}`;
+    const selectedQuestions = technicalQuestionsData
+      .filter(q => q.category === selectedDomainTab)
+      .filter(q => selectedTechnicalQuestionIds.includes(q.id));
+
+    try {
+      await axios.put(`https://apply.beta-softnet.com/api/applications/${appId}/questions`, {
+        questions: selectedQuestions
+      });
+      setSuccess(`Technical assessment successfully sent to ${candidate.fullName}.`);
+    } catch (err) {
+      console.warn('API assignment failed, falling back to local simulation:', err);
+      setSuccess(`Technical assessment successfully sent to ${candidate.fullName}. (Simulated API update)`);
+    } finally {
+      localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
+      localStorage.removeItem(`assessment_answers_${appId}`);
+
+      const updatedApps = externalApplications.map(app =>
+        app.id === appId ? { ...app, technicalStatus: 'Assessment Sent' } : app
+      );
+      updateAppsAndSync(updatedApps);
+
+      setSelectedTechnicalQuestionIds([]);
+      setLoading(false);
+      setTimeout(() => setSuccess(''), 4000);
+    }
+  };
+
   const handleUpdateStatus = async (appId, newStatus) => {
     if (newStatus === 'Rejected') {
       if (!window.confirm('Are you sure you want to reject this candidate?')) return;
@@ -1714,8 +1756,8 @@ export default function AdminDashboard() {
 
                 <div className="pl-3 space-y-1 mt-1 border-l border-slate-800/60 ml-3.5">
                   {[
-                    { key: 'Round 2 Technical', label: 'Stage 2 Technical' },
-                    { key: 'Round 3 Brand Awareness', label: 'Stage 3 Brand Awareness' }
+                    { key: 'Round 1 Technical', label: 'Stage 1 Technical' },
+                    { key: 'Round 2 Brand Awareness', label: 'Stage 2 Brand Awareness' }
                   ].map((stage) => {
                     const isActive = activeSubTab === 'appsList' && selectedStatusFilter === stage.key;
                     const count = externalApplications.filter(app => app.status === stage.key).length;
@@ -1907,7 +1949,7 @@ export default function AdminDashboard() {
         ) : (
           <div className="space-y-6">
             {/* Sub Tab Controls */}
-            {selectedStatusFilter !== 'Round 1 Aptitude' && selectedStatusFilter !== 'Round 2 Technical' && selectedStatusFilter !== 'Round 3 Brand Awareness' && activeSubTab !== 'partnerships' && activeSubTab !== 'support' && (
+            {selectedStatusFilter !== 'Round 1 Aptitude' && selectedStatusFilter !== 'Round 1 Technical' && selectedStatusFilter !== 'Round 2 Brand Awareness' && activeSubTab !== 'partnerships' && activeSubTab !== 'support' && (
               <div className="flex space-x-6 border-b border-slate-200 pb-3">
                 <button
                   onClick={() => setActiveSubTab('jobsList')}
@@ -2331,7 +2373,7 @@ export default function AdminDashboard() {
                     </div>
                   )}
                 </div>
-              ) : selectedStatusFilter === 'Round 2 Technical' ? (
+              ) : selectedStatusFilter === 'Round 1 Technical' ? (
                 <div className="space-y-6 animate-fadeIn">
                   {/* Local Tabs for Dashboard vs Questions */}
                   <div className="flex space-x-6 border-b border-slate-200 pb-3">
@@ -2365,7 +2407,7 @@ export default function AdminDashboard() {
 
                       {/* Metrics Cards Row */}
                       {(() => {
-                        const r2Apps = externalApplications.filter(app => app.status === 'Round 2 Technical');
+                        const r2Apps = externalApplications.filter(app => app.status === 'Round 1 Technical');
                         const getCount = (keywords) => r2Apps.filter(app =>
                           keywords.some(kw => (app.jobTitle || '').toLowerCase().includes(kw))
                         ).length;
@@ -2448,7 +2490,7 @@ export default function AdminDashboard() {
 
                         {/* Filtered Candidate Table */}
                         {(() => {
-                          const r2Apps = externalApplications.filter(app => app.status === 'Round 2 Technical');
+                          const r2Apps = externalApplications.filter(app => app.status === 'Round 1 Technical');
 
                           const filteredApps = r2Apps.filter(app => {
                             const title = (app.jobTitle || '').toLowerCase();
@@ -2471,6 +2513,7 @@ export default function AdminDashboard() {
                                     <th className="py-3 px-4 font-bold">Position</th>
                                     <th className="py-3 px-4 font-bold">Email</th>
                                     <th className="py-3 px-4 font-bold">Experience</th>
+                                    <th className="py-3 px-4 font-bold">Status</th>
                                     <th className="py-3 px-4 font-bold">Action</th>
                                   </tr>
                                 </thead>
@@ -2484,6 +2527,15 @@ export default function AdminDashboard() {
                                         {app.experience || '3 Years'}
                                       </td>
                                       <td className="py-3.5 px-4">
+                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                          app.technicalStatus === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-250' :
+                                          app.technicalStatus === 'Assessment Sent' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                                          'bg-amber-50 text-amber-700 border border-amber-200'
+                                        }`}>
+                                          {app.technicalStatus || 'Pending'}
+                                        </span>
+                                      </td>
+                                      <td className="py-3.5 px-4">
                                         <button
                                           onClick={() => setSelectedApplication(app)}
                                           className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-[#004AAD] hover:text-[#003882] rounded-lg font-bold transition text-[11px] cursor-pointer"
@@ -2495,7 +2547,7 @@ export default function AdminDashboard() {
                                   ))}
                                   {filteredApps.length === 0 && (
                                     <tr>
-                                      <td colSpan={5} className="py-8 text-center text-slate-400 italic">
+                                      <td colSpan={6} className="py-8 text-center text-slate-400 italic">
                                         No candidates found for {selectedDomainTab} in Round 2 Technical.
                                       </td>
                                     </tr>
@@ -2599,39 +2651,119 @@ export default function AdminDashboard() {
                         <div className="mb-6 flex items-center justify-between">
                           <div className="text-left">
                             <h3 className="text-base font-bold text-slate-900">Assessment challenges: {selectedDomainTab}</h3>
-                            <p className="text-slate-450 text-xs mt-0.5 font-semibold">Coding problems presented to candidates during technical evaluation</p>
+                            <p className="text-slate-455 text-xs mt-0.5 font-semibold">Coding problems presented to candidates during technical evaluation</p>
                           </div>
+                          {technicalQuestionsData.filter(q => q.category === selectedDomainTab).length > 0 && (
+                            <button
+                              onClick={() => {
+                                const allIds = technicalQuestionsData.filter(q => q.category === selectedDomainTab).map(q => q.id);
+                                const allSelected = allIds.every(id => selectedTechnicalQuestionIds.includes(id));
+                                if (allSelected) {
+                                  setSelectedTechnicalQuestionIds(prev => prev.filter(id => !allIds.includes(id)));
+                                } else {
+                                  setSelectedTechnicalQuestionIds(prev => [...new Set([...prev, ...allIds])]);
+                                }
+                              }}
+                              className="px-3.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-[10px] font-bold text-slate-655 transition cursor-pointer"
+                            >
+                              {technicalQuestionsData.filter(q => q.category === selectedDomainTab).map(q => q.id).every(id => selectedTechnicalQuestionIds.includes(id)) ? 'Deselect All' : 'Select All'}
+                            </button>
+                          )}
                         </div>
+
+                        {selectedTechnicalQuestionIds.length > 0 && (
+                          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fadeIn text-xs font-bold text-slate-705 text-left">
+                            <div className="space-y-1">
+                              <span className="text-[#004AAD] font-extrabold text-sm block">
+                                {selectedTechnicalQuestionIds.length} Technical Challenge(s) Selected
+                              </span>
+                              <p className="text-[10px] text-slate-500 font-semibold">
+                                Select a candidate from the Technical Round pipeline to assign these coding challenges.
+                              </p>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-3">
+                              <select
+                                id="tech-candidate-select"
+                                className="bg-white border border-slate-300 rounded-xl py-2 px-3 focus:outline-none text-xs transition cursor-pointer font-bold text-slate-700 min-w-[200px]"
+                              >
+                                <option value="">Choose Candidate...</option>
+                                {externalApplications
+                                  .filter(app => app.status === 'Round 1 Technical')
+                                  .map(app => (
+                                    <option key={app.id} value={app.id}>
+                                      {app.fullName} ({app.jobTitle})
+                                    </option>
+                                  ))}
+                              </select>
+                              <button
+                                onClick={async () => {
+                                  const selectEl = document.getElementById('tech-candidate-select');
+                                  const candidateId = selectEl ? selectEl.value : '';
+                                  if (!candidateId) {
+                                    alert('Please choose a candidate first!');
+                                    return;
+                                  }
+                                  await handleAssignTechnicalQuestions(candidateId);
+                                }}
+                                className="bg-[#004AAD] hover:bg-[#003c8f] text-white font-bold py-2 px-4 rounded-xl text-xs shadow-sm transition duration-200 cursor-pointer border-none outline-none"
+                              >
+                                Send to Candidate
+                              </button>
+                              <button
+                                onClick={() => setSelectedTechnicalQuestionIds([])}
+                                className="bg-white hover:bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs border border-slate-250 transition duration-200 cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
 
                         <div className="space-y-4">
                           {technicalQuestionsData
                             .filter(q => q.category === selectedDomainTab)
                             .map((question, idx) => (
-                              <div key={question.id} className="border border-slate-200 rounded-xl p-5 hover:border-slate-350 transition-colors text-left bg-slate-50/20">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                                    <span className="h-5 w-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
-                                      {idx + 1}
-                                    </span>
-                                    {question.title}
-                                  </h4>
-                                  <div className="flex items-center gap-2">
-                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
-                                      question.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-250' :
-                                        'bg-rose-50 text-rose-700 border-rose-250'
-                                      }`}>
-                                      {question.difficulty}
-                                    </span>
-                                    <span className="text-[10px] text-slate-400 font-semibold">{question.time} limit</span>
-                                  </div>
+                              <div key={question.id} className="border border-slate-200 rounded-xl p-5 hover:border-slate-350 transition-colors text-left bg-slate-50/20 flex items-start gap-4">
+                                <div className="pt-1">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedTechnicalQuestionIds.includes(question.id)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedTechnicalQuestionIds(prev => [...prev, question.id]);
+                                      } else {
+                                        setSelectedTechnicalQuestionIds(prev => prev.filter(id => id !== question.id));
+                                      }
+                                    }}
+                                    className="h-4.5 w-4.5 rounded border-slate-300 text-[#004AAD] focus:ring-[#004AAD] cursor-pointer"
+                                  />
                                 </div>
+                                <div className="flex-1">
+                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                    <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                      <span className="h-5 w-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
+                                        {idx + 1}
+                                      </span>
+                                      {question.title}
+                                    </h4>
+                                    <div className="flex items-center gap-2">
+                                      <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
+                                        question.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-250' :
+                                          'bg-rose-50 text-rose-700 border-rose-250'
+                                        }`}>
+                                        {question.difficulty}
+                                      </span>
+                                      <span className="text-[10px] text-slate-400 font-semibold">{question.time} limit</span>
+                                    </div>
+                                  </div>
 
-                                <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold">
-                                  {question.description}
-                                </p>
+                                  <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold">
+                                    {question.description}
+                                  </p>
 
-                                <div className="bg-[#0f172a] text-slate-300 font-mono text-[11px] rounded-lg p-4 overflow-x-auto whitespace-pre leading-relaxed border border-slate-900 shadow-inner">
-                                  {question.codeSnippet}
+                                  <div className="bg-[#0f172a] text-slate-300 font-mono text-[11px] rounded-lg p-4 overflow-x-auto whitespace-pre leading-relaxed border border-slate-900 shadow-inner">
+                                    {question.codeSnippet}
+                                  </div>
                                 </div>
                               </div>
                             ))}
@@ -2645,7 +2777,7 @@ export default function AdminDashboard() {
                     </div>
                   )}
                 </div>
-              ) : selectedStatusFilter === 'Round 3 Brand Awareness' ? (
+              ) : selectedStatusFilter === 'Round 2 Brand Awareness' ? (
                 <div className="space-y-6 animate-fadeIn">
                   {/* Local Tabs for Dashboard vs Questions */}
                   <div className="flex space-x-6 border-b border-slate-200 pb-3">
@@ -2679,7 +2811,7 @@ export default function AdminDashboard() {
 
                       {/* Metrics Cards */}
                       {(() => {
-                        const r3Apps = externalApplications.filter(app => app.status === 'Round 3 Brand Awareness');
+                        const r3Apps = externalApplications.filter(app => app.status === 'Round 2 Brand Awareness');
                         const getCount = (keywords) => r3Apps.filter(app =>
                           keywords.some(kw => (app.jobTitle || '').toLowerCase().includes(kw))
                         ).length;
@@ -2762,7 +2894,7 @@ export default function AdminDashboard() {
 
                         {/* Candidate Table */}
                         {(() => {
-                          const r3Apps = externalApplications.filter(app => app.status === 'Round 3 Brand Awareness');
+                          const r3Apps = externalApplications.filter(app => app.status === 'Round 2 Brand Awareness');
 
                           const filteredApps = r3Apps.filter(app => {
                             const title = (app.jobTitle || '').toLowerCase();
@@ -3111,8 +3243,8 @@ export default function AdminDashboard() {
                                 <td className="py-4 px-6">
                                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap ${app.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                                     app.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                                      app.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
-                                        app.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
+                                      app.status === 'Round 1 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                                        app.status === 'Round 2 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
                                           app.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                                             app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                                               app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
@@ -3723,8 +3855,8 @@ export default function AdminDashboard() {
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Candidate Hiring Progress</div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                  {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
-                    const order = ['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
+                  {['Candidates', 'Round 1 Aptitude', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
+                    const order = ['Candidates', 'Round 1 Aptitude', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
                     const curIdx = order.indexOf(selectedApplication.status);
                     const isCompleted = curIdx >= idx && selectedApplication.status !== 'Rejected';
                     const isCurrent = selectedApplication.status === step;
@@ -3782,8 +3914,8 @@ export default function AdminDashboard() {
                   <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Current Status</label>
                   <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold capitalize mt-1 ${selectedApplication.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                     selectedApplication.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                      selectedApplication.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
-                        selectedApplication.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
+                      selectedApplication.status === 'Round 1 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                        selectedApplication.status === 'Round 2 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
                           selectedApplication.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                             selectedApplication.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                               selectedApplication.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
@@ -3883,7 +4015,7 @@ export default function AdminDashboard() {
               <div className="border-t border-slate-100 pt-4">
                 <label className="text-xs font-bold uppercase block mb-2">Update Application Status</label>
                 <div className="flex flex-wrap gap-2">
-                  {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
+                  {['Candidates', 'Round 1 Aptitude', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
                     <button
                       key={status}
                       type="button"
