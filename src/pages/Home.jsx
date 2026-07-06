@@ -567,7 +567,7 @@ export default function Home() {
               >
                 {/* Background glow hover effect */}
                 <div className={`absolute -right-10 -top-10 w-24 h-24 rounded-full bg-gradient-to-br ${tech.gradient} opacity-5 group-hover:opacity-15 blur-xl transition-opacity duration-300`} />
-                
+
                 <div className="space-y-4 w-full">
                   <div className={`p-3 rounded-2xl border flex-shrink-0 inline-flex ${tech.bg}`}>
                     <Icon className="h-5 w-5" />
@@ -581,7 +581,7 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Small indicator pill at the bottom */}
                 <div className="mt-6 flex items-center justify-between w-full">
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-2.5 py-0.5">
@@ -602,7 +602,7 @@ export default function Home() {
             <span>Growth & Learning</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
-            Why Choose Our Programs?
+            Why Choose Us?
           </h2>
           <p className="text-slate-500 text-lg">
             Accelerate your career with structured mentorship, real-world deployments, and clear paths to full-time roles.
@@ -623,7 +623,7 @@ export default function Home() {
                   </div>
                   <span className="text-[9px] font-mono text-slate-500">program_pipeline.json</span>
                 </div>
-                
+
                 {/* Pipeline visual steps */}
                 <div className="space-y-3">
                   {[
@@ -632,7 +632,7 @@ export default function Home() {
                     { phase: 'Month 4', title: 'Architecture & Scaling Reviews', status: 'Pending', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
                     { phase: 'Month 5-6', title: 'Graduation & PPO Assessment', status: 'Final', color: 'text-slate-400 bg-slate-800 border-slate-700' }
                   ].map((step, idx) => (
-                    <motion.div 
+                    <motion.div
                       key={step.phase}
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}

@@ -536,17 +536,21 @@ export default function About() {
             <p className="text-slate-400 text-sm">Meet the innovators guiding our engineering and product vision.</p>
           </div>
 
-          <motion.div
+          <motion.a
+            href={leadership[0].infoLink}
+            target="_blank"
+            rel="noopener noreferrer"
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="max-w-5xl mx-auto p-6 md:p-10 rounded-3xl border border-[#0A3161]/12 shadow-xl leader-card flex flex-col md:flex-row items-stretch gap-8 md:gap-10 text-left relative overflow-hidden"
+            className="max-w-5xl mx-auto p-6 md:p-10 rounded-3xl border border-[#0A3161]/12 shadow-xl leader-card flex flex-col md:flex-row items-stretch gap-8 md:gap-10 text-left relative overflow-hidden block hover:border-[#FF6325]/30 hover:shadow-2xl transition-all duration-300 cursor-pointer no-underline text-inherit"
+            style={{ textDecoration: 'none', color: 'inherit' }}
           >
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#FF6325]/5 to-transparent opacity-30 pointer-events-none" />
  
-            {/* Left Column: Profile (Image, Name, Title, Info Button) */}
+            {/* Left Column: Profile (Image, Name, Title) */}
             <div className="w-full md:w-52 flex-shrink-0 flex flex-col items-center justify-center text-center space-y-4 border-b md:border-b-0 md:border-r border-[#0A3161]/10 pb-6 md:pb-0 md:pr-8 relative z-10">
               <div className="h-48 w-48 rounded-2xl overflow-hidden border-2 border-slate-200/80 shadow-md relative group shrink-0">
                 <img
@@ -561,17 +565,6 @@ export default function About() {
                 <p className="text-sm font-bold text-[#FF6325] uppercase tracking-widest">
                   Founder & CEO
                 </p>
-              </div>
- 
-              <div>
-                <a
-                  href={leadership[0].infoLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-[#004AAD] to-[#3b82f6] hover:scale-105 shadow-lg text-white text-xs font-bold transition duration-300 select-none cursor-pointer"
-                >
-                  Info
-                </a>
               </div>
             </div>
  
@@ -594,7 +587,7 @@ export default function About() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </motion.a>
         </div>
 
         {/* SECTION 8: CALL TO ACTION */}

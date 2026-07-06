@@ -711,7 +711,7 @@ const parseSupportMessage = (msg, name, email, company, id, date) => {
 
 const generateAptitudeQuestions = (category) => {
   const list = [];
-  
+
   const vocabSynonyms = [
     { word: 'Loquacious', options: 'Talkative, Quiet, Angry, Happy', ans: 'Talkative' },
     { word: 'Ephemeral', options: 'Short-lived, Eternal, Internal, Bright', ans: 'Short-lived' },
@@ -964,7 +964,7 @@ const generateAptitudeQuestions = (category) => {
         title = `Ratio Trend Data Q${i}`;
         const ratio1 = (i % 3) + 2;
         const ratio2 = (i % 2) + 3;
-        description = `The ratio of frontend developers to backend developers in team is ${ratio1}:${ratio2}. If the total headcount of developers is ${ (ratio1 + ratio2) * 8 }, find the number of frontend developers.`;
+        description = `The ratio of frontend developers to backend developers in team is ${ratio1}:${ratio2}. If the total headcount of developers is ${(ratio1 + ratio2) * 8}, find the number of frontend developers.`;
         codeSnippet = `Total: ${ratio1}x + ${ratio2}x = ${(ratio1 + ratio2) * 8}\nx = 8\nFrontend Count = ${ratio1} * 8 = ${ratio1 * 8}`;
       }
 
@@ -1123,7 +1123,7 @@ export default function AdminDashboard() {
     try {
       const contactRes = await api.get('/api/contact');
       const list = contactRes.data.data || contactRes.data || [];
-      
+
       const parsedPartners = list
         .map(item => parsePartnerMessage(item.message, item.name, item.email, item.company, item.id || item._id, item.createdAt))
         .filter(Boolean);
@@ -1138,7 +1138,7 @@ export default function AdminDashboard() {
       try {
         const contactRes = await api.get('/api/contacts');
         const list = contactRes.data.data || contactRes.data || [];
-        
+
         const parsedPartners = list
           .map(item => parsePartnerMessage(item.message, item.name, item.email, item.company, item.id || item._id, item.createdAt))
           .filter(Boolean);
@@ -1390,10 +1390,10 @@ export default function AdminDashboard() {
     const assignedKey = `assessment_questions_${appId}`;
     const selectedQuestions = generateAptitudeQuestions(selectedAptitudeCategory)
       .filter(q => selectedAptitudeQuestionIds.includes(q.id));
-    
+
     localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
 
-    const updatedApps = externalApplications.map(app => 
+    const updatedApps = externalApplications.map(app =>
       app.id === appId ? { ...app, aptitudeStatus: 'Assessment Sent' } : app
     );
     updateAppsAndSync(updatedApps);
@@ -1653,11 +1653,10 @@ export default function AdminDashboard() {
                 setSelectedStatusFilter('Candidates');
                 setActiveSubTab('jobsList');
               }}
-              className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer text-left ${
-                activeSubTab === 'jobsList' 
-                  ? 'bg-[#004AAD] text-white' 
-                  : 'text-slate-400 hover:bg-slate-800/20 hover:text-white'
-              }`}
+              className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer text-left ${activeSubTab === 'jobsList'
+                ? 'bg-[#004AAD] text-white'
+                : 'text-slate-400 hover:bg-slate-800/20 hover:text-white'
+                }`}
               style={activeSubTab === 'jobsList' ? { color: '#ffffff' } : {}}
             >
               <Briefcase className="h-4 w-4 text-blue-200" />
@@ -1668,11 +1667,10 @@ export default function AdminDashboard() {
               onClick={() => {
                 setActiveSubTab('analytics');
               }}
-              className={`w-full flex items-center space-x-3 px-4 py-2.5 mt-1 rounded-xl text-xs font-semibold transition cursor-pointer text-left ${
-                activeSubTab === 'analytics' 
-                  ? 'bg-[#004AAD] text-white font-bold' 
-                  : 'text-slate-400 hover:bg-slate-800/20 hover:text-white'
-              }`}
+              className={`w-full flex items-center space-x-3 px-4 py-2.5 mt-1 rounded-xl text-xs font-semibold transition cursor-pointer text-left ${activeSubTab === 'analytics'
+                ? 'bg-[#004AAD] text-white font-bold'
+                : 'text-slate-400 hover:bg-slate-800/20 hover:text-white'
+                }`}
               style={activeSubTab === 'analytics' ? { color: '#ffffff' } : {}}
             >
               <BarChart3 className="h-4 w-4 text-blue-200" />
@@ -1684,32 +1682,66 @@ export default function AdminDashboard() {
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">
                 Candidate Pipeline
               </p>
-              {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness'].map((status) => {
-                const isActive = activeSubTab === 'appsList' && selectedStatusFilter === status;
-                const count = externalApplications.filter(app => app.status === status).length;
-                
+              {/* Candidates flat item */}
+              {(() => {
+                const isActive = activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates';
+                const count = externalApplications.filter(app => app.status === 'Candidates').length;
                 return (
                   <button
-                    key={status}
                     onClick={() => {
-                      setSelectedStatusFilter(status);
+                      setSelectedStatusFilter('Candidates');
                       setActiveSubTab('appsList');
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${
-                      isActive 
-                        ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20' 
-                        : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
-                    }`}
+                    className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${isActive
+                      ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20'
+                      : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
+                      }`}
                   >
-                    <span>{status}</span>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                      isActive ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
-                    }`}>
+                    <span>Candidates</span>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                      }`}>
                       {count}
                     </span>
                   </button>
                 );
-              })}
+              })()}
+
+              {/* Round 1 folder structure */}
+              <div className="pt-1.5">
+                <div className="flex items-center space-x-2 px-3 py-1 text-[9px] font-bold text-slate-550 uppercase tracking-wider">
+                  <span>Round 1</span>
+                </div>
+                
+                <div className="pl-3 space-y-1 mt-1 border-l border-slate-800/60 ml-3.5">
+                  {[
+                    { key: 'Round 1 Aptitude', label: 'Stage 1 Aptitude' },
+                    { key: 'Round 2 Technical', label: 'Stage 2 Technical' },
+                    { key: 'Round 3 Brand Awareness', label: 'Stage 3 Brand Awareness' }
+                  ].map((stage) => {
+                    const isActive = activeSubTab === 'appsList' && selectedStatusFilter === stage.key;
+                    const count = externalApplications.filter(app => app.status === stage.key).length;
+                    return (
+                      <button
+                        key={stage.key}
+                        onClick={() => {
+                          setSelectedStatusFilter(stage.key);
+                          setActiveSubTab('appsList');
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-1 rounded-md text-[10px] font-semibold transition cursor-pointer text-left ${isActive
+                          ? 'bg-blue-600/20 text-white font-bold border border-blue-500/10'
+                          : 'text-slate-400 hover:bg-slate-800/20 hover:text-white border border-transparent'
+                          }`}
+                      >
+                        <span>{stage.label}</span>
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                          }`}>
+                          {count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               {/* Separator line */}
               <div className="border-t border-slate-800/80 my-2" />
@@ -1719,16 +1751,14 @@ export default function AdminDashboard() {
                 onClick={() => {
                   setActiveSubTab('partnerships');
                 }}
-                className={`w-full flex items-center justify-between px-3 py-1.5 mt-2 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${
-                  activeSubTab === 'partnerships' 
-                    ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20' 
-                    : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
-                }`}
+                className={`w-full flex items-center justify-between px-3 py-1.5 mt-2 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${activeSubTab === 'partnerships'
+                  ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20'
+                  : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
+                  }`}
               >
                 <span>Partnership Requests</span>
-                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                  activeSubTab === 'partnerships' ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
-                }`}>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${activeSubTab === 'partnerships' ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                  }`}>
                   {partnerships.length}
                 </span>
               </button>
@@ -1738,16 +1768,14 @@ export default function AdminDashboard() {
                 onClick={() => {
                   setActiveSubTab('support');
                 }}
-                className={`w-full flex items-center justify-between px-3 py-1.5 mt-1 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${
-                  activeSubTab === 'support' 
-                    ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20' 
-                    : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
-                }`}
+                className={`w-full flex items-center justify-between px-3 py-1.5 mt-1 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${activeSubTab === 'support'
+                  ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20'
+                  : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
+                  }`}
               >
                 <span>Support Requests</span>
-                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                  activeSubTab === 'support' ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
-                }`}>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${activeSubTab === 'support' ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                  }`}>
                   {supports.length}
                 </span>
               </button>
@@ -2015,7 +2043,7 @@ export default function AdminDashboard() {
                       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                         <div>
                           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                            Round 1 - Aptitude Dashboard
+                            Stage 1 - Aptitude Dashboard
                           </h2>
                           <p className="text-slate-500 text-sm mt-1">
                             Overview of candidate assessment metrics and test schedules
@@ -2112,19 +2140,17 @@ export default function AdminDashboard() {
                                       <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
                                       <td className="py-3.5 px-4">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4">
-                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${
-                                          dateVal === 'Not Selected' ? 'bg-slate-50 text-slate-500 border border-slate-200' : 'bg-blue-50 text-blue-700 border border-blue-200'
-                                        }`}>
+                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${dateVal === 'Not Selected' ? 'bg-slate-50 text-slate-500 border border-slate-200' : 'bg-blue-50 text-blue-700 border border-blue-200'
+                                          }`}>
                                           {dateVal}
                                         </span>
                                       </td>
                                       <td className="py-3.5 px-4 font-semibold text-slate-900">{timeVal}</td>
                                       <td className="py-3.5 px-4">
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold ${
-                                          statusVal === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold ${statusVal === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                                           statusVal === 'Assessment Sent' || statusVal === 'Scheduled' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                                          'bg-slate-50 text-slate-500 border border-slate-200'
-                                        }`}>
+                                            'bg-slate-50 text-slate-500 border border-slate-200'
+                                          }`}>
                                           {statusVal === 'Scheduled' ? 'Assessment Sent' : statusVal}
                                         </span>
                                       </td>
@@ -2156,7 +2182,7 @@ export default function AdminDashboard() {
                               {externalApplications.filter(app => app.status === 'Round 1 Aptitude').length === 0 && (
                                 <tr>
                                   <td colSpan={6} className="py-8 text-center text-slate-400 italic">
-                                    No candidates currently in Round 1 Aptitude.
+                                    No candidates currently in Stage 1 Aptitude.
                                   </td>
                                 </tr>
                               )}
@@ -2178,7 +2204,7 @@ export default function AdminDashboard() {
                               Manage aptitude assessment questions for candidates
                             </p>
                           </div>
-                          
+
                           {/* Stats */}
                           <div className="flex items-center gap-3">
                             <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2 text-center">
@@ -2341,10 +2367,10 @@ export default function AdminDashboard() {
                       {/* Metrics Cards Row */}
                       {(() => {
                         const r2Apps = externalApplications.filter(app => app.status === 'Round 2 Technical');
-                        const getCount = (keywords) => r2Apps.filter(app => 
+                        const getCount = (keywords) => r2Apps.filter(app =>
                           keywords.some(kw => (app.jobTitle || '').toLowerCase().includes(kw))
                         ).length;
-                        
+
                         const feCount = getCount(['react', 'frontend', 'ui', 'ux']);
                         const beCount = getCount(['java', 'spring', 'node', 'python', 'backend']);
                         const fsCount = getCount(['full stack', 'fullstack']);
@@ -2411,11 +2437,10 @@ export default function AdminDashboard() {
                             <button
                               key={domain}
                               onClick={() => setSelectedDomainTab(domain)}
-                              className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer border ${
-                                selectedDomainTab === domain
-                                  ? 'bg-[#004AAD] text-white border-[#004AAD] shadow-sm'
-                                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-                              }`}
+                              className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer border ${selectedDomainTab === domain
+                                ? 'bg-[#004AAD] text-white border-[#004AAD] shadow-sm'
+                                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                                }`}
                             >
                               {domain}
                             </button>
@@ -2425,7 +2450,7 @@ export default function AdminDashboard() {
                         {/* Filtered Candidate Table */}
                         {(() => {
                           const r2Apps = externalApplications.filter(app => app.status === 'Round 2 Technical');
-                          
+
                           const filteredApps = r2Apps.filter(app => {
                             const title = (app.jobTitle || '').toLowerCase();
                             if (selectedDomainTab === 'React') return title.includes('react') || title.includes('frontend') || title.includes('ui') || title.includes('ux');
@@ -2496,7 +2521,7 @@ export default function AdminDashboard() {
                               Manage domain coding challenges, system design prompts, and automation assessments
                             </p>
                           </div>
-                          
+
                           {/* Stats */}
                           <div className="flex items-center gap-3">
                             <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2 text-center">
@@ -2547,19 +2572,17 @@ export default function AdminDashboard() {
                             <div
                               key={domain}
                               onClick={() => setSelectedDomainTab(domain)}
-                              className={`p-5 rounded-2xl shadow-sm border transition-all duration-300 flex flex-col justify-between min-h-[120px] group cursor-pointer ${
-                                selectedDomainTab === domain
-                                  ? 'bg-white border-[#004AAD] ring-2 ring-[#004AAD]/10'
-                                  : 'bg-white border-slate-200 hover:border-[#004AAD]/40 hover:shadow-md'
-                              }`}
+                              className={`p-5 rounded-2xl shadow-sm border transition-all duration-300 flex flex-col justify-between min-h-[120px] group cursor-pointer ${selectedDomainTab === domain
+                                ? 'bg-white border-[#004AAD] ring-2 ring-[#004AAD]/10'
+                                : 'bg-white border-slate-200 hover:border-[#004AAD]/40 hover:shadow-md'
+                                }`}
                             >
                               <div className="flex items-start justify-between">
                                 <div className={`p-2.5 rounded-xl ${iconBg}`}>
                                   <Sliders className="h-5 w-5" />
                                 </div>
-                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                                  selectedDomainTab === domain ? 'bg-[#004AAD] text-white' : 'bg-slate-50 text-slate-550 border border-slate-200'
-                                }`}>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${selectedDomainTab === domain ? 'bg-[#004AAD] text-white' : 'bg-slate-50 text-slate-550 border border-slate-200'
+                                  }`}>
                                   Category
                                 </span>
                               </div>
@@ -2594,17 +2617,16 @@ export default function AdminDashboard() {
                                     {question.title}
                                   </h4>
                                   <div className="flex items-center gap-2">
-                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${
-                                      question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
+                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
                                       question.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-250' :
-                                      'bg-rose-50 text-rose-700 border-rose-250'
-                                    }`}>
+                                        'bg-rose-50 text-rose-700 border-rose-250'
+                                      }`}>
                                       {question.difficulty}
                                     </span>
                                     <span className="text-[10px] text-slate-400 font-semibold">{question.time} limit</span>
                                   </div>
                                 </div>
-                                
+
                                 <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold">
                                   {question.description}
                                 </p>
@@ -2659,7 +2681,7 @@ export default function AdminDashboard() {
                       {/* Metrics Cards */}
                       {(() => {
                         const r3Apps = externalApplications.filter(app => app.status === 'Round 3 Brand Awareness');
-                        const getCount = (keywords) => r3Apps.filter(app => 
+                        const getCount = (keywords) => r3Apps.filter(app =>
                           keywords.some(kw => (app.jobTitle || '').toLowerCase().includes(kw))
                         ).length;
 
@@ -2729,11 +2751,10 @@ export default function AdminDashboard() {
                             <button
                               key={domain}
                               onClick={() => setSelectedBrandDomainTab(domain)}
-                              className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer border ${
-                                selectedBrandDomainTab === domain
-                                  ? 'bg-[#004AAD] text-white border-[#004AAD] shadow-sm'
-                                  : 'bg-slate-50 text-slate-655 border-slate-200 hover:bg-slate-100'
-                              }`}
+                              className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer border ${selectedBrandDomainTab === domain
+                                ? 'bg-[#004AAD] text-white border-[#004AAD] shadow-sm'
+                                : 'bg-slate-50 text-slate-655 border-slate-200 hover:bg-slate-100'
+                                }`}
                             >
                               {domain}
                             </button>
@@ -2743,7 +2764,7 @@ export default function AdminDashboard() {
                         {/* Candidate Table */}
                         {(() => {
                           const r3Apps = externalApplications.filter(app => app.status === 'Round 3 Brand Awareness');
-                          
+
                           const filteredApps = r3Apps.filter(app => {
                             const title = (app.jobTitle || '').toLowerCase();
                             if (selectedBrandDomainTab === 'BNX Mail') return title.includes('mail') || title.includes('smtp');
@@ -2861,19 +2882,17 @@ export default function AdminDashboard() {
                             <div
                               key={domain}
                               onClick={() => setSelectedBrandDomainTab(domain)}
-                              className={`p-5 rounded-2xl shadow-sm border transition-all duration-300 flex flex-col justify-between min-h-[120px] group cursor-pointer ${
-                                selectedBrandDomainTab === domain
-                                  ? 'bg-white border-[#004AAD] ring-2 ring-[#004AAD]/10'
-                                  : 'bg-white border-slate-200 hover:border-[#004AAD]/40 hover:shadow-md'
-                              }`}
+                              className={`p-5 rounded-2xl shadow-sm border transition-all duration-300 flex flex-col justify-between min-h-[120px] group cursor-pointer ${selectedBrandDomainTab === domain
+                                ? 'bg-white border-[#004AAD] ring-2 ring-[#004AAD]/10'
+                                : 'bg-white border-slate-200 hover:border-[#004AAD]/40 hover:shadow-md'
+                                }`}
                             >
                               <div className="flex items-start justify-between">
                                 <div className={`p-2.5 rounded-xl ${iconBg}`}>
                                   {domain === 'BNX Mail' ? <Mail className="h-5 w-5" /> : <Sliders className="h-5 w-5" />}
                                 </div>
-                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                                  selectedBrandDomainTab === domain ? 'bg-[#004AAD] text-white' : 'bg-slate-50 text-slate-555 border border-slate-200'
-                                }`}>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${selectedBrandDomainTab === domain ? 'bg-[#004AAD] text-white' : 'bg-slate-50 text-slate-555 border border-slate-200'
+                                  }`}>
                                   Category
                                 </span>
                               </div>
@@ -2908,11 +2927,10 @@ export default function AdminDashboard() {
                                     {question.title}
                                   </h4>
                                   <div className="flex items-center gap-2">
-                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${
-                                      question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
+                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
                                       question.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-250' :
-                                      'bg-rose-50 text-rose-700 border-rose-250'
-                                    }`}>
+                                        'bg-rose-50 text-rose-700 border-rose-250'
+                                      }`}>
                                       {question.difficulty}
                                     </span>
                                     <span className="text-[10px] text-slate-400 font-semibold">{question.time} limit</span>
@@ -2940,232 +2958,231 @@ export default function AdminDashboard() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                {/* Advanced Search & Filtering Bar */}
-                <div className="bg-white border border-slate-200 p-5 rounded-2xl space-y-4 text-left shadow-sm">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {/* Search bar */}
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Search Candidate / Job</label>
-                      <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search name or position..."
-                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
-                      />
-                    </div>
+                  {/* Advanced Search & Filtering Bar */}
+                  <div className="bg-white border border-slate-200 p-5 rounded-2xl space-y-4 text-left shadow-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      {/* Search bar */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Search Candidate / Job</label>
+                        <input
+                          type="text"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          placeholder="Search name or position..."
+                          className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
+                        />
+                      </div>
 
-                    {/* Status filter */}
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filter by Status</label>
-                      <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
-                      >
-                        <option value="All">All Statuses</option>
-                        <option value="Pending">Pending (Candidates)</option>
-                        <option value="Interview Scheduled">Interview Scheduled</option>
-                        <option value="Rejected">Rejected</option>
-                      </select>
-                    </div>
-
-                    {/* Job Filter */}
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filter by Job Posting</label>
-                      <select
-                        value={selectedJobFilter}
-                        onChange={(e) => setSelectedJobFilter(e.target.value)}
-                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
-                      >
-                        <option value="All">All Jobs</option>
-                        {Array.from(new Set(externalApplications.map(app => app.jobTitle))).map(title => (
-                          <option key={title} value={title}>{title}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Clear button */}
-                    <div className="flex items-end justify-end">
-                      {(searchTerm || statusFilter !== 'All' || selectedJobFilter !== 'All' || startDate || endDate) && (
-                        <button
-                          onClick={() => {
-                            setSearchTerm('');
-                            setStatusFilter('All');
-                            setSelectedJobFilter('All');
-                            setStartDate('');
-                            setEndDate('');
-                          }}
-                          className="px-4 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold transition cursor-pointer"
+                      {/* Status filter */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filter by Status</label>
+                        <select
+                          value={statusFilter}
+                          onChange={(e) => setStatusFilter(e.target.value)}
+                          className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
                         >
-                          Clear Filters
-                        </button>
-                      )}
+                          <option value="All">All Statuses</option>
+                          <option value="Pending">Pending (Candidates)</option>
+                          <option value="Interview Scheduled">Interview Scheduled</option>
+                          <option value="Rejected">Rejected</option>
+                        </select>
+                      </div>
+
+                      {/* Job Filter */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filter by Job Posting</label>
+                        <select
+                          value={selectedJobFilter}
+                          onChange={(e) => setSelectedJobFilter(e.target.value)}
+                          className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
+                        >
+                          <option value="All">All Jobs</option>
+                          {Array.from(new Set(externalApplications.map(app => app.jobTitle))).map(title => (
+                            <option key={title} value={title}>{title}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Clear button */}
+                      <div className="flex items-end justify-end">
+                        {(searchTerm || statusFilter !== 'All' || selectedJobFilter !== 'All' || startDate || endDate) && (
+                          <button
+                            onClick={() => {
+                              setSearchTerm('');
+                              setStatusFilter('All');
+                              setSelectedJobFilter('All');
+                              setStartDate('');
+                              setEndDate('');
+                            }}
+                            className="px-4 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold transition cursor-pointer"
+                          >
+                            Clear Filters
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-3">
+                      {/* Date range - Start Date */}
+                      <div className="flex items-center space-x-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">From Date:</label>
+                        <input
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                          className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
+                        />
+                      </div>
+
+                      {/* Date range - End Date */}
+                      <div className="flex items-center space-x-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">To Date:</label>
+                        <input
+                          type="date"
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                          className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-3">
-                    {/* Date range - Start Date */}
-                    <div className="flex items-center space-x-2">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">From Date:</label>
-                      <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
-                      />
-                    </div>
+                  <div className="admin-glass-card rounded-2xl overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-sm">
+                        <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider font-bold">
+                          <tr>
+                            <th className="py-4 px-6 font-bold">Candidate</th>
+                            <th className="py-4 px-6 font-bold">Job Applied</th>
+                            <th className="py-4 px-6 font-bold">Status</th>
+                            <th className="py-4 px-6 font-bold">Date</th>
+                            <th className="py-4 px-6 font-bold">Resume</th>
+                            <th className="py-4 px-6 font-bold">Cover Letter</th>
+                            <th className="py-4 px-6 font-bold text-center">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-slate-700 text-xs">
+                          {(() => {
+                            const filtered = externalApplications
+                              .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
+                              .filter(app => {
+                                if (statusFilter === 'All') {
+                                  return selectedStatusFilter === 'Candidates' ? app.status === 'Candidates' : app.status === selectedStatusFilter;
+                                }
+                                if (statusFilter === 'Pending') return app.status === 'Candidates';
+                                return app.status === statusFilter;
+                              })
+                              .filter(app => {
+                                if (!searchTerm) return true;
+                                const query = searchTerm.toLowerCase();
+                                return app.fullName.toLowerCase().includes(query) || app.jobTitle.toLowerCase().includes(query);
+                              })
+                              .filter(app => {
+                                if (!startDate && !endDate) return true;
+                                const appDate = new Date(app.createdAt);
+                                if (startDate && appDate < new Date(startDate)) return false;
+                                if (endDate) {
+                                  const adjustedEnd = new Date(endDate);
+                                  adjustedEnd.setHours(23, 59, 59, 999);
+                                  if (appDate > adjustedEnd) return false;
+                                }
+                                return true;
+                              });
 
-                    {/* Date range - End Date */}
-                    <div className="flex items-center space-x-2">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">To Date:</label>
-                      <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition"
-                      />
-                    </div>
-                  </div>
-                </div>
+                            if (filtered.length === 0) {
+                              return (
+                                <tr>
+                                  <td colSpan={7} className="py-8 text-center text-slate-400 italic">
+                                    No external applications found matching the selected filters.
+                                  </td>
+                                </tr>
+                              );
+                            }
 
-                <div className="admin-glass-card rounded-2xl overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
-                      <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider font-bold">
-                        <tr>
-                          <th className="py-4 px-6 font-bold">Candidate</th>
-                          <th className="py-4 px-6 font-bold">Job Applied</th>
-                          <th className="py-4 px-6 font-bold">Status</th>
-                          <th className="py-4 px-6 font-bold">Date</th>
-                          <th className="py-4 px-6 font-bold">Resume</th>
-                          <th className="py-4 px-6 font-bold">Cover Letter</th>
-                          <th className="py-4 px-6 font-bold text-center">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-slate-700 text-xs">
-                        {(() => {
-                          const filtered = externalApplications
-                            .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
-                            .filter(app => {
-                              if (statusFilter === 'All') {
-                                return selectedStatusFilter === 'Candidates' ? app.status === 'Candidates' : app.status === selectedStatusFilter;
-                              }
-                              if (statusFilter === 'Pending') return app.status === 'Candidates';
-                              return app.status === statusFilter;
-                            })
-                            .filter(app => {
-                              if (!searchTerm) return true;
-                              const query = searchTerm.toLowerCase();
-                              return app.fullName.toLowerCase().includes(query) || app.jobTitle.toLowerCase().includes(query);
-                            })
-                            .filter(app => {
-                              if (!startDate && !endDate) return true;
-                              const appDate = new Date(app.createdAt);
-                              if (startDate && appDate < new Date(startDate)) return false;
-                              if (endDate) {
-                                const adjustedEnd = new Date(endDate);
-                                adjustedEnd.setHours(23, 59, 59, 999);
-                                if (appDate > adjustedEnd) return false;
-                              }
-                              return true;
-                            });
+                            return filtered.map(app => (
+                              <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
+                                <td className="py-4 px-6">
+                                  <div className="font-bold text-slate-900">{app.fullName}</div>
+                                  <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
+                                </td>
+                                <td className="py-4 px-6">
+                                  <div className="font-semibold text-slate-900">{app.jobTitle}</div>
+                                  <div className="text-slate-450 text-[10px] mt-0.5">{app.jobDepartment} • {app.jobLocation}</div>
+                                </td>
+                                <td className="py-4 px-6">
+                                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap ${app.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+                                    app.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                                      app.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                                        app.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
+                                          app.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                                            app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                                              app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
+                                                app.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                                                  app.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
+                                                    app.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
+                                                      'bg-slate-50 text-slate-700 border border-slate-200'
+                                    }`}>
+                                    {app.status}
+                                  </span>
+                                </td>
+                                <td className="py-4 px-6 text-slate-450">
+                                  {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
+                                </td>
+                                <td className="py-4 px-6">
+                                  {app.resumeUrl ? (
+                                    <button
+                                      onClick={() => {
+                                        setSelectedResumeUrl(app.resumeUrl);
+                                        setSelectedResumeCandidate(app.fullName);
+                                      }}
+                                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold cursor-pointer"
+                                    >
+                                      <FileText className="h-3.5 w-3.5 text-[#004AAD]" />
+                                      <span>View Resume</span>
+                                    </button>
+                                  ) : (
+                                    <span className="text-slate-400 italic">No resume</span>
+                                  )}
+                                </td>
+                                <td className="py-4 px-6 max-w-xs">
+                                  <button
+                                    onClick={() => setSelectedCoverLetter({
+                                      candidate: app.fullName,
+                                      job: app.jobTitle,
+                                      text: app.coverLetter
+                                    })}
+                                    className="text-[#004AAD] hover:text-blue-800 font-semibold underline underline-offset-2 text-left line-clamp-2 cursor-pointer bg-transparent border-none p-0"
+                                  >
+                                    {app.coverLetter}
+                                  </button>
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                  <div className="flex items-center justify-center gap-1.5">
+                                    <button
+                                      onClick={() => {
+                                        setSelectedApplication(app);
+                                        setCandidateStatus(app.status || 'Candidates');
+                                      }}
+                                      className="px-2.5 py-1.5 rounded bg-purple-50 hover:bg-purple-100 text-[#8B5CF6] border border-purple-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
+                                    >
+                                      Schedule Interview
+                                    </button>
 
-                          if (filtered.length === 0) {
-                            return (
-                              <tr>
-                                <td colSpan={7} className="py-8 text-center text-slate-400 italic">
-                                  No external applications found matching the selected filters.
+                                    <button
+                                      onClick={() => handleUpdateStatus(app.id, 'Rejected')}
+                                      className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
+                                    >
+                                      Reject
+                                    </button>
+                                  </div>
                                 </td>
                               </tr>
-                            );
-                          }
-
-                          return filtered.map(app => (
-                            <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                              <td className="py-4 px-6">
-                                <div className="font-bold text-slate-900">{app.fullName}</div>
-                                <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
-                              </td>
-                              <td className="py-4 px-6">
-                                <div className="font-semibold text-slate-900">{app.jobTitle}</div>
-                                <div className="text-slate-450 text-[10px] mt-0.5">{app.jobDepartment} • {app.jobLocation}</div>
-                              </td>
-                              <td className="py-4 px-6">
-                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap ${
-                                  app.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
-                                  app.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                                  app.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
-                                  app.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
-                                  app.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
-                                  app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                  app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
-                                  app.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                                  app.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
-                                  app.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
-                                  'bg-slate-50 text-slate-700 border border-slate-200'
-                                }`}>
-                                  {app.status}
-                                </span>
-                              </td>
-                              <td className="py-4 px-6 text-slate-450">
-                                {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
-                              </td>
-                              <td className="py-4 px-6">
-                                {app.resumeUrl ? (
-                                  <button
-                                    onClick={() => {
-                                      setSelectedResumeUrl(app.resumeUrl);
-                                      setSelectedResumeCandidate(app.fullName);
-                                    }}
-                                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold cursor-pointer"
-                                  >
-                                    <FileText className="h-3.5 w-3.5 text-[#004AAD]" />
-                                    <span>View Resume</span>
-                                  </button>
-                                ) : (
-                                  <span className="text-slate-400 italic">No resume</span>
-                                )}
-                              </td>
-                              <td className="py-4 px-6 max-w-xs">
-                                <button
-                                  onClick={() => setSelectedCoverLetter({
-                                    candidate: app.fullName,
-                                    job: app.jobTitle,
-                                    text: app.coverLetter
-                                  })}
-                                  className="text-[#004AAD] hover:text-blue-800 font-semibold underline underline-offset-2 text-left line-clamp-2 cursor-pointer bg-transparent border-none p-0"
-                                >
-                                  {app.coverLetter}
-                                </button>
-                              </td>
-                              <td className="py-4 px-6 text-center">
-                                <div className="flex items-center justify-center gap-1.5">
-                                  <button
-                                    onClick={() => {
-                                      setSelectedApplication(app);
-                                      setCandidateStatus(app.status || 'Candidates');
-                                    }}
-                                    className="px-2.5 py-1.5 rounded bg-purple-50 hover:bg-purple-100 text-[#8B5CF6] border border-purple-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
-                                  >
-                                    Schedule Interview
-                                  </button>
-                                  
-                                  <button
-                                    onClick={() => handleUpdateStatus(app.id, 'Rejected')}
-                                    className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
-                                  >
-                                    Reject
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))
-                        })()}
-                      </tbody>
-                    </table>
+                            ))
+                          })()}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
                 </div>
               )
             )}
@@ -3203,7 +3220,7 @@ export default function AdminDashboard() {
                               Contact: <span className="text-slate-700 font-bold">{partner.name}</span> &lt;{partner.email}&gt;
                             </p>
                           </div>
-                          
+
                           <div className="flex flex-wrap gap-2 text-[10px] md:text-right">
                             <span className="px-2.5 py-1 rounded bg-slate-50 border border-slate-200 text-slate-650 font-bold uppercase select-none">
                               Size: {partner.companySize}
@@ -3280,7 +3297,7 @@ export default function AdminDashboard() {
                               Email: <a href={`mailto:${ticket.email}`} className="text-[#004AAD] hover:underline font-bold">{ticket.email}</a>
                             </p>
                           </div>
-                          
+
                           <div className="flex flex-wrap gap-2 text-[10px] md:text-right">
                             <button
                               onClick={() => handleSupportDismiss(ticket.id)}
@@ -3712,17 +3729,16 @@ export default function AdminDashboard() {
                     const curIdx = order.indexOf(selectedApplication.status);
                     const isCompleted = curIdx >= idx && selectedApplication.status !== 'Rejected';
                     const isCurrent = selectedApplication.status === step;
-                    
+
                     return (
-                      <div 
-                        key={step} 
-                        className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition duration-300 ${
-                          isCurrent 
-                            ? 'bg-blue-600 border-transparent text-white shadow-sm' 
-                            : isCompleted 
-                              ? 'bg-emerald-50 border-emerald-100 text-emerald-700' 
-                              : 'bg-white border-slate-100 text-slate-400'
-                        }`}
+                      <div
+                        key={step}
+                        className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition duration-300 ${isCurrent
+                          ? 'bg-blue-600 border-transparent text-white shadow-sm'
+                          : isCompleted
+                            ? 'bg-emerald-50 border-emerald-100 text-emerald-700'
+                            : 'bg-white border-slate-100 text-slate-400'
+                          }`}
                       >
                         <span className="text-[10px] font-extrabold tracking-tight block">
                           {step}
@@ -3765,19 +3781,18 @@ export default function AdminDashboard() {
                   <p className="text-xs font-semibold text-slate-700 mt-0.5">{selectedApplication.jobDepartment} • {selectedApplication.jobLocation}</p>
 
                   <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Current Status</label>
-                  <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold capitalize mt-1 ${
-                    selectedApplication.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+                  <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold capitalize mt-1 ${selectedApplication.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                     selectedApplication.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                    selectedApplication.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
-                    selectedApplication.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
-                    selectedApplication.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
-                    selectedApplication.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                    selectedApplication.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
-                    selectedApplication.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                    selectedApplication.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
-                    selectedApplication.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
-                    'bg-slate-50 text-slate-700 border border-slate-200'
-                  }`}>
+                      selectedApplication.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                        selectedApplication.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
+                          selectedApplication.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                            selectedApplication.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                              selectedApplication.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
+                                selectedApplication.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                                  selectedApplication.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
+                                    selectedApplication.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
+                                      'bg-slate-50 text-slate-700 border border-slate-200'
+                    }`}>
                     {selectedApplication.status}
                   </span>
                 </div>
@@ -3850,7 +3865,7 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={async () => {
-                      const updatedApps = externalApplications.map(app => 
+                      const updatedApps = externalApplications.map(app =>
                         app.id === selectedApplication.id ? { ...app, remarks: remarks } : app
                       );
                       updateAppsAndSync(updatedApps);
@@ -3874,11 +3889,10 @@ export default function AdminDashboard() {
                       key={status}
                       type="button"
                       onClick={() => handleUpdateStatus(selectedApplication.id, status)}
-                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold border transition cursor-pointer capitalize ${
-                        selectedApplication.status === status
-                          ? 'bg-slate-900 border-transparent text-white'
-                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold border transition cursor-pointer capitalize ${selectedApplication.status === status
+                        ? 'bg-slate-900 border-transparent text-white'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                        }`}
                     >
                       {status}
                     </button>
@@ -4002,12 +4016,11 @@ export default function AdminDashboard() {
             </button>
 
             <div className="flex items-center space-x-3 mb-6">
-              <div className={`p-3 rounded-2xl ${
-                selectedAptitudeCategory === 'Quant' ? 'bg-blue-50 text-blue-600' :
+              <div className={`p-3 rounded-2xl ${selectedAptitudeCategory === 'Quant' ? 'bg-blue-50 text-blue-600' :
                 selectedAptitudeCategory === 'Logical' ? 'bg-purple-50 text-purple-600' :
-                selectedAptitudeCategory === 'Verbal' ? 'bg-amber-50 text-amber-600' :
-                'bg-emerald-50 text-emerald-600'
-              }`}>
+                  selectedAptitudeCategory === 'Verbal' ? 'bg-amber-50 text-amber-600' :
+                    'bg-emerald-50 text-emerald-600'
+                }`}>
                 {selectedAptitudeCategory === 'Quant' && <Calculator className="h-6 w-6" />}
                 {selectedAptitudeCategory === 'Logical' && <Brain className="h-6 w-6" />}
                 {selectedAptitudeCategory === 'Verbal' && <BookOpen className="h-6 w-6" />}
@@ -4126,11 +4139,10 @@ export default function AdminDashboard() {
                       <td className="py-3.5 px-4 font-mono font-bold text-[#004AAD]">{q.id.toUpperCase()}</td>
                       <td className="py-3.5 px-4 font-bold text-slate-900">{q.title}</td>
                       <td className="py-3.5 px-4">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${
-                          q.difficulty === 'Hard' ? 'bg-red-50 text-red-700 border border-red-200' :
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${q.difficulty === 'Hard' ? 'bg-red-50 text-red-700 border border-red-200' :
                           q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                          'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        }`}>
+                            'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          }`}>
                           {q.difficulty}
                         </span>
                       </td>
@@ -4171,7 +4183,7 @@ export default function AdminDashboard() {
                   Screening profile attachment sheet
                 </p>
               </div>
-              
+
               <div className="flex items-center space-x-3">
                 <a
                   href={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `https://apply.beta-softnet.com${selectedResumeUrl}`}
