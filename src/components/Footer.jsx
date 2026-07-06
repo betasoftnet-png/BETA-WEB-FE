@@ -73,7 +73,7 @@ export default function Footer() {
         }
       `}</style>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-16">
           {/* Brand Info */}
           <div className="md:col-span-1 space-y-4 flex flex-col items-center text-center">
             <Link to="/" className="flex items-center justify-center select-none">
@@ -123,6 +123,18 @@ export default function Footer() {
               <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Careers</Link></li>
               <li><Link to="/partners" className="text-slate-600 hover:text-blue-600 transition">Partners</Link></li>
               <li><Link to="/support" className="text-slate-600 hover:text-blue-600 transition">Support</Link></li>
+            </ul>
+          </div>
+
+          {/* Internships */}
+          <div>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Internships</h2>
+            <ul className="space-y-2 text-sm font-medium">
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Fullstack Development</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">App Development</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">AI&ML</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Data Science</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Data Analytics</Link></li>
             </ul>
           </div>
 

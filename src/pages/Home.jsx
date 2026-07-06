@@ -13,7 +13,15 @@ import {
   Briefcase,
   UserCheck,
   User,
-  Star
+  Star,
+  Cpu,
+  Database,
+  Lock,
+  Terminal,
+  Code2,
+  Workflow,
+  Network,
+  Award
 } from 'lucide-react';
 
 export default function Home() {
@@ -71,6 +79,73 @@ export default function Home() {
       title: "Operations Director, ApexLogistics",
       initials: "MR",
       gradient: "from-violet-400 to-indigo-600"
+    }
+  ];
+
+  const techStack = [
+    {
+      name: 'React 18',
+      description: 'Modern front-end framework rendering declarative, state-driven interfaces with high responsiveness.',
+      icon: Code2,
+      category: 'Frontend',
+      bg: 'bg-cyan-50 text-cyan-600 border-cyan-100',
+      gradient: 'from-cyan-400 to-blue-500'
+    },
+    {
+      name: 'Vite',
+      description: 'Ultra-fast bundler and dev server powering blazing fast builds and Hot Module Replacement.',
+      icon: Terminal,
+      category: 'Build System',
+      bg: 'bg-amber-50 text-amber-600 border-amber-100',
+      gradient: 'from-amber-400 to-orange-500'
+    },
+    {
+      name: 'Tailwind CSS',
+      description: 'Utility-first styling library supporting rich design systems and layouts natively.',
+      icon: Globe,
+      category: 'Styling',
+      bg: 'bg-sky-50 text-sky-600 border-sky-100',
+      gradient: 'from-sky-400 to-indigo-500'
+    },
+    {
+      name: 'Node.js & Express',
+      description: 'Robust server architecture supporting scalable RESTful APIs and rapid routing services.',
+      icon: Cpu,
+      category: 'Backend Server',
+      bg: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+      gradient: 'from-emerald-400 to-teal-500'
+    },
+    {
+      name: 'MongoDB',
+      description: 'Scalable NoSQL database engine storage for flexible team workspaces, notes, and task backlogs.',
+      icon: Database,
+      category: 'Database',
+      bg: 'bg-green-50 text-green-600 border-green-100',
+      gradient: 'from-green-400 to-emerald-600'
+    },
+    {
+      name: 'OAuth 2.0 & JWT',
+      description: 'Cryptographically secure auth protocols powering SSO gateways and API access controls.',
+      icon: Lock,
+      category: 'Security',
+      bg: 'bg-rose-50 text-rose-600 border-rose-100',
+      gradient: 'from-rose-400 to-red-500'
+    },
+    {
+      name: 'WebSockets',
+      description: 'Bi-directional real-time channels syncing collaborative task boards and email clients.',
+      icon: Network,
+      category: 'Communication',
+      bg: 'bg-indigo-50 text-indigo-600 border-indigo-100',
+      gradient: 'from-indigo-400 to-violet-500'
+    },
+    {
+      name: 'Framer Motion',
+      description: 'High-performance layout transitions and fluid micro-animations for an interactive UX.',
+      icon: Workflow,
+      category: 'Animation',
+      bg: 'bg-fuchsia-50 text-fuchsia-600 border-fuchsia-100',
+      gradient: 'from-fuchsia-400 to-pink-500'
     }
   ];
 
@@ -297,9 +372,9 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full md:w-[55%] max-w-lg h-full flex flex-col justify-center text-left">
+          <div className="w-full md:w-[62%] max-w-2xl h-full flex flex-col justify-center text-left">
 
-            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-4 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
+            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
                   Enterprise Suite
@@ -308,9 +383,9 @@ export default function Home() {
                 <div className="border-t border-slate-300 w-full my-4"></div> */}
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
-                <div className="lg:col-span-1 w-full h-64 text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg rounded-2xl">
+                <div className="lg:col-span-1 w-full h-80 text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg rounded-2xl">
                   {/* Deep Glowing Tech Starfield Particles */}
                   <div className="absolute w-2 h-2 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
                   <div className="absolute w-1 h-1 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
@@ -331,23 +406,23 @@ export default function Home() {
 
                   {/* Pulsating Premium Logo Container */}
                   <div className="relative z-10 transition-transform duration-300 hover:scale-105">
-                    <div className="bg-white border border-blue-500/45 w-20 h-20 rounded-2xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
+                    <div className="bg-white border border-blue-500/45 w-24 h-24 rounded-2xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
                       <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/25 via-cyan-500/10 to-transparent pointer-events-none" />
-                      <img src="/logo.png" alt="Beta Logo" className="h-11 w-11 object-contain relative z-10 animate-pulse" />
+                      <img src="/logo.png" alt="Beta Logo" className="h-14 w-14 object-contain relative z-10 animate-pulse" />
                     </div>
                   </div>
                 </div>
 
                 {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
-                <div className="lg:col-span-1 flex flex-col gap-3 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-3">
+                <div className="lg:col-span-1 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
                   {/* BNXmail */}
                   <a
                     href="https://www.bnxmail.com/login"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex flex-col justify-center p-3 rounded-xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-1"
+                    className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-1"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       {/* Logo */}
 
                       <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
@@ -361,12 +436,9 @@ export default function Home() {
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-[11px] font-medium leading-normal mt-0.5">
+                    <p className="text-slate-500 text-xs font-medium leading-normal mt-0.5">
                       Real time mail, always <span className="whitespace-nowrap">in sync.</span> “Instant mail, Connected work.”
                     </p>
-
-
-
                   </a>
 
                   {/* Cliks Business */}
@@ -374,9 +446,9 @@ export default function Home() {
                     href="https://www.cliksbusiness.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex flex-col justify-center p-3 rounded-xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-1"
+                    className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-1"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       {/* Logo */}
                       <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                         <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-12 w-12 object-contain" />
@@ -389,7 +461,7 @@ export default function Home() {
                     </div>
 
                     {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-[11px] font-medium leading-normal mt-0.5">
+                    <p className="text-slate-500 text-xs font-medium leading-normal mt-0.5">
                       "Connecting businesses, creating opportunities, and enabling growth."
                     </p>
                   </a>
@@ -458,6 +530,179 @@ export default function Home() {
                   </div>
                   <div className="text-3xl md:text-4xl font-extrabold text-[#004AAD]">{stat.value}</div>
                   <div className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{stat.label}</div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION: TECHNOLOGIES USED */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
+        <div className="max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+            <Cpu className="h-3.5 w-3.5" />
+            <span>Our Tech Stack</span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
+            Powered by Next-Gen Technologies
+          </h2>
+          <p className="text-slate-500 text-lg">
+            We leverage a modern, enterprise-grade tech stack built for exceptional speed, reliability, and security.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {techStack.map((tech, idx) => {
+            const Icon = tech.icon;
+            return (
+              <motion.div
+                key={tech.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col items-start justify-between h-full hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+              >
+                {/* Background glow hover effect */}
+                <div className={`absolute -right-10 -top-10 w-24 h-24 rounded-full bg-gradient-to-br ${tech.gradient} opacity-5 group-hover:opacity-15 blur-xl transition-opacity duration-300`} />
+                
+                <div className="space-y-4 w-full">
+                  <div className={`p-3 rounded-2xl border flex-shrink-0 inline-flex ${tech.bg}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-extrabold text-slate-900 mb-1.5 flex items-center gap-1.5">
+                      {tech.name}
+                    </h3>
+                    <p className="text-slate-500 text-xs leading-relaxed font-medium">
+                      {tech.description}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Small indicator pill at the bottom */}
+                <div className="mt-6 flex items-center justify-between w-full">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-2.5 py-0.5">
+                    {tech.category}
+                  </span>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* SECTION: WHY CHOOSE OUR PROGRAMS */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
+        <div className="max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+            <Award className="h-3.5 w-3.5" />
+            <span>Growth & Learning</span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
+            Why Choose Our Programs?
+          </h2>
+          <p className="text-slate-500 text-lg">
+            Accelerate your career with structured mentorship, real-world deployments, and clear paths to full-time roles.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left">
+          {/* Left Column: Visual Growth Roadmap */}
+          <div className="lg:col-span-5 w-full">
+            <div className="relative p-6 rounded-3xl bg-slate-900 text-white border border-slate-800 shadow-2xl overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-transparent to-purple-900/30 opacity-60 pointer-events-none" />
+              <div className="relative z-10 space-y-5">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <div className="flex items-center space-x-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                  </div>
+                  <span className="text-[9px] font-mono text-slate-500">program_pipeline.json</span>
+                </div>
+                
+                {/* Pipeline visual steps */}
+                <div className="space-y-3">
+                  {[
+                    { phase: 'Month 1', title: 'Onboarding & Core Tech Mastery', status: 'Completed', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+                    { phase: 'Month 2-3', title: 'Production Feature Dev & Deploy', status: 'Active', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
+                    { phase: 'Month 4', title: 'Architecture & Scaling Reviews', status: 'Pending', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+                    { phase: 'Month 5-6', title: 'Graduation & PPO Assessment', status: 'Final', color: 'text-slate-400 bg-slate-800 border-slate-700' }
+                  ].map((step, idx) => (
+                    <motion.div 
+                      key={step.phase}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: idx * 0.12 }}
+                      className="flex items-center justify-between p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 hover:border-slate-700/80 transition-colors"
+                    >
+                      <div className="flex items-center space-x-3 overflow-hidden mr-2">
+                        <span className="text-[10px] font-mono text-slate-500 w-14 flex-shrink-0">{step.phase}</span>
+                        <span className="text-[11px] font-semibold text-slate-200 truncate">{step.title}</span>
+                      </div>
+                      <span className={`text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border flex-shrink-0 ${step.color}`}>
+                        {step.status}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Key Benefits */}
+          <div className="lg:col-span-7 space-y-4">
+            {[
+              {
+                title: 'Real-World Production Impact',
+                desc: 'Collaborate on active projects, ship actual code, and launch features that serve enterprise scale and users daily.',
+                icon: Zap,
+                bg: 'bg-amber-50 text-amber-600 border-amber-100'
+              },
+              {
+                title: '1-on-1 Senior Mentorship',
+                desc: 'Get paired with core engineers and senior product architects. Participate in structured design and code reviews daily.',
+                icon: Users,
+                bg: 'bg-blue-50 text-blue-600 border-blue-100'
+              },
+              {
+                title: 'Modern Stack Experience',
+                desc: 'Gain expert-level command of React 18, Node.js, WebSockets, MongoDB, and secure cryptographically-signed JWT/SSO platforms.',
+                icon: Workflow,
+                bg: 'bg-emerald-50 text-emerald-600 border-emerald-100'
+              },
+              {
+                title: 'Direct Career Pathways (PPO)',
+                desc: 'Our program is a talent incubator. High performing program graduates receive pre-placement offers to join full-time.',
+                icon: Award,
+                bg: 'bg-purple-50 text-purple-600 border-purple-100'
+              }
+            ].map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: idx * 0.08 }}
+                  className="glass-card hover:bg-white/90 p-5 rounded-2xl border border-slate-200/80 flex items-start space-x-4 shadow-sm hover:shadow-md transition-all duration-300 group cursor-default"
+                >
+                  <div className={`p-3 rounded-xl border flex-shrink-0 mt-0.5 transition-colors ${item.bg}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="space-y-1 text-left">
+                    <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                      {item.title}
+                    </h3>
+                    <p className="text-slate-500 text-xs leading-relaxed font-medium">
+                      {item.desc}
+                    </p>
+                  </div>
                 </motion.div>
               );
             })}
