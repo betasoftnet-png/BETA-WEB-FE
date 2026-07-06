@@ -597,27 +597,209 @@ const fallbackApps = [
   { id: 'r3-cr-4', fullName: 'Mouth McFadden Jr', email: 'mouth.jr@example.com', phone: '+91 94444 55554', resumeUrl: '/mock_resume.pdf', coverLetter: 'Social channels.', status: 'Round 2 Brand Awareness', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' }
 ];
 
-const technicalQuestionsData = [
-  { id: 'q-r2-1', category: 'React', title: 'Debounced State Hook', difficulty: 'Medium', time: '20 mins', description: 'Implement a custom hook `useDebounce(value, delay)` that returns a debounced version of the input value. Provide clean optimization handles for dependency arrays.', codeSnippet: 'function useDebounce(value, delay) {\n  const [debouncedValue, setDebouncedValue] = useState(value);\n  useEffect(() => {\n    const handler = setTimeout(() => setDebouncedValue(value), delay);\n    return () => clearTimeout(handler);\n  }, [value, delay]);\n  return debouncedValue;\n}' },
-  { id: 'q-r2-2', category: 'React', title: 'Fiber Reconciliation Internals', difficulty: 'Hard', time: '15 mins', description: 'Explain the difference between Stack Reconciler and Fiber Reconciler in React. Detail how the render phase and commit phase cooperate asynchronously.', codeSnippet: '// Conceptual explanation: Stack is synchronous & blocking. Fiber splits work into chunks using RequestIdleCallback.' },
-  { id: 'q-r2-3', category: 'Java', title: 'Thread-safe Singleton Pattern', difficulty: 'Medium', time: '15 mins', description: 'Write a thread-safe Singleton class implementation in Java using double-checked locking pattern. Explain why the `volatile` keyword is critical here.', codeSnippet: 'public class Singleton {\n  private static volatile Singleton instance;\n  private Singleton() {}\n  public static Singleton getInstance() {\n    if (instance == null) {\n      synchronized (Singleton.class) {\n        if (instance == null) {\n          instance = new Singleton();\n        }\n      }\n    }\n    return instance;\n  }\n}' },
-  { id: 'q-r2-4', category: 'Java', title: 'Hotspot JVM GC comparison', difficulty: 'Hard', time: '20 mins', description: 'Compare G1 GC with ZGC collector. Detail the latency characteristics and memory layout differences under high allocation rates.', codeSnippet: '// Conceptual explanation: ZGC executes phases concurrently with application threads, keeping stop-the-world pauses below 1ms.' },
-  { id: 'q-r2-5', category: 'Spring Boot', title: 'Security Filter Chain setup', difficulty: 'Hard', time: '30 mins', description: 'Design a custom JWT verification filter chain and register it in SecurityFilterChain configuration. Exclude public endpoints from context verification.', codeSnippet: '@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n  http.csrf(csrf -> csrf.disable())\n      .authorizeHttpRequests(auth -> auth\n          .requestMatchers("/api/auth/**").permitAll()\n          .anyRequest().authenticated()\n      )\n      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);\n  return http.build();\n}' },
-  { id: 'q-r2-6', category: 'Spring Boot', title: 'Bean Initialization sequence', difficulty: 'Easy', time: '10 mins', description: 'Describe the differences between `@PostConstruct`, `InitializingBean`, and custom `init-method` lifecycle declarations.', codeSnippet: '// PostConstruct executes first, then afterPropertiesSet from InitializingBean, followed by custom XML/Java configuration init methods.' },
-  { id: 'q-r2-7', category: 'Node.js', title: 'Event Loop Bottleneck Resolution', difficulty: 'Hard', time: '25 mins', description: 'Identify how synchronous computation blocks the Event Loop. Implement a worker pool model or async partition process to free the main execution thread.', codeSnippet: 'const { Worker } = require(\'worker_threads\');\nfunction runWorker(workerData) {\n  return new Promise((resolve, reject) => {\n    const worker = new Worker(\'./worker.js\', { workerData });\n    worker.on(\'message\', resolve);\n    worker.on(\'error\', reject);\n  });\n}' },
-  { id: 'q-r2-8', category: 'Python', title: 'TTL Cache Decorator', difficulty: 'Medium', time: '20 mins', description: 'Build a custom python decorator `@ttl_cache(seconds=60)` that caches the returns of a function and invalidates cache entries older than the defined TTL.', codeSnippet: 'import time\ndef ttl_cache(seconds=60):\n    def decorator(func):\n        cache = {}\n        def wrapper(*args):\n            now = time.time()\n            if args in cache and (now - cache[args][1] < seconds):\n                return cache[args][0]\n            result = func(*args)\n            cache[args] = (result, now)\n            return result\n        return wrapper\n    return decorator' },
-  { id: 'q-r2-9', category: 'Testing', title: 'Dynamic Session Testing', difficulty: 'Medium', time: '15 mins', description: 'Write a Cypress automation script that bypasses multi-step login by injecting session cookies and directly navigates to administrative sub-routes.', codeSnippet: 'describe("Session Bypass", () => {\n  beforeEach(() => {\n    cy.setCookie("session_token", "mock_value_123");\n    cy.visit("/admin/dashboard");\n  });\n});' },
-  { id: 'q-r2-10', category: 'DevOps', title: 'Multi-stage Docker setup', difficulty: 'Easy', time: '15 mins', description: 'Write a multi-stage Dockerfile for a React application. Minimize the final production image footprint by using nginx as the hosting block.', codeSnippet: '# Stage 1\nFROM node:alpine AS builder\nWORKDIR /app\nCOPY . .\nRUN npm run build\n\n# Stage 2\nFROM nginx:alpine\nCOPY --from=builder /app/dist /usr/share/nginx/html' }
-];
+const generateTechnicalQuestions = () => {
+  const categories = ['React', 'Java', 'Spring Boot', 'Node.js', 'Python', 'Testing', 'DevOps'];
+  const questions = [];
+  
+  // React
+  const reactTemplates = [
+    ["State Mutation Output", "What is the output of updating React state directly without setState?", "The component does not re-render", "The component re-renders immediately", "Explain the difference between useMemo and useCallback.", 'const [state, setState] = useState({ value: "old" });\nstate.value = "new";\n// Is this correct?'],
+    ["Hook Lifecycle Evaluation", "In React, do hooks execute in the exact same order on every render?", "True", "False", "Explain the difference between useEffect layout phase and paint phase.", 'useEffect(() => {\n  console.log("Render completed");\n}, []);'],
+    ["Virtual DOM Performance", "Does the Virtual DOM execute reflows faster than the real DOM directly?", "True", "False", "Explain the reconciliation process in React Fiber.", '// Fiber reconciler splits render and commit phases'],
+    ["React Strict Mode", "Does React Strict Mode double-invoke component render functions in development?", "True", "False", "Explain why Strict Mode does this.", '<React.StrictMode>\n  <App />\n</React.StrictMode>'],
+    ["Controlled Input Mutation", "Is an input with only a value prop (and no onChange) mutable by typing?", "True", "False", "Explain the difference between controlled and uncontrolled components.", '<input value="hello" />'],
+    ["Custom Hook State Sharing", "Does calling a custom hook share state variables across multiple component instances?", "True", "False", "Explain how custom hooks share state logic but not raw state.", 'const val = useCustomHook();'],
+    ["Child Render Optimization", "Does a child component automatically re-render when its parent component state updates?", "True", "False", "Explain how to optimize child component rendering using React.memo.", 'const Child = React.memo(MyComponent);'],
+    ["Synthetic Event Delegation", "Does React SyntheticEvent system bubble events to the native window target?", "True", "False", "Explain how SyntheticEvent delegation works in React 18.", 'const onClick = (e) => { e.stopPropagation(); }'],
+    ["Error Boundary Capture", "Can an Error Boundary catch errors occurring inside asynchronous setTimeout callbacks?", "True", "False", "Explain where Error Boundaries can and cannot capture errors.", 'class ErrorBoundary extends React.Component { ... }'],
+    ["Portal Mount Target", "Does React Portal mount DOM nodes outside of the main root DOM hierarchy?", "True", "False", "Explain the event propagation behavior of React Portals.", 'ReactDOM.createPortal(child, container)'],
+    ["Suspense Default Import", "Does React.lazy require a default export for the dynamically imported component?", "True", "False", "Explain how code splitting works with Suspense.", 'const LazyComp = React.lazy(() => import("./Comp"));'],
+    ["Context Value Reference", "Does every consumer of a React Context re-render when the Provider value reference changes?", "True", "False", "Explain how to prevent unnecessary context consumer re-renders.", '<MyContext.Provider value={value}>'],
+    ["Ref Forwarding Target", "Does forwardRef allow parent components to access native DOM nodes of children?", "True", "False", "Explain why forwarding refs is useful in custom input libraries.", 'const MyInput = forwardRef((props, ref) => ...)'],
+    ["State Update Batching", "Does React batch state updates inside microtasks and event handler callbacks?", "True", "False", "Explain batching behaviors in React 18 concurrency mode.", 'setState(c => c + 1);\nsetState(c => c + 1);'],
+    ["Index Key Side Effects", "Can index-based keys cause state mismatch issues when list items are reordered?", "True", "False", "Explain how React uses keys during the reconciliation process.", 'items.map((item, idx) => <li key={idx}>{item}</li>)'],
+    ["HOC Runtime Injection", "Do Higher-Order Components dynamically wrap components at runtime?", "True", "False", "Explain the difference between HOCs and custom Hooks.", 'export default withAuth(MyComponent);'],
+    ["Hydration Mismatch Source", "Does React hydration run rendering on the client to match HTML output from the server?", "True", "False", "Explain the term \"hydration mismatch\".", 'ReactDOM.hydrateRoot(document.getElementById("root"), <App />);'],
+    ["Profiler Duration Tracker", "Does the React Profiler record rendering times of both mount and update phases?", "True", "False", "Explain the difference between actualDuration and baseDuration in Profiler.", '<Profiler id="App" onRender={callback}>'],
+    ["Fragment DOM Footprint", "Does using React Fragment <></> add an extra wrapper element to the DOM tree?", "True", "False", "Explain why DOM flattening is important in CSS flex layouts.", '<><div>A</div><div>B</div></>'],
+    ["Concurrent Render Interrupt", "Can concurrent rendering in React interrupt an ongoing component render phase?", "True", "False", "Explain how startTransition works to schedule low-priority rendering.", 'startTransition(() => { setTab("analytics"); });']
+  ];
+
+  // Java
+  const javaTemplates = [
+    ["String Reference Equality", "What is the output of checking string identity with == in Java?", "True", "False", "Explain the difference between an interface and an abstract class.", 'String s1 = new String("test");\nString s2 = "test";\nSystem.out.println(s1 == s2);'],
+    ["JVM Heap Segments", "Does the Java Garbage Collector run in the same execution thread as the main application thread?", "True", "False", "Explain the difference between G1 GC and ZGC collector.", 'System.gc();'],
+    ["Checked Exception Scope", "Does a checked exception require a throws signature or try-catch block to compile?", "True", "False", "Explain the difference between checked and unchecked exceptions.", 'throw new IOException("Failed");'],
+    ["HashMap Bucket Collision", "Does HashMap resize buckets into red-black trees when collisions exceed 8 items?", "True", "False", "Explain how HashMap handles key collisions in Java 8.", 'map.put(key, value);'],
+    ["Volatile Synchronization", "Does the volatile keyword guarantee atomicity of compound operations (like count++)?", "True", "False", "Explain why volatile is critical for thread-safe double-checked singleton lock.", 'private static volatile Singleton instance;'],
+    ["Stream Lazy Evaluation", "Are Java Streams operations evaluated only when a terminal operation is executed?", "True", "False", "Explain the difference between intermediate and terminal stream operations.", 'stream.filter(s -> s.startsWith("A")).map(String::toUpperCase);'],
+    ["Generics Type Erasure", "Does JVM preserve generic type parameters in bytecode at execution runtime?", "True", "False", "Explain the concept of type erasure in Java Generics.", 'List<String> list = new ArrayList<>();'],
+    ["Classloader Delegation", "Does the JVM Bootstrap ClassLoader delegate class lookup requests to the System ClassLoader first?", "True", "False", "Explain the parent delegation model in ClassLoader architecture.", 'ClassLoader.getSystemClassLoader();'],
+    ["Serializable Transient Keyword", "Does serialization save fields marked with the transient keyword to bytes output?", "True", "False", "Explain the purpose of transient and serialVersionUID fields.", 'private transient String password;'],
+    ["Thread Sync ReentrantLocks", "Does ReentrantLock support lock acquisition interrupts and timeout configurations?", "True", "False", "Explain the difference between synchronized block and ReentrantLock.", 'lock.tryLock(5, TimeUnit.SECONDS);'],
+    ["Virtual Threads Concurrency", "Do Project Loom Virtual Threads mount directly on OS threads in a 1-to-1 ratio?", "True", "False", "Explain how virtual threads achieve high concurrency with low overhead.", 'Thread.startVirtualThread(() -> {});'],
+    ["Integer Cache Cache Bounds", "Does Java cache Integer object references for values from -128 to 127 automatically?", "True", "False", "Explain why autoboxing reference comparisons fail outside cache limits.", 'Integer a = 128; Integer b = 128; System.out.println(a == b);'],
+    ["Method Overload Dispatch", "Does JVM resolve method overloading at compile time (static binding)?", "True", "False", "Explain the difference between method overloading and overriding binding.", 'public void process(String s) {}'],
+    ["Reflection API Performance", "Does using the Reflection API bypass compile-time security and type checking checks?", "True", "False", "Explain the performance trade-offs of Reflection in Java.", 'Method m = MyClass.class.getMethod("process");'],
+    ["Comparable Comparator Order", "Does Comparable\'s compareTo define the intrinsic natural ordering of a class?", "True", "False", "Explain the difference between Comparable and Comparator interfaces.", 'public int compareTo(Person other) { ... }'],
+    ["JPA N+1 Query Problem", "Does lazy loading trigger the N+1 select query problem in relational mappings?", "True", "False", "Explain how to resolve the JPA N+1 select problem using JOIN FETCH.", '@OneToMany(fetch = FetchType.LAZY)'],
+    ["Optional Unwrap Optional Null", "Does calling Optional.of(null) throw a NullPointerException immediately at runtime?", "True", "False", "Explain when to use Optional.ofNullable instead.", 'Optional<String> op = Optional.of(null);'],
+    ["Final Modifier Classes", "Can a class marked with the final modifier be inherited by subclasses?", "True", "False", "Explain final variables, methods, and class usage cases.", 'public final class Configuration { ... }'],
+    ["JVM Arguments Allocation", "Does -Xms configure the maximum heap memory allocation limit of the JVM?", "True", "False", "Explain the purpose of -Xms, -Xmx, and -XX:MaxMetaspaceSize.", 'java -Xms512m -Xmx2g -jar app.jar'],
+    ["Try-With-Resources Close", "Does try-with-resources automatically close classes implementing AutoCloseable interface?", "True", "False", "Explain how try-with-resources prevents connection leak bugs.", 'try (BufferedReader br = new BufferedReader(new FileReader("file.txt"))) { ... }']
+  ];
+
+  // Spring Boot
+  const springTemplates = [
+    ["Bean Scope Default", "Are Spring Beans singleton scoped by default?", "True", "False", "Explain the difference between @Component and @Service annotations.", '@Component\npublic class AppService {\n  // Default Spring Bean Scope\n}'],
+    ["Auto-wiring Type Check", "Does @Autowired resolve dependencies by type first, then by qualifier name?", "True", "False", "Explain the difference between @RestController and @Controller.", '@Autowired\nprivate PaymentGateway paymentService;'],
+    ["Transactional Rollback Rule", "Does @Transactional rollback transactions automatically on checked Exception classes?", "True", "False", "Explain how rollbackFor attribute configures rollback targets.", '@Transactional(rollbackFor = Exception.class)\npublic void update() { ... }'],
+    ["ComponentScan Inclusion Scope", "Does @SpringBootApplication automatically scan package paths outside its own directory?", "True", "False", "Explain the component scan default scanning structure.", '@SpringBootApplication\npublic class Application { ... }'],
+    ["Profile Override Settings", "Can active Spring profiles configure property overrides via application-{profile}.properties?", "True", "False", "Explain the priority structure of Spring Boot property sources.", 'spring.profiles.active=prod'],
+    ["Actuator Security Check", "Are all Spring Boot Actuator endpoints exposed and accessible publicly by default?", "True", "False", "Explain how to configure Actuator endpoint security restrictions.", 'management.endpoints.web.exposure.include=*'],
+    ["DispatcherServlet Mapping", "Does the DispatcherServlet intercept and route all incoming HTTP web requests?", "True", "False", "Explain the Spring MVC request routing sequence.", '// DispatcherServlet acts as the Front Controller'],
+    ["Dependency Injection Choice", "Is Constructor Injection preferred over Field Injection in modern Spring applications?", "True", "False", "Explain why Constructor Injection improves testing and final fields.", 'public AppController(AppService service) { this.service = service; }'],
+    ["JPA Entity Mapping Type", "Does @Entity require a default no-args constructor to instantiate classes?", "True", "False", "Explain why JPA entities require default constructors.", '@Entity\npublic class User { ... }'],
+    ["CommandLineRunner Sequence", "Does CommandLineRunner execute its run method before the ApplicationContext finishes starting?", "True", "False", "Explain when CommandLineRunner is triggered during startup.", '@Component\npublic class SeedRunner implements CommandLineRunner { ... }'],
+    ["Bean Lifecycle Callback", "Does @PostConstruct execute after all bean properties have been initialized?", "True", "False", "Explain the sequence of post-processor callbacks in lifecycle.", '@PostConstruct\npublic void init() { ... }'],
+    ["CORS Configuration Rules", "Does registering WebMvcConfigurer add global CORS mappings across controllers?", "True", "False", "Explain why CORS headers are vital in microservices.", 'registry.addMapping("/api/**").allowedOrigins("*");'],
+    ["ConfigurationProperties Read", "Does @ConfigurationProperties map properties dynamically into structured classes?", "True", "False", "Explain the differences between @Value and @ConfigurationProperties.", '@ConfigurationProperties(prefix = "app.security")'],
+    ["Value Placeholder Fallback", "Does @Value(\"${app.name}\") throw an exception if the property name is not defined?", "True", "False", "Explain how to define a fallback value in a value placeholder.", '@Value("${app.name:BetaSystem}")'],
+    ["WebClient Async Requests", "Is RestTemplate non-blocking and optimized for concurrent reactive calls?", "True", "False", "Explain the difference between RestTemplate and WebClient APIs.", 'webClient.get().uri("/data").retrieve().bodyToMono(String.class);'],
+    ["ControllerAdvice Handling", "Does @ControllerAdvice intercept exceptions thrown across all controller routes?", "True", "False", "Explain how ExceptionHandler maps responses dynamically.", '@ControllerAdvice\npublic class GlobalErrorHandler { ... }'],
+    ["Cacheable Invalidation Key", "Does @Cacheable fetch returns from the cache store if arguments match cached keys?", "True", "False", "Explain the difference between @Cacheable and @CachePut annotations.", '@Cacheable(value = "users", key = "#id")'],
+    ["Hibernate N+1 Query Fix", "Does setting FetchType.EAGER on OneToMany associations resolve N+1 query issue?", "True", "False", "Explain how fetch joins differ from eager loading strategies.", '@OneToMany(fetch = FetchType.EAGER)'],
+    ["ConditionalOnProperty Boot", "Does @ConditionalOnProperty register beans only if property values match expectations?", "True", "False", "Explain the purpose of Conditional annotations in custom starters.", '@ConditionalOnProperty(name = "module.enabled", havingValue = "true")'],
+    ["Custom Validation Setup", "Can custom constraint validators validate properties via @Constraint validation?", "True", "False", "Explain the role of ConstraintValidator implementation interface.", '@Constraint(validatedBy = AgeValidator.class)']
+  ];
+
+  // Node.js
+  const nodeTemplates = [
+    ["Event Loop Execution", "Does process.nextTick() execute before microtasks or macrotasks in the Node.js event loop?", "True", "False", "Explain the difference between setImmediate() and setTimeout(fn, 0).", 'process.nextTick(() => console.log("tick"));\nsetTimeout(() => console.log("timeout"), 0);'],
+    ["Blocking File I/O Sync", "Does fs.readFileSync block the main Node.js thread until I/O finishes?", "True", "False", "Explain how async I/O offloads work to the libuv thread pool.", 'const data = fs.readFileSync("config.json");'],
+    ["Buffer Binary Storage", "Are Buffer class instances stored in V8 heap memory blocks directly?", "True", "False", "Explain how Buffer accesses raw binary memory buffers outside V8.", 'const buf = Buffer.alloc(1024);'],
+    ["Streams Data Piping Flow", "Does piping streams automatically handle backpressure limits between read/write blocks?", "True", "False", "Explain the mechanism of backpressure in Node streams.", 'readableStream.pipe(writableStream);'],
+    ["Thread Pool Capacity", "Does setting UV_THREADPOOL_SIZE configure the libuv worker pool limits?", "True", "False", "Explain which operations utilize libuv worker threads in Node.", 'process.env.UV_THREADPOOL_SIZE = 8;'],
+    ["Module Caching Lookup", "Are modules cached in require.cache after their first load statement?", "True", "False", "Explain how to force reload a cached module in Node.js.", 'const m1 = require("./module");\nconst m2 = require("./module");'],
+    ["Cluster Concurrency Sync", "Does Cluster module run multiple V8 instances sharing the exact same socket port?", "True", "False", "Explain how Cluster divides traffic using round-robin load distribution.", 'cluster.fork();'],
+    ["EventEmitter Memory Leak", "Can adding listeners to EventEmitter without removing them lead to memory leaks?", "True", "False", "Explain how to prevent event listener memory leak bugs.", 'emitter.on("update", callback);'],
+    ["Dependencies Distinction", "Are devDependencies packaged in the production deploy bundle by npm run build?", "True", "False", "Explain the difference between dependencies and devDependencies.", '"devDependencies": { "vite": "^4.0.0" }'],
+    ["Error First Conventions", "Does Node.js error-first callback protocol pass error objects as the second argument?", "True", "False", "Explain the argument signature pattern of error-first callbacks.", 'fs.readFile("file.txt", (err, data) => { ... });'],
+    ["Processes Spawn Fork", "Does child_process.fork() run commands inside a new V8 process instance?", "True", "False", "Explain the differences between spawn, exec, and fork methods.", 'const child = fork("./child.js");'],
+    ["V8 Heap Limit Crash", "Does exceeding the max heap allocation limit crash the Node.js runtime process?", "True", "False", "Explain the JVM arguments to increase heap memory limits in Node.", 'node --max-old-space-size=4096 app.js'],
+    ["Express Middleware Chain", "Does calling next() inside Express middleware route traffic to the next handler?", "True", "False", "Explain how error-handling middleware is registered in Express.", 'app.use((req, res, next) => { next(); });'],
+    ["Worker Threads Workers", "Do Node.js Worker Threads share memory using SharedArrayBuffer arrays?", "True", "False", "Explain the difference between child_process and worker_threads.", 'const worker = new Worker("./worker.js");'],
+    ["Promise Unhandled Reject", "Do unhandled promise rejections terminate the Node process dynamically by default?", "True", "False", "Explain how to register process-level event hooks for unhandled exceptions.", 'process.on("unhandledRejection", (err) => { ... });'],
+    ["Crypto Salt PBKDF2 Sync", "Does crypto.pbkdf2Sync block the event loop while calculating hashes?", "True", "False", "Explain why asynchronous hashing functions should be preferred in APIs.", 'const hash = crypto.pbkdf2Sync(pw, salt, 1000, 64, "sha512");'],
+    ["Lock File Dependency Lock", "Does package-lock.json guarantee that identical dependency trees are installed across environments?", "True", "False", "Explain the difference between package.json version ranges and lockfile lock.", '// Autogenerated package-lock.json'],
+    ["Socket Hang Up Timeout", "Does connection socket timeout trigger a socket hang up error on HTTP clients?", "True", "False", "Explain how to handle write socket timeouts on server routes.", 'server.on("timeout", (socket) => { socket.destroy(); });'],
+    ["Path Directory Resolution", "Does path.resolve always convert paths into absolute path strings?", "True", "False", "Explain the differences between path.join and path.resolve methods.", 'path.resolve("src", "components");'],
+    ["Env Vars Loader Config", "Does process.env read variables directly from the OS environment namespaces?", "True", "False", "Explain why dotenv configuration is required at entry points.", 'require("dotenv").config();\nconst port = process.env.PORT;']
+  ];
+
+  // Python
+  const pythonTemplates = [
+    ["Boolean Interpretation", "What is the output of print(bool(\"False\"))?", "True", "False", "Explain the difference between @staticmethod and @classmethod.", 'print(bool("False"))'],
+    ["Decorator Wraps Metadata", "Does @functools.wraps preserve original function name and docstring attributes?", "True", "False", "Explain why metadata preservation is vital for decorator chains.", '@wraps(func)\ndef wrapper(*args, **kwargs):\n    return func(*args, **kwargs)'],
+    ["List Mutability Referral", "Does assigning a list to a new variable create a copy of the list object?", "True", "False", "Explain how python mutable object assignment reference passing works.", 'a = [1, 2, 3]\nb = a\nb.append(4)'],
+    ["GIL Concurrency Constraints", "Does Python GIL restrict execution of multiple CPU-intensive python threads concurrently?", "True", "False", "Explain the difference between threading and multiprocessing models in Python.", 'import threading\nt = threading.Thread(target=process_data)'],
+    ["Dict Key Hashability Rule", "Can a list mutable container be used as a dictionary key object in Python?", "True", "False", "Explain what objects are hashable and why keys require hashability.", 'my_dict = { [1, 2]: "value" }'],
+    ["Generator Yield Storage", "Does generator yield save execution state and suspend execution stack frames dynamically?", "True", "False", "Explain the difference between generator functions and list comprehensions.", 'def count_up():\n    yield 1\n    yield 2'],
+    ["Comprehension Generators", "Does list comprehension run faster than equivalent loop append operations?", "True", "False", "Explain how memory footprint differs between list and generator expressions.", 'squares = [x**2 for x in range(1000)]'],
+    ["Garbage Collection Count", "Does Python rely primarily on reference counting for memory cleanup cycles?", "True", "False", "Explain how Python handles cyclic reference memory leaks.", 'import gc\ngc.collect()'],
+    ["Shallow Deep Copying", "Does copy.copy copy nested objects inside lists by reference value?", "True", "False", "Explain the difference between copy.copy() and copy.deepcopy().", 'import copy\na = [[1, 2], [3, 4]]\nb = copy.copy(a)'],
+    ["Context Manager Block", "Does the __exit__ method in context managers trigger if an exception is raised?", "True", "False", "Explain the signature and purpose of context manager exit methods.", 'with open("file.txt", "r") as f:\n    data = f.read()'],
+    ["Sys Modules Import Cache", "Does Python reload a module from disk every time it hits an import statement?", "True", "False", "Explain how Python caches imported modules inside sys.modules.", 'import sys\n# check modules cache'],
+    ["MRO Inheritance Search", "Does Python use Depth-First Search for multiple inheritance method resolution?", "True", "False", "Explain the C3 linearization algorithm used for python class MRO.", 'class C(A, B):\n    pass'],
+    ["Lambda Variable Closure", "Does a python lambda function bind closure variables at definition runtime?", "True", "False", "Explain the dynamic scoping behavior of variable bindings in lambda.", 'funcs = [lambda: i for i in range(3)]\nprint(funcs[0]())'],
+    ["Unpacking Args Kwargs", "Does *args unpack dictionary key-value arguments inside python functions?", "True", "False", "Explain how args and kwargs tuple and dictionary bindings work.", 'def process(*args, **kwargs): ...'],
+    ["Try Finally Override", "Does a return statement inside a finally block override return values from try?", "True", "False", "Explain try-except-else-finally execution order rules.", 'def test():\n    try: return 1\n    finally: return 2'],
+    ["Virtualenv Execution Iso", "Does a Python virtual environment duplicate Python binary installations inside local paths?", "True", "False", "Explain how virtualenvs isolate dependencies from global paths.", 'source venv/bin/activate'],
+    ["Fstrings Formatter Speed", "Are f-strings evaluated at runtime and run faster than format() formatting methods?", "True", "False", "Explain f-string parsing advantages in Python 3.6+.", 'msg = f"User {user.name} authenticated"'],
+    ["Dunder Struct Constructor", "Does __new__ act as the actual instance constructor before __init__ initialization?", "True", "False", "Explain the difference between __new__ and __init__ magic methods.", 'def __new__(cls, *args, **kwargs): ...'],
+    ["Mutable Default Argument", "Is the default argument value of python parameters evaluated once at import runtime?", "True", "False", "Explain the mutable default argument trap and how to solve it.", 'def add_item(item, list_items=[]):\n    list_items.append(item)'],
+    ["List Sort Inplace Reverse", "Does list.sort() modify the original list object in-place?", "True", "False", "Explain the difference between sorted() and list.sort().", 'my_list = [3, 1, 2]\nmy_list.sort()']
+  ];
+
+  // Testing
+  const testingTemplates = [
+    ["Cypress Command Queue", "Does Cypress run test commands synchronously or enqueue them for asynchronous execution?", "True", "False", "Explain the difference between cy.wait() and cy.tick().", 'cy.visit("/login");\ncy.get("input").type("admin");'],
+    ["Unit Integration Scopes", "Does a unit test verify interactions between multiple integration dependencies?", "True", "False", "Explain the difference between unit testing and integration testing.", '// Unit test definition block'],
+    ["Mocking Stubbing Targets", "Does stubbing replace component dependencies with dynamic pre-programmed responses?", "True", "False", "Explain when mock verifications are preferred over stub returns.", 'const stub = sinon.stub(api, "fetch");'],
+    ["Selenium WebDriver Sync", "Does Selenium WebDriver require native driver binaries to interface with web browsers?", "True", "False", "Explain how WebDriver implements the W3C protocol.", 'WebDriver driver = new ChromeDriver();'],
+    ["TDD Red Green Lifecycle", "Does Test-Driven Development mandate writing unit tests after implementation?", "True", "False", "Explain the stages of the Red-Green-Refactor test cycle.", '// TDD loop: Red -> Green -> Refactor'],
+    ["Headless Browser Automation", "Does running tests in headless mode save system resources during CI/CD build runtime?", "True", "False", "Explain what headless execution is and why it runs faster.", 'cypress run --headless'],
+    ["API Contract Verification", "Does API contract testing verify schema validation responses from endpoints?", "True", "False", "Explain how Pact or JSON Schema ensures contract conformity.", 'expect(res.body).to.have.jsonSchema(userSchema);'],
+    ["Code Coverage Meaning", "Does 100% statement coverage guarantee that code logic has zero bug cases?", "True", "False", "Explain the difference between statement, branch, and path coverage.", '// Code coverage calculation output'],
+    ["Dynamic Session Injection", "Does Cypress support session caching to skip authentication steps in tests?", "True", "False", "Explain how cy.session() bypasses login paths dynamically.", 'cy.session("login-token", () => { ... });'],
+    ["POM Architecture Design", "Does Page Object Model isolate selector attributes from actual test script assertions?", "True", "False", "Explain the benefits of POM in automation script maintenance.", 'const loginPage = new LoginPage();\nloginPage.login("user", "pass");'],
+    ["Flaky Test Mitigation", "Does increasing test retries resolve the underlying race condition of flaky tests?", "True", "False", "Explain how async wait handles prevent flaky test occurrences.", 'cy.get("button", { timeout: 10000 }).should("be.visible");'],
+    ["Parallel Execution Sync", "Does parallel test execution require independent clean database instances?", "True", "False", "Explain how test state leaks occur during parallel pipeline runs.", 'npm run test:parallel'],
+    ["Mutation Test Execution", "Does mutation testing inject bugs into source files to verify test assertions fail?", "True", "False", "Explain the term \"mutant killed\" in testing metrics.", '// Mutation test setup'],
+    ["Component Jest Isolation", "Does shallow rendering in Jest mount child components recursively in tests?", "True", "False", "Explain the difference between shallow and mount rendering.", 'const wrapper = shallow(<Dashboard />);'],
+    ["E2E State DB Clean", "Should End-to-End tests truncate database tables before executing tests?", "True", "False", "Explain why testing database isolation is vital in CI/CD pipeline.", 'before(() => { db.truncateAll(); });'],
+    ["Assertions Implicit Explicit", "Are cy.should() statements treated as implicit assertions in Cypress?", "True", "False", "Explain the difference between implicit and explicit assertions.", 'cy.get(".alert").should("contain", "Success");'],
+    ["Visual Regression Pixel", "Does visual regression testing check screenshot layouts pixel-by-pixel?", "True", "False", "Explain the challenges of anti-aliasing in visual diffs.", 'cy.matchImageSnapshot();'],
+    ["Smoke Testing Purpose", "Does a smoke test suite verify every detail edge-case of application workflows?", "True", "False", "Explain the difference between smoke, regression, and sanity test suites.", '// Sanity checks'],
+    ["Mock Service Worker Setup", "Does Mock Service Worker (MSW) intercept network requests at the API layer?", "True", "False", "Explain the benefits of MSW over mocking network clients.", 'setupServer(...handlers);'],
+    ["Test Double Classifications", "Is a mock class dummy placeholder wrapper code without verification checks?", "True", "False", "Explain the differences between dummy, fake, spy, stub, and mock.", 'const spy = sinon.spy(analytics, "track");']
+  ];
+
+  // DevOps
+  const devopsTemplates = [
+    ["Dockerfile Layer Caching", "Does changing a line at the top of a Dockerfile invalidate cache layers below it?", "True", "False", "Explain how Dockerfile instruction order affects build caching.", 'COPY package.json .\nRUN npm install\nCOPY . .'],
+    ["COPY vs ADD Instructions", "Can the Dockerfile COPY instruction pull files from remote web URLs?", "True", "False", "Explain when to prefer COPY over ADD for local build files.", 'COPY ./src /app/src'],
+    ["Container VM Virtualization", "Do containers share the host operating system kernel directly?", "True", "False", "Explain how namespaces and cgroups isolate docker containers.", '// Container virtualization layer'],
+    ["K8s Pod Namespace Share", "Do all containers in a Kubernetes Pod share the exact same network IP?", "True", "False", "Explain port mapping conflicts within a single K8s Pod.", '// Pod network namespace sharing'],
+    ["IaC State Drift Detection", "Does Terraform automatically apply configuration changes to fix drift without apply?", "True", "False", "Explain how terraform.tfstate records resource settings.", 'terraform plan'],
+    ["Nginx Reverse Proxy Load", "Does Nginx IP Hash algorithm always distribute traffic in round-robin fashion?", "True", "False", "Explain when session persistence dictates IP Hash routing.", 'upstream backend {\n  ip_hash;\n  server srv1.example.com;\n}'],
+    ["Canary Deployment Strategy", "Does a Blue-Green deployment route user traffic to new nodes incrementally?", "True", "False", "Explain how Canary deployments differ from Blue-Green strategies.", '// Deployment pipeline routing'],
+    ["Prometheus Pull Model", "Does Prometheus collect metrics by polling target HTTP endpoints?", "True", "False", "Explain the role of Prometheus Pushgateway for batch jobs.", 'scrape_configs:\n  - job_name: "spring-boot"'],
+    ["Docker Bridge Host Network", "Does default Docker bridge network expose container ports to host interfaces automatically?", "True", "False", "Explain port mapping configurations in docker networks.", 'docker run -p 80:80 nginx'],
+    ["K8s Service Types NodePort", "Does ClusterIP service expose Kubernetes pods outside the cluster network?", "True", "False", "Explain the difference between ClusterIP, NodePort, and LoadBalancer.", 'spec:\n  type: ClusterIP'],
+    ["System Load Average Metric", "Does a load average of 4.0 on a 2-core CPU indicate processor overload?", "True", "False", "Explain how to interpret load average metrics in Linux.", '$ uptime\nload average: 4.00, 2.50, 1.20'],
+    ["Git Rebase Merge History", "Does git rebase rewrite commit histories by applying local commits on branches?", "True", "False", "Explain the pros and cons of git rebase versus git merge.", 'git rebase main'],
+    ["SSH Key Handshake Security", "Does SSH authorization authenticate clients using public key cryptography?", "True", "False", "Explain how the authorized_keys file secures server authentication.", 'ssh-copy-id -i ~/.ssh/id_rsa.pub user@server'],
+    ["S3 Storage Classes Lifecycle", "Does moving files to Glacier Deep Archive preserve instant object retrieval times?", "True", "False", "Explain S3 lifecycle rules and archival storage retrievals.", '// S3 transition setup'],
+    ["Docker Compose Orchestration", "Does Docker Compose manage container scale orchestrations across multiple host servers?", "True", "False", "Explain how Docker Swarm differs from Docker Compose scaling.", 'docker-compose up --scale web=3'],
+    ["K8s ConfigMap Secret Encryption", "Are Kubernetes Secrets encrypted at-rest inside etcd databases by default?", "True", "False", "Explain how to enable envelope encryption for etcd secrets.", 'kind: Secret\ndata:\n  api-key: dGVzdF9rZXk='],
+    ["Terraform Init Plugin Download", "Does terraform init download provider plugins specified in project configurations?", "True", "False", "Explain where Terraform stores downloaded provider packages.", 'terraform {\n  required_providers {\n    aws = ...\n  }\n}'],
+    ["ELK Centralized Logging Flow", "Does Logstash index log documents directly into Kibana dashboards?", "True", "False", "Explain the centralized logging data flow pipeline (Filebeat-Logstash-ES).", '// Logging pipeline stream'],
+    ["CORS Proxy Header Rules", "Does reverse proxy configuration require injecting Access-Control-Allow-Origin headers?", "True", "False", "Explain CORS preflight OPTIONS request interception.", 'add_header "Access-Control-Allow-Origin" "*";'],
+    ["Git Hooks Execution Stage", "Can a pre-commit git hook prevent commits from finalizing if lint checks fail?", "True", "False", "Explain the location and setup of local git hook scripts.", '#!/bin/sh\nnpm run lint']
+  ];
+
+  const mapTemplate = (tmpl, cat, index) => ({
+    id: `q-tech-${cat.toLowerCase().replace('.', '')}-${index}`,
+    category: cat,
+    title: tmpl[0],
+    difficulty: index <= 7 ? 'Easy' : index <= 14 ? 'Medium' : 'Hard',
+    time: index <= 7 ? '10 mins' : index <= 14 ? '15 mins' : '20 mins',
+    description: `${tmpl[1]}\na) ${tmpl[2]}\nb) ${tmpl[3]}\n\nShort Answer: ${tmpl[4]}`,
+    codeSnippet: tmpl[5]
+  });
+
+  reactTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'React', i + 1)));
+  javaTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Java', i + 1)));
+  springTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Spring Boot', i + 1)));
+  nodeTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Node.js', i + 1)));
+  pythonTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Python', i + 1)));
+  testingTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Testing', i + 1)));
+  devopsTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'DevOps', i + 1)));
+
+  return questions;
+};
+
+const technicalQuestionsData = generateTechnicalQuestions();
 
 const brandQuestionsData = [
-  { id: 'q-r3-1', category: 'BNX Mail', title: 'SMTP Encryption Advocacy', difficulty: 'Medium', time: '15 mins', description: 'How does BNX Mail solve SMTP interception vulnerability? Write a brand messaging guide explaining this to a customer CTO who lacks cryptography context.', codeSnippet: 'BNX Mail encrypts every email segment using TLS/SMTP-over-SSL with Zero-knowledge architecture. No server caches raw message payloads, guaranteeing zero snooping.' },
-  { id: 'q-r3-2', category: 'BNX Mail', title: 'Microsoft 365 Migration Campaign', difficulty: 'Hard', time: '20 mins', description: 'Design a customer-facing brand campaign addressing migrating 10k enterprise mailboxes to BNX Mail with zero uptime disruption.', codeSnippet: 'Phase 1: Dual-delivery split delivery setup.\nPhase 2: SMTP connector synchronization.\nPhase 3: Final DNS MX pointer changeover with zero email loss.' },
-  { id: 'q-r3-3', category: 'Cliks Business', title: 'Team Task Velocity Strategy', difficulty: 'Easy', time: '10 mins', description: 'Detail the competitive messaging edge Cliks Business has over Slack/Trello. Highlight unified task nodes and real-time collaboration canvas.', codeSnippet: 'Tagline: "Work together, faster." Key points: No context switching, zero latency canvas sync, and deep files ecosystem integration.' },
-  { id: 'q-r3-4', category: 'Cliks Business', title: 'Target Enterprise Acquisition Pitch', difficulty: 'Medium', time: '25 mins', description: 'Draft a sales pitch targeting mid-size technology companies to migrate from multiple SaaS apps to a single Cliks Business subscription.', codeSnippet: 'Unified dashboards reduce operational licensing costs by 40% and eliminate time wasted on app context switching.' },
-  { id: 'q-r3-5', category: 'Company Core Values', title: 'Corporate Identity Core Values', difficulty: 'Easy', time: '10 mins', description: 'Explain the design significance of the BNX logo animation pulse and how it represents our mission to build deep connected infrastructures.', codeSnippet: 'The central pulse represents constant live-sync data stream, and the revolving orbits symbolize integrated SaaS applications.' },
-  { id: 'q-r3-6', category: 'Public Relations', title: 'Crisis Control Outage Communication', difficulty: 'Hard', time: '20 mins', description: 'Write an official brand response addressing a hypothetical 30-minute system outage in BNX Mail, maintaining public trust.', codeSnippet: 'Official Release: "Beta engineering quickly contained an edge CDN routing issue. All user mail payloads remained encrypted and secure. We value your business." ' },
-  { id: 'q-r3-7', category: 'Ecosystem Integration', title: 'Beta Single Sign-On Value Prop', difficulty: 'Medium', time: '15 mins', description: 'Outline a partner campaign highlighting Beta\'s single-sign-on (SSO) integration. How does it improve the security narrative of third-party apps?', codeSnippet: 'Single-Sign-On locks authentication to verified domain credentials, instantly protecting all third-party integrations from credential leaks.' }
+  { id: 'q-r3-1', category: 'BNX Mail', title: 'SMTP Encryption Scope', difficulty: 'Medium', time: '15 mins', description: 'Does standard SMTP-over-SSL encrypt mail payloads at rest on relay servers?\na) True\nb) False\n\nShort Answer: Explain the difference between TLS transmission security and End-to-End Encryption.', codeSnippet: '// SMTP configuration\nmail.smtp.ssl.enable = true;' },
+  { id: 'q-r3-2', category: 'BNX Mail', title: 'MX DNS Routing', difficulty: 'Hard', time: '20 mins', description: 'Can an enterprise configure multiple MX records to load-balance email traffic dynamically?\na) True\nb) False\n\nShort Answer: Explain the difference between SPF, DKIM, and DMARC authentication.', codeSnippet: 'IN MX 10 mail.bnx.com\nIN MX 20 backup.bnx.com' },
+  { id: 'q-r3-3', category: 'Cliks Business', title: 'Collaborative Canvas Sync', difficulty: 'Easy', time: '10 mins', description: 'Does Cliks Canvas use WebSockets to synchronise canvas state in real-time across users?\na) True\nb) False\n\nShort Answer: Explain the difference between real-time socket updates and HTTP polling.', codeSnippet: 'stompClient.send("/app/canvas/sync", {}, JSON.stringify(canvasState));' },
+  { id: 'q-r3-4', category: 'Cliks Business', title: 'Unified SaaS Licensing', difficulty: 'Medium', time: '25 mins', description: 'Does Cliks Business consolidate file storage, chat, and task boards under a single billing account?\na) True\nb) False\n\nShort Answer: Explain the difference between seat-based licensing and usage-based quotas.', codeSnippet: 'const quota = user.getSubscriptionQuota();\nconsole.log(quota.unifiedBillingEnabled);' },
+  { id: 'q-r3-5', category: 'Company Core Values', title: 'Logo Animation Representation', difficulty: 'Easy', time: '10 mins', description: 'Does the central pulse in the BNX logo represent a live-sync data stream?\na) True\nb) False\n\nShort Answer: Explain the difference between brand positioning and corporate core values.', codeSnippet: '@keyframes pulse {\n  0% { transform: scale(1); }\n  50% { transform: scale(1.1); }\n}' },
+  { id: 'q-r3-6', category: 'Public Relations', title: 'Crisis Payload Disclosures', difficulty: 'Hard', time: '20 mins', description: 'Should a public incident statement disclose detailed firewall configurations during an active DDoS containment?\na) True\nb) False\n\nShort Answer: Explain the difference between proactive security updates and reactive post-mortems.', codeSnippet: '// Incident Response Template\nlogMessage("CDN outage detected - routing redirected to failover.");' },
+  { id: 'q-r3-7', category: 'Ecosystem Integration', title: 'Single Sign-On Authentication', difficulty: 'Medium', time: '15 mins', description: 'Does single sign-on (SSO) eliminate the need for application-specific passwords?\na) True\nb) False\n\nShort Answer: Explain the difference between OAuth 2.0 and SAML protocols.', codeSnippet: 'api.get("/api/oauth/authorize?response_type=code");' }
 ];
 
 const fallbackPartnerships = [
@@ -2757,7 +2939,7 @@ export default function AdminDashboard() {
                                     </div>
                                   </div>
 
-                                  <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold">
+                                  <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold whitespace-pre-wrap">
                                     {question.description}
                                   </p>
 
@@ -3955,7 +4137,7 @@ export default function AdminDashboard() {
                   return (
                     <div className="border-t border-slate-100 pt-4">
                       <label className="text-xs font-bold uppercase block mb-2.5 text-slate-800">
-                        View Candidate Assessment Answers (Score: {selectedApplication.aptitudeScore || '0'}%)
+                        View Candidate Assessment Answers (Score: {selectedApplication.technicalScore || selectedApplication.aptitudeScore || '0'}%)
                       </label>
                       <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-4 max-h-[220px] overflow-y-auto admin-scrollbar">
                         {qList.map((q, qidx) => {
@@ -3965,7 +4147,7 @@ export default function AdminDashboard() {
                               <div className="font-bold text-slate-900">
                                 Q{qidx + 1}. {q.title}
                               </div>
-                              <p className="text-slate-500 italic">
+                              <p className="text-slate-500 italic whitespace-pre-wrap">
                                 {q.description}
                               </p>
                               <div className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-800">

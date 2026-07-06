@@ -266,7 +266,7 @@ export default function Assessment() {
                   </span>
                 </div>
 
-                <p className="text-slate-700 text-sm leading-relaxed font-medium">
+                <p className="text-slate-700 text-sm leading-relaxed font-medium whitespace-pre-wrap">
                   {q.description}
                 </p>
 
