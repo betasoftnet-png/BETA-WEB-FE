@@ -1714,7 +1714,6 @@ export default function AdminDashboard() {
 
                 <div className="pl-3 space-y-1 mt-1 border-l border-slate-800/60 ml-3.5">
                   {[
-                    { key: 'Round 1 Aptitude', label: 'Stage 1 Aptitude' },
                     { key: 'Round 2 Technical', label: 'Stage 2 Technical' },
                     { key: 'Round 3 Brand Awareness', label: 'Stage 3 Brand Awareness' }
                   ].map((stage) => {
