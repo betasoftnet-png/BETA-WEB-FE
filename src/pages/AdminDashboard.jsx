@@ -6,7 +6,7 @@ import {
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
   Lock, Mail, Calculator, Brain, BookOpen, BarChart3, Bell,
   Upload, Download, ChevronRight, Calendar, Sliders,
-  Handshake
+  Handshake, Phone, Send
 } from 'lucide-react';
 import axios from 'axios';
 import api from '../api';
@@ -1628,6 +1628,53 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleSendAssessmentQuick = async (app) => {
+    setError('');
+    setSuccess('');
+    const assignedKey = `assessment_questions_${app.id}`;
+    let questions = [];
+    let updatedApps = [];
+
+    if (app.status === 'Round 1 Aptitude') {
+      questions = generateAptitudeQuestions('Quant').slice(0, 5); // default 5 Quant questions
+      localStorage.setItem(assignedKey, JSON.stringify(questions));
+      localStorage.removeItem(`assessment_answers_${app.id}`);
+      updatedApps = externalApplications.map(a =>
+        a.id === app.id ? { ...a, aptitudeStatus: 'Assessment Sent' } : a
+      );
+      updateAppsAndSync(updatedApps);
+      setSuccess(`Aptitude assessment successfully sent to ${app.fullName}.`);
+      setTimeout(() => setSuccess(''), 4000);
+    } else if (app.status === 'Round 1 Technical') {
+      // Find suitable tech category based on job title, default to React
+      const title = (app.jobTitle || '').toLowerCase();
+      let category = 'React';
+      if (title.includes('java') || title.includes('backend') || title.includes('spring')) {
+        category = title.includes('spring') ? 'Spring Boot' : 'Java';
+      } else if (title.includes('node') || title.includes('api')) {
+        category = 'Node.js';
+      } else if (title.includes('python') || title.includes('data')) {
+        category = 'Python';
+      } else if (title.includes('test') || title.includes('qa')) {
+        category = 'Testing';
+      } else if (title.includes('devops') || title.includes('cloud') || title.includes('infra')) {
+        category = 'DevOps';
+      }
+
+      questions = technicalQuestionsData.filter(q => q.category === category).slice(0, 3); // Assign first 3 questions of category
+      localStorage.setItem(assignedKey, JSON.stringify(questions));
+      localStorage.removeItem(`assessment_answers_${app.id}`);
+      updatedApps = externalApplications.map(a =>
+        a.id === app.id ? { ...a, technicalStatus: 'Assessment Sent' } : a
+      );
+      updateAppsAndSync(updatedApps);
+      setSuccess(`Technical coding challenges (${category}) successfully sent to ${app.fullName}.`);
+      setTimeout(() => setSuccess(''), 4000);
+    } else {
+      alert('This candidate is not currently in an assessment stage (Round 1 Aptitude or Round 1 Technical).');
+    }
+  };
+
   const handleUpdateStatus = async (appId, newStatus) => {
     if (newStatus === 'Rejected') {
       if (!window.confirm('Are you sure you want to reject this candidate?')) return;
@@ -2360,7 +2407,17 @@ export default function AdminDashboard() {
 
                                   return (
                                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
+                                      <td className="py-3.5 px-4">
+                                        <button
+                                          onClick={() => {
+                                            setSelectedApplication(app);
+                                            setCandidateStatus(app.status || 'Candidates');
+                                          }}
+                                          className="font-bold text-slate-900 hover:text-[#004AAD] transition text-left cursor-pointer bg-transparent border-none p-0 outline-none"
+                                        >
+                                          {app.fullName}
+                                        </button>
+                                      </td>
                                       <td className="py-3.5 px-4">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${dateVal === 'Not Selected' ? 'bg-slate-50 text-slate-500 border border-slate-200' : 'bg-blue-50 text-blue-700 border border-blue-200'
@@ -2702,7 +2759,17 @@ export default function AdminDashboard() {
                                 <tbody className="divide-y divide-slate-100 text-slate-700">
                                   {filteredApps.map((app) => (
                                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
+                                      <td className="py-3.5 px-4">
+                                        <button
+                                          onClick={() => {
+                                            setSelectedApplication(app);
+                                            setCandidateStatus(app.status || 'Candidates');
+                                          }}
+                                          className="font-bold text-slate-900 hover:text-[#004AAD] transition text-left cursor-pointer bg-transparent border-none p-0 outline-none"
+                                        >
+                                          {app.fullName}
+                                        </button>
+                                      </td>
                                       <td className="py-3.5 px-4 font-medium text-slate-600">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4 text-slate-500">{app.email}</td>
                                       <td className="py-3.5 px-4 font-semibold text-slate-700">
@@ -3103,7 +3170,17 @@ export default function AdminDashboard() {
                                 <tbody className="divide-y divide-slate-100 text-slate-700">
                                   {filteredApps.map((app) => (
                                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
+                                      <td className="py-3.5 px-4">
+                                        <button
+                                          onClick={() => {
+                                            setSelectedApplication(app);
+                                            setCandidateStatus(app.status || 'Candidates');
+                                          }}
+                                          className="font-bold text-slate-900 hover:text-[#004AAD] transition text-left cursor-pointer bg-transparent border-none p-0 outline-none"
+                                        >
+                                          {app.fullName}
+                                        </button>
+                                      </td>
                                       <td className="py-3.5 px-4 font-medium text-slate-600">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4 text-slate-500">{app.email}</td>
                                       <td className="py-3.5 px-4 font-semibold text-slate-700">
@@ -3415,7 +3492,15 @@ export default function AdminDashboard() {
                             return filtered.map(app => (
                               <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="py-4 px-6">
-                                  <div className="font-bold text-slate-900">{app.fullName}</div>
+                                  <button
+                                    onClick={() => {
+                                      setSelectedApplication(app);
+                                      setCandidateStatus(app.status || 'Candidates');
+                                    }}
+                                    className="font-bold text-slate-900 hover:text-[#004AAD] transition text-left cursor-pointer bg-transparent border-none p-0 outline-none"
+                                  >
+                                    {app.fullName}
+                                  </button>
                                   <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
                                 </td>
                                 <td className="py-4 px-6">
@@ -4025,20 +4110,94 @@ export default function AdminDashboard() {
               <X className="h-5 w-5" />
             </button>
 
-            <h3 className="text-xl font-extrabold text-slate-900 mb-2">
-              Review Candidate Profile
-            </h3>
-            <p className="text-xs text-slate-500 mb-6 border-b border-slate-100 pb-2">
-              Review info, update candidacy status, or schedule an interview below.
-            </p>
+            {/* Profile Header (Top Section) */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 border-b border-slate-100 pb-6 mb-6">
+              {/* Large Avatar */}
+              <div className="h-20 w-20 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-blue-500/10 shrink-0">
+                {selectedApplication.fullName.split(' ').map(n => n[0]).join('')}
+              </div>
+
+              {/* Candidate Info */}
+              <div className="flex-grow text-center sm:text-left space-y-1.5">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 justify-center sm:justify-start">
+                  <h3 className="text-xl font-black text-slate-900 leading-none">
+                    {selectedApplication.fullName}
+                  </h3>
+                  {(() => {
+                    const isShortlisted = ['Shortlisted', 'Selected', 'Joined'].includes(selectedApplication.status);
+                    const isRejected = selectedApplication.status === 'Rejected';
+                    return (
+                      <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                        isShortlisted
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                          : isRejected
+                            ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                            : 'bg-purple-100 text-purple-800 border border-purple-200'
+                      }`}>
+                        {isShortlisted ? 'shortlisted' : isRejected ? 'rejected' : 'in process'}
+                      </span>
+                    );
+                  })()}
+                </div>
+
+                <div className="text-slate-500 text-xs font-semibold">
+                  Applied for: <strong className="text-slate-800">{selectedApplication.jobTitle}</strong>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-slate-500 text-xs font-bold mt-1">
+                  <span className="flex items-center gap-1">
+                    <Mail className="h-3.5 w-3.5 text-slate-400" />
+                    {selectedApplication.email}
+                  </span>
+                  {selectedApplication.phone && (
+                    <span className="flex items-center gap-1">
+                      <Phone className="h-3.5 w-3.5 text-slate-400" />
+                      {selectedApplication.phone}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Action Buttons */}
+            <div className="flex flex-wrap gap-2.5 mb-6 border-b border-slate-100 pb-6 justify-center sm:justify-start">
+              <button
+                type="button"
+                onClick={() => {
+                  document.getElementById('schedule-interview-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#004AAD] hover:bg-[#003882] text-white rounded-xl text-xs font-bold transition shadow-sm hover:shadow cursor-pointer border-none outline-none"
+              >
+                <Calendar className="h-3.5 w-3.5" />
+                Schedule Interview
+              </button>
+              <button
+                type="button"
+                onClick={() => handleUpdateStatus(selectedApplication.id, 'Rejected')}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition cursor-pointer"
+              >
+                <Trash className="h-3.5 w-3.5" />
+                Reject
+              </button>
+              {(selectedApplication.status === 'Round 1 Aptitude' || selectedApplication.status === 'Round 1 Technical') && (
+                <button
+                  type="button"
+                  onClick={() => handleSendAssessmentQuick(selectedApplication)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-xl text-xs font-bold transition cursor-pointer"
+                >
+                  <Send className="h-3.5 w-3.5" />
+                  Send Assessment
+                </button>
+              )}
+            </div>
 
             <div className="space-y-6">
               {/* Stepper / Progress Tracking */}
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Candidate Hiring Progress</div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                  {['Candidates', 'Round 1 Aptitude', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
-                    const order = ['Candidates', 'Round 1 Aptitude', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
+                  {['Candidates', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
+                    const order = ['Candidates', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
                     const curIdx = order.indexOf(selectedApplication.status);
                     const isCompleted = curIdx >= idx && selectedApplication.status !== 'Rejected';
                     const isCurrent = selectedApplication.status === step;
@@ -4197,7 +4356,7 @@ export default function AdminDashboard() {
               <div className="border-t border-slate-100 pt-4">
                 <label className="text-xs font-bold uppercase block mb-2">Update Application Status</label>
                 <div className="flex flex-wrap gap-2">
-                  {['Candidates', 'Round 1 Aptitude', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
+                  {['Candidates', 'Round 1 Technical', 'Round 2 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
                     <button
                       key={status}
                       type="button"
@@ -4214,7 +4373,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Schedule Interview Form */}
-              <form onSubmit={handleScheduleInterview} className="border-t border-slate-100 pt-4 space-y-4">
+              <form id="schedule-interview-section" onSubmit={handleScheduleInterview} className="border-t border-slate-100 pt-4 space-y-4">
                 <label className="text-xs font-bold uppercase block mb-1">Schedule Interview / Meeting</label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
