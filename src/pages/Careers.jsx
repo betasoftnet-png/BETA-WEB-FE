@@ -50,8 +50,7 @@ const fallbackJobs = [
   {
     id: 'mock-1',
     title: 'Senior Full Stack Engineer',
-
-    location: 'Chennai, India (Hybrid)',
+    location: 'Tiruvallur',
     type: 'Full-Time',
     experience: '3+ Years',
     skills: ['React', 'Node.js', 'MongoDB', 'Express'],
@@ -60,8 +59,7 @@ const fallbackJobs = [
   {
     id: 'mock-2',
     title: 'UI/UX Designer & Developer',
-
-    location: 'Chennai, India (Hybrid)',
+    location: 'Vellore',
     type: 'Full-Time',
     experience: '2+ Years',
     skills: ['Figma', 'React', 'Tailwind CSS', 'Framer Motion'],
@@ -70,8 +68,7 @@ const fallbackJobs = [
   {
     id: 'mock-3',
     title: 'DevOps & Infrastructure Lead',
-
-    location: 'Chennai, India (Hybrid)',
+    location: 'Tiruvallur',
     type: 'Full-Time',
     experience: '4+ Years',
     skills: ['AWS', 'Kubernetes', 'CI/CD Pipelines', 'Docker'],
@@ -80,8 +77,7 @@ const fallbackJobs = [
   {
     id: 'mock-4',
     title: 'QA Automation Engineer',
-
-    location: 'Chennai, India (Hybrid)',
+    location: 'Vellore',
     type: 'Full-Time',
     experience: '2+ Years',
     skills: ['Selenium', 'Cypress', 'JavaScript', 'Postman'],
@@ -126,8 +122,11 @@ export default function Careers() {
         setJobsError('');
         const response = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs`);
         const data = response.data.data || response.data || [];
-        const fetched = data.map(job => ({
+        const fetched = data.map((job, idx) => ({
           ...job,
+          location: job.location && (job.location.toLowerCase().includes('tiruvallur') || job.location.toLowerCase().includes('vellore')) 
+            ? (job.location.toLowerCase().includes('tiruvallur') ? 'Tiruvallur' : 'Vellore')
+            : (idx % 2 === 0 ? 'Tiruvallur' : 'Vellore'),
           team: job.department || job.team || 'Engineering',
           experience: job.experience || '2+ Years',
           skills: Array.isArray(job.skills) ? job.skills : []
