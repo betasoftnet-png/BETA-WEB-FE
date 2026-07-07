@@ -1260,8 +1260,8 @@ export default function AdminDashboard() {
     setError('');
     try {
       const [jobsRes, appsRes] = await Promise.all([
-        axios.get('http://localhost:8080/api/jobs'),
-        axios.get('https://apply.beta-softnet.com/api/applications')
+        axios.get('http://localhost:8081/api/jobs'),
+        axios.get('http://localhost:8081/api/admin/applications')
       ]);
       setExternalJobs(jobsRes.data.data || jobsRes.data || []);
 
@@ -1346,9 +1346,22 @@ export default function AdminDashboard() {
   };
 
   // Load data only if authenticated as admin
+  const loadApplications = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8081/api/admin/applications"
+      );
+
+      setExternalApplications(response.data);
+
+    } catch (error) {
+      console.error("Failed to load applications:", error);
+    }
+  };
   useEffect(() => {
     if (user && user.role === 'ROLE_ADMIN') {
       fetchData();
+      loadApplications();
     }
   }, [user]);
 
@@ -1652,7 +1665,7 @@ export default function AdminDashboard() {
       .filter(q => selectedTestQuestionIds.includes(q.id));
 
     try {
-      await axios.post("http://localhost:8080/api/assessment/send", {
+      await axios.post("http://localhost:8081/api/assessment/send", {
         candidateId: Number(appId),
         questionIds: selectedTechnicalQuestionIds
       });

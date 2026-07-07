@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Shield, Brain, Clock, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react';
 
@@ -27,61 +28,17 @@ export default function Assessment() {
     }
 
     // Load assigned questions or load default 5 Quant questions
-    const assignedKey = `assessment_questions_${candidateId}`;
-    const storedQuestions = localStorage.getItem(assignedKey);
-    if (storedQuestions) {
-      setQuestions(JSON.parse(storedQuestions));
-    } else {
-      // Load a default set of 5 sample questions if none were assigned
-      const defaultQuestions = [
-        {
-          id: 'q-quant-default-1',
-          title: 'Simple Interest & Growth',
-          difficulty: 'Easy',
-          time: '2 mins',
-          description: 'Calculate the Simple Interest on a principal sum of $2000 at a rate of 6% per annum for 3 years.',
-          options: ['A) $360', 'B) $300', 'C) $400', 'D) $420'],
-          correctIndex: 0
-        },
-        {
-          id: 'q-logical-default-2',
-          title: 'Blood Relations Tree',
-          difficulty: 'Medium',
-          time: '2 mins',
-          description: 'Pointing to a photo, a project lead says: "His mother is the only daughter-in-law of my father\'s wife." How is the lead related to the person in the photo?',
-          options: ['A) Brother', 'B) Father', 'C) Uncle', 'D) Cousin'],
-          correctIndex: 1
-        },
-        {
-          id: 'q-verbal-default-3',
-          title: 'Synonyms & Vocabulary',
-          difficulty: 'Easy',
-          time: '1 min',
-          description: 'Choose the word which is closest in meaning to the term "Loquacious".',
-          options: ['A) Quiet', 'B) Angry', 'C) Talkative', 'D) Happy'],
-          correctIndex: 2
-        },
-        {
-          id: 'q-quant-default-4',
-          title: 'Profit and Loss',
-          difficulty: 'Medium',
-          time: '2 mins',
-          description: 'A retail merchant marks his inventory 20% above cost price and then offers a customer discount of 10%. What is the net profit percentage?',
-          options: ['A) 10%', 'B) 8%', 'C) 12%', 'D) 5%'],
-          correctIndex: 1
-        },
-        {
-          id: 'q-dataint-default-5',
-          title: 'Pie Chart Budget Share',
-          difficulty: 'Medium',
-          time: '3 mins',
-          description: 'A corporate pie chart segments expenditure. If the total annual budget is $200,000, find the raw amount spent on R&D if it represents 15% of total share.',
-          options: ['A) $30,000', 'B) $25,000', 'C) $35,000', 'D) $40,000'],
-          correctIndex: 0
-        }
-      ];
-      setQuestions(defaultQuestions);
-    }
+    axios.get(`http://localhost:8081/api/assessment/${candidateId}`)
+      .then((response) => {
+
+        setQuestions(response.data);
+
+      })
+      .catch((error) => {
+
+        console.log(error);
+
+      });
   }, [candidateId]);
 
   // Running Timer Countdown
@@ -224,8 +181,8 @@ export default function Assessment() {
               <Brain className="h-4 w-4" />
               <span>
                 {candidate?.status === 'Round 1 Technical' ? 'Round 2: Technical Challenge' :
-                 candidate?.status === 'Round 2 Brand Awareness' ? 'Round 3: Brand Awareness Evaluation' :
-                 'Round 1: Aptitude Screening'}
+                  candidate?.status === 'Round 2 Brand Awareness' ? 'Round 3: Brand Awareness Evaluation' :
+                    'Round 1: Aptitude Screening'}
               </span>
             </div>
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">{candidateName}</h1>

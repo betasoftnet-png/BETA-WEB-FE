@@ -30,7 +30,7 @@ import api from '../api';
 const JOB_BOARD_API_BASE =
   window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8080'
+    ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
 
 const benefits = [
@@ -190,7 +190,7 @@ export default function Careers() {
         const data = response.data.data || response.data || [];
         const fetched = data.map((job, idx) => ({
           ...job,
-          location: job.location && (job.location.toLowerCase().includes('tiruvallur') || job.location.toLowerCase().includes('vellore')) 
+          location: job.location && (job.location.toLowerCase().includes('tiruvallur') || job.location.toLowerCase().includes('vellore'))
             ? (job.location.toLowerCase().includes('tiruvallur') ? 'Tiruvallur' : 'Vellore')
             : (idx % 2 === 0 ? 'Tiruvallur' : 'Vellore'),
           team: job.department || job.team || 'Engineering',
@@ -253,42 +253,48 @@ export default function Careers() {
 
   const handleApply = async (e, jobOverride = null) => {
     e.preventDefault();
-    const activeJob = jobOverride || selectedJob;
-    if (!fullName || !email || !phone || !resume || !activeJob) return;
 
-    setStatus('loading');
+    const activeJob = jobOverride || selectedJob;
+
+    // Debug logs
+    console.log("Active Job:", activeJob);
+    console.log("Job ID:", activeJob?.id);
+
+    if (!fullName || !email || !phone || !resume || !activeJob) {
+      console.log("Validation failed");
+      return;
+    }
+
+    setStatus("loading");
+
     const formData = new FormData();
-    formData.append('jobId', activeJob.id);
-    formData.append('fullName', fullName);
-    formData.append('email', email);
-    formData.append('phone', phone);
-    formData.append('coverLetter', coverLetter);
-    formData.append('resume', resume);
+    formData.append("jobId", activeJob.id);
+    formData.append("fullName", fullName);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("coverLetter", coverLetter);
+    formData.append("resume", resume);
+
+    // Print all FormData values
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
 
     try {
-      await axios.post(`${JOB_BOARD_API_BASE}/api/jobs/apply`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setStatus('success');
-      setMessage(`Application for ${activeJob.title} submitted successfully!`);
-      if (!user) {
-        setFullName('');
-        setEmail('');
-      } else {
-        const computedName = user.fullName || [user.firstName, user.lastName].filter(Boolean).join(' ') || localStorage.getItem('beta_fullName') || '';
-        setFullName(computedName);
-        setEmail(user.email || localStorage.getItem('beta_email') || user.username || '');
-      }
-      setPhone('');
-      setCoverLetter('');
-      setResume(null);
-      // setSelectedJobForGeneral(null);
-    } catch (err) {
-      console.error(err);
-      setStatus('error');
-      setMessage(err.response?.data?.message || 'Failed to submit application. Try again.');
+      const response = await axios.post(
+        `${JOB_BOARD_API_BASE}/api/jobs/apply`,
+        formData
+      );
+
+      console.log("Success:", response.data);
+      setStatus("success");
+
+    } catch (error) {
+      console.error("Error:", error);
+      console.error("Response:", error.response);
+      console.error("Data:", error.response?.data);
+
+      setStatus("error");
     }
   };
 
@@ -315,7 +321,7 @@ export default function Careers() {
       }
 
       const userEmail = (user.email || user.username || '').toLowerCase();
-      
+
       const apiFiltered = apiApps.filter(
         (app) => (app.email || '').toLowerCase() === userEmail
       );
@@ -1299,7 +1305,7 @@ export default function Careers() {
                   {userApplications.map((app) => {
                     const statusText = app.status;
                     const appliedDate = formatDate(app.createdAt);
-                    
+
                     // Determine step index for progress tracker
                     let activeIdx = 0;
                     if (statusText === 'Candidates') activeIdx = 0;
@@ -1334,13 +1340,12 @@ export default function Careers() {
 
                           {/* Mapped Status Badge */}
                           <div className="flex-shrink-0">
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${
-                              ['Selected', 'Joined'].includes(statusText)
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                : statusText === 'Rejected'
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${['Selected', 'Joined'].includes(statusText)
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : statusText === 'Rejected'
                                 ? 'bg-rose-50 text-rose-700 border-rose-200'
                                 : 'bg-purple-50 text-purple-700 border-purple-200'
-                            }`}>
+                              }`}>
                               {statusText}
                             </span>
                           </div>
