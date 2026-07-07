@@ -85,6 +85,30 @@ const fallbackJobs = [
   }
 ];
 
+const mapStatusToUI = (status) => {
+  const s = (status || '').toLowerCase().trim();
+  if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Candidates';
+  if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 Aptitude';
+  if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 1 Technical';
+  if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 2 Brand Awareness';
+  if (s === 'shortlisted') return 'Shortlisted';
+  if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
+  if (s === 'approved' || s === 'selected') return 'Selected';
+  if (s === 'rejected') return 'Rejected';
+  if (s === 'joined') return 'Joined';
+  return 'Candidates';
+};
+
+const formatDate = (isoString) => {
+  if (!isoString) return '';
+  try {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch {
+    return isoString;
+  }
+};
+
 export default function Careers() {
   const navigate = useNavigate();
   const { user, redirectToSSO } = useContext(AuthContext);
@@ -109,6 +133,13 @@ export default function Careers() {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+
+  // My Jobs Applications Tracking State
+  const [showMyJobs, setShowMyJobs] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [myJobsLoading, setMyJobsLoading] = useState(false);
+  const [myJobsError, setMyJobsError] = useState('');
+  const [userApplications, setUserApplications] = useState([]);
 
   // Extract unique filter options dynamically from jobsList
   const teams = Array.from(new Set(jobsList.map(job => job.team).filter(Boolean)));
@@ -202,11 +233,127 @@ export default function Careers() {
       setPhone('');
       setCoverLetter('');
       setResume(null);
-      setSelectedJobForGeneral(null);
+      // setSelectedJobForGeneral(null);
     } catch (err) {
       console.error(err);
       setStatus('error');
       setMessage(err.response?.data?.message || 'Failed to submit application. Try again.');
+    }
+  };
+
+  const fetchUserApplications = async () => {
+    if (!user) return;
+    setMyJobsLoading(true);
+    setMyJobsError('');
+    try {
+      let apiApps = [];
+      try {
+        const response = await axios.get(`${JOB_BOARD_API_BASE}/api/applications`);
+        apiApps = response.data?.data || response.data || [];
+      } catch (err) {
+        console.error('API /api/applications failed:', err);
+      }
+
+      // Load local storage apps
+      let localApps = [];
+      try {
+        const stored = localStorage.getItem('beta_applications');
+        localApps = stored ? JSON.parse(stored) : [];
+      } catch (err) {
+        console.error('Local storage read failed:', err);
+      }
+
+      const userEmail = (user.email || user.username || '').toLowerCase();
+      
+      const apiFiltered = apiApps.filter(
+        (app) => (app.email || '').toLowerCase() === userEmail
+      );
+      const localFiltered = localApps.filter(
+        (app) => (app.email || '').toLowerCase() === userEmail
+      );
+
+      const mergedApps = [];
+      const seenIds = new Set();
+
+      // Normalize API apps and match with local storage
+      apiFiltered.forEach((app) => {
+        const normalized = {
+          id: app.id,
+          fullName: app.fullName || app.fullname || '',
+          email: app.email || '',
+          phone: app.phone || '',
+          resumeUrl: app.resumeUrl || app.resumeurl || '',
+          coverLetter: app.coverLetter || app.coverletter || '',
+          status: mapStatusToUI(app.status),
+          createdAt: app.createdAt || app.createdat || '',
+          jobTitle: app.jobTitle || app.jobtitle || '',
+          jobDepartment: app.jobDepartment || app.jobdepartment || '',
+          jobLocation: app.jobLocation || app.joblocation || '',
+          interviewDate: app.interviewDate || app.interviewdate || '',
+          interviewTime: app.interviewTime || app.interviewtime || '',
+          aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
+          aptitudeScore: app.aptitudeScore || app.aptitudescore || '',
+          experience: app.experience || '3 Years'
+        };
+
+        const localMatch = localFiltered.find((l) => l.id === app.id);
+        if (localMatch) {
+          if (localMatch.aptitudeStatus && !normalized.aptitudeStatus) {
+            normalized.aptitudeStatus = localMatch.aptitudeStatus;
+          }
+          if (localMatch.aptitudeScore !== undefined && localMatch.aptitudeScore !== null && normalized.aptitudeScore === '') {
+            normalized.aptitudeScore = localMatch.aptitudeScore;
+          }
+          if (localMatch.status && localMatch.status !== normalized.status && localMatch.status !== 'Candidates') {
+            normalized.status = localMatch.status;
+          }
+        }
+
+        mergedApps.push(normalized);
+        seenIds.add(app.id);
+      });
+
+      // Include local apps that are not yet on backend
+      localFiltered.forEach((localApp) => {
+        if (!seenIds.has(localApp.id)) {
+          mergedApps.push({
+            id: localApp.id,
+            fullName: localApp.fullName || '',
+            email: localApp.email || '',
+            phone: localApp.phone || '',
+            resumeUrl: localApp.resumeUrl || '',
+            coverLetter: localApp.coverLetter || '',
+            status: localApp.status || 'Candidates',
+            createdAt: localApp.createdAt || new Date().toISOString(),
+            jobTitle: localApp.jobTitle || '',
+            jobDepartment: localApp.jobDepartment || 'Engineering',
+            jobLocation: localApp.jobLocation || 'Tiruvallur',
+            interviewDate: localApp.interviewDate || '',
+            interviewTime: localApp.interviewTime || '',
+            aptitudeStatus: localApp.aptitudeStatus || '',
+            aptitudeScore: localApp.aptitudeScore !== undefined && localApp.aptitudeScore !== null ? localApp.aptitudeScore : '',
+            experience: localApp.experience || '3 Years'
+          });
+        }
+      });
+
+      // Sort by date created desc
+      mergedApps.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setUserApplications(mergedApps);
+    } catch (err) {
+      console.error('Failed to parse or merge user applications:', err);
+      setMyJobsError('Failed to load application details.');
+    } finally {
+      setMyJobsLoading(false);
+    }
+  };
+
+  const handleMyJobsClick = () => {
+    if (!user) {
+      setShowLoginPrompt(true);
+    } else {
+      setShowMyJobs(true);
+      fetchUserApplications();
     }
   };
 
@@ -431,6 +578,15 @@ export default function Careers() {
                       </button>
                     )}
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={handleMyJobsClick}
+                    className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-purple-500/20 bg-white text-slate-700 hover:bg-slate-50 transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap"
+                  >
+                    <Briefcase className="h-3.5 w-3.5 text-[#8B5CF6]" />
+                    <span>My Jobs</span>
+                  </button>
 
                   <button
                     type="button"
@@ -973,6 +1129,287 @@ export default function Careers() {
                   </button>
                 </form>
               )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* MY JOBS MODAL */}
+      <AnimatePresence>
+        {showMyJobs && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-2xl bg-white rounded-3xl p-6 md:p-8 border border-purple-100 shadow-2xl text-left flex flex-col max-h-[85vh]"
+            >
+              <button
+                onClick={() => setShowMyJobs(false)}
+                className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-purple-50 text-purple-400 hover:text-purple-600 transition cursor-pointer z-10"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="mb-6 space-y-1 pr-8">
+                <span className="text-xs font-bold text-[#EC4899] uppercase tracking-widest">Candidate Workspace</span>
+                <h3 className="text-2xl font-black">My Applications</h3>
+                <p className="text-slate-500 text-xs font-medium">Track your active roles and interview updates</p>
+              </div>
+
+              {myJobsLoading ? (
+                <div className="flex flex-col items-center justify-center py-16 space-y-4">
+                  <div className="h-10 w-10 border-4 border-purple-500/30 border-t-purple-600 rounded-full animate-spin" />
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wider animate-pulse">Retrieving application history...</p>
+                </div>
+              ) : myJobsError ? (
+                <div className="py-12 text-center space-y-4">
+                  <div className="h-12 w-12 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto text-rose-500">
+                    <AlertCircle className="h-6 w-6" />
+                  </div>
+                  <h4 className="text-base font-bold text-slate-800">Something went wrong</h4>
+                  <p className="text-xs text-slate-500 max-w-xs mx-auto">{myJobsError}</p>
+                  <button
+                    onClick={fetchUserApplications}
+                    className="px-5 py-2 rounded-xl bg-purple-600 text-white text-xs font-extrabold shadow-md hover:bg-purple-700 transition cursor-pointer"
+                  >
+                    Retry Fetching
+                  </button>
+                </div>
+              ) : userApplications.length === 0 ? (
+                <div className="py-16 text-center space-y-6">
+                  <div className="h-16 w-16 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center mx-auto text-[#EC4899] shadow-sm">
+                    <Briefcase className="h-8 w-8 text-purple-400" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-base font-bold text-slate-800">No Applications Found</h4>
+                    <p className="text-slate-500 text-xs leading-relaxed max-w-sm mx-auto">
+                      You haven't submitted any job applications yet. Apply to our open roles to track them here!
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowMyJobs(false);
+                      const target = document.getElementById('search-roles');
+                      if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-extrabold transition cursor-pointer shadow-md"
+                  >
+                    Explore Opportunities
+                  </button>
+                </div>
+              ) : (
+                <div className="overflow-y-auto pr-2 space-y-5 flex-grow scrollbar-thin max-h-[55vh]">
+                  {userApplications.map((app) => {
+                    const statusText = app.status;
+                    const appliedDate = formatDate(app.createdAt);
+                    
+                    // Determine step index for progress tracker
+                    let activeIdx = 0;
+                    if (statusText === 'Candidates') activeIdx = 0;
+                    else if (statusText === 'Shortlisted') activeIdx = 1;
+                    else if (['Round 1 Aptitude', 'Round 1 Technical', 'Round 2 Brand Awareness'].includes(statusText)) activeIdx = 2;
+                    else if (statusText === 'Interview Scheduled') activeIdx = 3;
+                    else if (['Selected', 'Rejected', 'Joined'].includes(statusText)) activeIdx = 4;
+
+                    const steps = ['Applied', 'Screening', 'Assessment', 'Interview', 'Decision'];
+
+                    return (
+                      <div
+                        key={app.id}
+                        className="glass-card-purple p-5 rounded-2xl border border-purple-500/10 flex flex-col gap-4 relative overflow-hidden bg-white/70"
+                      >
+                        {/* Upper card header */}
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                          <div>
+                            <h4 className="text-base font-black text-slate-900 group-hover:text-[#EC4899] transition-colors">
+                              {app.jobTitle || 'General Opening'}
+                            </h4>
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs text-slate-500 font-semibold">
+                              <span className="text-[#EC4899] font-extrabold uppercase tracking-wide text-[10px]">
+                                {app.jobDepartment || 'Engineering'}
+                              </span>
+                              <span>&bull;</span>
+                              <span>{app.jobLocation || 'Tiruvallur'}</span>
+                              <span>&bull;</span>
+                              <span className="text-[11px] text-slate-400 font-medium">Applied on {appliedDate}</span>
+                            </div>
+                          </div>
+
+                          {/* Mapped Status Badge */}
+                          <div className="flex-shrink-0">
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${
+                              ['Selected', 'Joined'].includes(statusText)
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                : statusText === 'Rejected'
+                                ? 'bg-rose-50 text-rose-700 border-rose-200'
+                                : 'bg-purple-50 text-purple-700 border-purple-200'
+                            }`}>
+                              {statusText}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Interactive Steps Visualizer */}
+                        <div className="border-t border-purple-500/10 pt-4 pb-2">
+                          <div className="relative flex items-center justify-between w-full">
+                            {/* Connector Line */}
+                            <div className="absolute left-3 right-3 top-3 h-[2px] bg-slate-100 z-0">
+                              <div
+                                className="h-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] transition-all duration-500"
+                                style={{ width: `${(activeIdx / (steps.length - 1)) * 100}%` }}
+                              />
+                            </div>
+
+                            {/* Node Circles */}
+                            {steps.map((stepName, idx) => {
+                              const isCompleted = idx < activeIdx;
+                              const isActive = idx === activeIdx;
+                              const isRejectedDecision = idx === 4 && statusText === 'Rejected';
+
+                              let circleClasses = 'bg-white border-slate-200 text-slate-400';
+                              if (isCompleted) {
+                                circleClasses = 'bg-[#8B5CF6] border-[#8B5CF6] text-white shadow-sm';
+                              } else if (isActive) {
+                                circleClasses = isRejectedDecision
+                                  ? 'bg-rose-500 border-rose-500 text-white shadow-md shadow-rose-200 animate-pulse'
+                                  : 'bg-[#EC4899] border-[#EC4899] text-white shadow-md shadow-pink-200 animate-pulse';
+                              }
+
+                              return (
+                                <div key={stepName} className="flex flex-col items-center relative z-10 w-[20%] text-center">
+                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 text-[10px] font-black transition-all duration-300 ${circleClasses}`}>
+                                    {idx + 1}
+                                  </div>
+                                  <span className={`text-[8.5px] font-bold mt-1.5 uppercase tracking-wide block ${isActive ? 'text-[#EC4899]' : isCompleted ? 'text-slate-600' : 'text-slate-400'}`}>
+                                    {stepName}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Actionable status details below tracker */}
+                        {statusText === 'Round 1 Aptitude' && (
+                          <div className="mt-1">
+                            {app.aptitudeStatus === 'Scheduled' ? (
+                              <div className="p-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                                <div className="text-left">
+                                  <span className="font-extrabold text-[#F59E0B] uppercase tracking-wider block mb-0.5">Online Assessment Available</span>
+                                  <p className="text-slate-500 font-medium">Your 10-minute automated coding assessment is ready to begin.</p>
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    setShowMyJobs(false);
+                                    navigate(`/careers/assessment?id=${app.id}`);
+                                  }}
+                                  className="w-full sm:w-auto px-4.5 py-2.5 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-[#EC4899]/15 text-center whitespace-nowrap"
+                                >
+                                  Take Assessment
+                                </button>
+                              </div>
+                            ) : app.aptitudeStatus === 'Completed' ? (
+                              <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Assessment Completed</span>
+                                <p className="text-slate-500 font-medium">
+                                  Score: <strong className="text-slate-800">{app.aptitudeScore || '0'}/5</strong>. Recruiting managers are reviewing your submission.
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Awaiting Scheduling</span>
+                                <p className="text-slate-500 font-medium">We are preparing your online coding screening questions. Check back soon.</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {statusText === 'Interview Scheduled' && (
+                          <div className="mt-1">
+                            {app.interviewDate && app.interviewTime ? (
+                              <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Interview Scheduled</span>
+                                <p className="text-slate-500 font-medium">
+                                  📅 Date: <strong className="text-slate-800">{app.interviewDate}</strong> at <strong className="text-slate-800">{app.interviewTime}</strong>. A calendar invite has been sent to your email.
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Scheduling In Progress</span>
+                                <p className="text-slate-500 font-medium">Recruiting coordinators are finalizing interview slots. Check your email for invites shortly.</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {['Selected', 'Joined'].includes(statusText) && (
+                          <div className="mt-1">
+                            <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
+                              <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Application Selected!</span>
+                              <p className="text-slate-500 font-medium">
+                                Congratulations! You have successfully cleared our rounds. An onboarding specialist will contact you with the offer proposal and equity schedule.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {statusText === 'Rejected' && (
+                          <div className="mt-1">
+                            <div className="p-3.5 bg-rose-500/5 border border-rose-500/20 rounded-xl text-left text-xs">
+                              <span className="font-extrabold text-rose-600 uppercase tracking-wider block mb-0.5">Application Closed</span>
+                              <p className="text-slate-500 font-medium">
+                                We sincerely appreciate the time you took to interview with us. While we are not moving forward with this opening, we will retain your file for matching roles.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* SIGN IN REQUIRED FOR MY JOBS */}
+      <AnimatePresence>
+        {showLoginPrompt && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-sm bg-white rounded-3xl p-6 md:p-8 border border-purple-100 shadow-2xl text-left"
+            >
+              <button
+                onClick={() => setShowLoginPrompt(false)}
+                className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-purple-50 text-purple-400 hover:text-purple-600 transition cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <div className="py-6 text-center space-y-6">
+                <div className="h-16 w-16 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center mx-auto text-[#EC4899] shadow-sm">
+                  <AlertCircle className="h-8 w-8 animate-pulse" />
+                </div>
+                <h4 className="text-lg font-bold">Sign In Required</h4>
+                <p className="text-slate-500 text-xs leading-relaxed max-w-xs mx-auto">
+                  Please sign in to view and track your job application updates.
+                </p>
+                <button
+                  onClick={() => {
+                    setShowLoginPrompt(false);
+                    redirectToSSO('/careers');
+                  }}
+                  className="w-full px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] text-white text-xs font-extrabold transition cursor-pointer border-none shadow-md"
+                >
+                  Sign In to View Applications
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
