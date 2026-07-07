@@ -6,7 +6,7 @@ export default function Login() {
   const { user, redirectToSSO } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => { 
     if (user) {
       if (user.role === 'ROLE_ADMIN') {
         navigate('/adminofcarrer');
