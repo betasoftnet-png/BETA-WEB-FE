@@ -1610,13 +1610,15 @@ export default function AdminDashboard() {
       .filter(q => selectedTechnicalQuestionIds.includes(q.id));
 
     try {
-      await axios.put(`https://apply.beta-softnet.com/api/applications/${appId}/questions`, {
-        questions: selectedQuestions
+      await axios.post("http://localhost:8080/api/assessment/send", {
+        candidateId: Number(appId),
+        questionIds: selectedTechnicalQuestionIds
       });
+
       setSuccess(`Technical assessment successfully sent to ${candidate.fullName}.`);
     } catch (err) {
-      console.warn('API assignment failed, falling back to local simulation:', err);
-      setSuccess(`Technical assessment successfully sent to ${candidate.fullName}. (Simulated API update)`);
+      console.error(err);
+      setError("Failed to send assessment.");
     } finally {
       localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
       localStorage.removeItem(`assessment_answers_${appId}`);
@@ -1650,13 +1652,15 @@ export default function AdminDashboard() {
       .filter(q => selectedTestQuestionIds.includes(q.id));
 
     try {
-      await axios.put(`https://apply.beta-softnet.com/api/applications/${appId}/questions`, {
-        questions: selectedQuestions
+      await axios.post("http://localhost:8080/api/assessment/send", {
+        candidateId: Number(appId),
+        questionIds: selectedTechnicalQuestionIds
       });
-      setSuccess(`Test questions successfully sent to ${candidate.fullName}.`);
+
+      setSuccess(`Technical assessment successfully sent to ${candidate.fullName}.`);
     } catch (err) {
-      console.warn('API assignment failed, falling back to local simulation:', err);
-      setSuccess(`Test questions successfully sent to ${candidate.fullName}. (Simulated API update)`);
+      console.error(err);
+      setError("Failed to send assessment.");
     } finally {
       localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
       localStorage.removeItem(`assessment_answers_${appId}`);
@@ -2838,8 +2842,8 @@ export default function AdminDashboard() {
                                       </td>
                                       <td className="py-3.5 px-4">
                                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${app.technicalStatus === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-250' :
-                                            app.technicalStatus === 'Assessment Sent' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                              'bg-amber-50 text-amber-700 border border-amber-200'
+                                          app.technicalStatus === 'Assessment Sent' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                                            'bg-amber-50 text-amber-700 border border-amber-200'
                                           }`}>
                                           {app.technicalStatus || 'Pending'}
                                         </span>
@@ -4188,10 +4192,10 @@ export default function AdminDashboard() {
                     const isRejected = selectedApplication.status === 'Rejected';
                     return (
                       <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${isShortlisted
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                          : isRejected
-                            ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                            : 'bg-purple-100 text-purple-800 border border-purple-200'
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                        : isRejected
+                          ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                          : 'bg-purple-100 text-purple-800 border border-purple-200'
                         }`}>
                         {isShortlisted ? 'shortlisted' : isRejected ? 'rejected' : 'in process'}
                       </span>
@@ -4612,8 +4616,8 @@ export default function AdminDashboard() {
                       <td className="py-3.5 px-4 font-bold text-slate-550">{q.category}</td>
                       <td className="py-3.5 px-4">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${q.difficulty === 'Hard' ? 'bg-red-50 text-red-700 border border-red-200' :
-                            q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                              'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                            'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           }`}>
                           {q.difficulty}
                         </span>
