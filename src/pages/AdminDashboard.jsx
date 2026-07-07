@@ -600,7 +600,7 @@ const fallbackApps = [
 const generateTechnicalQuestions = () => {
   const categories = ['React', 'Java', 'Spring Boot', 'Node.js', 'Python', 'Testing', 'DevOps'];
   const questions = [];
-  
+
   // React
   const reactTemplates = [
     ["State Mutation Output", "What is the output of updating React state directly without setState?", "The component does not re-render", "The component re-renders immediately", "Explain the difference between useMemo and useCallback.", 'const [state, setState] = useState({ value: "old" });\nstate.value = "new";\n// Is this correct?'],
@@ -2837,11 +2837,10 @@ export default function AdminDashboard() {
                                         {app.experience || '3 Years'}
                                       </td>
                                       <td className="py-3.5 px-4">
-                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                          app.technicalStatus === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-250' :
-                                          app.technicalStatus === 'Assessment Sent' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                          'bg-amber-50 text-amber-700 border border-amber-200'
-                                        }`}>
+                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${app.technicalStatus === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-250' :
+                                            app.technicalStatus === 'Assessment Sent' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                                              'bg-amber-50 text-amber-700 border border-amber-200'
+                                          }`}>
                                           {app.technicalStatus || 'Pending'}
                                         </span>
                                       </td>
@@ -4188,13 +4187,12 @@ export default function AdminDashboard() {
                     const isShortlisted = ['Shortlisted', 'Selected', 'Joined'].includes(selectedApplication.status);
                     const isRejected = selectedApplication.status === 'Rejected';
                     return (
-                      <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                        isShortlisted
+                      <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${isShortlisted
                           ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                           : isRejected
                             ? 'bg-rose-100 text-rose-800 border border-rose-200'
                             : 'bg-purple-100 text-purple-800 border border-purple-200'
-                      }`}>
+                        }`}>
                         {isShortlisted ? 'shortlisted' : isRejected ? 'rejected' : 'in process'}
                       </span>
                     );
@@ -4613,11 +4611,10 @@ export default function AdminDashboard() {
                       <td className="py-3.5 px-4 font-bold text-slate-900">{q.title}</td>
                       <td className="py-3.5 px-4 font-bold text-slate-550">{q.category}</td>
                       <td className="py-3.5 px-4">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${
-                          q.difficulty === 'Hard' ? 'bg-red-50 text-red-700 border border-red-200' :
-                          q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                          'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        }`}>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${q.difficulty === 'Hard' ? 'bg-red-50 text-red-700 border border-red-200' :
+                            q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                              'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          }`}>
                           {q.difficulty}
                         </span>
                       </td>
