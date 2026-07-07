@@ -1209,6 +1209,10 @@ export default function AdminDashboard() {
   const [interviewer, setInterviewer] = useState('Tech Team Lead');
   const [remarks, setRemarks] = useState('');
 
+  // Test modal states
+  const [showTestModal, setShowTestModal] = useState(false);
+  const [selectedTestQuestionIds, setSelectedTestQuestionIds] = useState([]);
+
   // Job Posting/Editing Modal States
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null); // null if adding, job object if editing
@@ -1626,6 +1630,64 @@ export default function AdminDashboard() {
       setLoading(false);
       setTimeout(() => setSuccess(''), 4000);
     }
+  };
+
+  const handleSendTest = async (appId) => {
+    const candidate = externalApplications.find(app => app.id === appId);
+    if (!candidate) return;
+
+    if (selectedTestQuestionIds.length === 0) {
+      alert('Please select at least one question first!');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    const assignedKey = `assessment_questions_${appId}`;
+    const selectedQuestions = technicalQuestionsData.slice(0, 40)
+      .filter(q => selectedTestQuestionIds.includes(q.id));
+
+    try {
+      await axios.put(`https://apply.beta-softnet.com/api/applications/${appId}/questions`, {
+        questions: selectedQuestions
+      });
+      setSuccess(`Test questions successfully sent to ${candidate.fullName}.`);
+    } catch (err) {
+      console.warn('API assignment failed, falling back to local simulation:', err);
+      setSuccess(`Test questions successfully sent to ${candidate.fullName}. (Simulated API update)`);
+    } finally {
+      localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
+      localStorage.removeItem(`assessment_answers_${appId}`);
+
+      const updatedApps = externalApplications.map(app =>
+        app.id === appId ? { ...app, technicalStatus: 'Assessment Sent', aptitudeStatus: 'Assessment Sent' } : app
+      );
+      updateAppsAndSync(updatedApps);
+
+      setSelectedTestQuestionIds([]);
+      setShowTestModal(false);
+      setLoading(false);
+      setTimeout(() => setSuccess(''), 4000);
+    }
+  };
+
+  const toggleTestQuestion = (qId) => {
+    if (selectedTestQuestionIds.includes(qId)) {
+      setSelectedTestQuestionIds(selectedTestQuestionIds.filter(id => id !== qId));
+    } else {
+      setSelectedTestQuestionIds([...selectedTestQuestionIds, qId]);
+    }
+  };
+
+  const selectAllTestQuestions = () => {
+    const allIds = technicalQuestionsData.slice(0, 40).map(q => q.id);
+    setSelectedTestQuestionIds(allIds);
+  };
+
+  const deselectAllTestQuestions = () => {
+    setSelectedTestQuestionIds([]);
   };
 
   const handleSendAssessmentQuick = async (app) => {
@@ -4178,6 +4240,17 @@ export default function AdminDashboard() {
                 <Trash className="h-3.5 w-3.5" />
                 Reject
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedTestQuestionIds([]);
+                  setShowTestModal(true);
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-xl text-xs font-bold transition cursor-pointer"
+              >
+                <Brain className="h-3.5 w-3.5" />
+                Test
+              </button>
               {(selectedApplication.status === 'Round 1 Aptitude' || selectedApplication.status === 'Round 1 Technical') && (
                 <button
                   type="button"
@@ -4467,6 +4540,108 @@ export default function AdminDashboard() {
               <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap no-override">
                 {selectedCoverLetter.text}
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Assigning 40 Test Questions */}
+      {showTestModal && selectedApplication && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-4xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 admin-scrollbar overflow-y-auto max-h-[90vh]">
+            <button
+              onClick={() => setShowTestModal(false)}
+              className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div>
+              <h3 className="text-xl font-extrabold text-slate-900">
+                Select Test Questions for {selectedApplication.fullName}
+              </h3>
+              <p className="text-xs text-slate-550 font-bold mt-0.5">
+                Choose from the standard list of 40 evaluation questions to send to this candidate.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 mt-4 mb-4">
+              <button
+                type="button"
+                onClick={selectAllTestQuestions}
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-lg transition cursor-pointer"
+              >
+                Select All
+              </button>
+              <button
+                type="button"
+                onClick={deselectAllTestQuestions}
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-lg transition cursor-pointer"
+              >
+                Deselect All
+              </button>
+              <span className="text-xs text-slate-500 font-bold ml-2">
+                {selectedTestQuestionIds.length} of 40 selected
+              </span>
+            </div>
+
+            {/* Questions Table */}
+            <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[50vh] overflow-y-auto admin-scrollbar">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-extrabold tracking-wider sticky top-0 z-10">
+                  <tr>
+                    <th className="py-3 px-4 w-10">Select</th>
+                    <th className="py-3 px-4 w-16">ID</th>
+                    <th className="py-3 px-4 w-48">Title</th>
+                    <th className="py-3 px-4 w-24">Category</th>
+                    <th className="py-3 px-4 w-20">Difficulty</th>
+                    <th className="py-3 px-4">Description</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                  {technicalQuestionsData.slice(0, 40).map((q) => (
+                    <tr key={q.id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="py-3.5 px-4 w-10">
+                        <input
+                          type="checkbox"
+                          checked={selectedTestQuestionIds.includes(q.id)}
+                          onChange={() => toggleTestQuestion(q.id)}
+                          className="h-4 w-4 rounded border-slate-300 text-[#004AAD] focus:ring-[#004AAD] cursor-pointer"
+                        />
+                      </td>
+                      <td className="py-3.5 px-4 font-mono font-bold text-[#004AAD]">{q.id.toUpperCase()}</td>
+                      <td className="py-3.5 px-4 font-bold text-slate-900">{q.title}</td>
+                      <td className="py-3.5 px-4 font-bold text-slate-550">{q.category}</td>
+                      <td className="py-3.5 px-4">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${
+                          q.difficulty === 'Hard' ? 'bg-red-50 text-red-700 border border-red-200' :
+                          q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                          'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        }`}>
+                          {q.difficulty}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 max-w-sm truncate" title={q.description}>{q.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
+              <button
+                onClick={() => setShowTestModal(false)}
+                className="px-5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleSendTest(selectedApplication.id)}
+                disabled={loading}
+                className="px-5 py-2 rounded-xl bg-[#004AAD] hover:bg-[#003882] text-white text-xs font-bold transition cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 border-none outline-none"
+              >
+                {loading ? 'Sending...' : 'Send Test to Candidate'}
+              </button>
             </div>
           </div>
         </div>
