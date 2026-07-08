@@ -3604,10 +3604,10 @@ export default function AdminDashboard() {
                                   {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
                                 </td>
                                 <td className="py-4 px-6">
-                                  {app.resumeUrl ? (
+                                  {app.resume ? (
                                     <button
                                       onClick={() => {
-                                        setSelectedResumeUrl(app.resumeUrl);
+                                        setSelectedResumeUrl(`http://localhost:8081/uploads/${app.resume}`);
                                         setSelectedResumeCandidate(app.fullName);
                                       }}
                                       className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold cursor-pointer"
@@ -4846,7 +4846,7 @@ export default function AdminDashboard() {
 
               <div className="flex items-center space-x-3">
                 <a
-                  href={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `https://apply.beta-softnet.com${selectedResumeUrl}`}
+                  href={selectedResumeUrl}
                   download={`${selectedResumeCandidate.replace(/\s+/g, '_')}_Resume.pdf`}
                   target="_blank"
                   rel="noopener noreferrer"

@@ -50,7 +50,7 @@ const processSteps = [
 
 const fallbackJobs = [
   {
-    id: 'mock-1',
+    id: 1,
     title: 'Senior Full Stack Engineer',
     location: 'Tiruvallur',
     type: 'Full-Time',
@@ -59,7 +59,7 @@ const fallbackJobs = [
     description: 'We are seeking a talented Senior Full Stack Engineer to lead development of our client-facing portal, APIs, and key features.'
   },
   {
-    id: 'mock-2',
+    id: 2,
     title: 'UI/UX Designer & Developer',
     location: 'Vellore',
     type: 'Full-Time',
@@ -68,7 +68,7 @@ const fallbackJobs = [
     description: 'Join us to design beautiful user experiences and translate them into high-fidelity web components.'
   },
   {
-    id: 'mock-3',
+    id: 3,
     title: 'DevOps & Infrastructure Lead',
     location: 'Tiruvallur',
     type: 'Full-Time',
@@ -77,7 +77,7 @@ const fallbackJobs = [
     description: 'Own our deployment architecture, monitoring pipeline, database clustering, and security controls.'
   },
   {
-    id: 'mock-4',
+    id: 4,
     title: 'QA Automation Engineer',
     location: 'Vellore',
     type: 'Full-Time',
@@ -89,7 +89,7 @@ const fallbackJobs = [
 
 const upcomingJobs = [
   {
-    id: 'upcoming-1',
+    id: 6,
     title: 'Data Analyst & BI Specialist',
     location: 'Tiruvallur',
     type: 'Full-Time',
@@ -99,7 +99,7 @@ const upcomingJobs = [
     team: 'Data Science'
   },
   {
-    id: 'upcoming-2',
+    id: 7,
     title: 'Cybersecurity Analyst',
     location: 'Vellore',
     type: 'Full-Time',
@@ -109,7 +109,7 @@ const upcomingJobs = [
     team: 'Security'
   },
   {
-    id: 'upcoming-3',
+    id: 8,
     title: 'Senior Product Manager',
     location: 'Tiruvallur',
     type: 'Full-Time',
@@ -148,7 +148,7 @@ export default function Careers() {
   const navigate = useNavigate();
   const { user, redirectToSSO } = useContext(AuthContext);
 
-  const [jobsList, setJobsList] = useState(fallbackJobs);
+  const [jobsList, setJobsList] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(false);
   const [jobsError, setJobsError] = useState('');
 
