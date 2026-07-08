@@ -158,6 +158,9 @@ export default function Careers() {
   const [phone, setPhone] = useState('');
   const [coverLetter, setCoverLetter] = useState('');
   const [resume, setResume] = useState(null);
+  const [interviewDate, setInterviewDate] = useState('');
+  const [interviewTime, setInterviewTime] = useState('');
+  const [shouldSchedule, setShouldSchedule] = useState(false);
 
   const [status, setStatus] = useState('idle'); // idle, loading, success, error
   const [message, setMessage] = useState('');
@@ -219,6 +222,20 @@ export default function Careers() {
     }
   }, [user]);
 
+  // Reset form when selectedJob changes
+  useEffect(() => {
+    if (!selectedJob) {
+      setPhone('');
+      setCoverLetter('');
+      setResume(null);
+      setStatus('idle');
+      setMessage('');
+      setInterviewDate('');
+      setInterviewTime('');
+      setShouldSchedule(false);
+    }
+  }, [selectedJob]);
+
 
   const [currentPage, setCurrentPage] = useState('active'); // 'active' or 'upcoming'
 
@@ -266,6 +283,7 @@ export default function Careers() {
     }
 
     setStatus("loading");
+    setMessage("");
 
     const formData = new FormData();
     formData.append("jobId", activeJob.id);
@@ -274,6 +292,13 @@ export default function Careers() {
     formData.append("phone", phone);
     formData.append("coverLetter", coverLetter);
     formData.append("resume", resume);
+
+    if (shouldSchedule && interviewDate) {
+      formData.append("interviewDate", interviewDate);
+    }
+    if (shouldSchedule && interviewTime) {
+      formData.append("interviewTime", interviewTime);
+    }
 
     // Print all FormData values
     for (const pair of formData.entries()) {
@@ -288,6 +313,34 @@ export default function Careers() {
 
       console.log("Success:", response.data);
       setStatus("success");
+      setMessage(response.data?.message || "Your application was submitted successfully!");
+
+      // Save locally to track in Candidate Workspace / My Jobs
+      const newApp = {
+        id: response.data?.data?.id || `local-${Date.now()}`,
+        fullName,
+        email,
+        phone,
+        coverLetter,
+        resumeUrl: resume ? resume.name : '',
+        status: shouldSchedule && interviewDate ? 'Interview Scheduled' : 'Candidates',
+        createdAt: new Date().toISOString(),
+        jobTitle: activeJob.title,
+        jobDepartment: activeJob.team || 'Engineering',
+        jobLocation: activeJob.location || 'Tiruvallur',
+        interviewDate: shouldSchedule ? interviewDate : '',
+        interviewTime: shouldSchedule ? interviewTime : '',
+        experience: activeJob.experience || '3 Years'
+      };
+
+      try {
+        const stored = localStorage.getItem('beta_applications');
+        const currentLocal = stored ? JSON.parse(stored) : [];
+        currentLocal.push(newApp);
+        localStorage.setItem('beta_applications', JSON.stringify(currentLocal));
+      } catch (err) {
+        console.error('Error saving local application backup:', err);
+      }
 
     } catch (error) {
       console.error("Error:", error);
@@ -295,6 +348,7 @@ export default function Careers() {
       console.error("Data:", error.response?.data);
 
       setStatus("error");
+      setMessage(error.response?.data?.message || error.response?.data || error.message || "Failed to submit application.");
     }
   };
 
@@ -339,7 +393,8 @@ export default function Careers() {
           fullName: app.fullName || app.fullname || '',
           email: app.email || '',
           phone: app.phone || '',
-          resumeUrl: app.resumeUrl || app.resumeurl || '',
+          resume: app.resume || app.resumeUrl || app.resumeurl || '',
+          resumeUrl: app.resumeUrl || app.resumeurl || (app.resume ? (app.resume.startsWith('http') || app.resume.startsWith('/') ? app.resume : `${JOB_BOARD_API_BASE}/uploads/${app.resume}`) : ''),
           coverLetter: app.coverLetter || app.coverletter || '',
           status: mapStatusToUI(app.status),
           createdAt: app.createdAt || app.createdat || '',
@@ -1204,6 +1259,58 @@ export default function Careers() {
                         {resume ? resume.name : 'Click or drag PDF resume here'}
                       </span>
                     </div>
+                  </div>
+
+                  {/* Pre-schedule Time Option */}
+                  <div className="bg-purple-50/50 border border-purple-100 rounded-2xl p-4 space-y-3">
+                    <div className="flex items-center space-x-2.5">
+                      <input
+                        type="checkbox"
+                        id="shouldSchedule"
+                        checked={shouldSchedule}
+                        onChange={(e) => setShouldSchedule(e.target.checked)}
+                        className="h-4.5 w-4.5 text-[#8B5CF6] focus:ring-[#EC4899] border-purple-300 rounded cursor-pointer"
+                      />
+                      <label htmlFor="shouldSchedule" className="text-xs font-black text-slate-700 cursor-pointer select-none">
+                        Pre-schedule an interview slot now
+                      </label>
+                    </div>
+
+                    <AnimatePresence>
+                      {shouldSchedule && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden space-y-3"
+                        >
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Preferred Date</label>
+                              <input
+                                type="date"
+                                required={shouldSchedule}
+                                min={new Date().toISOString().split('T')[0]}
+                                value={interviewDate}
+                                onChange={(e) => setInterviewDate(e.target.value)}
+                                className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#EC4899] text-xs transition"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Preferred Time</label>
+                              <input
+                                type="time"
+                                required={shouldSchedule}
+                                value={interviewTime}
+                                onChange={(e) => setInterviewTime(e.target.value)}
+                                className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#EC4899] text-xs transition"
+                              />
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
                   {status === 'error' && (

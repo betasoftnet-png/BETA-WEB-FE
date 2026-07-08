@@ -6,7 +6,7 @@ import {
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
   Lock, Mail, Calculator, Brain, BookOpen, BarChart3, Bell,
   Upload, Download, ChevronRight, Calendar, Sliders,
-  Handshake, Phone, Send
+  Handshake
 } from 'lucide-react';
 import axios from 'axios';
 import api from '../api';
@@ -15,8 +15,8 @@ const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
   if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Candidates';
   if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 Aptitude';
-  if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 1 Technical';
-  if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 2 Brand Awareness';
+  if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 2 Technical';
+  if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 3 Brand Awareness';
   if (s === 'shortlisted') return 'Shortlisted';
   if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
   if (s === 'approved' || s === 'selected') return 'Selected';
@@ -25,811 +25,6 @@ const mapStatusToUI = (status) => {
   return 'Candidates';
 };
 
-const fallbackApps = [
-  {
-    id: 'app-mock-1',
-    fullName: 'Jane Doe',
-    email: 'jane.doe@example.com',
-    phone: '+91 98765 43210',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'I am excited to apply for the Senior Systems Engineer position at Beta. I have over 5 years of experience in distributed systems design, React, Node.js, and scaling high-availability architectures.',
-    status: 'Candidates',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Senior Full Stack Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)'
-  },
-  {
-    id: 'app-mock-2',
-    fullName: 'Alex Smith',
-    email: 'alex.smith@example.com',
-    phone: '+1 (555) 019-2834',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Hello! I am a passionate UI/UX developer with extensive experience building premium user experiences with Framer Motion, Tailwind, and React.',
-    status: 'Shortlisted',
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    jobTitle: 'UI/UX Designer & Developer',
-    jobDepartment: 'Design',
-    jobLocation: 'Chennai, India (Hybrid)'
-  },
-  {
-    id: 'app-mock-round1-1',
-    fullName: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+91 99999 88888',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'A highly competent React developer with 3 years of frontend expertise.',
-    status: 'Round 1 Aptitude',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'React Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    interviewDate: '02-Jul-2026',
-    interviewTime: '10 AM',
-    aptitudeStatus: 'Scheduled'
-  },
-  {
-    id: 'app-mock-round1-2',
-    fullName: 'Priya S',
-    email: 'priya.s@example.com',
-    phone: '+91 88888 77777',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Java backend specialist focusing on Spring Boot microservices.',
-    status: 'Round 1 Aptitude',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Java Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    interviewDate: '02-Jul-2026',
-    interviewTime: '11 AM',
-    aptitudeStatus: 'Scheduled'
-  },
-  {
-    id: 'app-mock-round1-3',
-    fullName: 'Arun K',
-    email: 'arun.k@example.com',
-    phone: '+91 77777 66666',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Creative designer and UI developer expert with Tailwind and CSS.',
-    status: 'Round 1 Aptitude',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'UI Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    interviewDate: '03-Jul-2026',
-    interviewTime: '02 PM',
-    aptitudeStatus: 'Completed'
-  },
-  {
-    id: 'app-mock-round1-4',
-    fullName: 'Rahul M',
-    email: 'rahul.m@example.com',
-    phone: '+91 66666 55555',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Node.js developer with database indexing expertise.',
-    status: 'Round 1 Aptitude',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Backend Dev',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    interviewDate: 'Not Selected',
-    interviewTime: '--',
-    aptitudeStatus: 'Pending'
-  },
-  {
-    id: 'r2-fe-1',
-    fullName: 'Sarah Connor',
-    email: 'sarah.c@example.com',
-    phone: '+91 95432 10987',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'React expert focusing on clean UI rendering.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'React Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '5 Years'
-  },
-  {
-    id: 'r2-fe-2',
-    fullName: 'Alex Rivera',
-    email: 'alex.r@example.com',
-    phone: '+91 95432 10988',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'UI developer specialized in HTML5, CSS3, and responsive design systems.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'UI Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-fe-3',
-    fullName: 'Daniel Lee',
-    email: 'daniel.l@example.com',
-    phone: '+91 95432 10989',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Frontend developer focusing on React and Redux architectures.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'React Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '4 Years'
-  },
-  {
-    id: 'r2-fe-4',
-    fullName: 'John Baker',
-    email: 'john.b@example.com',
-    phone: '+91 95432 10990',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'High-end UI design systems builder.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'UI/UX Designer & Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-fe-5',
-    fullName: 'Lily Chen',
-    email: 'lily.c@example.com',
-    phone: '+91 95432 10991',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'React framework expert with state handling experience.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'React Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '5 Years'
-  },
-  {
-    id: 'r2-fe-6',
-    fullName: 'Marcus Aurelius',
-    email: 'marcus.a@example.com',
-    phone: '+91 95432 10992',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'CSS, layout design, and design system focus.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'UI Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '6 Years'
-  },
-  {
-    id: 'r2-fe-7',
-    fullName: 'Sophia Patel',
-    email: 'sophia.p@example.com',
-    phone: '+91 95432 10993',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'React Hooks and context provider developer.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'React Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '4 Years'
-  },
-  {
-    id: 'r2-fe-8',
-    fullName: 'Jack Ryan',
-    email: 'jack.r@example.com',
-    phone: '+91 95432 10994',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'CSS keyframe details and transitions.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'UI Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-fe-9',
-    fullName: 'Anna Kowalski',
-    email: 'anna.k@example.com',
-    phone: '+91 95432 10995',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'React applications modular setups.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'React Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '2 Years'
-  },
-  {
-    id: 'r2-fe-10',
-    fullName: 'Oliver Twist',
-    email: 'oliver.t@example.com',
-    phone: '+91 95432 10996',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Clean CSS systems builder.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'UI Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-fe-11',
-    fullName: 'Emily Bronte',
-    email: 'emily.b@example.com',
-    phone: '+91 95432 10997',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Advanced React component patterns.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'React Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '4 Years'
-  },
-  {
-    id: 'r2-fe-12',
-    fullName: 'Robert Frost',
-    email: 'robert.f@example.com',
-    phone: '+91 95432 10998',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'UI focus, performance scoring developer.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'UI Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '5 Years'
-  },
-
-  // Backend Candidates (8)
-  {
-    id: 'r2-be-1',
-    fullName: 'David Miller',
-    email: 'david.m@example.com',
-    phone: '+91 84321 09876',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Java Developer focused on core optimization.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Java Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '4 Years'
-  },
-  {
-    id: 'r2-be-2',
-    fullName: 'Karen Smith',
-    email: 'karen.s@example.com',
-    phone: '+91 73210 98765',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Spring Boot REST microservices specialist.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Spring Boot Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '6 Years'
-  },
-  {
-    id: 'r2-be-3',
-    fullName: 'Michael Johnson',
-    email: 'michael.j@example.com',
-    phone: '+91 62109 87654',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Node.js/Express backend architect.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Node.js Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-be-4',
-    fullName: 'Suresh R',
-    email: 'suresh.r@example.com',
-    phone: '+91 51098 76543',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Python/Django backend developer.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Python Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '4 Years'
-  },
-  {
-    id: 'r2-be-5',
-    fullName: 'Diana Prince',
-    email: 'diana.p@example.com',
-    phone: '+91 84321 09877',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Core Java specialist.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Java Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '5 Years'
-  },
-  {
-    id: 'r2-be-6',
-    fullName: 'Clark Kent',
-    email: 'clark.k@example.com',
-    phone: '+91 84321 09878',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Node/Koa/Express coder.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Node.js Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-be-7',
-    fullName: 'Bruce Wayne',
-    email: 'bruce.w@example.com',
-    phone: '+91 84321 09879',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Python scripts, Django security.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Python Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '6 Years'
-  },
-  {
-    id: 'r2-be-8',
-    fullName: 'Barry Allen',
-    email: 'barry.a@example.com',
-    phone: '+91 84321 09880',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Java concurrency and threading Developer.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Java Developer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '2 Years'
-  },
-
-  // Full Stack Candidates (5)
-  {
-    id: 'r2-fs-1',
-    fullName: 'Tony Stark',
-    email: 'tony.s@example.com',
-    phone: '+91 30987 54322',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Senior React/Node systems engineer.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Senior Full Stack Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '6 Years'
-  },
-  {
-    id: 'r2-fs-2',
-    fullName: 'Peter Parker',
-    email: 'peter.p@example.com',
-    phone: '+91 30987 54323',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'MERN stack specialist.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Senior Full Stack Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-fs-3',
-    fullName: 'Steve Rogers',
-    email: 'steve.r@example.com',
-    phone: '+91 30987 54324',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Full stack web architectures.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Senior Full Stack Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '5 Years'
-  },
-  {
-    id: 'r2-fs-4',
-    fullName: 'Natasha Romanoff',
-    email: 'natasha.r@example.com',
-    phone: '+91 30987 54325',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'React, Node, Postgres architect.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Senior Full Stack Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '4 Years'
-  },
-  {
-    id: 'r2-fs-5',
-    fullName: 'Wanda Maximoff',
-    email: 'wanda.m@example.com',
-    phone: '+91 30987 54326',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'MERN stack coding.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'Senior Full Stack Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-
-  // Testing Candidates (4)
-  {
-    id: 'r2-qa-1',
-    fullName: 'Jessica A',
-    email: 'jessica.a@example.com',
-    phone: '+91 40987 65432',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Selenium and Cypress test structures.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'QA Automation Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '5 Years'
-  },
-  {
-    id: 'r2-qa-2',
-    fullName: 'Arthur Dent',
-    email: 'arthur.d@example.com',
-    phone: '+91 40987 65433',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Integration testing developer.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'QA Automation Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-qa-3',
-    fullName: 'Ford Prefect',
-    email: 'ford.p@example.com',
-    phone: '+91 40987 65434',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Automation suite builder.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'QA Automation Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '4 Years'
-  },
-  {
-    id: 'r2-qa-4',
-    fullName: 'Tricia McMillan',
-    email: 'tricia.m@example.com',
-    phone: '+91 40987 65435',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'API load and automation tests.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'QA Automation Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '5 Years'
-  },
-
-  // DevOps Candidates (2)
-  {
-    id: 'r2-do-1',
-    fullName: 'Devin K',
-    email: 'devin.k@example.com',
-    phone: '+91 30987 54321',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Docker, AWS deployments, Kubernetes.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'DevOps Cloud Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '3 Years'
-  },
-  {
-    id: 'r2-do-2',
-    fullName: 'Linus Torvalds',
-    email: 'linus.t@example.com',
-    phone: '+91 30987 54327',
-    resumeUrl: '/mock_resume.pdf',
-    coverLetter: 'Linux kernel deployments, systems optimization.',
-    status: 'Round 1 Technical',
-    createdAt: new Date().toISOString(),
-    jobTitle: 'DevOps Cloud Engineer',
-    jobDepartment: 'Engineering',
-    jobLocation: 'Chennai, India (Hybrid)',
-    experience: '10 Years'
-  },
-
-  // Round 3 - Brand Awareness (BNX Mail - 12)
-  { id: 'r3-bm-1', fullName: 'Lucas Scott', email: 'lucas.s@example.com', phone: '+91 91111 22221', resumeUrl: '/mock_resume.pdf', coverLetter: 'Email advocate.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bm-2', fullName: 'Nathan Scott', email: 'nathan.s@example.com', phone: '+91 91111 22222', resumeUrl: '/mock_resume.pdf', coverLetter: 'SMTP expert.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-bm-3', fullName: 'Haley James', email: 'haley.j@example.com', phone: '+91 91111 22223', resumeUrl: '/mock_resume.pdf', coverLetter: 'Customer messaging.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-bm-4', fullName: 'Peyton Sawyer', email: 'peyton.s@example.com', phone: '+91 91111 22224', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand PR.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bm-5', fullName: 'Brooke Davis', email: 'brooke.d@example.com', phone: '+91 91111 22225', resumeUrl: '/mock_resume.pdf', coverLetter: 'Product placement.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
-  { id: 'r3-bm-6', fullName: 'Dan Scott', email: 'dan.s@example.com', phone: '+91 91111 22226', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise outreach.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '8 Years' },
-  { id: 'r3-bm-7', fullName: 'Mouth McFadden', email: 'mouth.m@example.com', phone: '+91 91111 22227', resumeUrl: '/mock_resume.pdf', coverLetter: 'Communications expert.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bm-8', fullName: 'Skills Taylor', email: 'skills.t@example.com', phone: '+91 91111 22228', resumeUrl: '/mock_resume.pdf', coverLetter: 'Promotions lead.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-bm-9', fullName: 'Keith Scott', email: 'keith.s@example.com', phone: '+91 91111 22229', resumeUrl: '/mock_resume.pdf', coverLetter: 'CTO engagement.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-bm-10', fullName: 'Karen Roe', email: 'karen.r@example.com', phone: '+91 91111 22230', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand design.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-bm-11', fullName: 'Whitey Durham', email: 'whitey.d@example.com', phone: '+91 91111 22231', resumeUrl: '/mock_resume.pdf', coverLetter: 'Branding legacy.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '12 Years' },
-  { id: 'r3-bm-12', fullName: 'Deb Scott', email: 'deb.s@example.com', phone: '+91 91111 22232', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise outreach.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'BNX Mail Strategist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
-
-  // Cliks Business - 8
-  { id: 'r3-cb-1', fullName: 'Julian Baker', email: 'julian.b@example.com', phone: '+91 92222 33331', resumeUrl: '/mock_resume.pdf', coverLetter: 'SaaS pitch.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-cb-2', fullName: 'Clay Evans', email: 'clay.e@example.com', phone: '+91 92222 33332', resumeUrl: '/mock_resume.pdf', coverLetter: 'Acquisition strategy.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-cb-3', fullName: 'Quinn James', email: 'quinn.j@example.com', phone: '+91 92222 33333', resumeUrl: '/mock_resume.pdf', coverLetter: 'Workflow design.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-cb-4', fullName: 'Chase Adams', email: 'chase.a@example.com', phone: '+91 92222 33334', resumeUrl: '/mock_resume.pdf', coverLetter: 'Enterprise licensing.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-cb-5', fullName: 'Chris Keller', email: 'chris.k@example.com', phone: '+91 92222 33335', resumeUrl: '/mock_resume.pdf', coverLetter: 'Client outreach.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
-  { id: 'r3-cb-6', fullName: 'Mia Catalano', email: 'mia.c@example.com', phone: '+91 92222 33336', resumeUrl: '/mock_resume.pdf', coverLetter: 'Brand messaging.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' },
-  { id: 'r3-cb-7', fullName: 'Alex Dupre', email: 'alex.d@example.com', phone: '+91 92222 33337', resumeUrl: '/mock_resume.pdf', coverLetter: 'Product demos.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-cb-8', fullName: 'Victoria Davis', email: 'victoria.d@example.com', phone: '+91 92222 33338', resumeUrl: '/mock_resume.pdf', coverLetter: 'Executive relations.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Cliks Business Consultant', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '7 Years' },
-
-  // Company Core Values - 5
-  { id: 'r3-bs-1', fullName: 'Rachel Gatina', email: 'rachel.g@example.com', phone: '+91 93333 44441', resumeUrl: '/mock_resume.pdf', coverLetter: 'Values advocate.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bs-2', fullName: 'Bevin Mirskey', email: 'bevin.m@example.com', phone: '+91 93333 44442', resumeUrl: '/mock_resume.pdf', coverLetter: 'Corporate communication.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-bs-3', fullName: 'Cooper Lee', email: 'cooper.l@example.com', phone: '+91 93333 44443', resumeUrl: '/mock_resume.pdf', coverLetter: 'Ethics strategy.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '6 Years' },
-  { id: 'r3-bs-4', fullName: 'Gigi Silveri', email: 'gigi.s@example.com', phone: '+91 93333 44444', resumeUrl: '/mock_resume.pdf', coverLetter: 'Identity alignment.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-bs-5', fullName: 'Shelly Simon', email: 'shelly.s@example.com', phone: '+91 93333 44445', resumeUrl: '/mock_resume.pdf', coverLetter: 'Corporate culture.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Company Core Values Specialist', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-
-  // Public Relations - 4
-  { id: 'r3-cr-1', fullName: 'Millicent Huxtable', email: 'millie.h@example.com', phone: '+91 94444 55551', resumeUrl: '/mock_resume.pdf', coverLetter: 'PR strategist.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '4 Years' },
-  { id: 'r3-cr-2', fullName: 'Chuck Scolnik', email: 'chuck.s@example.com', phone: '+91 94444 55552', resumeUrl: '/mock_resume.pdf', coverLetter: 'Media outreach.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '5 Years' },
-  { id: 'r3-cr-3', fullName: 'Marvin McFadden', email: 'marvin.m@example.com', phone: '+91 94444 55553', resumeUrl: '/mock_resume.pdf', coverLetter: 'Event branding.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '3 Years' },
-  { id: 'r3-cr-4', fullName: 'Mouth McFadden Jr', email: 'mouth.jr@example.com', phone: '+91 94444 55554', resumeUrl: '/mock_resume.pdf', coverLetter: 'Social channels.', status: 'Shortlisted', createdAt: new Date().toISOString(), jobTitle: 'Public Relations Representative', jobDepartment: 'Marketing', jobLocation: 'Chennai, India (Hybrid)', experience: '2 Years' }
-];
-
-const generateTechnicalQuestions = () => {
-  const categories = ['React', 'Java', 'Spring Boot', 'Node.js', 'Python', 'Testing', 'DevOps'];
-  const questions = [];
-
-  // React
-  const reactTemplates = [
-    ["State Mutation Output", "What is the output of updating React state directly without setState?", "The component does not re-render", "The component re-renders immediately", "Explain the difference between useMemo and useCallback.", 'const [state, setState] = useState({ value: "old" });\nstate.value = "new";\n// Is this correct?'],
-    ["Hook Lifecycle Evaluation", "In React, do hooks execute in the exact same order on every render?", "True", "False", "Explain the difference between useEffect layout phase and paint phase.", 'useEffect(() => {\n  console.log("Render completed");\n}, []);'],
-    ["Virtual DOM Performance", "Does the Virtual DOM execute reflows faster than the real DOM directly?", "True", "False", "Explain the reconciliation process in React Fiber.", '// Fiber reconciler splits render and commit phases'],
-    ["React Strict Mode", "Does React Strict Mode double-invoke component render functions in development?", "True", "False", "Explain why Strict Mode does this.", '<React.StrictMode>\n  <App />\n</React.StrictMode>'],
-    ["Controlled Input Mutation", "Is an input with only a value prop (and no onChange) mutable by typing?", "True", "False", "Explain the difference between controlled and uncontrolled components.", '<input value="hello" />'],
-    ["Custom Hook State Sharing", "Does calling a custom hook share state variables across multiple component instances?", "True", "False", "Explain how custom hooks share state logic but not raw state.", 'const val = useCustomHook();'],
-    ["Child Render Optimization", "Does a child component automatically re-render when its parent component state updates?", "True", "False", "Explain how to optimize child component rendering using React.memo.", 'const Child = React.memo(MyComponent);'],
-    ["Synthetic Event Delegation", "Does React SyntheticEvent system bubble events to the native window target?", "True", "False", "Explain how SyntheticEvent delegation works in React 18.", 'const onClick = (e) => { e.stopPropagation(); }'],
-    ["Error Boundary Capture", "Can an Error Boundary catch errors occurring inside asynchronous setTimeout callbacks?", "True", "False", "Explain where Error Boundaries can and cannot capture errors.", 'class ErrorBoundary extends React.Component { ... }'],
-    ["Portal Mount Target", "Does React Portal mount DOM nodes outside of the main root DOM hierarchy?", "True", "False", "Explain the event propagation behavior of React Portals.", 'ReactDOM.createPortal(child, container)'],
-    ["Suspense Default Import", "Does React.lazy require a default export for the dynamically imported component?", "True", "False", "Explain how code splitting works with Suspense.", 'const LazyComp = React.lazy(() => import("./Comp"));'],
-    ["Context Value Reference", "Does every consumer of a React Context re-render when the Provider value reference changes?", "True", "False", "Explain how to prevent unnecessary context consumer re-renders.", '<MyContext.Provider value={value}>'],
-    ["Ref Forwarding Target", "Does forwardRef allow parent components to access native DOM nodes of children?", "True", "False", "Explain why forwarding refs is useful in custom input libraries.", 'const MyInput = forwardRef((props, ref) => ...)'],
-    ["State Update Batching", "Does React batch state updates inside microtasks and event handler callbacks?", "True", "False", "Explain batching behaviors in React 18 concurrency mode.", 'setState(c => c + 1);\nsetState(c => c + 1);'],
-    ["Index Key Side Effects", "Can index-based keys cause state mismatch issues when list items are reordered?", "True", "False", "Explain how React uses keys during the reconciliation process.", 'items.map((item, idx) => <li key={idx}>{item}</li>)'],
-    ["HOC Runtime Injection", "Do Higher-Order Components dynamically wrap components at runtime?", "True", "False", "Explain the difference between HOCs and custom Hooks.", 'export default withAuth(MyComponent);'],
-    ["Hydration Mismatch Source", "Does React hydration run rendering on the client to match HTML output from the server?", "True", "False", "Explain the term \"hydration mismatch\".", 'ReactDOM.hydrateRoot(document.getElementById("root"), <App />);'],
-    ["Profiler Duration Tracker", "Does the React Profiler record rendering times of both mount and update phases?", "True", "False", "Explain the difference between actualDuration and baseDuration in Profiler.", '<Profiler id="App" onRender={callback}>'],
-    ["Fragment DOM Footprint", "Does using React Fragment <></> add an extra wrapper element to the DOM tree?", "True", "False", "Explain why DOM flattening is important in CSS flex layouts.", '<><div>A</div><div>B</div></>'],
-    ["Concurrent Render Interrupt", "Can concurrent rendering in React interrupt an ongoing component render phase?", "True", "False", "Explain how startTransition works to schedule low-priority rendering.", 'startTransition(() => { setTab("analytics"); });']
-  ];
-
-  // Java
-  const javaTemplates = [
-    ["String Reference Equality", "What is the output of checking string identity with == in Java?", "True", "False", "Explain the difference between an interface and an abstract class.", 'String s1 = new String("test");\nString s2 = "test";\nSystem.out.println(s1 == s2);'],
-    ["JVM Heap Segments", "Does the Java Garbage Collector run in the same execution thread as the main application thread?", "True", "False", "Explain the difference between G1 GC and ZGC collector.", 'System.gc();'],
-    ["Checked Exception Scope", "Does a checked exception require a throws signature or try-catch block to compile?", "True", "False", "Explain the difference between checked and unchecked exceptions.", 'throw new IOException("Failed");'],
-    ["HashMap Bucket Collision", "Does HashMap resize buckets into red-black trees when collisions exceed 8 items?", "True", "False", "Explain how HashMap handles key collisions in Java 8.", 'map.put(key, value);'],
-    ["Volatile Synchronization", "Does the volatile keyword guarantee atomicity of compound operations (like count++)?", "True", "False", "Explain why volatile is critical for thread-safe double-checked singleton lock.", 'private static volatile Singleton instance;'],
-    ["Stream Lazy Evaluation", "Are Java Streams operations evaluated only when a terminal operation is executed?", "True", "False", "Explain the difference between intermediate and terminal stream operations.", 'stream.filter(s -> s.startsWith("A")).map(String::toUpperCase);'],
-    ["Generics Type Erasure", "Does JVM preserve generic type parameters in bytecode at execution runtime?", "True", "False", "Explain the concept of type erasure in Java Generics.", 'List<String> list = new ArrayList<>();'],
-    ["Classloader Delegation", "Does the JVM Bootstrap ClassLoader delegate class lookup requests to the System ClassLoader first?", "True", "False", "Explain the parent delegation model in ClassLoader architecture.", 'ClassLoader.getSystemClassLoader();'],
-    ["Serializable Transient Keyword", "Does serialization save fields marked with the transient keyword to bytes output?", "True", "False", "Explain the purpose of transient and serialVersionUID fields.", 'private transient String password;'],
-    ["Thread Sync ReentrantLocks", "Does ReentrantLock support lock acquisition interrupts and timeout configurations?", "True", "False", "Explain the difference between synchronized block and ReentrantLock.", 'lock.tryLock(5, TimeUnit.SECONDS);'],
-    ["Virtual Threads Concurrency", "Do Project Loom Virtual Threads mount directly on OS threads in a 1-to-1 ratio?", "True", "False", "Explain how virtual threads achieve high concurrency with low overhead.", 'Thread.startVirtualThread(() -> {});'],
-    ["Integer Cache Cache Bounds", "Does Java cache Integer object references for values from -128 to 127 automatically?", "True", "False", "Explain why autoboxing reference comparisons fail outside cache limits.", 'Integer a = 128; Integer b = 128; System.out.println(a == b);'],
-    ["Method Overload Dispatch", "Does JVM resolve method overloading at compile time (static binding)?", "True", "False", "Explain the difference between method overloading and overriding binding.", 'public void process(String s) {}'],
-    ["Reflection API Performance", "Does using the Reflection API bypass compile-time security and type checking checks?", "True", "False", "Explain the performance trade-offs of Reflection in Java.", 'Method m = MyClass.class.getMethod("process");'],
-    ["Comparable Comparator Order", "Does Comparable\'s compareTo define the intrinsic natural ordering of a class?", "True", "False", "Explain the difference between Comparable and Comparator interfaces.", 'public int compareTo(Person other) { ... }'],
-    ["JPA N+1 Query Problem", "Does lazy loading trigger the N+1 select query problem in relational mappings?", "True", "False", "Explain how to resolve the JPA N+1 select problem using JOIN FETCH.", '@OneToMany(fetch = FetchType.LAZY)'],
-    ["Optional Unwrap Optional Null", "Does calling Optional.of(null) throw a NullPointerException immediately at runtime?", "True", "False", "Explain when to use Optional.ofNullable instead.", 'Optional<String> op = Optional.of(null);'],
-    ["Final Modifier Classes", "Can a class marked with the final modifier be inherited by subclasses?", "True", "False", "Explain final variables, methods, and class usage cases.", 'public final class Configuration { ... }'],
-    ["JVM Arguments Allocation", "Does -Xms configure the maximum heap memory allocation limit of the JVM?", "True", "False", "Explain the purpose of -Xms, -Xmx, and -XX:MaxMetaspaceSize.", 'java -Xms512m -Xmx2g -jar app.jar'],
-    ["Try-With-Resources Close", "Does try-with-resources automatically close classes implementing AutoCloseable interface?", "True", "False", "Explain how try-with-resources prevents connection leak bugs.", 'try (BufferedReader br = new BufferedReader(new FileReader("file.txt"))) { ... }']
-  ];
-
-  // Spring Boot
-  const springTemplates = [
-    ["Bean Scope Default", "Are Spring Beans singleton scoped by default?", "True", "False", "Explain the difference between @Component and @Service annotations.", '@Component\npublic class AppService {\n  // Default Spring Bean Scope\n}'],
-    ["Auto-wiring Type Check", "Does @Autowired resolve dependencies by type first, then by qualifier name?", "True", "False", "Explain the difference between @RestController and @Controller.", '@Autowired\nprivate PaymentGateway paymentService;'],
-    ["Transactional Rollback Rule", "Does @Transactional rollback transactions automatically on checked Exception classes?", "True", "False", "Explain how rollbackFor attribute configures rollback targets.", '@Transactional(rollbackFor = Exception.class)\npublic void update() { ... }'],
-    ["ComponentScan Inclusion Scope", "Does @SpringBootApplication automatically scan package paths outside its own directory?", "True", "False", "Explain the component scan default scanning structure.", '@SpringBootApplication\npublic class Application { ... }'],
-    ["Profile Override Settings", "Can active Spring profiles configure property overrides via application-{profile}.properties?", "True", "False", "Explain the priority structure of Spring Boot property sources.", 'spring.profiles.active=prod'],
-    ["Actuator Security Check", "Are all Spring Boot Actuator endpoints exposed and accessible publicly by default?", "True", "False", "Explain how to configure Actuator endpoint security restrictions.", 'management.endpoints.web.exposure.include=*'],
-    ["DispatcherServlet Mapping", "Does the DispatcherServlet intercept and route all incoming HTTP web requests?", "True", "False", "Explain the Spring MVC request routing sequence.", '// DispatcherServlet acts as the Front Controller'],
-    ["Dependency Injection Choice", "Is Constructor Injection preferred over Field Injection in modern Spring applications?", "True", "False", "Explain why Constructor Injection improves testing and final fields.", 'public AppController(AppService service) { this.service = service; }'],
-    ["JPA Entity Mapping Type", "Does @Entity require a default no-args constructor to instantiate classes?", "True", "False", "Explain why JPA entities require default constructors.", '@Entity\npublic class User { ... }'],
-    ["CommandLineRunner Sequence", "Does CommandLineRunner execute its run method before the ApplicationContext finishes starting?", "True", "False", "Explain when CommandLineRunner is triggered during startup.", '@Component\npublic class SeedRunner implements CommandLineRunner { ... }'],
-    ["Bean Lifecycle Callback", "Does @PostConstruct execute after all bean properties have been initialized?", "True", "False", "Explain the sequence of post-processor callbacks in lifecycle.", '@PostConstruct\npublic void init() { ... }'],
-    ["CORS Configuration Rules", "Does registering WebMvcConfigurer add global CORS mappings across controllers?", "True", "False", "Explain why CORS headers are vital in microservices.", 'registry.addMapping("/api/**").allowedOrigins("*");'],
-    ["ConfigurationProperties Read", "Does @ConfigurationProperties map properties dynamically into structured classes?", "True", "False", "Explain the differences between @Value and @ConfigurationProperties.", '@ConfigurationProperties(prefix = "app.security")'],
-    ["Value Placeholder Fallback", "Does @Value(\"${app.name}\") throw an exception if the property name is not defined?", "True", "False", "Explain how to define a fallback value in a value placeholder.", '@Value("${app.name:BetaSystem}")'],
-    ["WebClient Async Requests", "Is RestTemplate non-blocking and optimized for concurrent reactive calls?", "True", "False", "Explain the difference between RestTemplate and WebClient APIs.", 'webClient.get().uri("/data").retrieve().bodyToMono(String.class);'],
-    ["ControllerAdvice Handling", "Does @ControllerAdvice intercept exceptions thrown across all controller routes?", "True", "False", "Explain how ExceptionHandler maps responses dynamically.", '@ControllerAdvice\npublic class GlobalErrorHandler { ... }'],
-    ["Cacheable Invalidation Key", "Does @Cacheable fetch returns from the cache store if arguments match cached keys?", "True", "False", "Explain the difference between @Cacheable and @CachePut annotations.", '@Cacheable(value = "users", key = "#id")'],
-    ["Hibernate N+1 Query Fix", "Does setting FetchType.EAGER on OneToMany associations resolve N+1 query issue?", "True", "False", "Explain how fetch joins differ from eager loading strategies.", '@OneToMany(fetch = FetchType.EAGER)'],
-    ["ConditionalOnProperty Boot", "Does @ConditionalOnProperty register beans only if property values match expectations?", "True", "False", "Explain the purpose of Conditional annotations in custom starters.", '@ConditionalOnProperty(name = "module.enabled", havingValue = "true")'],
-    ["Custom Validation Setup", "Can custom constraint validators validate properties via @Constraint validation?", "True", "False", "Explain the role of ConstraintValidator implementation interface.", '@Constraint(validatedBy = AgeValidator.class)']
-  ];
-
-  // Node.js
-  const nodeTemplates = [
-    ["Event Loop Execution", "Does process.nextTick() execute before microtasks or macrotasks in the Node.js event loop?", "True", "False", "Explain the difference between setImmediate() and setTimeout(fn, 0).", 'process.nextTick(() => console.log("tick"));\nsetTimeout(() => console.log("timeout"), 0);'],
-    ["Blocking File I/O Sync", "Does fs.readFileSync block the main Node.js thread until I/O finishes?", "True", "False", "Explain how async I/O offloads work to the libuv thread pool.", 'const data = fs.readFileSync("config.json");'],
-    ["Buffer Binary Storage", "Are Buffer class instances stored in V8 heap memory blocks directly?", "True", "False", "Explain how Buffer accesses raw binary memory buffers outside V8.", 'const buf = Buffer.alloc(1024);'],
-    ["Streams Data Piping Flow", "Does piping streams automatically handle backpressure limits between read/write blocks?", "True", "False", "Explain the mechanism of backpressure in Node streams.", 'readableStream.pipe(writableStream);'],
-    ["Thread Pool Capacity", "Does setting UV_THREADPOOL_SIZE configure the libuv worker pool limits?", "True", "False", "Explain which operations utilize libuv worker threads in Node.", 'process.env.UV_THREADPOOL_SIZE = 8;'],
-    ["Module Caching Lookup", "Are modules cached in require.cache after their first load statement?", "True", "False", "Explain how to force reload a cached module in Node.js.", 'const m1 = require("./module");\nconst m2 = require("./module");'],
-    ["Cluster Concurrency Sync", "Does Cluster module run multiple V8 instances sharing the exact same socket port?", "True", "False", "Explain how Cluster divides traffic using round-robin load distribution.", 'cluster.fork();'],
-    ["EventEmitter Memory Leak", "Can adding listeners to EventEmitter without removing them lead to memory leaks?", "True", "False", "Explain how to prevent event listener memory leak bugs.", 'emitter.on("update", callback);'],
-    ["Dependencies Distinction", "Are devDependencies packaged in the production deploy bundle by npm run build?", "True", "False", "Explain the difference between dependencies and devDependencies.", '"devDependencies": { "vite": "^4.0.0" }'],
-    ["Error First Conventions", "Does Node.js error-first callback protocol pass error objects as the second argument?", "True", "False", "Explain the argument signature pattern of error-first callbacks.", 'fs.readFile("file.txt", (err, data) => { ... });'],
-    ["Processes Spawn Fork", "Does child_process.fork() run commands inside a new V8 process instance?", "True", "False", "Explain the differences between spawn, exec, and fork methods.", 'const child = fork("./child.js");'],
-    ["V8 Heap Limit Crash", "Does exceeding the max heap allocation limit crash the Node.js runtime process?", "True", "False", "Explain the JVM arguments to increase heap memory limits in Node.", 'node --max-old-space-size=4096 app.js'],
-    ["Express Middleware Chain", "Does calling next() inside Express middleware route traffic to the next handler?", "True", "False", "Explain how error-handling middleware is registered in Express.", 'app.use((req, res, next) => { next(); });'],
-    ["Worker Threads Workers", "Do Node.js Worker Threads share memory using SharedArrayBuffer arrays?", "True", "False", "Explain the difference between child_process and worker_threads.", 'const worker = new Worker("./worker.js");'],
-    ["Promise Unhandled Reject", "Do unhandled promise rejections terminate the Node process dynamically by default?", "True", "False", "Explain how to register process-level event hooks for unhandled exceptions.", 'process.on("unhandledRejection", (err) => { ... });'],
-    ["Crypto Salt PBKDF2 Sync", "Does crypto.pbkdf2Sync block the event loop while calculating hashes?", "True", "False", "Explain why asynchronous hashing functions should be preferred in APIs.", 'const hash = crypto.pbkdf2Sync(pw, salt, 1000, 64, "sha512");'],
-    ["Lock File Dependency Lock", "Does package-lock.json guarantee that identical dependency trees are installed across environments?", "True", "False", "Explain the difference between package.json version ranges and lockfile lock.", '// Autogenerated package-lock.json'],
-    ["Socket Hang Up Timeout", "Does connection socket timeout trigger a socket hang up error on HTTP clients?", "True", "False", "Explain how to handle write socket timeouts on server routes.", 'server.on("timeout", (socket) => { socket.destroy(); });'],
-    ["Path Directory Resolution", "Does path.resolve always convert paths into absolute path strings?", "True", "False", "Explain the differences between path.join and path.resolve methods.", 'path.resolve("src", "components");'],
-    ["Env Vars Loader Config", "Does process.env read variables directly from the OS environment namespaces?", "True", "False", "Explain why dotenv configuration is required at entry points.", 'require("dotenv").config();\nconst port = process.env.PORT;']
-  ];
-
-  // Python
-  const pythonTemplates = [
-    ["Boolean Interpretation", "What is the output of print(bool(\"False\"))?", "True", "False", "Explain the difference between @staticmethod and @classmethod.", 'print(bool("False"))'],
-    ["Decorator Wraps Metadata", "Does @functools.wraps preserve original function name and docstring attributes?", "True", "False", "Explain why metadata preservation is vital for decorator chains.", '@wraps(func)\ndef wrapper(*args, **kwargs):\n    return func(*args, **kwargs)'],
-    ["List Mutability Referral", "Does assigning a list to a new variable create a copy of the list object?", "True", "False", "Explain how python mutable object assignment reference passing works.", 'a = [1, 2, 3]\nb = a\nb.append(4)'],
-    ["GIL Concurrency Constraints", "Does Python GIL restrict execution of multiple CPU-intensive python threads concurrently?", "True", "False", "Explain the difference between threading and multiprocessing models in Python.", 'import threading\nt = threading.Thread(target=process_data)'],
-    ["Dict Key Hashability Rule", "Can a list mutable container be used as a dictionary key object in Python?", "True", "False", "Explain what objects are hashable and why keys require hashability.", 'my_dict = { [1, 2]: "value" }'],
-    ["Generator Yield Storage", "Does generator yield save execution state and suspend execution stack frames dynamically?", "True", "False", "Explain the difference between generator functions and list comprehensions.", 'def count_up():\n    yield 1\n    yield 2'],
-    ["Comprehension Generators", "Does list comprehension run faster than equivalent loop append operations?", "True", "False", "Explain how memory footprint differs between list and generator expressions.", 'squares = [x**2 for x in range(1000)]'],
-    ["Garbage Collection Count", "Does Python rely primarily on reference counting for memory cleanup cycles?", "True", "False", "Explain how Python handles cyclic reference memory leaks.", 'import gc\ngc.collect()'],
-    ["Shallow Deep Copying", "Does copy.copy copy nested objects inside lists by reference value?", "True", "False", "Explain the difference between copy.copy() and copy.deepcopy().", 'import copy\na = [[1, 2], [3, 4]]\nb = copy.copy(a)'],
-    ["Context Manager Block", "Does the __exit__ method in context managers trigger if an exception is raised?", "True", "False", "Explain the signature and purpose of context manager exit methods.", 'with open("file.txt", "r") as f:\n    data = f.read()'],
-    ["Sys Modules Import Cache", "Does Python reload a module from disk every time it hits an import statement?", "True", "False", "Explain how Python caches imported modules inside sys.modules.", 'import sys\n# check modules cache'],
-    ["MRO Inheritance Search", "Does Python use Depth-First Search for multiple inheritance method resolution?", "True", "False", "Explain the C3 linearization algorithm used for python class MRO.", 'class C(A, B):\n    pass'],
-    ["Lambda Variable Closure", "Does a python lambda function bind closure variables at definition runtime?", "True", "False", "Explain the dynamic scoping behavior of variable bindings in lambda.", 'funcs = [lambda: i for i in range(3)]\nprint(funcs[0]())'],
-    ["Unpacking Args Kwargs", "Does *args unpack dictionary key-value arguments inside python functions?", "True", "False", "Explain how args and kwargs tuple and dictionary bindings work.", 'def process(*args, **kwargs): ...'],
-    ["Try Finally Override", "Does a return statement inside a finally block override return values from try?", "True", "False", "Explain try-except-else-finally execution order rules.", 'def test():\n    try: return 1\n    finally: return 2'],
-    ["Virtualenv Execution Iso", "Does a Python virtual environment duplicate Python binary installations inside local paths?", "True", "False", "Explain how virtualenvs isolate dependencies from global paths.", 'source venv/bin/activate'],
-    ["Fstrings Formatter Speed", "Are f-strings evaluated at runtime and run faster than format() formatting methods?", "True", "False", "Explain f-string parsing advantages in Python 3.6+.", 'msg = f"User {user.name} authenticated"'],
-    ["Dunder Struct Constructor", "Does __new__ act as the actual instance constructor before __init__ initialization?", "True", "False", "Explain the difference between __new__ and __init__ magic methods.", 'def __new__(cls, *args, **kwargs): ...'],
-    ["Mutable Default Argument", "Is the default argument value of python parameters evaluated once at import runtime?", "True", "False", "Explain the mutable default argument trap and how to solve it.", 'def add_item(item, list_items=[]):\n    list_items.append(item)'],
-    ["List Sort Inplace Reverse", "Does list.sort() modify the original list object in-place?", "True", "False", "Explain the difference between sorted() and list.sort().", 'my_list = [3, 1, 2]\nmy_list.sort()']
-  ];
-
-  // Testing
-  const testingTemplates = [
-    ["Cypress Command Queue", "Does Cypress run test commands synchronously or enqueue them for asynchronous execution?", "True", "False", "Explain the difference between cy.wait() and cy.tick().", 'cy.visit("/login");\ncy.get("input").type("admin");'],
-    ["Unit Integration Scopes", "Does a unit test verify interactions between multiple integration dependencies?", "True", "False", "Explain the difference between unit testing and integration testing.", '// Unit test definition block'],
-    ["Mocking Stubbing Targets", "Does stubbing replace component dependencies with dynamic pre-programmed responses?", "True", "False", "Explain when mock verifications are preferred over stub returns.", 'const stub = sinon.stub(api, "fetch");'],
-    ["Selenium WebDriver Sync", "Does Selenium WebDriver require native driver binaries to interface with web browsers?", "True", "False", "Explain how WebDriver implements the W3C protocol.", 'WebDriver driver = new ChromeDriver();'],
-    ["TDD Red Green Lifecycle", "Does Test-Driven Development mandate writing unit tests after implementation?", "True", "False", "Explain the stages of the Red-Green-Refactor test cycle.", '// TDD loop: Red -> Green -> Refactor'],
-    ["Headless Browser Automation", "Does running tests in headless mode save system resources during CI/CD build runtime?", "True", "False", "Explain what headless execution is and why it runs faster.", 'cypress run --headless'],
-    ["API Contract Verification", "Does API contract testing verify schema validation responses from endpoints?", "True", "False", "Explain how Pact or JSON Schema ensures contract conformity.", 'expect(res.body).to.have.jsonSchema(userSchema);'],
-    ["Code Coverage Meaning", "Does 100% statement coverage guarantee that code logic has zero bug cases?", "True", "False", "Explain the difference between statement, branch, and path coverage.", '// Code coverage calculation output'],
-    ["Dynamic Session Injection", "Does Cypress support session caching to skip authentication steps in tests?", "True", "False", "Explain how cy.session() bypasses login paths dynamically.", 'cy.session("login-token", () => { ... });'],
-    ["POM Architecture Design", "Does Page Object Model isolate selector attributes from actual test script assertions?", "True", "False", "Explain the benefits of POM in automation script maintenance.", 'const loginPage = new LoginPage();\nloginPage.login("user", "pass");'],
-    ["Flaky Test Mitigation", "Does increasing test retries resolve the underlying race condition of flaky tests?", "True", "False", "Explain how async wait handles prevent flaky test occurrences.", 'cy.get("button", { timeout: 10000 }).should("be.visible");'],
-    ["Parallel Execution Sync", "Does parallel test execution require independent clean database instances?", "True", "False", "Explain how test state leaks occur during parallel pipeline runs.", 'npm run test:parallel'],
-    ["Mutation Test Execution", "Does mutation testing inject bugs into source files to verify test assertions fail?", "True", "False", "Explain the term \"mutant killed\" in testing metrics.", '// Mutation test setup'],
-    ["Component Jest Isolation", "Does shallow rendering in Jest mount child components recursively in tests?", "True", "False", "Explain the difference between shallow and mount rendering.", 'const wrapper = shallow(<Dashboard />);'],
-    ["E2E State DB Clean", "Should End-to-End tests truncate database tables before executing tests?", "True", "False", "Explain why testing database isolation is vital in CI/CD pipeline.", 'before(() => { db.truncateAll(); });'],
-    ["Assertions Implicit Explicit", "Are cy.should() statements treated as implicit assertions in Cypress?", "True", "False", "Explain the difference between implicit and explicit assertions.", 'cy.get(".alert").should("contain", "Success");'],
-    ["Visual Regression Pixel", "Does visual regression testing check screenshot layouts pixel-by-pixel?", "True", "False", "Explain the challenges of anti-aliasing in visual diffs.", 'cy.matchImageSnapshot();'],
-    ["Smoke Testing Purpose", "Does a smoke test suite verify every detail edge-case of application workflows?", "True", "False", "Explain the difference between smoke, regression, and sanity test suites.", '// Sanity checks'],
-    ["Mock Service Worker Setup", "Does Mock Service Worker (MSW) intercept network requests at the API layer?", "True", "False", "Explain the benefits of MSW over mocking network clients.", 'setupServer(...handlers);'],
-    ["Test Double Classifications", "Is a mock class dummy placeholder wrapper code without verification checks?", "True", "False", "Explain the differences between dummy, fake, spy, stub, and mock.", 'const spy = sinon.spy(analytics, "track");']
-  ];
-
-  // DevOps
-  const devopsTemplates = [
-    ["Dockerfile Layer Caching", "Does changing a line at the top of a Dockerfile invalidate cache layers below it?", "True", "False", "Explain how Dockerfile instruction order affects build caching.", 'COPY package.json .\nRUN npm install\nCOPY . .'],
-    ["COPY vs ADD Instructions", "Can the Dockerfile COPY instruction pull files from remote web URLs?", "True", "False", "Explain when to prefer COPY over ADD for local build files.", 'COPY ./src /app/src'],
-    ["Container VM Virtualization", "Do containers share the host operating system kernel directly?", "True", "False", "Explain how namespaces and cgroups isolate docker containers.", '// Container virtualization layer'],
-    ["K8s Pod Namespace Share", "Do all containers in a Kubernetes Pod share the exact same network IP?", "True", "False", "Explain port mapping conflicts within a single K8s Pod.", '// Pod network namespace sharing'],
-    ["IaC State Drift Detection", "Does Terraform automatically apply configuration changes to fix drift without apply?", "True", "False", "Explain how terraform.tfstate records resource settings.", 'terraform plan'],
-    ["Nginx Reverse Proxy Load", "Does Nginx IP Hash algorithm always distribute traffic in round-robin fashion?", "True", "False", "Explain when session persistence dictates IP Hash routing.", 'upstream backend {\n  ip_hash;\n  server srv1.example.com;\n}'],
-    ["Canary Deployment Strategy", "Does a Blue-Green deployment route user traffic to new nodes incrementally?", "True", "False", "Explain how Canary deployments differ from Blue-Green strategies.", '// Deployment pipeline routing'],
-    ["Prometheus Pull Model", "Does Prometheus collect metrics by polling target HTTP endpoints?", "True", "False", "Explain the role of Prometheus Pushgateway for batch jobs.", 'scrape_configs:\n  - job_name: "spring-boot"'],
-    ["Docker Bridge Host Network", "Does default Docker bridge network expose container ports to host interfaces automatically?", "True", "False", "Explain port mapping configurations in docker networks.", 'docker run -p 80:80 nginx'],
-    ["K8s Service Types NodePort", "Does ClusterIP service expose Kubernetes pods outside the cluster network?", "True", "False", "Explain the difference between ClusterIP, NodePort, and LoadBalancer.", 'spec:\n  type: ClusterIP'],
-    ["System Load Average Metric", "Does a load average of 4.0 on a 2-core CPU indicate processor overload?", "True", "False", "Explain how to interpret load average metrics in Linux.", '$ uptime\nload average: 4.00, 2.50, 1.20'],
-    ["Git Rebase Merge History", "Does git rebase rewrite commit histories by applying local commits on branches?", "True", "False", "Explain the pros and cons of git rebase versus git merge.", 'git rebase main'],
-    ["SSH Key Handshake Security", "Does SSH authorization authenticate clients using public key cryptography?", "True", "False", "Explain how the authorized_keys file secures server authentication.", 'ssh-copy-id -i ~/.ssh/id_rsa.pub user@server'],
-    ["S3 Storage Classes Lifecycle", "Does moving files to Glacier Deep Archive preserve instant object retrieval times?", "True", "False", "Explain S3 lifecycle rules and archival storage retrievals.", '// S3 transition setup'],
-    ["Docker Compose Orchestration", "Does Docker Compose manage container scale orchestrations across multiple host servers?", "True", "False", "Explain how Docker Swarm differs from Docker Compose scaling.", 'docker-compose up --scale web=3'],
-    ["K8s ConfigMap Secret Encryption", "Are Kubernetes Secrets encrypted at-rest inside etcd databases by default?", "True", "False", "Explain how to enable envelope encryption for etcd secrets.", 'kind: Secret\ndata:\n  api-key: dGVzdF9rZXk='],
-    ["Terraform Init Plugin Download", "Does terraform init download provider plugins specified in project configurations?", "True", "False", "Explain where Terraform stores downloaded provider packages.", 'terraform {\n  required_providers {\n    aws = ...\n  }\n}'],
-    ["ELK Centralized Logging Flow", "Does Logstash index log documents directly into Kibana dashboards?", "True", "False", "Explain the centralized logging data flow pipeline (Filebeat-Logstash-ES).", '// Logging pipeline stream'],
-    ["CORS Proxy Header Rules", "Does reverse proxy configuration require injecting Access-Control-Allow-Origin headers?", "True", "False", "Explain CORS preflight OPTIONS request interception.", 'add_header "Access-Control-Allow-Origin" "*";'],
-    ["Git Hooks Execution Stage", "Can a pre-commit git hook prevent commits from finalizing if lint checks fail?", "True", "False", "Explain the location and setup of local git hook scripts.", '#!/bin/sh\nnpm run lint']
-  ];
-
-  const mapTemplate = (tmpl, cat, index) => ({
-    id: `q-tech-${cat.toLowerCase().replace('.', '')}-${index}`,
-    category: cat,
-    title: tmpl[0],
-    difficulty: index <= 7 ? 'Easy' : index <= 14 ? 'Medium' : 'Hard',
-    time: index <= 7 ? '10 mins' : index <= 14 ? '15 mins' : '20 mins',
-    description: `${tmpl[1]}\na) ${tmpl[2]}\nb) ${tmpl[3]}\n\nShort Answer: ${tmpl[4]}`,
-    codeSnippet: tmpl[5]
-  });
-
-  reactTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'React', i + 1)));
-  javaTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Java', i + 1)));
-  springTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Spring Boot', i + 1)));
-  nodeTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Node.js', i + 1)));
-  pythonTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Python', i + 1)));
-  testingTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'Testing', i + 1)));
-  devopsTemplates.forEach((t, i) => questions.push(mapTemplate(t, 'DevOps', i + 1)));
-
-  return questions;
-};
-
-const technicalQuestionsData = generateTechnicalQuestions();
-
-const brandQuestionsData = [
-  { id: 'q-r3-1', category: 'BNX Mail', title: 'SMTP Encryption Scope', difficulty: 'Medium', time: '15 mins', description: 'Does standard SMTP-over-SSL encrypt mail payloads at rest on relay servers?\na) True\nb) False\n\nShort Answer: Explain the difference between TLS transmission security and End-to-End Encryption.', codeSnippet: '// SMTP configuration\nmail.smtp.ssl.enable = true;' },
-  { id: 'q-r3-2', category: 'BNX Mail', title: 'MX DNS Routing', difficulty: 'Hard', time: '20 mins', description: 'Can an enterprise configure multiple MX records to load-balance email traffic dynamically?\na) True\nb) False\n\nShort Answer: Explain the difference between SPF, DKIM, and DMARC authentication.', codeSnippet: 'IN MX 10 mail.bnx.com\nIN MX 20 backup.bnx.com' },
-  { id: 'q-r3-3', category: 'Cliks Business', title: 'Collaborative Canvas Sync', difficulty: 'Easy', time: '10 mins', description: 'Does Cliks Canvas use WebSockets to synchronise canvas state in real-time across users?\na) True\nb) False\n\nShort Answer: Explain the difference between real-time socket updates and HTTP polling.', codeSnippet: 'stompClient.send("/app/canvas/sync", {}, JSON.stringify(canvasState));' },
-  { id: 'q-r3-4', category: 'Cliks Business', title: 'Unified SaaS Licensing', difficulty: 'Medium', time: '25 mins', description: 'Does Cliks Business consolidate file storage, chat, and task boards under a single billing account?\na) True\nb) False\n\nShort Answer: Explain the difference between seat-based licensing and usage-based quotas.', codeSnippet: 'const quota = user.getSubscriptionQuota();\nconsole.log(quota.unifiedBillingEnabled);' },
-  { id: 'q-r3-5', category: 'Company Core Values', title: 'Logo Animation Representation', difficulty: 'Easy', time: '10 mins', description: 'Does the central pulse in the BNX logo represent a live-sync data stream?\na) True\nb) False\n\nShort Answer: Explain the difference between brand positioning and corporate core values.', codeSnippet: '@keyframes pulse {\n  0% { transform: scale(1); }\n  50% { transform: scale(1.1); }\n}' },
-  { id: 'q-r3-6', category: 'Public Relations', title: 'Crisis Payload Disclosures', difficulty: 'Hard', time: '20 mins', description: 'Should a public incident statement disclose detailed firewall configurations during an active DDoS containment?\na) True\nb) False\n\nShort Answer: Explain the difference between proactive security updates and reactive post-mortems.', codeSnippet: '// Incident Response Template\nlogMessage("CDN outage detected - routing redirected to failover.");' },
-  { id: 'q-r3-7', category: 'Ecosystem Integration', title: 'Single Sign-On Authentication', difficulty: 'Medium', time: '15 mins', description: 'Does single sign-on (SSO) eliminate the need for application-specific passwords?\na) True\nb) False\n\nShort Answer: Explain the difference between OAuth 2.0 and SAML protocols.', codeSnippet: 'api.get("/api/oauth/authorize?response_type=code");' }
-];
-
-const fallbackPartnerships = [
-  {
-    id: 'partner-mock-1',
-    name: 'Jane Doe',
-    email: 'jane.doe@globaltech.com',
-    company: 'Global Tech Solutions',
-    partnerType: 'Technology Partner',
-    website: 'https://globaltech.com',
-    companySize: '500-1000',
-    marketFocus: 'Enterprise Cloud Infrastructure',
-    proposal: 'We would like to integrate BNX Mail into our corporate dashboard suite to provide our clients with zero-knowledge encrypted mail channels.',
-    phone: '+1 (555) 321-9876',
-    createdAt: new Date(Date.now() - 3 * 86400000).toISOString()
-  },
-  {
-    id: 'partner-mock-2',
-    name: 'Sophia Loren',
-    email: 'sophia@fintechpulse.io',
-    company: 'Fintech Pulse Inc',
-    partnerType: 'Strategic Alliance',
-    website: 'https://fintechpulse.io',
-    companySize: '100-250',
-    marketFocus: 'Financial Data Analytics',
-    proposal: 'Seeking an integration with B2Auth for single-sign-on MFA across our customer trading desks. We want to co-market this solution to compliance officers.',
-    phone: '+44 20 7946 0192',
-    createdAt: new Date(Date.now() - 5 * 86400000).toISOString()
-  }
-];
 
 const parsePartnerMessage = (msg, name, email, company, id, date) => {
   if (!msg) return null;
@@ -857,24 +52,7 @@ const parsePartnerMessage = (msg, name, email, company, id, date) => {
   };
 };
 
-const fallbackSupports = [
-  {
-    id: 'support-mock-1',
-    name: 'Michael Scott',
-    email: 'michael.scott@dundermifflin.com',
-    product: 'BNX Mail',
-    message: 'We are facing issue when synchronization with SMTP connector is delayed. It takes about 2 minutes to show up on active conversations. Please check latency on our dedicated endpoint.',
-    createdAt: new Date(Date.now() - 1 * 86400000).toISOString()
-  },
-  {
-    id: 'support-mock-2',
-    name: 'Pam Beesly',
-    email: 'pam@dundermifflin.com',
-    product: 'Cliks Business',
-    message: 'Can you guide me on how to delegate user administration permissions? We want to assign 3 secondary team leads with edit rights on the canvas.',
-    createdAt: new Date(Date.now() - 2 * 86400000).toISOString()
-  }
-];
+
 
 const parseSupportMessage = (msg, name, email, company, id, date) => {
   if (!msg) return null;
@@ -891,277 +69,7 @@ const parseSupportMessage = (msg, name, email, company, id, date) => {
   };
 };
 
-const generateAptitudeQuestions = (category) => {
-  const list = [];
 
-  const vocabSynonyms = [
-    { word: 'Loquacious', options: 'Talkative, Quiet, Angry, Happy', ans: 'Talkative' },
-    { word: 'Ephemeral', options: 'Short-lived, Eternal, Internal, Bright', ans: 'Short-lived' },
-    { word: 'Capricious', options: 'Unpredictable, Steady, Intelligent, Fearful', ans: 'Unpredictable' },
-    { word: 'Aberration', options: 'Deviation, Standard, Consequence, Alignment', ans: 'Deviation' },
-    { word: 'Gregarious', options: 'Sociable, Introverted, Aggressive, Calm', ans: 'Sociable' },
-    { word: 'Taciturn', options: 'Reserved, Loud, Creative, Hostile', ans: 'Reserved' },
-    { word: 'Obdurate', options: 'Stubborn, Flexible, Caring, Wise', ans: 'Stubborn' },
-    { word: 'Mitigate', options: 'Alleviate, Aggravate, Connect, Enhance', ans: 'Alleviate' },
-    { word: 'Pragmatic', options: 'Practical, Dreamy, Reckless, Logical', ans: 'Practical' },
-    { word: 'Apathy', options: 'Indifference, Empathy, Enthusiasm, Clarity', ans: 'Indifference' }
-  ];
-
-  const verbalErrors = [
-    "Neither the manager nor his employees [was/were] present at the launch.",
-    "She has been working in the branding department [since/for] five years.",
-    "The client was angry because the software had [many/much] bugs.",
-    "If he [would have/had] studied the core values, he would have cleared the interview.",
-    "Every one of the applicants [have/has] submitted their respective documents."
-  ];
-
-  if (category === 'Quant') {
-    for (let i = 1; i <= 50; i++) {
-      const type = i % 8;
-      let title = "";
-      let description = "";
-      let codeSnippet = "";
-
-      if (type === 0) {
-        title = `Simple Interest & Growth Q${i}`;
-        const sum = i * 200 + 1000;
-        const rate = (i % 5) + 4;
-        const years = (i % 3) + 2;
-        description = `Calculate the Simple Interest on a principal sum of $${sum} at a rate of ${rate}% per annum for ${years} years.`;
-        codeSnippet = `Formula: SI = (P * R * T) / 100\nP = $${sum}, R = ${rate}%, T = ${years} years\nResult: $${(sum * rate * years) / 100}`;
-      } else if (type === 1) {
-        title = `Train & Platform Speed Q${i}`;
-        const speedKmh = 45 + (i % 5) * 9;
-        const trainLen = 150 + (i % 4) * 50;
-        const timeSec = 20 + (i % 3) * 10;
-        description = `A train traveling at ${speedKmh} km/h passes a platform in ${timeSec} seconds. If the length of the train is ${trainLen} meters, find the length of the platform in meters.`;
-        codeSnippet = `Speed: ${speedKmh} km/h = ${((speedKmh * 5) / 18).toFixed(2)} m/s\nTotal Distance = Speed * Time\nPlatform Length = Total Distance - Train Length`;
-      } else if (type === 2) {
-        title = `Algebraic Equations Q${i}`;
-        const coeff1 = (i % 4) + 2;
-        const coeff2 = (i % 5) + 5;
-        const result = coeff1 * (i + 3) + coeff2;
-        description = `Solve the algebraic equation for x: Find the value of x if ${coeff1}x + ${coeff2} = ${result}.`;
-        codeSnippet = `Equation: ${coeff1}x + ${coeff2} = ${result}\nStep 1: ${coeff1}x = ${result - coeff2}\nStep 2: x = ${(result - coeff2) / coeff1}`;
-      } else if (type === 3) {
-        title = `Probability Distribution Q${i}`;
-        const red = (i % 5) + 3;
-        const blue = (i % 4) + 4;
-        const green = (i % 3) + 5;
-        const total = red + blue + green;
-        description = `A box contains ${red} red, ${blue} blue, and ${green} green marbles. If one marble is drawn at random, what is the probability that it is NOT green?`;
-        codeSnippet = `Total Marbles: ${total}\nTarget Marbles (Red + Blue): ${red + blue}\nProbability: ${(red + blue)}/${total}`;
-      } else if (type === 4) {
-        title = `Ages & Ratios Q${i}`;
-        const r1 = (i % 3) + 2;
-        const r2 = (i % 3) + 3;
-        const multiplier = (i % 4) + 3;
-        const sum = (r1 + r2) * multiplier;
-        description = `The ratio of the current ages of Alice and Bob is ${r1}:${r2}. If the sum of their ages is ${sum} years, what will be Bob's age in 5 years?`;
-        codeSnippet = `Ratio: ${r1}x + ${r2}x = ${sum}\n${r1 + r2}x = ${sum} => x = ${multiplier}\nBob's Age = ${r2} * ${multiplier} = ${r2 * multiplier}\nIn 5 years: ${r2 * multiplier + 5}`;
-      } else if (type === 5) {
-        title = `Profit and Loss Q${i}`;
-        const markup = 15 + (i % 5) * 5;
-        const discount = 5 + (i % 3) * 2;
-        description = `A retail merchant marks his inventory ${markup}% above cost price and then offers a customer discount of ${discount}%. What is the net profit percentage?`;
-        codeSnippet = `Let Cost Price = 100\nMarked Price = ${100 + markup}\nSelling Price = ${100 + markup} * (1 - ${discount}/100) = ${((100 + markup) * (1 - discount / 100)).toFixed(2)}\nProfit = ${(((100 + markup) * (1 - discount / 100)) - 100).toFixed(2)}%`;
-      } else if (type === 6) {
-        title = `Time and Work Q${i}`;
-        const daysA = 10 + (i % 4) * 2;
-        const daysB = 15 + (i % 3) * 5;
-        description = `If Operator A can process a pipeline segment in ${daysA} hours and Operator B can complete the same segment in ${daysB} hours, how long will they take if they collaborate?`;
-        codeSnippet = `Rate A: 1/${daysA}, Rate B: 1/${daysB}\nCombined Rate: (1/${daysA}) + (1/${daysB}) = ${(daysA + daysB)}/${daysA * daysB}\nTime: ${(daysA * daysB) / (daysA + daysB)} hours`;
-      } else {
-        title = `Partnership Capital Share Q${i}`;
-        const capA = 1000 * ((i % 5) + 2);
-        const capB = 1500 * ((i % 4) + 3);
-        const profit = 500 * ((i % 6) + 5);
-        description = `Partners X and Y start a business. Partner X invests $${capA} and Partner Y invests $${capB}. Out of a total profit of $${profit}, what is Partner Y's share?`;
-        codeSnippet = `Investment Ratio X:Y = ${capA}:${capB}\nTotal shares = ${capA + capB}\nPartner Y Share = ($${capB} / $${capA + capB}) * $${profit}`;
-      }
-
-      list.push({
-        id: `q-quant-${i}`,
-        title,
-        difficulty: i % 15 === 0 ? 'Hard' : i % 5 === 0 ? 'Medium' : 'Easy',
-        time: i % 8 === 1 || i % 8 === 6 ? '3 mins' : '2 mins',
-        description,
-        codeSnippet
-      });
-    }
-  } else if (category === 'Logical') {
-    for (let i = 1; i <= 50; i++) {
-      const type = i % 7;
-      let title = "";
-      let description = "";
-      let codeSnippet = "";
-
-      if (type === 0) {
-        title = `Alphanumeric Coding Q${i}`;
-        const words = ['DESIGN', 'SYSTEM', 'CODING', 'AUTHENTICATION', 'SECURITY'];
-        const word = words[i % words.length];
-        description = `In a logical coding pattern, if '${word}' is encrypted by shifting all consonants by +1 and vowels by -1, decode the encrypted pattern code.`;
-        codeSnippet = `Word: ${word}\nRule: Consonants +1, Vowels -1\nVerify character ASCII transformation arrays.`;
-      } else if (type === 1) {
-        title = `Blood Relations Tree Q${i}`;
-        description = `Pointing to a photo, a project lead says: "His mother is the only daughter-in-law of my father's wife." How is the lead related to the person in the photo?`;
-        codeSnippet = `Variables: Father's Wife = Mother\nOnly daughter-in-law of mother = Lead's wife (or brother's wife)\nPerson = Lead's child (or nephew).`;
-      } else if (type === 2) {
-        title = `Directions & Coords Q${i}`;
-        const d1 = 5 + (i % 5) * 2;
-        const d2 = 4 + (i % 3) * 3;
-        description = `A delivery agent travels ${d1} km North, turns right and drives ${d2} km, then turns right again and travels ${d1} km. How far is the agent from the starting coordinate?`;
-        codeSnippet = `Path vectors: (+0, +${d1}) -> (+${d2}, +${d1}) -> (+${d2}, +0)\nNet coordinate change: (+${d2}, 0)\nDistance: ${d2} km East.`;
-      } else if (type === 3) {
-        title = `Row Ordering Alignment Q${i}`;
-        const total = 20 + (i % 6) * 5;
-        const rank = 5 + (i % 4) * 3;
-        description = `In a candidate ranking row of ${total} designers, Sarah is ranked ${rank}th from the top. What is her rank position counted from the bottom?`;
-        codeSnippet = `Formula: Bottom Position = (Total - Top Position) + 1\nCalculation: (${total} - ${rank}) + 1 = ${total - rank + 1}`;
-      } else if (type === 4) {
-        title = `Deductive Syllogisms Q${i}`;
-        description = `Statements: 1. All networks are secure. 2. Some secure systems are nodes. Decide which conclusions follow logically: (A) Some nodes are networks. (B) No system is a network.`;
-        codeSnippet = `Venn diagram bounds: Networks ⊆ Secure. Systems ∩ Secure ≠ Ø. No direct overlap forced between Networks and Systems.`;
-      } else if (type === 5) {
-        title = `Number Series Completion Q${i}`;
-        const base = (i % 5) + 2;
-        const diff = (i % 4) + 3;
-        description = `Complete the numerical sequencing pattern: ${base}, ${base + diff}, ${base + diff * 2}, ${base + diff * 3}, ?`;
-        codeSnippet = `Difference pattern is constant: +${diff}\nNext term: ${base + diff * 4}`;
-      } else {
-        title = `Mathematical Operators Q${i}`;
-        const val1 = 12 + (i % 3) * 2;
-        const val2 = 3 + (i % 2) * 2;
-        description = `If '+' represents multiplication, '-' represents division, '*' represents addition, and '/' represents subtraction, compute the value of: ${val1} - ${val2} * 10 / 2.`;
-        codeSnippet = `Substitute operations: (${val1} / ${val2}) + 10 - 2\nCalculation: ${(val1 / val2).toFixed(2)} + 8 = ${(val1 / val2 + 8).toFixed(2)}`;
-      }
-
-      list.push({
-        id: `q-logical-${i}`,
-        title,
-        difficulty: i % 12 === 0 ? 'Hard' : i % 4 === 0 ? 'Medium' : 'Easy',
-        time: '2 mins',
-        description,
-        codeSnippet
-      });
-    }
-  } else if (category === 'Verbal') {
-    for (let i = 1; i <= 50; i++) {
-      const type = i % 5;
-      let title = "";
-      let description = "";
-      let codeSnippet = "";
-
-      if (type === 0) {
-        const item = vocabSynonyms[i % vocabSynonyms.length];
-        title = `Synonyms & Vocabulary Q${i}`;
-        description = `Choose the word which is closest in meaning to the highlighted term: "${item.word}". Options: ${item.options}.`;
-        codeSnippet = `Correct Synonym: ${item.ans}\nContext usage: The ${item.word.toLowerCase()} speech was noteworthy.`;
-      } else if (type === 1) {
-        const errText = verbalErrors[i % verbalErrors.length];
-        title = `Sentence Error Detection Q${i}`;
-        description = `Identify the segment containing grammatical error or choose correct options: "${errText}"`;
-        codeSnippet = `Rule: Subject-verb agreement, coordinate conjunctions, or correct preposition usage constraints.`;
-      } else if (type === 2) {
-        title = `Antonyms & Contrast Q${i}`;
-        const antonyms = [
-          { word: 'Benevolent', ans: 'Malevolent' },
-          { word: 'Candid', ans: 'Deceptive' },
-          { word: 'Meticulous', ans: 'Careless' },
-          { word: 'Frugal', ans: 'Extravagant' },
-          { word: 'Diligent', ans: 'Lazy' }
-        ];
-        const item = antonyms[i % antonyms.length];
-        description = `Select the word which is most opposite in meaning to the word: "${item.word}".`;
-        codeSnippet = `Word: ${item.word} <=> Antonym: ${item.ans}`;
-      } else if (type === 3) {
-        title = `Prepositions & Phrasals Q${i}`;
-        const verbs = [
-          { sentence: "The executive was accused ____ breach of contract.", ans: "of" },
-          { sentence: "He had to comply ____ the compliance guidelines.", ans: "with" },
-          { sentence: "She persists ____ recommending code splitting.", ans: "in" },
-          { sentence: "They are responsible ____ configuring DNS routes.", ans: "for" }
-        ];
-        const item = verbs[i % verbs.length];
-        description = `Fill in the blank with the appropriate preposition: "${item.sentence}"`;
-        codeSnippet = `Verb-Preposition Collocation: ${item.ans}`;
-      } else {
-        title = `Idioms context usage Q${i}`;
-        description = `Select the correct meaning of the idiom: "Bite the bullet". Options: (A) Evade responsibilities. (B) Face a difficult situation with courage. (C) Start a dispute. (D) Spend wastefully.`;
-        codeSnippet = `Idiom meaning: Face a difficult or painful situation with courage and endurance. Correct answer is (B).`;
-      }
-
-      list.push({
-        id: `q-verbal-${i}`,
-        title,
-        difficulty: i % 10 === 0 ? 'Hard' : i % 5 === 0 ? 'Medium' : 'Easy',
-        time: '1 min',
-        description,
-        codeSnippet
-      });
-    }
-  } else if (category === 'Data Int.') {
-    for (let i = 1; i <= 50; i++) {
-      const type = i % 6;
-      let title = "";
-      let description = "";
-      let codeSnippet = "";
-
-      if (type === 0) {
-        title = `Bar Chart YoY Revenue Q${i}`;
-        const rev21 = 200 + (i % 5) * 50;
-        const rev24 = 300 + (i % 4) * 80;
-        description = `The bar chart shows Company revenues. 2021 Revenue = $${rev21}k. 2024 Revenue = $${rev24}k. Calculate the percentage growth in revenue from 2021 to 2024.`;
-        codeSnippet = `Increase: $${rev24 - rev21}k\nFormula: (Increase / Initial) * 100\nGrowth: (( ${rev24 - rev21} / ${rev21} ) * 100).toFixed(2)%`;
-      } else if (type === 1) {
-        title = `Pie Chart Budget share Q${i}`;
-        const total = 100000 + (i % 4) * 50000;
-        const pct = 10 + (i % 3) * 5;
-        description = `A corporate pie chart segments expenditure. If the total annual budget is $${total}, find the raw amount spent on R&D if it represents ${pct}% of total share.`;
-        codeSnippet = `Total: $${total}\nR&D Share: ${pct}%\nR&D budget: $${(total * pct) / 100}`;
-      } else if (type === 2) {
-        title = `Line Graph Profit Ratios Q${i}`;
-        const rev = 500 + (i % 5) * 100;
-        const ratio = 100 - (10 + (i % 3) * 5);
-        description = `The line graph displays revenue vs expenditures. Profit margin is ${ratio}%. If the sales revenue is $${rev}k, what is the expenditure in $?`;
-        codeSnippet = `Revenue: $${rev}k\nProfit: $${(rev * ratio) / 100}k\nExpenditure = Revenue - Profit = $${rev - (rev * ratio) / 100}k`;
-      } else if (type === 3) {
-        title = `Tabular Sales Report Q${i}`;
-        const q1 = 40 + (i % 3) * 10;
-        const q2 = 50 + (i % 4) * 10;
-        const q3 = 45 + (i % 3) * 5;
-        const q4 = 60 + (i % 5) * 10;
-        const avg = (q1 + q2 + q3 + q4) / 4;
-        description = `A table lists quarterly sales of product B: Q1 = ${q1} units, Q2 = ${q2} units, Q3 = ${q3} units, Q4 = ${q4} units. Calculate the average quarterly sales.`;
-        codeSnippet = `Total sales: ${q1 + q2 + q3 + q4}\nAverage = Total / 4 = ${avg} units`;
-      } else if (type === 4) {
-        title = `Venn Diagram User overlap Q${i}`;
-        const total = 500;
-        const mail = 250 + (i % 5) * 20;
-        const business = 200 + (i % 4) * 15;
-        const both = 80 + (i % 3) * 10;
-        description = `In a survey of ${total} clients, ${mail} use BNX Mail, ${business} use Cliks Business, and ${both} use both. How many clients use neither product?`;
-        codeSnippet = `Union = Mail + Business - Both = ${mail + business - both}\nNeither = Total - Union = ${total - (mail + business - both)}`;
-      } else {
-        title = `Ratio Trend Data Q${i}`;
-        const ratio1 = (i % 3) + 2;
-        const ratio2 = (i % 2) + 3;
-        description = `The ratio of frontend developers to backend developers in team is ${ratio1}:${ratio2}. If the total headcount of developers is ${(ratio1 + ratio2) * 8}, find the number of frontend developers.`;
-        codeSnippet = `Total: ${ratio1}x + ${ratio2}x = ${(ratio1 + ratio2) * 8}\nx = 8\nFrontend Count = ${ratio1} * 8 = ${ratio1 * 8}`;
-      }
-
-      list.push({
-        id: `q-dataint-${i}`,
-        title,
-        difficulty: i % 15 === 0 ? 'Hard' : i % 5 === 0 ? 'Medium' : 'Easy',
-        time: i % 6 === 0 ? '4 mins' : '3 mins',
-        description,
-        codeSnippet
-      });
-    }
-  }
-  return list;
-};
 
 export default function AdminDashboard() {
   const { user, logout } = useContext(AuthContext);
@@ -1182,7 +90,6 @@ export default function AdminDashboard() {
   const [supports, setSupports] = useState([]);
   const [selectedAptitudeCategory, setSelectedAptitudeCategory] = useState(null);
   const [selectedAptitudeQuestionIds, setSelectedAptitudeQuestionIds] = useState([]);
-  const [selectedTechnicalQuestionIds, setSelectedTechnicalQuestionIds] = useState([]);
   const [selectedResumeUrl, setSelectedResumeUrl] = useState(null);
   const [selectedResumeCandidate, setSelectedResumeCandidate] = useState(null);
 
@@ -1208,10 +115,6 @@ export default function AdminDashboard() {
   const [interviewLink, setInterviewLink] = useState('https://meet.google.com/abc-defg-hij');
   const [interviewer, setInterviewer] = useState('Tech Team Lead');
   const [remarks, setRemarks] = useState('');
-
-  // Test modal states
-  const [showTestModal, setShowTestModal] = useState(false);
-  const [selectedTestQuestionIds, setSelectedTestQuestionIds] = useState([]);
 
   // Job Posting/Editing Modal States
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -1261,7 +164,7 @@ export default function AdminDashboard() {
     try {
       const [jobsRes, appsRes] = await Promise.all([
         axios.get('http://localhost:8081/api/jobs'),
-        axios.get('http://localhost:8081/api/admin/applications')
+        axios.get('https://apply.beta-softnet.com/api/applications')
       ]);
       setExternalJobs(jobsRes.data.data || jobsRes.data || []);
 
@@ -1346,22 +249,9 @@ export default function AdminDashboard() {
   };
 
   // Load data only if authenticated as admin
-  const loadApplications = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8081/api/admin/applications"
-      );
-
-      setExternalApplications(response.data);
-
-    } catch (error) {
-      console.error("Failed to load applications:", error);
-    }
-  };
   useEffect(() => {
     if (user && user.role === 'ROLE_ADMIN') {
       fetchData();
-      loadApplications();
     }
   }, [user]);
 
@@ -1501,10 +391,10 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       if (editingJob) {
-        await axios.put(`http://localhost:8080/api/jobs/${editingJob.id}`, payload);
+        await axios.put(`http://localhost:8081/api/jobs/${editingJob.id}`, payload);
         setSuccess('Job opening updated successfully.');
       } else {
-        await axios.post('http://localhost:8080/api/jobs', payload);
+        await axios.post('http://localhost:8081/api/jobs', payload);
         setSuccess('Job opening posted successfully.');
       }
       setIsJobModalOpen(false);
@@ -1523,7 +413,7 @@ export default function AdminDashboard() {
     setSuccess('');
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:8080/api/jobs/${id}`);
+      await axios.delete(`http://localhost:8081/api/jobs/${id}`);
       setSuccess('Job opening deleted successfully.');
       fetchData();
     } catch (err) {
@@ -1602,156 +492,6 @@ export default function AdminDashboard() {
     setSelectedAptitudeQuestionIds([]);
     setSelectedAptitudeCategory(null);
     setTimeout(() => setSuccess(''), 4000);
-  };
-
-  const handleAssignTechnicalQuestions = async (appId) => {
-    const candidate = externalApplications.find(app => app.id === appId);
-    if (!candidate) return;
-
-    if (selectedTechnicalQuestionIds.length === 0) {
-      alert('Please select at least one question first!');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
-    const assignedKey = `assessment_questions_${appId}`;
-    const selectedQuestions = technicalQuestionsData
-      .filter(q => q.category === selectedDomainTab)
-      .filter(q => selectedTechnicalQuestionIds.includes(q.id));
-
-    try {
-      await axios.post("http://localhost:8080/api/assessment/send", {
-        candidateId: Number(appId),
-        questionIds: selectedTechnicalQuestionIds
-      });
-
-      setSuccess(`Technical assessment successfully sent to ${candidate.fullName}.`);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to send assessment.");
-    } finally {
-      localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
-      localStorage.removeItem(`assessment_answers_${appId}`);
-
-      const updatedApps = externalApplications.map(app =>
-        app.id === appId ? { ...app, technicalStatus: 'Assessment Sent' } : app
-      );
-      updateAppsAndSync(updatedApps);
-
-      setSelectedTechnicalQuestionIds([]);
-      setLoading(false);
-      setTimeout(() => setSuccess(''), 4000);
-    }
-  };
-
-  const handleSendTest = async (appId) => {
-    const candidate = externalApplications.find(app => app.id === appId);
-    if (!candidate) return;
-
-    if (selectedTestQuestionIds.length === 0) {
-      alert('Please select at least one question first!');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
-    const assignedKey = `assessment_questions_${appId}`;
-    const selectedQuestions = technicalQuestionsData.slice(0, 40)
-      .filter(q => selectedTestQuestionIds.includes(q.id));
-
-    try {
-      await axios.post("http://localhost:8081/api/assessment/send", {
-        candidateId: Number(appId),
-        questionIds: selectedTechnicalQuestionIds
-      });
-
-      setSuccess(`Technical assessment successfully sent to ${candidate.fullName}.`);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to send assessment.");
-    } finally {
-      localStorage.setItem(assignedKey, JSON.stringify(selectedQuestions));
-      localStorage.removeItem(`assessment_answers_${appId}`);
-
-      const updatedApps = externalApplications.map(app =>
-        app.id === appId ? { ...app, technicalStatus: 'Assessment Sent', aptitudeStatus: 'Assessment Sent' } : app
-      );
-      updateAppsAndSync(updatedApps);
-
-      setSelectedTestQuestionIds([]);
-      setShowTestModal(false);
-      setLoading(false);
-      setTimeout(() => setSuccess(''), 4000);
-    }
-  };
-
-  const toggleTestQuestion = (qId) => {
-    if (selectedTestQuestionIds.includes(qId)) {
-      setSelectedTestQuestionIds(selectedTestQuestionIds.filter(id => id !== qId));
-    } else {
-      setSelectedTestQuestionIds([...selectedTestQuestionIds, qId]);
-    }
-  };
-
-  const selectAllTestQuestions = () => {
-    const allIds = technicalQuestionsData.slice(0, 40).map(q => q.id);
-    setSelectedTestQuestionIds(allIds);
-  };
-
-  const deselectAllTestQuestions = () => {
-    setSelectedTestQuestionIds([]);
-  };
-
-  const handleSendAssessmentQuick = async (app) => {
-    setError('');
-    setSuccess('');
-    const assignedKey = `assessment_questions_${app.id}`;
-    let questions = [];
-    let updatedApps = [];
-
-    if (app.status === 'Round 1 Aptitude') {
-      questions = generateAptitudeQuestions('Quant').slice(0, 5); // default 5 Quant questions
-      localStorage.setItem(assignedKey, JSON.stringify(questions));
-      localStorage.removeItem(`assessment_answers_${app.id}`);
-      updatedApps = externalApplications.map(a =>
-        a.id === app.id ? { ...a, aptitudeStatus: 'Assessment Sent' } : a
-      );
-      updateAppsAndSync(updatedApps);
-      setSuccess(`Aptitude assessment successfully sent to ${app.fullName}.`);
-      setTimeout(() => setSuccess(''), 4000);
-    } else if (app.status === 'Round 1 Technical') {
-      // Find suitable tech category based on job title, default to React
-      const title = (app.jobTitle || '').toLowerCase();
-      let category = 'React';
-      if (title.includes('java') || title.includes('backend') || title.includes('spring')) {
-        category = title.includes('spring') ? 'Spring Boot' : 'Java';
-      } else if (title.includes('node') || title.includes('api')) {
-        category = 'Node.js';
-      } else if (title.includes('python') || title.includes('data')) {
-        category = 'Python';
-      } else if (title.includes('test') || title.includes('qa')) {
-        category = 'Testing';
-      } else if (title.includes('devops') || title.includes('cloud') || title.includes('infra')) {
-        category = 'DevOps';
-      }
-
-      questions = technicalQuestionsData.filter(q => q.category === category).slice(0, 3); // Assign first 3 questions of category
-      localStorage.setItem(assignedKey, JSON.stringify(questions));
-      localStorage.removeItem(`assessment_answers_${app.id}`);
-      updatedApps = externalApplications.map(a =>
-        a.id === app.id ? { ...a, technicalStatus: 'Assessment Sent' } : a
-      );
-      updateAppsAndSync(updatedApps);
-      setSuccess(`Technical coding challenges (${category}) successfully sent to ${app.fullName}.`);
-      setTimeout(() => setSuccess(''), 4000);
-    } else {
-      alert('This candidate is not currently in an assessment stage (Round 1 Aptitude or Round 1 Technical).');
-    }
   };
 
   const handleUpdateStatus = async (appId, newStatus) => {
@@ -2064,7 +804,8 @@ export default function AdminDashboard() {
 
                 <div className="pl-3 space-y-1 mt-1 border-l border-slate-800/60 ml-3.5">
                   {[
-                    { key: 'Round 1 Technical', label: 'Stage 1 Technical' }
+                    { key: 'Round 1 Technical', label: 'Stage 1 Technical' },
+                    { key: 'Round 2 Brand Awareness', label: 'Stage 2 Brand Awareness' }
                   ].map((stage) => {
                     const isActive = activeSubTab === 'appsList' && selectedStatusFilter === stage.key;
                     const count = externalApplications.filter(app => app.status === stage.key).length;
@@ -2236,7 +977,7 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
-            {((activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates') || activeSubTab === 'jobsList' || activeSubTab === 'jobBoard') && (
+            {((activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates') || activeSubTab === 'jobBoard') && (
               <button
                 onClick={openAddJobModal}
                 className="flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-semibold admin-glow-btn"
@@ -2256,7 +997,7 @@ export default function AdminDashboard() {
         ) : (
           <div className="space-y-6">
             {/* Sub Tab Controls */}
-            {selectedStatusFilter !== 'Round 1 Aptitude' && selectedStatusFilter !== 'Round 1 Technical' && selectedStatusFilter !== 'Round 2 Brand Awareness' && activeSubTab !== 'partnerships' && activeSubTab !== 'support' && (
+            {selectedStatusFilter !== 'Round 1 Aptitude' && selectedStatusFilter !== 'Round 2 Technical' && selectedStatusFilter !== 'Round 3 Brand Awareness' && activeSubTab !== 'partnerships' && activeSubTab !== 'support' && (
               <div className="flex space-x-6 border-b border-slate-200 pb-3">
                 <button
                   onClick={() => setActiveSubTab('jobsList')}
@@ -2485,17 +1226,7 @@ export default function AdminDashboard() {
 
                                   return (
                                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                                      <td className="py-3.5 px-4">
-                                        <button
-                                          onClick={() => {
-                                            setSelectedApplication(app);
-                                            setCandidateStatus(app.status || 'Candidates');
-                                          }}
-                                          className="font-bold text-slate-900 hover:text-[#004AAD] transition text-left cursor-pointer bg-transparent border-none p-0 outline-none"
-                                        >
-                                          {app.fullName}
-                                        </button>
-                                      </td>
+                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
                                       <td className="py-3.5 px-4">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${dateVal === 'Not Selected' ? 'bg-slate-50 text-slate-500 border border-slate-200' : 'bg-blue-50 text-blue-700 border border-blue-200'
@@ -2690,7 +1421,7 @@ export default function AdminDashboard() {
                     </div>
                   )}
                 </div>
-              ) : selectedStatusFilter === 'Round 1 Technical' ? (
+              ) : selectedStatusFilter === 'Round 2 Technical' ? (
                 <div className="space-y-6 animate-fadeIn">
                   {/* Local Tabs for Dashboard vs Questions */}
                   <div className="flex space-x-6 border-b border-slate-200 pb-3">
@@ -2724,7 +1455,7 @@ export default function AdminDashboard() {
 
                       {/* Metrics Cards Row */}
                       {(() => {
-                        const r2Apps = externalApplications.filter(app => app.status === 'Round 1 Technical');
+                        const r2Apps = externalApplications.filter(app => app.status === 'Round 2 Technical');
                         const getCount = (keywords) => r2Apps.filter(app =>
                           keywords.some(kw => (app.jobTitle || '').toLowerCase().includes(kw))
                         ).length;
@@ -2807,7 +1538,7 @@ export default function AdminDashboard() {
 
                         {/* Filtered Candidate Table */}
                         {(() => {
-                          const r2Apps = externalApplications.filter(app => app.status === 'Round 1 Technical');
+                          const r2Apps = externalApplications.filter(app => app.status === 'Round 2 Technical');
 
                           const filteredApps = r2Apps.filter(app => {
                             const title = (app.jobTitle || '').toLowerCase();
@@ -2830,36 +1561,17 @@ export default function AdminDashboard() {
                                     <th className="py-3 px-4 font-bold">Position</th>
                                     <th className="py-3 px-4 font-bold">Email</th>
                                     <th className="py-3 px-4 font-bold">Experience</th>
-                                    <th className="py-3 px-4 font-bold">Status</th>
                                     <th className="py-3 px-4 font-bold">Action</th>
                                   </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 text-slate-700">
                                   {filteredApps.map((app) => (
                                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                                      <td className="py-3.5 px-4">
-                                        <button
-                                          onClick={() => {
-                                            setSelectedApplication(app);
-                                            setCandidateStatus(app.status || 'Candidates');
-                                          }}
-                                          className="font-bold text-slate-900 hover:text-[#004AAD] transition text-left cursor-pointer bg-transparent border-none p-0 outline-none"
-                                        >
-                                          {app.fullName}
-                                        </button>
-                                      </td>
+                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
                                       <td className="py-3.5 px-4 font-medium text-slate-600">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4 text-slate-500">{app.email}</td>
                                       <td className="py-3.5 px-4 font-semibold text-slate-700">
                                         {app.experience || '3 Years'}
-                                      </td>
-                                      <td className="py-3.5 px-4">
-                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${app.technicalStatus === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-250' :
-                                          app.technicalStatus === 'Assessment Sent' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                            'bg-amber-50 text-amber-700 border border-amber-200'
-                                          }`}>
-                                          {app.technicalStatus || 'Pending'}
-                                        </span>
                                       </td>
                                       <td className="py-3.5 px-4">
                                         <button
@@ -2873,7 +1585,7 @@ export default function AdminDashboard() {
                                   ))}
                                   {filteredApps.length === 0 && (
                                     <tr>
-                                      <td colSpan={6} className="py-8 text-center text-slate-400 italic">
+                                      <td colSpan={5} className="py-8 text-center text-slate-400 italic">
                                         No candidates found for {selectedDomainTab} in Round 2 Technical.
                                       </td>
                                     </tr>
@@ -2977,119 +1689,39 @@ export default function AdminDashboard() {
                         <div className="mb-6 flex items-center justify-between">
                           <div className="text-left">
                             <h3 className="text-base font-bold text-slate-900">Assessment challenges: {selectedDomainTab}</h3>
-                            <p className="text-slate-455 text-xs mt-0.5 font-semibold">Coding problems presented to candidates during technical evaluation</p>
+                            <p className="text-slate-450 text-xs mt-0.5 font-semibold">Coding problems presented to candidates during technical evaluation</p>
                           </div>
-                          {technicalQuestionsData.filter(q => q.category === selectedDomainTab).length > 0 && (
-                            <button
-                              onClick={() => {
-                                const allIds = technicalQuestionsData.filter(q => q.category === selectedDomainTab).map(q => q.id);
-                                const allSelected = allIds.every(id => selectedTechnicalQuestionIds.includes(id));
-                                if (allSelected) {
-                                  setSelectedTechnicalQuestionIds(prev => prev.filter(id => !allIds.includes(id)));
-                                } else {
-                                  setSelectedTechnicalQuestionIds(prev => [...new Set([...prev, ...allIds])]);
-                                }
-                              }}
-                              className="px-3.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-[10px] font-bold text-slate-655 transition cursor-pointer"
-                            >
-                              {technicalQuestionsData.filter(q => q.category === selectedDomainTab).map(q => q.id).every(id => selectedTechnicalQuestionIds.includes(id)) ? 'Deselect All' : 'Select All'}
-                            </button>
-                          )}
                         </div>
-
-                        {selectedTechnicalQuestionIds.length > 0 && (
-                          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fadeIn text-xs font-bold text-slate-705 text-left">
-                            <div className="space-y-1">
-                              <span className="text-[#004AAD] font-extrabold text-sm block">
-                                {selectedTechnicalQuestionIds.length} Technical Challenge(s) Selected
-                              </span>
-                              <p className="text-[10px] text-slate-500 font-semibold">
-                                Select a candidate from the Technical Round pipeline to assign these coding challenges.
-                              </p>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-3">
-                              <select
-                                id="tech-candidate-select"
-                                className="bg-white border border-slate-300 rounded-xl py-2 px-3 focus:outline-none text-xs transition cursor-pointer font-bold text-slate-700 min-w-[200px]"
-                              >
-                                <option value="">Choose Candidate...</option>
-                                {externalApplications
-                                  .filter(app => app.status === 'Round 1 Technical')
-                                  .map(app => (
-                                    <option key={app.id} value={app.id}>
-                                      {app.fullName} ({app.jobTitle})
-                                    </option>
-                                  ))}
-                              </select>
-                              <button
-                                onClick={async () => {
-                                  const selectEl = document.getElementById('tech-candidate-select');
-                                  const candidateId = selectEl ? selectEl.value : '';
-                                  if (!candidateId) {
-                                    alert('Please choose a candidate first!');
-                                    return;
-                                  }
-                                  await handleAssignTechnicalQuestions(candidateId);
-                                }}
-                                className="bg-[#004AAD] hover:bg-[#003c8f] text-white font-bold py-2 px-4 rounded-xl text-xs shadow-sm transition duration-200 cursor-pointer border-none outline-none"
-                              >
-                                Send to Candidate
-                              </button>
-                              <button
-                                onClick={() => setSelectedTechnicalQuestionIds([])}
-                                className="bg-white hover:bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs border border-slate-250 transition duration-200 cursor-pointer"
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        )}
 
                         <div className="space-y-4">
                           {technicalQuestionsData
                             .filter(q => q.category === selectedDomainTab)
                             .map((question, idx) => (
-                              <div key={question.id} className="border border-slate-200 rounded-xl p-5 hover:border-slate-350 transition-colors text-left bg-slate-50/20 flex items-start gap-4">
-                                <div className="pt-1">
-                                  <input
-                                    type="checkbox"
-                                    checked={selectedTechnicalQuestionIds.includes(question.id)}
-                                    onChange={(e) => {
-                                      if (e.target.checked) {
-                                        setSelectedTechnicalQuestionIds(prev => [...prev, question.id]);
-                                      } else {
-                                        setSelectedTechnicalQuestionIds(prev => prev.filter(id => id !== question.id));
-                                      }
-                                    }}
-                                    className="h-4.5 w-4.5 rounded border-slate-300 text-[#004AAD] focus:ring-[#004AAD] cursor-pointer"
-                                  />
+                              <div key={question.id} className="border border-slate-200 rounded-xl p-5 hover:border-slate-350 transition-colors text-left bg-slate-50/20">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                    <span className="h-5 w-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
+                                      {idx + 1}
+                                    </span>
+                                    {question.title}
+                                  </h4>
+                                  <div className="flex items-center gap-2">
+                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
+                                      question.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-250' :
+                                        'bg-rose-50 text-rose-700 border-rose-250'
+                                      }`}>
+                                      {question.difficulty}
+                                    </span>
+                                    <span className="text-[10px] text-slate-400 font-semibold">{question.time} limit</span>
+                                  </div>
                                 </div>
-                                <div className="flex-1">
-                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                                    <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                                      <span className="h-5 w-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
-                                        {idx + 1}
-                                      </span>
-                                      {question.title}
-                                    </h4>
-                                    <div className="flex items-center gap-2">
-                                      <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full border ${question.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' :
-                                        question.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border-amber-250' :
-                                          'bg-rose-50 text-rose-700 border-rose-250'
-                                        }`}>
-                                        {question.difficulty}
-                                      </span>
-                                      <span className="text-[10px] text-slate-400 font-semibold">{question.time} limit</span>
-                                    </div>
-                                  </div>
 
-                                  <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold whitespace-pre-wrap">
-                                    {question.description}
-                                  </p>
+                                <p className="text-xs text-slate-600 leading-relaxed mb-4 font-semibold">
+                                  {question.description}
+                                </p>
 
-                                  <div className="bg-[#0f172a] text-slate-300 font-mono text-[11px] rounded-lg p-4 overflow-x-auto whitespace-pre leading-relaxed border border-slate-900 shadow-inner">
-                                    {question.codeSnippet}
-                                  </div>
+                                <div className="bg-[#0f172a] text-slate-300 font-mono text-[11px] rounded-lg p-4 overflow-x-auto whitespace-pre leading-relaxed border border-slate-900 shadow-inner">
+                                  {question.codeSnippet}
                                 </div>
                               </div>
                             ))}
@@ -3103,7 +1735,7 @@ export default function AdminDashboard() {
                     </div>
                   )}
                 </div>
-              ) : selectedStatusFilter === 'Round 2 Brand Awareness' ? (
+              ) : selectedStatusFilter === 'Round 3 Brand Awareness' ? (
                 <div className="space-y-6 animate-fadeIn">
                   {/* Local Tabs for Dashboard vs Questions */}
                   <div className="flex space-x-6 border-b border-slate-200 pb-3">
@@ -3137,7 +1769,7 @@ export default function AdminDashboard() {
 
                       {/* Metrics Cards */}
                       {(() => {
-                        const r3Apps = externalApplications.filter(app => app.status === 'Round 2 Brand Awareness');
+                        const r3Apps = externalApplications.filter(app => app.status === 'Round 3 Brand Awareness');
                         const getCount = (keywords) => r3Apps.filter(app =>
                           keywords.some(kw => (app.jobTitle || '').toLowerCase().includes(kw))
                         ).length;
@@ -3220,7 +1852,7 @@ export default function AdminDashboard() {
 
                         {/* Candidate Table */}
                         {(() => {
-                          const r3Apps = externalApplications.filter(app => app.status === 'Round 2 Brand Awareness');
+                          const r3Apps = externalApplications.filter(app => app.status === 'Round 3 Brand Awareness');
 
                           const filteredApps = r3Apps.filter(app => {
                             const title = (app.jobTitle || '').toLowerCase();
@@ -3247,17 +1879,7 @@ export default function AdminDashboard() {
                                 <tbody className="divide-y divide-slate-100 text-slate-700">
                                   {filteredApps.map((app) => (
                                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                                      <td className="py-3.5 px-4">
-                                        <button
-                                          onClick={() => {
-                                            setSelectedApplication(app);
-                                            setCandidateStatus(app.status || 'Candidates');
-                                          }}
-                                          className="font-bold text-slate-900 hover:text-[#004AAD] transition text-left cursor-pointer bg-transparent border-none p-0 outline-none"
-                                        >
-                                          {app.fullName}
-                                        </button>
-                                      </td>
+                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
                                       <td className="py-3.5 px-4 font-medium text-slate-600">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4 text-slate-500">{app.email}</td>
                                       <td className="py-3.5 px-4 font-semibold text-slate-700">
@@ -3569,15 +2191,7 @@ export default function AdminDashboard() {
                             return filtered.map(app => (
                               <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="py-4 px-6">
-                                  <button
-                                    onClick={() => {
-                                      setSelectedApplication(app);
-                                      setCandidateStatus(app.status || 'Candidates');
-                                    }}
-                                    className="font-bold text-slate-900 hover:text-[#004AAD] transition text-left cursor-pointer bg-transparent border-none p-0 outline-none"
-                                  >
-                                    {app.fullName}
-                                  </button>
+                                  <div className="font-bold text-slate-900">{app.fullName}</div>
                                   <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
                                 </td>
                                 <td className="py-4 px-6">
@@ -3587,8 +2201,8 @@ export default function AdminDashboard() {
                                 <td className="py-4 px-6">
                                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap ${app.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                                     app.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                                      app.status === 'Round 1 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
-                                        app.status === 'Round 2 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
+                                      app.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                                        app.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
                                           app.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                                             app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                                               app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
@@ -3604,10 +2218,10 @@ export default function AdminDashboard() {
                                   {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
                                 </td>
                                 <td className="py-4 px-6">
-                                  {app.resume ? (
+                                  {app.resumeUrl ? (
                                     <button
                                       onClick={() => {
-                                        setSelectedResumeUrl(`http://localhost:8081/uploads/${app.resume}`);
+                                        setSelectedResumeUrl(app.resumeUrl);
                                         setSelectedResumeCandidate(app.fullName);
                                       }}
                                       className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold cursor-pointer"
@@ -4187,104 +2801,20 @@ export default function AdminDashboard() {
               <X className="h-5 w-5" />
             </button>
 
-            {/* Profile Header (Top Section) */}
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 border-b border-slate-100 pb-6 mb-6">
-              {/* Large Avatar */}
-              <div className="h-20 w-20 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-blue-500/10 shrink-0">
-                {selectedApplication.fullName.split(' ').map(n => n[0]).join('')}
-              </div>
-
-              {/* Candidate Info */}
-              <div className="flex-grow text-center sm:text-left space-y-1.5">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 justify-center sm:justify-start">
-                  <h3 className="text-xl font-black text-slate-900 leading-none">
-                    {selectedApplication.fullName}
-                  </h3>
-                  {(() => {
-                    const isShortlisted = ['Shortlisted', 'Selected', 'Joined'].includes(selectedApplication.status);
-                    const isRejected = selectedApplication.status === 'Rejected';
-                    return (
-                      <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${isShortlisted
-                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                        : isRejected
-                          ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                          : 'bg-purple-100 text-purple-800 border border-purple-200'
-                        }`}>
-                        {isShortlisted ? 'shortlisted' : isRejected ? 'rejected' : 'in process'}
-                      </span>
-                    );
-                  })()}
-                </div>
-
-                <div className="text-slate-500 text-xs font-semibold">
-                  Applied for: <strong className="text-slate-800">{selectedApplication.jobTitle}</strong>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-slate-500 text-xs font-bold mt-1">
-                  <span className="flex items-center gap-1">
-                    <Mail className="h-3.5 w-3.5 text-slate-400" />
-                    {selectedApplication.email}
-                  </span>
-                  {selectedApplication.phone && (
-                    <span className="flex items-center gap-1">
-                      <Phone className="h-3.5 w-3.5 text-slate-400" />
-                      {selectedApplication.phone}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Action Buttons */}
-            <div className="flex flex-wrap gap-2.5 mb-6 border-b border-slate-100 pb-6 justify-center sm:justify-start">
-              <button
-                type="button"
-                onClick={() => {
-                  document.getElementById('schedule-interview-section')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#004AAD] hover:bg-[#003882] text-white rounded-xl text-xs font-bold transition shadow-sm hover:shadow cursor-pointer border-none outline-none"
-              >
-                <Calendar className="h-3.5 w-3.5" />
-                Schedule Interview
-              </button>
-              <button
-                type="button"
-                onClick={() => handleUpdateStatus(selectedApplication.id, 'Rejected')}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition cursor-pointer"
-              >
-                <Trash className="h-3.5 w-3.5" />
-                Reject
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedTestQuestionIds([]);
-                  setShowTestModal(true);
-                }}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-xl text-xs font-bold transition cursor-pointer"
-              >
-                <Brain className="h-3.5 w-3.5" />
-                Test
-              </button>
-              {(selectedApplication.status === 'Round 1 Aptitude' || selectedApplication.status === 'Round 1 Technical') && (
-                <button
-                  type="button"
-                  onClick={() => handleSendAssessmentQuick(selectedApplication)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-xl text-xs font-bold transition cursor-pointer"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  Send Assessment
-                </button>
-              )}
-            </div>
+            <h3 className="text-xl font-extrabold text-slate-900 mb-2">
+              Review Candidate Profile
+            </h3>
+            <p className="text-xs text-slate-500 mb-6 border-b border-slate-100 pb-2">
+              Review info, update candidacy status, or schedule an interview below.
+            </p>
 
             <div className="space-y-6">
               {/* Stepper / Progress Tracking */}
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Candidate Hiring Progress</div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                  {['Candidates', 'Round 1 Technical', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
-                    const order = ['Candidates', 'Round 1 Technical', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
+                  {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
+                    const order = ['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
                     const curIdx = order.indexOf(selectedApplication.status);
                     const isCompleted = curIdx >= idx && selectedApplication.status !== 'Rejected';
                     const isCurrent = selectedApplication.status === step;
@@ -4342,8 +2872,8 @@ export default function AdminDashboard() {
                   <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Current Status</label>
                   <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold capitalize mt-1 ${selectedApplication.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                     selectedApplication.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                      selectedApplication.status === 'Round 1 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
-                        selectedApplication.status === 'Round 2 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
+                      selectedApplication.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                        selectedApplication.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
                           selectedApplication.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                             selectedApplication.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                               selectedApplication.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
@@ -4383,7 +2913,7 @@ export default function AdminDashboard() {
                   return (
                     <div className="border-t border-slate-100 pt-4">
                       <label className="text-xs font-bold uppercase block mb-2.5 text-slate-800">
-                        View Candidate Assessment Answers (Score: {selectedApplication.technicalScore || selectedApplication.aptitudeScore || '0'}%)
+                        View Candidate Assessment Answers (Score: {selectedApplication.aptitudeScore || '0'}%)
                       </label>
                       <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-4 max-h-[220px] overflow-y-auto admin-scrollbar">
                         {qList.map((q, qidx) => {
@@ -4393,7 +2923,7 @@ export default function AdminDashboard() {
                               <div className="font-bold text-slate-900">
                                 Q{qidx + 1}. {q.title}
                               </div>
-                              <p className="text-slate-500 italic whitespace-pre-wrap">
+                              <p className="text-slate-500 italic">
                                 {q.description}
                               </p>
                               <div className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-800">
@@ -4443,7 +2973,7 @@ export default function AdminDashboard() {
               <div className="border-t border-slate-100 pt-4">
                 <label className="text-xs font-bold uppercase block mb-2">Update Application Status</label>
                 <div className="flex flex-wrap gap-2">
-                  {['Candidates', 'Round 1 Technical', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
+                  {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
                     <button
                       key={status}
                       type="button"
@@ -4460,7 +2990,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Schedule Interview Form */}
-              <form id="schedule-interview-section" onSubmit={handleScheduleInterview} className="border-t border-slate-100 pt-4 space-y-4">
+              <form onSubmit={handleScheduleInterview} className="border-t border-slate-100 pt-4 space-y-4">
                 <label className="text-xs font-bold uppercase block mb-1">Schedule Interview / Meeting</label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
@@ -4555,107 +3085,6 @@ export default function AdminDashboard() {
               <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap no-override">
                 {selectedCoverLetter.text}
               </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal for Assigning 40 Test Questions */}
-      {showTestModal && selectedApplication && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-4xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 admin-scrollbar overflow-y-auto max-h-[90vh]">
-            <button
-              onClick={() => setShowTestModal(false)}
-              className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition cursor-pointer"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            <div>
-              <h3 className="text-xl font-extrabold text-slate-900">
-                Select Test Questions for {selectedApplication.fullName}
-              </h3>
-              <p className="text-xs text-slate-550 font-bold mt-0.5">
-                Choose from the standard list of 40 evaluation questions to send to this candidate.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 mt-4 mb-4">
-              <button
-                type="button"
-                onClick={selectAllTestQuestions}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-lg transition cursor-pointer"
-              >
-                Select All
-              </button>
-              <button
-                type="button"
-                onClick={deselectAllTestQuestions}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-lg transition cursor-pointer"
-              >
-                Deselect All
-              </button>
-              <span className="text-xs text-slate-500 font-bold ml-2">
-                {selectedTestQuestionIds.length} of 40 selected
-              </span>
-            </div>
-
-            {/* Questions Table */}
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[50vh] overflow-y-auto admin-scrollbar">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-extrabold tracking-wider sticky top-0 z-10">
-                  <tr>
-                    <th className="py-3 px-4 w-10">Select</th>
-                    <th className="py-3 px-4 w-16">ID</th>
-                    <th className="py-3 px-4 w-48">Title</th>
-                    <th className="py-3 px-4 w-24">Category</th>
-                    <th className="py-3 px-4 w-20">Difficulty</th>
-                    <th className="py-3 px-4">Description</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
-                  {technicalQuestionsData.slice(0, 40).map((q) => (
-                    <tr key={q.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="py-3.5 px-4 w-10">
-                        <input
-                          type="checkbox"
-                          checked={selectedTestQuestionIds.includes(q.id)}
-                          onChange={() => toggleTestQuestion(q.id)}
-                          className="h-4 w-4 rounded border-slate-300 text-[#004AAD] focus:ring-[#004AAD] cursor-pointer"
-                        />
-                      </td>
-                      <td className="py-3.5 px-4 font-mono font-bold text-[#004AAD]">{q.id.toUpperCase()}</td>
-                      <td className="py-3.5 px-4 font-bold text-slate-900">{q.title}</td>
-                      <td className="py-3.5 px-4 font-bold text-slate-550">{q.category}</td>
-                      <td className="py-3.5 px-4">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${q.difficulty === 'Hard' ? 'bg-red-50 text-red-700 border border-red-200' :
-                          q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                            'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          }`}>
-                          {q.difficulty}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 max-w-sm truncate" title={q.description}>{q.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
-              <button
-                onClick={() => setShowTestModal(false)}
-                className="px-5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleSendTest(selectedApplication.id)}
-                disabled={loading}
-                className="px-5 py-2 rounded-xl bg-[#004AAD] hover:bg-[#003882] text-white text-xs font-bold transition cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 border-none outline-none"
-              >
-                {loading ? 'Sending...' : 'Send Test to Candidate'}
-              </button>
             </div>
           </div>
         </div>
@@ -4846,7 +3275,7 @@ export default function AdminDashboard() {
 
               <div className="flex items-center space-x-3">
                 <a
-                  href={selectedResumeUrl}
+                  href={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `https://apply.beta-softnet.com${selectedResumeUrl}`}
                   download={`${selectedResumeCandidate.replace(/\s+/g, '_')}_Resume.pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
