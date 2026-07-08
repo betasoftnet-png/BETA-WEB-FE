@@ -25,6 +25,16 @@ const mapStatusToUI = (status) => {
   return 'Candidates';
 };
 
+const BACKEND_API_BASE =
+  window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8081'
+    : 'https://apply.beta-softnet.com';
+
+const fallbackApps = [];
+const fallbackPartnerships = [];
+const fallbackSupports = [];
+
 
 const parsePartnerMessage = (msg, name, email, company, id, date) => {
   if (!msg) return null;
@@ -163,11 +173,20 @@ export default function AdminDashboard() {
     setError('');
     try {
       const [jobsRes, appsRes] = await Promise.all([
-        axios.get('http://localhost:8081/api/jobs'),
-        axios.get('https://apply.beta-softnet.com/api/applications')
+        axios.get(`${BACKEND_API_BASE}/api/jobs`),
+        axios.get(`${BACKEND_API_BASE}/api/admin/applications`)
       ]);
-      setExternalJobs(jobsRes.data.data || jobsRes.data || []);
+      const jobsList = jobsRes.data.data || jobsRes.data || [];
+      setExternalJobs(jobsList);
 
+      // const applicationsList = appsRes.data.data || appsRes.data || [];
+
+      // const activeApplications = applicationsList.filter(
+      //   (application) => application.status !== "REJECTED"
+      // );
+
+      // console.log("Applications:", activeApplications);
+      // setApplications(activeApplications);
       const apps = appsRes.data.data || appsRes.data || [];
       if (apps.length === 0) {
         const stored = localStorage.getItem('beta_applications');
@@ -178,29 +197,38 @@ export default function AdminDashboard() {
           localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
         }
       } else {
-        const normalizedApps = apps.map(app => ({
-          id: app.id,
-          fullName: app.fullName || app.fullname || '',
-          email: app.email || '',
-          phone: app.phone || '',
-          resumeUrl: app.resumeUrl || app.resumeurl || '',
-          coverLetter: app.coverLetter || app.coverletter || '',
-          status: mapStatusToUI(app.status),
-          createdAt: app.createdAt || app.createdat || '',
-          jobTitle: app.jobTitle || app.jobtitle || '',
-          jobDepartment: app.jobDepartment || app.jobdepartment || '',
-          jobLocation: app.jobLocation || app.joblocation || '',
-          interviewDate: app.interviewDate || app.interviewdate || '',
-          interviewTime: app.interviewTime || app.interviewtime || '',
-          aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
-          aptitudeScore: app.aptitudeScore || app.aptitudescore || '',
-          experience: app.experience || '3 Years'
-        }));
+        const normalizedApps = apps
+          .filter(app => (app.status || '').toUpperCase() !== "REJECTED")
+          .map(app => {
+            const matchedJob = jobsList.find(j => String(j.id) === String(app.jobId));
+
+            return {
+              id: app.id,
+              fullName: app.fullName || app.fullname || '',
+              email: app.email || '',
+              phone: app.phone || '',
+              resumeUrl: app.resume
+                ? `${BACKEND_API_BASE}/uploads/${app.resume}`
+                : (app.resumeUrl || app.resumeurl || ''),
+              coverLetter: app.coverLetter || app.coverletter || '',
+              status: mapStatusToUI(app.status),
+              createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+              jobTitle: matchedJob ? matchedJob.title : (app.jobTitle || app.jobtitle || 'Unknown Position'),
+              jobDepartment: matchedJob ? matchedJob.department : (app.jobDepartment || app.jobdepartment || 'Engineering'),
+              jobLocation: matchedJob ? matchedJob.location : (app.jobLocation || app.joblocation || 'Remote'),
+              interviewDate: app.interviewDate || app.interviewdate || '',
+              interviewTime: app.interviewTime || app.interviewtime || '',
+              aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
+              aptitudeScore: app.aptitudeScore || app.aptitudescore || '',
+              experience: app.experience || '3 Years'
+            };
+          });
+
         setExternalApplications(normalizedApps);
         localStorage.setItem('beta_applications', JSON.stringify(normalizedApps));
       }
-    } catch {
-      console.warn('Failed to fetch from live API. Loading fallback local data.');
+    } catch (fetchErr) {
+      console.warn('Failed to fetch from live API. Loading fallback local data.', fetchErr);
       const stored = localStorage.getItem('beta_applications');
       if (stored) {
         setExternalApplications(JSON.parse(stored));
@@ -391,10 +419,10 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       if (editingJob) {
-        await axios.put(`http://localhost:8081/api/jobs/${editingJob.id}`, payload);
+        await axios.put(`${BACKEND_API_BASE}/api/jobs/${editingJob.id}`, payload);
         setSuccess('Job opening updated successfully.');
       } else {
-        await axios.post('http://localhost:8081/api/jobs', payload);
+        await axios.post(`${BACKEND_API_BASE}/api/jobs`, payload);
         setSuccess('Job opening posted successfully.');
       }
       setIsJobModalOpen(false);
@@ -413,7 +441,7 @@ export default function AdminDashboard() {
     setSuccess('');
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:8081/api/jobs/${id}`);
+      await axios.delete(`${BACKEND_API_BASE}/api/jobs/${id}`);
       setSuccess('Job opening deleted successfully.');
       fetchData();
     } catch (err) {
@@ -502,7 +530,7 @@ export default function AdminDashboard() {
     setSuccess('');
     try {
       setLoading(true);
-      await axios.put(`https://apply.beta-softnet.com/api/applications/${appId}/status`, { status: newStatus });
+      await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${appId}/status`, { status: newStatus });
       setSuccess(`Candidate status updated to ${newStatus}. Notification email sent.`);
     } catch {
       console.warn('API update failed. Updating locally in state.');
@@ -536,7 +564,7 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       // Try sending to the backend API as requested
-      await axios.post(`https://apply.beta-softnet.com/api/applications/${selectedApplication.id}/schedule`, payload);
+      await axios.post(`${BACKEND_API_BASE}/api/admin/applications/${selectedApplication.id}/schedule`, payload);
       setSuccess(`Interview scheduled for ${selectedApplication.fullName} successfully. Data saved to database.`);
     } catch {
       console.warn('API schedule failed. Simulating successful scheduling locally.');
@@ -3275,7 +3303,7 @@ export default function AdminDashboard() {
 
               <div className="flex items-center space-x-3">
                 <a
-                  href={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `https://apply.beta-softnet.com${selectedResumeUrl}`}
+                  href={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `${BACKEND_API_BASE}${selectedResumeUrl.startsWith('/') ? '' : '/'}${selectedResumeUrl}`}
                   download={`${selectedResumeCandidate.replace(/\s+/g, '_')}_Resume.pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
