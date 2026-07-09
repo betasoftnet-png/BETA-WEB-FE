@@ -19,7 +19,7 @@ const mapStatusToUI = (status) => {
   if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 3 Brand Awareness';
   if (s === 'shortlisted') return 'Shortlisted';
   if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
-  if (s === 'approved' || s === 'selected') return 'Selected';
+  if (s === 'approved' || s === 'selected' || s === 'accepted') return 'Selected';
   if (s === 'rejected') return 'Rejected';
   if (s === 'joined') return 'Joined';
   return 'Candidates';
@@ -191,7 +191,8 @@ export default function AdminDashboard() {
       if (apps.length === 0) {
         const stored = localStorage.getItem('beta_applications');
         if (stored) {
-          setExternalApplications(JSON.parse(stored));
+          const parsed = JSON.parse(stored) || [];
+          setExternalApplications(parsed.filter(app => (app.status || '').toUpperCase() !== "REJECTED"));
         } else {
           setExternalApplications(fallbackApps);
           localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
@@ -211,7 +212,9 @@ export default function AdminDashboard() {
                 ? `${BACKEND_API_BASE}/uploads/${app.resume}`
                 : (app.resumeUrl || app.resumeurl || ''),
               coverLetter: app.coverLetter || app.coverletter || '',
-              status: mapStatusToUI(app.status),
+              status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING') 
+                ? 'Interview Scheduled' 
+                : mapStatusToUI(app.status),
               createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
               jobTitle: matchedJob ? matchedJob.title : (app.jobTitle || app.jobtitle || 'Unknown Position'),
               jobDepartment: matchedJob ? matchedJob.department : (app.jobDepartment || app.jobdepartment || 'Engineering'),
@@ -231,7 +234,8 @@ export default function AdminDashboard() {
       console.warn('Failed to fetch from live API. Loading fallback local data.', fetchErr);
       const stored = localStorage.getItem('beta_applications');
       if (stored) {
-        setExternalApplications(JSON.parse(stored));
+        const parsed = JSON.parse(stored) || [];
+        setExternalApplications(parsed.filter(app => (app.status || '').toUpperCase() !== "REJECTED"));
       } else {
         setExternalApplications(fallbackApps);
         localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
@@ -526,11 +530,19 @@ export default function AdminDashboard() {
     if (newStatus === 'Rejected') {
       if (!window.confirm('Are you sure you want to reject this candidate?')) return;
     }
+    if (newStatus === 'Selected') {
+      if (!window.confirm('Are you sure you want to accept this candidate?')) return;
+    }
     setError('');
     setSuccess('');
+
+    let backendStatus = newStatus;
+    if (newStatus === 'Selected') backendStatus = 'ACCEPTED';
+    if (newStatus === 'Rejected') backendStatus = 'REJECTED';
+
     try {
       setLoading(true);
-      await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${appId}/status`, { status: newStatus });
+      await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${appId}/status`, { status: backendStatus });
       setSuccess(`Candidate status updated to ${newStatus}. Notification email sent.`);
     } catch {
       console.warn('API update failed. Updating locally in state.');
@@ -824,44 +836,7 @@ export default function AdminDashboard() {
                 );
               })()}
 
-              {/* Round 1 folder structure */}
-              <div className="pt-1.5">
-                <div className="flex items-center space-x-2 px-3 py-1 text-[9px] font-bold text-slate-550 uppercase tracking-wider">
-                  <span>Round 1</span>
-                </div>
 
-                <div className="pl-3 space-y-1 mt-1 border-l border-slate-800/60 ml-3.5">
-                  {[
-                    { key: 'Round 1 Technical', label: 'Stage 1 Technical' },
-                    { key: 'Round 2 Brand Awareness', label: 'Stage 2 Brand Awareness' }
-                  ].map((stage) => {
-                    const isActive = activeSubTab === 'appsList' && selectedStatusFilter === stage.key;
-                    const count = externalApplications.filter(app => app.status === stage.key).length;
-                    return (
-                      <button
-                        key={stage.key}
-                        onClick={() => {
-                          setSelectedStatusFilter(stage.key);
-                          setActiveSubTab('appsList');
-                        }}
-                        className={`w-full flex items-center justify-between px-2.5 py-1 rounded-md text-[10px] font-semibold transition cursor-pointer text-left ${isActive
-                          ? 'bg-blue-600/20 text-white font-bold border border-blue-500/10'
-                          : 'text-slate-400 hover:bg-slate-800/20 hover:text-white border border-transparent'
-                          }`}
-                      >
-                        <span>{stage.label}</span>
-                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
-                          }`}>
-                          {count}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Separator line */}
-              <div className="border-t border-slate-800/80 my-2" />
 
               {/* Partnership Requests under Round 3 Brand Awareness */}
               <button
@@ -1025,7 +1000,7 @@ export default function AdminDashboard() {
         ) : (
           <div className="space-y-6">
             {/* Sub Tab Controls */}
-            {selectedStatusFilter !== 'Round 1 Aptitude' && selectedStatusFilter !== 'Round 2 Technical' && selectedStatusFilter !== 'Round 3 Brand Awareness' && activeSubTab !== 'partnerships' && activeSubTab !== 'support' && (
+            {activeSubTab !== 'partnerships' && activeSubTab !== 'support' && (
               <div className="flex space-x-6 border-b border-slate-200 pb-3">
                 <button
                   onClick={() => setActiveSubTab('jobsList')}
@@ -2098,10 +2073,13 @@ export default function AdminDashboard() {
                           onChange={(e) => setStatusFilter(e.target.value)}
                           className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
                         >
-                          <option value="All">All Statuses</option>
-                          <option value="Pending">Pending (Candidates)</option>
-                          <option value="Interview Scheduled">Interview Scheduled</option>
-                          <option value="Rejected">Rejected</option>
+                           <option value="All">All Statuses</option>
+                           <option value="Candidates">Candidates</option>
+                           <option value="Shortlisted">Shortlisted</option>
+                           <option value="Interview Scheduled">Interview Scheduled</option>
+                           <option value="Selected">Selected</option>
+                           <option value="Joined">Joined</option>
+                           <option value="Rejected">Rejected</option>
                         </select>
                       </div>
 
@@ -2183,9 +2161,7 @@ export default function AdminDashboard() {
                             const filtered = externalApplications
                               .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
                               .filter(app => {
-                                if (statusFilter === 'All') {
-                                  return selectedStatusFilter === 'Candidates' ? app.status === 'Candidates' : app.status === selectedStatusFilter;
-                                }
+                                if (statusFilter === 'All') return true;
                                 if (statusFilter === 'Pending') return app.status === 'Candidates';
                                 return app.status === statusFilter;
                               })
@@ -2283,6 +2259,13 @@ export default function AdminDashboard() {
                                       className="px-2.5 py-1.5 rounded bg-purple-50 hover:bg-purple-100 text-[#8B5CF6] border border-purple-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
                                     >
                                       Schedule Interview
+                                    </button>
+
+                                    <button
+                                      onClick={() => handleUpdateStatus(app.id, 'Selected')}
+                                      className="px-2.5 py-1.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-650 border border-emerald-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
+                                    >
+                                      Accept
                                     </button>
 
                                     <button
@@ -2518,7 +2501,7 @@ export default function AdminDashboard() {
                     <div className="space-y-4 flex-grow flex flex-col justify-center">
                       {(() => {
                         const total = externalApplications.length || 1;
-                        const interviewed = externalApplications.filter(app => app.status !== 'Candidates' && app.status !== 'Round 1 Aptitude').length;
+                        const interviewed = externalApplications.filter(app => app.status !== 'Candidates' && app.status !== 'Shortlisted').length;
                         const hired = externalApplications.filter(app => app.status === 'Selected' || app.status === 'Joined').length;
 
                         const intPct = Math.round((interviewed / total) * 100);
@@ -2841,8 +2824,8 @@ export default function AdminDashboard() {
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Candidate Hiring Progress</div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                  {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
-                    const order = ['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
+                  {['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
+                    const order = ['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
                     const curIdx = order.indexOf(selectedApplication.status);
                     const isCompleted = curIdx >= idx && selectedApplication.status !== 'Rejected';
                     const isCurrent = selectedApplication.status === step;
@@ -3001,7 +2984,7 @@ export default function AdminDashboard() {
               <div className="border-t border-slate-100 pt-4">
                 <label className="text-xs font-bold uppercase block mb-2">Update Application Status</label>
                 <div className="flex flex-wrap gap-2">
-                  {['Candidates', 'Round 1 Aptitude', 'Round 2 Technical', 'Round 3 Brand Awareness', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
+                  {['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
                     <button
                       key={status}
                       type="button"
@@ -3325,59 +3308,12 @@ export default function AdminDashboard() {
             </div>
 
             {/* Resume sheet preview */}
-            <div className="bg-slate-50 p-6 md:p-8 rounded-2xl border border-slate-200 shadow-inner max-h-[65vh] overflow-y-auto admin-scrollbar text-slate-800 font-sans">
-              <div className="bg-white p-8 rounded-xl border border-slate-150 shadow-sm max-w-2xl mx-auto space-y-6">
-                <div className="border-b border-slate-200 pb-5 text-center">
-                  <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{selectedResumeCandidate}</h1>
-                  <p className="text-[#004AAD] font-bold text-xs uppercase tracking-wider mt-1.5">
-                    {externalApplications.find(app => app.fullName === selectedResumeCandidate)?.jobTitle || 'Corporate Professional'}
-                  </p>
-                  <div className="text-slate-500 text-xs mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 font-semibold">
-                    <span>Email: {externalApplications.find(app => app.fullName === selectedResumeCandidate)?.email || 'candidate@example.com'}</span>
-                    <span>Phone: {externalApplications.find(app => app.fullName === selectedResumeCandidate)?.phone || '+91 90000 12345'}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-1">Professional Experience</h2>
-                    <div className="mt-2 space-y-3">
-                      <div>
-                        <div className="flex justify-between text-xs font-bold text-slate-900">
-                          <span>Senior Lead Consultant</span>
-                          <span className="text-slate-450">2023 - Present</span>
-                        </div>
-                        <p className="text-slate-500 text-[11px] font-semibold">Beta Softnet Corporate Partners</p>
-                        <p className="text-slate-600 text-xs mt-1 leading-relaxed">
-                          Led agile development and system integrations. Orchestrated client deployment frameworks and microservices.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-1">Core Competencies</h2>
-                    <div className="flex flex-wrap gap-1.5 mt-2">
-                      {['Agile Systems', 'Client Operations', 'React Architecture', 'Data Flows', 'System Scaling', 'Database Orchestration'].map(skill => (
-                        <span key={skill} className="px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-bold">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-1">Education & Certifications</h2>
-                    <div className="mt-2 text-xs">
-                      <div className="flex justify-between text-slate-900 font-bold">
-                        <span>B.Tech in Computer Science</span>
-                        <span className="text-slate-450">Class of 2021</span>
-                      </div>
-                      <p className="text-slate-500 text-[11px] font-semibold">National Institute of Technology</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-inner overflow-hidden h-[65vh]">
+              <iframe
+                src={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `${BACKEND_API_BASE}${selectedResumeUrl.startsWith('/') ? '' : '/'}${selectedResumeUrl}`}
+                className="w-full h-full border-none"
+                title={`${selectedResumeCandidate}'s Resume`}
+              />
             </div>
           </div>
         </div>
