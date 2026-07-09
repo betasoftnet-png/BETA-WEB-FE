@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Shield, Brain, Clock, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Shield, Brain, Clock, CheckCircle, AlertTriangle, ArrowRight, RefreshCw } from 'lucide-react';
 
 export default function Assessment() {
   const location = useLocation();
@@ -12,8 +12,11 @@ export default function Assessment() {
   const [candidate, setCandidate] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(1800); // Default 30 minutes in seconds
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [score, setScore] = useState(0);
 
   useEffect(() => {
@@ -21,29 +24,44 @@ export default function Assessment() {
     const storedApps = localStorage.getItem('beta_applications');
     if (storedApps && candidateId) {
       const apps = JSON.parse(storedApps);
-      const found = apps.find(app => app.id === candidateId);
+      const found = apps.find(app => String(app.id) === String(candidateId));
       if (found) {
         setCandidate(found);
       }
     }
 
-    // Load assigned questions or load default 5 Quant questions
+    if (!candidateId) {
+      setError('Invalid or missing candidate ID URL parameter.');
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError('');
     axios.get(`http://localhost:8081/api/assessment/${candidateId}`)
       .then((response) => {
-
-        setQuestions(response.data);
-
+        const fetchedQuestions = response.data || [];
+        setQuestions(fetchedQuestions);
+        if (fetchedQuestions.length === 0) {
+          setError('No assessment questions have been assigned to you yet.');
+        } else if (fetchedQuestions[0].duration) {
+          setTimeLeft(fetchedQuestions[0].duration * 60);
+        } else {
+          setTimeLeft(30 * 60); // Default fallback: 30 minutes
+        }
       })
       .catch((error) => {
-
-        console.log(error);
-
+        console.error('Failed to load candidate questions:', error);
+        setError('Failed to fetch assigned questions from the backend.');
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [candidateId]);
 
   // Running Timer Countdown
   useEffect(() => {
-    if (timeLeft <= 0 || submitted) return;
+    if (timeLeft <= 0 || submitted || loading) return;
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -55,19 +73,23 @@ export default function Assessment() {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, submitted]);
+  }, [timeLeft, submitted, loading]);
 
   const handleSelectOption = (qId, optionIdx) => {
+    if (submitted || submitting) return;
     setAnswers(prev => ({ ...prev, [qId]: optionIdx }));
   };
 
-  const handleSubmit = (autoSubmit = false) => {
-    if (submitted) return;
+  const handleSubmit = async (autoSubmit = false) => {
+    if (submitted || submitting) return;
 
     if (!autoSubmit && !window.confirm('Are you sure you want to submit your assessment answers now?')) {
       return;
     }
 
+    setSubmitting(true);
+    setError('');
+    
     // Calculate a mock score based on answered questions count
     let answeredCount = 0;
     questions.forEach((q) => {
@@ -81,41 +103,51 @@ export default function Assessment() {
       ? Math.min(100, Math.max(40, Math.round((answeredCount / questions.length) * 100)))
       : 80;
 
-    setScore(calculatedScore);
-    setSubmitted(true);
+    try {
+      // Send all answers to the backend
+      const answerPromises = Object.entries(answers).map(([qId, selectedVal]) => {
+        return axios.post('http://localhost:8081/api/answers', {
+          candidateId: parseInt(candidateId),
+          questionId: parseInt(qId),
+          selectedAnswer: selectedVal
+        });
+      });
+      
+      await Promise.all(answerPromises);
 
-    // Save full typed answers in localStorage
-    localStorage.setItem(`assessment_answers_${candidateId}`, JSON.stringify(answers));
+      setScore(calculatedScore);
+      setSubmitted(true);
 
-    // Save submission results to global localStorage
-    const storedApps = localStorage.getItem('beta_applications');
-    if (storedApps && candidateId) {
-      const apps = JSON.parse(storedApps);
-      const updated = apps.map(app => {
-        if (app.id === candidateId) {
-          if (app.status === 'Round 1 Technical') {
+      // Save full typed answers in localStorage
+      localStorage.setItem(`assessment_answers_${candidateId}`, JSON.stringify(answers));
+
+      // Save submission results to global localStorage
+      const storedApps = localStorage.getItem('beta_applications');
+      if (storedApps && candidateId) {
+        const apps = JSON.parse(storedApps);
+        const updated = apps.map(app => {
+          if (String(app.id) === String(candidateId)) {
+            const isTechnical = app.status === 'Round 1 Technical';
+            const isBrand = app.status === 'Round 2 Brand Awareness';
             return {
               ...app,
-              technicalStatus: 'Completed',
-              technicalScore: calculatedScore
-            };
-          } else if (app.status === 'Round 2 Brand Awareness') {
-            return {
-              ...app,
-              brandStatus: 'Completed',
-              brandScore: calculatedScore
-            };
-          } else {
-            return {
-              ...app,
-              aptitudeStatus: 'Completed',
-              aptitudeScore: calculatedScore
+              technicalStatus: isTechnical ? 'Completed' : app.technicalStatus,
+              technicalScore: isTechnical ? calculatedScore : app.technicalScore,
+              brandStatus: isBrand ? 'Completed' : app.brandStatus,
+              brandScore: isBrand ? calculatedScore : app.brandScore,
+              aptitudeStatus: (!isTechnical && !isBrand) ? 'Completed' : app.aptitudeStatus,
+              aptitudeScore: (!isTechnical && !isBrand) ? calculatedScore : app.aptitudeScore
             };
           }
-        }
-        return app;
-      });
-      localStorage.setItem('beta_applications', JSON.stringify(updated));
+          return app;
+        });
+        localStorage.setItem('beta_applications', JSON.stringify(updated));
+      }
+    } catch (err) {
+      console.error('Failed to submit answers:', err);
+      setError('Failed to submit assessment answers to the backend. Please check your network connection and try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -125,23 +157,45 @@ export default function Assessment() {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-  if (!candidate && candidateId) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50 text-slate-800">
-        <div className="max-w-md bg-white border border-slate-200 shadow-xl rounded-3xl p-8 text-center space-y-6">
-          <div className="h-16 w-16 bg-red-50 border border-red-200 text-red-500 rounded-2xl flex items-center justify-center mx-auto">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-left font-sans">
+        <div className="w-full max-w-xl bg-white border border-slate-200 shadow-2xl rounded-3xl p-8 md:p-10 text-center space-y-6">
+          <div className="h-16 w-16 bg-blue-50 border border-blue-200 text-[#004AAD] rounded-2xl flex items-center justify-center mx-auto animate-spin shadow-inner">
+            <RefreshCw className="h-8 w-8" />
+          </div>
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Loading Assessment...</h2>
+            <p className="text-slate-500 text-sm mt-1 leading-relaxed">
+              Please wait while we fetch your assigned screening questions from the recruitment database.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-left font-sans">
+        <div className="w-full max-w-xl bg-white border border-slate-200 shadow-2xl rounded-3xl p-8 md:p-10 text-center space-y-6">
+          <div className="h-16 w-16 bg-rose-50 border border-rose-200 text-rose-600 rounded-2xl flex items-center justify-center mx-auto shadow-sm animate-pulse">
             <AlertTriangle className="h-8 w-8" />
           </div>
-          <h2 className="text-xl font-extrabold text-slate-900">Assessment Link Invalid</h2>
-          <p className="text-sm text-slate-500 leading-relaxed">
-            The candidate profile could not be retrieved from the tracking system database. Please ensure you are opening a valid URL copied from the Admin panel.
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Assessment Unavailable</h2>
+            <p className="text-rose-600 text-sm font-semibold mt-2 bg-rose-50 border border-rose-100 rounded-2xl p-4 leading-relaxed">
+              {error}
+            </p>
+          </div>
+          <p className="text-slate-450 text-[11px] leading-relaxed">
+            Please contact the HR team or check your invitation link for details.
           </p>
         </div>
       </div>
     );
   }
 
-  // Fallback candidate text if viewing without ID
   const candidateName = candidate?.fullName || 'Guest Candidate';
   const jobTitle = candidate?.jobTitle || 'BNX Mail Strategist';
 
@@ -155,13 +209,13 @@ export default function Assessment() {
           <div>
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">Assessment Submitted!</h2>
             <p className="text-slate-500 text-sm mt-1 leading-relaxed">
-              Thank you, <strong className="text-slate-900">{candidateName}</strong>. Your aptitude screening exam responses have been successfully logged in the recruitment tracking system.
+              Thank you, <strong className="text-slate-900">{candidateName}</strong>. Your screening exam responses have been successfully logged in the recruitment tracking system.
             </p>
           </div>
           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs font-semibold text-slate-500">
             <div>Candidate: <strong className="text-slate-800">{candidateName}</strong></div>
             <div>Role: <strong className="text-slate-800">{jobTitle}</strong></div>
-            <div>Aptitude Score: <strong className="text-emerald-600 font-extrabold">{score}%</strong></div>
+            <div>Score: <strong className="text-emerald-600 font-extrabold">{score}%</strong></div>
           </div>
           <p className="text-slate-400 text-xs leading-relaxed">
             Recruiting team will review your profile metrics shortly. You may close this browser window.
@@ -173,7 +227,7 @@ export default function Assessment() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-850 font-sans py-12 px-4 flex justify-center text-left">
-      <div className="w-full max-w-3xl space-y-6">
+      <div className="w-full max-w-3xl space-y-6 animate-fadeIn">
         {/* Header card */}
         <div className="bg-white border border-slate-250 shadow-md rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-2">
@@ -192,7 +246,7 @@ export default function Assessment() {
           <div className="flex items-center space-x-4 bg-slate-50 border border-slate-200 px-4 py-3 rounded-2xl self-start md:self-auto shadow-sm">
             <Clock className={`h-5 w-5 ${timeLeft < 60 ? 'text-red-500 animate-pulse' : 'text-slate-450'}`} />
             <div>
-              <span className="text-[10px] text-slate-450 font-bold uppercase tracking-widest block">Time Remaining</span>
+              <span className="text-[10px] text-slate-455 font-bold uppercase tracking-widest block">Time Remaining</span>
               <span className={`text-base font-black font-mono ${timeLeft < 60 ? 'text-red-600' : 'text-slate-900'}`}>
                 {formatTime(timeLeft)}
               </span>
@@ -200,50 +254,58 @@ export default function Assessment() {
           </div>
         </div>
 
+        {error && (
+          <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-xs font-bold text-rose-700 flex items-center gap-2.5 shadow-sm animate-fadeIn">
+            <AlertTriangle className="h-4.5 w-4.5 text-rose-600" />
+            <span>{error}</span>
+          </div>
+        )}
+
         {/* Questions list */}
         <div className="space-y-6">
           {questions.map((q, idx) => {
-            // Generate standard multiple choice options if they don't exist
-            const options = q.options || [
-              'A) ValueOption 1',
-              'B) ValueOption 2',
-              'C) ValueOption 3',
-              'D) ValueOption 4'
-            ];
-
             return (
               <div key={q.id} className="bg-white border border-slate-250 shadow-sm rounded-2xl p-6 space-y-4">
                 <div className="flex items-start justify-between border-b border-slate-100 pb-3">
                   <div>
                     <span className="text-[10px] font-bold font-mono text-[#004AAD] uppercase tracking-wider block">Question {idx + 1} of {questions.length}</span>
-                    <h3 className="text-base font-extrabold text-slate-900 leading-snug mt-1">{q.title}</h3>
+                    <h3 className="text-base font-extrabold text-slate-900 leading-snug mt-1">{q.question}</h3>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-650 text-[9px] font-bold uppercase">
-                    {q.difficulty}
-                  </span>
                 </div>
 
-                <p className="text-slate-700 text-sm leading-relaxed font-medium whitespace-pre-wrap">
-                  {q.description}
-                </p>
-
-                {q.codeSnippet && (
-                  <div className="bg-[#0f172a] text-slate-350 font-mono text-[11px] rounded-lg p-4 overflow-x-auto whitespace-pre leading-relaxed border border-slate-900 shadow-inner">
-                    {q.codeSnippet}
-                  </div>
-                )}
-
-                {/* Text answer input box */}
-                <div className="pt-2">
-                  <label className="text-[10px] uppercase tracking-wider font-bold text-slate-450 block mb-1.5">Your Response:</label>
-                  <textarea
-                    rows={q.codeSnippet ? 10 : 3}
-                    value={answers[q.id] || ''}
-                    onChange={(e) => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
-                    placeholder={q.codeSnippet ? "Write your code, solution, or implementation here..." : "Type your final calculated answer, reasoning, or response here..."}
-                    className="w-full border border-slate-200 rounded-xl py-3.5 px-4 focus:outline-none focus:border-[#004AAD] text-xs font-semibold bg-slate-50/50 transition duration-250 font-mono"
-                    style={q.codeSnippet ? { fontFamily: 'Consolas, Monaco, monospace' } : {}}
-                  />
+                {/* Multiple choice option cards with radio selection */}
+                <div className="space-y-2.5 pt-2">
+                  {[
+                    { key: 'optionA', label: 'A', text: q.optionA },
+                    { key: 'optionB', label: 'B', text: q.optionB },
+                    { key: 'optionC', label: 'C', text: q.optionC },
+                    { key: 'optionD', label: 'D', text: q.optionD }
+                  ].map((opt) => {
+                    if (!opt.text) return null;
+                    const isSelected = answers[q.id] === opt.key;
+                    return (
+                      <label 
+                        key={opt.key}
+                        className={`flex items-center gap-3 p-3.5 rounded-2xl border text-sm font-semibold cursor-pointer transition-all duration-200 ${
+                          isSelected
+                            ? 'bg-blue-50/30 border-blue-400 text-blue-900 shadow-xs'
+                            : 'bg-slate-50/50 border-slate-200 hover:border-slate-350 text-slate-700'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name={`question_${q.id}`}
+                          value={opt.key}
+                          checked={isSelected}
+                          onChange={() => handleSelectOption(q.id, opt.key)}
+                          disabled={submitted || submitting}
+                          className="h-4.5 w-4.5 border-slate-350 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50"
+                        />
+                        <span className="font-black text-slate-455 mr-0.5">{opt.label}.</span>
+                        <span>{opt.text}</span>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -252,14 +314,15 @@ export default function Assessment() {
 
         {/* Submit Actions */}
         <div className="bg-white border border-slate-250 shadow-md rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <p className="text-xs text-slate-500 font-semibold leading-relaxed max-w-md">
+          <p className="text-xs text-slate-500 font-semibold leading-relaxed max-w-md text-left">
             Please review all your answers before submitting. The test will automatically finalize when the countdown reaches zero.
           </p>
           <button
             onClick={() => handleSubmit(false)}
-            className="flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition duration-200 cursor-pointer shadow-lg shadow-blue-500/10 self-end sm:self-auto border-none outline-none"
+            disabled={submitting || submitted}
+            className="flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition duration-200 cursor-pointer shadow-lg shadow-blue-500/10 self-end sm:self-auto border-none outline-none disabled:opacity-55 disabled:cursor-not-allowed"
           >
-            <span>Submit Assessment</span>
+            <span>{submitting ? 'Submitting Answers...' : 'Submit Assessment'}</span>
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>

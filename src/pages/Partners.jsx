@@ -268,15 +268,14 @@ export default function Partners() {
         }
 
         /* Hero top pill override */
-        .partners-futuristic-theme .bg-white\\/5.border-white\\/10.text-\\[\\#00E5FF\\],
-        .partners-futuristic-theme .bg-white\\/5.border-white\\/10 {
+        .partners-futuristic-theme .bg-white\/5.border-white\/10.text-\[\#10B981\],
+        .partners-futuristic-theme .bg-white\/5.border-white\/10.text-\[\#10B981\] span,
+        .partners-futuristic-theme .bg-white\/5.border-white\/10.text-\[\#10B981\] svg {
+          color: #10B981 !important;
+        }
+        .partners-futuristic-theme .bg-white\/5.border-white\/10 {
           background-color: rgba(10, 49, 97, 0.05) !important;
           border-color: rgba(10, 49, 97, 0.15) !important;
-          color: #FF6325 !important;
-        }
-        .partners-futuristic-theme .bg-white\\/5.border-white\\/10.text-\\[\\#00E5FF\\] span,
-        .partners-futuristic-theme .bg-white\\/5.border-white\\/10.text-\\[\\#00E5FF\\] svg {
-          color: #FF6325 !important;
         }
 
         /* Hero primary action button */
@@ -438,9 +437,9 @@ export default function Partners() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#00E5FF] text-xs font-bold uppercase tracking-widest select-none"
+            className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#10B981] text-xs font-bold uppercase tracking-widest select-none"
           >
-            <Handshake className="h-3.5 w-3.5 text-[#00E5FF] animate-pulse" />
+            <Handshake className="h-3.5 w-3.5 text-[#10B981] animate-pulse" />
             <span>Beta Partner Network</span>
           </motion.div>
 

@@ -6,7 +6,7 @@ import {
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
   Lock, Mail, Calculator, Brain, BookOpen, BarChart3, Bell,
   Upload, Download, ChevronRight, Calendar, Sliders,
-  Handshake
+  Handshake, ArrowLeft, Clock
 } from 'lucide-react';
 import axios from 'axios';
 import api from '../api';
@@ -19,7 +19,7 @@ const mapStatusToUI = (status) => {
   if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 3 Brand Awareness';
   if (s === 'shortlisted') return 'Shortlisted';
   if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
-  if (s === 'approved' || s === 'selected' || s === 'accepted') return 'Selected';
+  if (s === 'approved' || s === 'selected' || s === 'accepted') return 'Accepted';
   if (s === 'rejected') return 'Rejected';
   if (s === 'joined') return 'Joined';
   return 'Candidates';
@@ -125,6 +125,10 @@ export default function AdminDashboard() {
   const [interviewLink, setInterviewLink] = useState('https://meet.google.com/abc-defg-hij');
   const [interviewer, setInterviewer] = useState('Tech Team Lead');
   const [remarks, setRemarks] = useState('');
+  const [fetchedQuestions, setFetchedQuestions] = useState(null);
+  const [fetchingQuestions, setFetchingQuestions] = useState(false);
+  const [selectedQuestionsForCandidate, setSelectedQuestionsForCandidate] = useState([]);
+  const [sendingAssessment, setSendingAssessment] = useState(false);
 
   // Job Posting/Editing Modal States
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -192,14 +196,13 @@ export default function AdminDashboard() {
         const stored = localStorage.getItem('beta_applications');
         if (stored) {
           const parsed = JSON.parse(stored) || [];
-          setExternalApplications(parsed.filter(app => (app.status || '').toUpperCase() !== "REJECTED"));
+          setExternalApplications(parsed);
         } else {
           setExternalApplications(fallbackApps);
           localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
         }
       } else {
         const normalizedApps = apps
-          .filter(app => (app.status || '').toUpperCase() !== "REJECTED")
           .map(app => {
             const matchedJob = jobsList.find(j => String(j.id) === String(app.jobId));
 
@@ -235,7 +238,7 @@ export default function AdminDashboard() {
       const stored = localStorage.getItem('beta_applications');
       if (stored) {
         const parsed = JSON.parse(stored) || [];
-        setExternalApplications(parsed.filter(app => (app.status || '').toUpperCase() !== "REJECTED"));
+        setExternalApplications(parsed);
       } else {
         setExternalApplications(fallbackApps);
         localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
@@ -290,10 +293,18 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (selectedApplication) {
       setRemarks(selectedApplication.remarks || '');
+      setFetchedQuestions(null);
+      setSelectedQuestionsForCandidate([]);
+      const normStatus = mapStatusToUI(selectedApplication.status);
+      if (normStatus === 'Accepted' || selectedStatusFilter === 'Accepted') {
+        setActiveSubTab('candidateDetails');
+      }
     } else {
       setRemarks('');
+      setFetchedQuestions(null);
+      setSelectedQuestionsForCandidate([]);
     }
-  }, [selectedApplication]);
+  }, [selectedApplication, selectedStatusFilter]);
 
   useEffect(() => {
     if (externalApplications.length > 0) {
@@ -530,15 +541,23 @@ export default function AdminDashboard() {
     if (newStatus === 'Rejected') {
       if (!window.confirm('Are you sure you want to reject this candidate?')) return;
     }
-    if (newStatus === 'Selected') {
+    if (newStatus === 'Accepted') {
       if (!window.confirm('Are you sure you want to accept this candidate?')) return;
+    }
+    if (newStatus === 'Joined') {
+      if (!window.confirm('Are you sure you want to mark this candidate as Joined?')) return;
     }
     setError('');
     setSuccess('');
 
     let backendStatus = newStatus;
-    if (newStatus === 'Selected') backendStatus = 'ACCEPTED';
+    if (newStatus === 'Accepted') backendStatus = 'ACCEPTED';
     if (newStatus === 'Rejected') backendStatus = 'REJECTED';
+    if (newStatus === 'Joined') backendStatus = 'JOINED';
+    if (newStatus === 'Shortlisted') backendStatus = 'SHORTLISTED';
+    if (newStatus === 'Interview Scheduled') backendStatus = 'SCHEDULED';
+    if (newStatus === 'Interview Completed') backendStatus = 'REVIEWED';
+    if (newStatus === 'Candidates') backendStatus = 'PENDING';
 
     try {
       setLoading(true);
@@ -555,6 +574,69 @@ export default function AdminDashboard() {
         setSelectedApplication(prev => ({ ...prev, status: newStatus }));
       }
       setLoading(false);
+    }
+  };
+
+  const fetchTechnicalQuestions = async () => {
+    if (!selectedApplication) return;
+    setFetchingQuestions(true);
+    setError('');
+    try {
+      const allQuestionsRes = await axios.get(`${BACKEND_API_BASE}/api/questions`);
+      const allQuestions = allQuestionsRes.data || [];
+      
+      let assignedIds = [];
+      try {
+        const assignedRes = await axios.get(`${BACKEND_API_BASE}/api/assessment/${selectedApplication.id}`);
+        const assignedQuestions = assignedRes.data || [];
+        assignedIds = assignedQuestions.map(q => q.id);
+      } catch (errAssigned) {
+        console.warn('Failed to fetch assigned questions or none assigned yet:', errAssigned);
+      }
+      
+      setFetchedQuestions(allQuestions);
+      setSelectedQuestionsForCandidate(assignedIds);
+      
+      if (allQuestions.length === 0) {
+        setSuccess('No questions found in the question library database.');
+      } else {
+        setSuccess(`Fetched ${allQuestions.length} questions from question bank.`);
+      }
+      setTimeout(() => setSuccess(''), 4000);
+    } catch (err) {
+      console.error('Failed to fetch questions:', err);
+      setError('Failed to fetch technical questions library from backend.');
+      setTimeout(() => setError(''), 4000);
+    } finally {
+      setFetchingQuestions(false);
+    }
+  };
+
+  const handleToggleQuestionSelection = (qId) => {
+    setSelectedQuestionsForCandidate(prev => 
+      prev.includes(qId) ? prev.filter(id => id !== qId) : [...prev, qId]
+    );
+  };
+
+  const handleSendAssessmentToCandidate = async () => {
+    if (!selectedApplication || selectedQuestionsForCandidate.length === 0) return;
+    setSendingAssessment(true);
+    setError('');
+    setSuccess('');
+    try {
+      await axios.post(`${BACKEND_API_BASE}/api/assessment/send`, {
+        candidateId: selectedApplication.id,
+        questionIds: selectedQuestionsForCandidate,
+        duration: 30
+      });
+      setSuccess(`Assessment with ${selectedQuestionsForCandidate.length} questions successfully sent to candidate.`);
+      setTimeout(() => setSuccess(''), 4000);
+    } catch (err) {
+      console.error('Failed to send assessment:', err);
+      setError('Failed to send assessment to candidate.');
+      setTimeout(() => setError(''), 4000);
+    } finally {
+      setSendingAssessment(false);
     }
   };
 
@@ -836,6 +918,54 @@ export default function AdminDashboard() {
                 );
               })()}
 
+              {/* Accepted Candidates flat item */}
+              {(() => {
+                const isActive = (activeSubTab === 'appsList' || activeSubTab === 'candidateDetails') && selectedStatusFilter === 'Accepted';
+                const count = externalApplications.filter(app => app.status === 'Accepted').length;
+                return (
+                  <button
+                    onClick={() => {
+                      setSelectedStatusFilter('Accepted');
+                      setActiveSubTab('appsList');
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-1.5 mt-1 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${isActive
+                      ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20'
+                      : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
+                      }`}
+                  >
+                    <span>Accepted Candidates</span>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                      }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })()}
+
+              {/* Rejected Candidates flat item */}
+              {(() => {
+                const isActive = activeSubTab === 'appsList' && selectedStatusFilter === 'Rejected';
+                const count = externalApplications.filter(app => app.status === 'Rejected').length;
+                return (
+                  <button
+                    onClick={() => {
+                      setSelectedStatusFilter('Rejected');
+                      setActiveSubTab('appsList');
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-1.5 mt-1 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${isActive
+                      ? 'bg-blue-600/20 text-white font-bold border border-blue-500/20'
+                      : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
+                      }`}
+                  >
+                    <span>Rejected Candidates</span>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-rose-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
+                      }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })()}
+
 
 
               {/* Partnership Requests under Round 3 Brand Awareness */}
@@ -913,84 +1043,86 @@ export default function AdminDashboard() {
         )}
 
         {/* Tab Headers */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              External Job Board - Candidate Tracking System</h1>
+        {activeSubTab !== 'candidateDetails' && (
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                External Job Board - Candidate Tracking System</h1>
 
-            <p className="text-slate-550 text-sm mt-1">
-              Post careers to apply.beta-softnet.com and manage candidate applications.
-            </p>
-          </div>
+              <p className="text-slate-550 text-sm mt-1">
+                Post careers to apply.beta-softnet.com and manage candidate applications.
+              </p>
+            </div>
 
-          <div className="flex space-x-3 self-start sm:self-auto">
-            <button
-              onClick={fetchData}
-              disabled={loading}
-              className="p-2.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-slate-700 transition disabled:opacity-50"
-            >
-              <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
-            </button>
-
-            {/* Notification Bell Icon */}
-            <div className="relative">
+            <div className="flex space-x-3 self-start sm:self-auto">
               <button
-                onClick={() => setShowNotifications(prev => !prev)}
-                className="p-2.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-slate-700 transition relative cursor-pointer"
+                onClick={fetchData}
+                disabled={loading}
+                className="p-2.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-slate-700 transition disabled:opacity-50"
               >
-                <Bell className="h-5 w-5" />
-                {notifications.some(n => n.unread) && (
-                  <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 border border-white animate-pulse" />
-                )}
+                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
               </button>
 
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 p-4 space-y-3 animate-fadeIn text-left">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                    <span className="text-xs font-bold text-slate-900">System Notifications</span>
-                    <button
-                      onClick={() => {
-                        setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
-                        setShowNotifications(false);
-                      }}
-                      className="text-[10px] text-blue-600 hover:underline font-bold bg-transparent border-none p-0 cursor-pointer"
-                    >
-                      Mark all read
-                    </button>
-                  </div>
-                  <div className="space-y-2 max-h-[250px] overflow-y-auto admin-scrollbar">
-                    {notifications.length === 0 ? (
-                      <p className="text-slate-400 text-xs italic text-center py-4">No new alerts.</p>
-                    ) : (
-                      notifications.map(n => (
-                        <div key={n.id} className="p-2.5 bg-slate-50 border border-slate-150 rounded-xl space-y-1 text-left relative">
-                          {n.unread && <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-[#004AAD]" />}
-                          <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5 pr-3">
-                            {n.type === 'system' && <Shield className="h-3.5 w-3.5 text-emerald-600" />}
-                            {n.type === 'reminder' && <Calendar className="h-3.5 w-3.5 text-amber-500" />}
-                            {n.type === 'application' && <Briefcase className="h-3.5 w-3.5 text-[#004AAD]" />}
-                            <span>{n.title}</span>
+              {/* Notification Bell Icon */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowNotifications(prev => !prev)}
+                  className="p-2.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-slate-700 transition relative cursor-pointer"
+                >
+                  <Bell className="h-5 w-5" />
+                  {notifications.some(n => n.unread) && (
+                    <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-500 border border-white animate-pulse" />
+                  )}
+                </button>
+
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 p-4 space-y-3 animate-fadeIn text-left">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                      <span className="text-xs font-bold text-slate-900">System Notifications</span>
+                      <button
+                        onClick={() => {
+                          setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+                          setShowNotifications(false);
+                        }}
+                        className="text-[10px] text-blue-600 hover:underline font-bold bg-transparent border-none p-0 cursor-pointer"
+                      >
+                        Mark all read
+                      </button>
+                    </div>
+                    <div className="space-y-2 max-h-[250px] overflow-y-auto admin-scrollbar">
+                      {notifications.length === 0 ? (
+                        <p className="text-slate-400 text-xs italic text-center py-4">No new alerts.</p>
+                      ) : (
+                        notifications.map(n => (
+                          <div key={n.id} className="p-2.5 bg-slate-50 border border-slate-150 rounded-xl space-y-1 text-left relative">
+                            {n.unread && <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-[#004AAD]" />}
+                            <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5 pr-3">
+                              {n.type === 'system' && <Shield className="h-3.5 w-3.5 text-emerald-600" />}
+                              {n.type === 'reminder' && <Calendar className="h-3.5 w-3.5 text-amber-500" />}
+                              {n.type === 'application' && <Briefcase className="h-3.5 w-3.5 text-[#004AAD]" />}
+                              <span>{n.title}</span>
+                            </div>
+                            <p className="text-[11px] text-slate-650 font-semibold leading-normal">{n.message}</p>
+                            <div className="text-[9px] text-slate-400 font-bold">{n.time}</div>
                           </div>
-                          <p className="text-[11px] text-slate-650 font-semibold leading-normal">{n.message}</p>
-                          <div className="text-[9px] text-slate-400 font-bold">{n.time}</div>
-                        </div>
-                      ))
-                    )}
+                        ))
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
+              </div>
+              {((activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates') || activeSubTab === 'jobBoard') && (
+                <button
+                  onClick={openAddJobModal}
+                  className="flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-semibold admin-glow-btn"
+                >
+                  <Plus className="h-4 w-4 text-white" />
+                  <span className="text-white">Post a Job</span>
+                </button>
               )}
             </div>
-            {((activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates') || activeSubTab === 'jobBoard') && (
-              <button
-                onClick={openAddJobModal}
-                className="flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-semibold admin-glow-btn"
-              >
-                <Plus className="h-4 w-4 text-white" />
-                <span className="text-white">Post a Job</span>
-              </button>
-            )}
           </div>
-        </div>
+        )}
 
         {loading ? (
           <div className="flex items-center justify-center py-20 text-slate-500 space-x-2">
@@ -1000,7 +1132,7 @@ export default function AdminDashboard() {
         ) : (
           <div className="space-y-6">
             {/* Sub Tab Controls */}
-            {activeSubTab !== 'partnerships' && activeSubTab !== 'support' && (
+            {activeSubTab !== 'partnerships' && activeSubTab !== 'support' && activeSubTab !== 'candidateDetails' && (
               <div className="flex space-x-6 border-b border-slate-200 pb-3">
                 <button
                   onClick={() => setActiveSubTab('jobsList')}
@@ -2077,7 +2209,7 @@ export default function AdminDashboard() {
                            <option value="Candidates">Candidates</option>
                            <option value="Shortlisted">Shortlisted</option>
                            <option value="Interview Scheduled">Interview Scheduled</option>
-                           <option value="Selected">Selected</option>
+                           <option value="Accepted">Accepted</option>
                            <option value="Joined">Joined</option>
                            <option value="Rejected">Rejected</option>
                         </select>
@@ -2161,7 +2293,7 @@ export default function AdminDashboard() {
                             const filtered = externalApplications
                               .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
                               .filter(app => {
-                                if (statusFilter === 'All') return true;
+                                if (statusFilter === 'All') return app.status === selectedStatusFilter;
                                 if (statusFilter === 'Pending') return app.status === 'Candidates';
                                 return app.status === statusFilter;
                               })
@@ -2195,7 +2327,23 @@ export default function AdminDashboard() {
                             return filtered.map(app => (
                               <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="py-4 px-6">
-                                  <div className="font-bold text-slate-900">{app.fullName}</div>
+                                  <button
+                                    onClick={() => {
+                                      console.log('Candidate name clicked:', app.fullName, 'Status:', app.status);
+                                      const normalizedStatus = mapStatusToUI(app.status);
+                                      const updatedApp = { ...app, status: normalizedStatus };
+                                      setSelectedApplication(updatedApp);
+                                      setCandidateStatus(normalizedStatus);
+                                      console.log('Normalized Status:', normalizedStatus, 'selectedStatusFilter:', selectedStatusFilter);
+                                      if (normalizedStatus === 'Accepted' || selectedStatusFilter === 'Accepted') {
+                                        console.log('Transitioning to candidateDetails subpage');
+                                        setActiveSubTab('candidateDetails');
+                                      }
+                                    }}
+                                    className="font-bold text-[#004AAD] hover:underline cursor-pointer text-left block bg-transparent border-none p-0"
+                                  >
+                                    {app.fullName}
+                                  </button>
                                   <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
                                 </td>
                                 <td className="py-4 px-6">
@@ -2210,7 +2358,7 @@ export default function AdminDashboard() {
                                           app.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                                             app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                                               app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
-                                                app.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                                                app.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                                                   app.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
                                                     app.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
                                                       'bg-slate-50 text-slate-700 border border-slate-200'
@@ -2252,7 +2400,7 @@ export default function AdminDashboard() {
                                 <td className="py-4 px-6 text-center">
                                   <div className="flex items-center justify-center gap-1.5">
                                     <button
-                                      onClick={() => handleUpdateStatus(app.id, 'Selected')}
+                                      onClick={() => handleUpdateStatus(app.id, 'Accepted')}
                                       className="px-2.5 py-1.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-650 border border-emerald-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
                                     >
                                       Accept
@@ -2275,6 +2423,349 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               )
+            )}
+
+            {/* Sub Tab: Candidate Details Page */}
+            {activeSubTab === 'candidateDetails' && selectedApplication && (
+              <div className="animate-fadeIn space-y-6 text-left">
+                {/* Header Card */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={() => {
+                        setSelectedApplication(null);
+                        setActiveSubTab('appsList');
+                      }}
+                      className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-650 transition cursor-pointer flex items-center justify-center border-none"
+                      title="Back to List"
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </button>
+                    <div>
+                      <div className="flex items-center gap-3">
+                        <h2 className="text-2xl font-black text-slate-900 leading-tight">
+                          {selectedApplication.fullName}
+                        </h2>
+                        <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize ${
+                          selectedApplication.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-50 text-slate-700 border border-slate-200'
+                        }`}>
+                          {selectedApplication.status}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 font-medium mt-1">
+                        Applied for <strong className="text-slate-800">{selectedApplication.jobTitle}</strong> • {selectedApplication.jobDepartment} • {selectedApplication.jobLocation}
+                      </p>
+                    </div>
+                  </div>
+
+                   <div className="flex items-center gap-2">
+                     <button
+                       onClick={fetchTechnicalQuestions}
+                       disabled={fetchingQuestions}
+                       className="px-4 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-250 text-amber-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5"
+                     >
+                       <Brain className="h-4 w-4" />
+                       <span>{fetchingQuestions ? 'Fetching...' : 'Test'}</span>
+                     </button>
+                     <button
+                       onClick={() => handleUpdateStatus(selectedApplication.id, 'Rejected')}
+                       className="px-4 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-250 text-rose-700 text-xs font-bold rounded-xl transition cursor-pointer"
+                     >
+                       Reject Candidate
+                     </button>
+                     <button
+                       onClick={() => handleUpdateStatus(selectedApplication.id, 'Joined')}
+                       className="px-4 py-2 bg-[#004AAD] hover:bg-[#003882] text-white text-xs font-bold rounded-xl transition cursor-pointer"
+                     >
+                       Mark as Joined
+                     </button>
+                   </div>
+                </div>
+
+                {/* Progress Stepper Card */}
+                <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Candidate Hiring Progress</h3>
+                    <p className="text-[11px] text-slate-500 font-semibold mt-1">Click any step below to dynamically change the candidate's hiring stage.</p>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                    {['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Accepted', 'Joined'].map((step, idx) => {
+                      const order = ['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Accepted', 'Joined'];
+                      const curIdx = order.indexOf(selectedApplication.status);
+                      const hasInterview = selectedApplication.interviewDate && selectedApplication.interviewDate !== '' && selectedApplication.interviewDate !== 'null' && selectedApplication.interviewDate !== 'undefined';
+                      
+                      let isCompleted = false;
+                      if (step === 'Candidates') {
+                        isCompleted = true;
+                      } else if (step === 'Shortlisted') {
+                        isCompleted = selectedApplication.status !== 'Candidates' || selectedApplication.aptitudeStatus === 'Assessment Sent';
+                      } else if (step === 'Interview Scheduled') {
+                        isCompleted = hasInterview;
+                      } else if (step === 'Interview Completed') {
+                        isCompleted = hasInterview && (selectedApplication.status === 'Interview Completed' || selectedApplication.status === 'Accepted' || selectedApplication.status === 'Joined');
+                      } else if (step === 'Accepted') {
+                        isCompleted = selectedApplication.status === 'Accepted' || selectedApplication.status === 'Joined';
+                      } else if (step === 'Joined') {
+                        isCompleted = selectedApplication.status === 'Joined';
+                      }
+                      
+                      const isCurrent = selectedApplication.status === step;
+
+                      return (
+                        <div
+                          key={step}
+                          onClick={() => {
+                            if (!loading) {
+                              handleUpdateStatus(selectedApplication.id, step);
+                            }
+                          }}
+                          className={`flex flex-col items-center justify-center p-3.5 rounded-2xl border text-center transition duration-300 cursor-pointer hover:border-blue-400 hover:bg-slate-50 hover:shadow-xs ${
+                            isCurrent
+                              ? 'bg-blue-650/10 border-blue-500/30 text-[#004AAD] font-bold'
+                              : isCompleted
+                                ? 'bg-emerald-50/50 border-emerald-100 text-emerald-700'
+                                : 'bg-slate-50/50 border-slate-100 text-slate-400'
+                          }`}
+                        >
+                          <span className="text-[10px] font-extrabold tracking-tight block">
+                            {step}
+                          </span>
+                          {isCompleted && (
+                            <span className="text-[10px] font-bold text-emerald-600 block mt-1">✓ Completed</span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Main 2-Column Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  {/* Left Column: Profile Info & Original Resume (7 cols) */}
+                  <div className="lg:col-span-7 space-y-6">
+                    {/* Information Card */}
+                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-5">
+                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">Professional Details</h3>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Email Address</label>
+                          <p className="text-xs font-bold text-slate-800 mt-1">{selectedApplication.email}</p>
+                        </div>
+                        {selectedApplication.phone && (
+                          <div>
+                            <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Phone Number</label>
+                            <p className="text-xs font-bold text-slate-800 mt-1">{selectedApplication.phone}</p>
+                          </div>
+                        )}
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Work Experience</label>
+                          <p className="text-xs font-bold text-slate-800 mt-1">{selectedApplication.experience || '3 Years'}</p>
+                        </div>
+                        {selectedApplication.appliedDate && (
+                          <div>
+                            <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Applied Date</label>
+                            <p className="text-xs font-bold text-slate-800 mt-1">{selectedApplication.appliedDate}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {selectedApplication.coverLetter && (
+                        <div className="pt-4 border-t border-slate-100">
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Cover Letter</label>
+                          <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl max-h-[200px] overflow-y-auto mt-2">
+                            <p className="text-slate-700 text-xs leading-relaxed whitespace-pre-wrap">
+                              {selectedApplication.coverLetter}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Resume Card with Live Preview */}
+                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Candidate Resume Preview</h3>
+                        {selectedApplication.resumeUrl && (
+                          <a
+                            href={selectedApplication.resumeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline font-bold flex items-center gap-1.5"
+                          >
+                            <Download className="h-4.5 w-4.5" />
+                            <span>Download Resume</span>
+                          </a>
+                        )}
+                      </div>
+                      
+                      <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden aspect-[4/3] relative flex items-center justify-center">
+                        {selectedApplication.resumeUrl ? (
+                          <iframe
+                            src={`${selectedApplication.resumeUrl}#toolbar=0&navpanes=0`}
+                            className="w-full h-full border-none"
+                            title="Candidate Resume"
+                          />
+                        ) : (
+                          <div className="text-slate-400 text-xs italic flex flex-col items-center gap-2">
+                            <FileText className="h-8 w-8 text-slate-300" />
+                            <span>No original resume PDF file available for preview.</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                   {/* Right Column: Remarks & Assessment Responses (5 cols) */}
+                    <div className="lg:col-span-5 space-y-6">
+                      {/* Fetched Technical Questions Card */}
+                      {fetchedQuestions && (
+                        <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4 animate-fadeIn">
+                          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div>
+                              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Send Technical Test</h3>
+                              <p className="text-[10px] text-slate-500 font-semibold mt-0.5 font-medium flex items-center gap-1.5">
+                                <Clock className="h-3.5 w-3.5 text-amber-500" />
+                                <span className="text-amber-700 font-bold">Duration: 30 mins</span>
+                                <span className="text-slate-300">•</span>
+                                <span>Select questions from library below.</span>
+                              </p>
+                            </div>
+                            <span className="bg-blue-50 text-[#004AAD] border border-blue-100 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                              {selectedQuestionsForCandidate.length} Selected
+                            </span>
+                          </div>
+                          
+                          <div className="space-y-4 max-h-[350px] overflow-y-auto pr-1 admin-scrollbar">
+                            {fetchedQuestions.map((q, qidx) => {
+                              const isChecked = selectedQuestionsForCandidate.includes(q.id);
+                              return (
+                                <div 
+                                  key={q.id || qidx} 
+                                  onClick={() => handleToggleQuestionSelection(q.id)}
+                                  className={`border rounded-2xl p-4 space-y-2 text-left transition-all duration-200 cursor-pointer ${
+                                    isChecked 
+                                      ? 'bg-blue-50/30 border-blue-400 ring-1 ring-blue-400/20' 
+                                      : 'bg-slate-50/50 border-slate-150 hover:border-slate-350'
+                                  }`}
+                                >
+                                  <div className="text-xs font-black text-slate-800 flex items-start gap-2.5">
+                                    <input
+                                      type="checkbox"
+                                      checked={isChecked}
+                                      onChange={() => {}} // onClick on wrapper handles toggle
+                                      className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                                    />
+                                    <div className="flex-1 flex items-center justify-between gap-2">
+                                      <span className="font-bold text-slate-900 pr-2">Q{qidx + 1}. {q.question}</span>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Render options if present */}
+                                  {(q.optionA || q.optionB || q.optionC || q.optionD) && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6 mt-1.5 text-[11px] text-slate-650 font-semibold">
+                                      {q.optionA && <div><span className="text-slate-400 mr-1 font-bold">A.</span> {q.optionA}</div>}
+                                      {q.optionB && <div><span className="text-slate-400 mr-1 font-bold">B.</span> {q.optionB}</div>}
+                                      {q.optionC && <div><span className="text-slate-400 mr-1 font-bold">C.</span> {q.optionC}</div>}
+                                      {q.optionD && <div><span className="text-slate-400 mr-1 font-bold">D.</span> {q.optionD}</div>}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+  
+                          <div className="pt-2 border-t border-slate-100 flex justify-end">
+                            <button
+                              type="button"
+                              onClick={handleSendAssessmentToCandidate}
+                              disabled={sendingAssessment || selectedQuestionsForCandidate.length === 0}
+                              className="w-full flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#004AAD] hover:bg-[#003882] text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/10 border-none outline-none"
+                            >
+                              <span>{sendingAssessment ? 'Sending...' : 'Send Test to Candidate'}</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+ 
+                      {/* Evaluation Remarks Card */}
+                     <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                       <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">Evaluation Remarks</h3>
+                      
+                      <div className="space-y-3">
+                        <textarea
+                          rows={3}
+                          value={remarks}
+                          onChange={(e) => setRemarks(e.target.value)}
+                          placeholder="Enter interviewer evaluation notes, feedback remarks, or notes..."
+                          className="w-full admin-custom-input border border-slate-300 rounded-2xl py-3 px-4 focus:outline-none text-xs transition"
+                        />
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              const updatedApps = externalApplications.map(app =>
+                                app.id === selectedApplication.id ? { ...app, remarks: remarks } : app
+                              );
+                              updateAppsAndSync(updatedApps);
+                              setSelectedApplication(prev => ({ ...prev, remarks: remarks }));
+                              setSuccess('Remarks updated successfully.');
+                              setTimeout(() => setSuccess(''), 3000);
+                            }}
+                            className="px-4 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#004AAD] text-xs font-bold rounded-xl transition cursor-pointer font-sans"
+                          >
+                            Save Remarks
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Assessment Responses Card */}
+                    {(() => {
+                      const assignedQuestionsKey = `assessment_questions_${selectedApplication.id}`;
+                      const answersKey = `assessment_answers_${selectedApplication.id}`;
+                      const storedQuestions = localStorage.getItem(assignedQuestionsKey);
+                      const storedAnswers = localStorage.getItem(answersKey);
+
+                      if (storedQuestions && storedAnswers) {
+                        try {
+                          const qList = JSON.parse(storedQuestions);
+                          const aList = JSON.parse(storedAnswers);
+
+                          return (
+                            <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">Assessment Q&A Responses</h3>
+                              
+                              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1 admin-scrollbar">
+                                {qList.map((q, qidx) => {
+                                  const candAnswer = aList[q.id];
+                                  return (
+                                    <div key={q.id} className="bg-slate-50 border border-slate-150 rounded-2xl p-4 space-y-2 text-left">
+                                      <div className="text-xs font-black text-slate-800">
+                                        Q{qidx + 1}. {q.title}
+                                      </div>
+                                      <p className="text-slate-500 text-[11px] leading-relaxed italic">
+                                        {q.description}
+                                      </p>
+                                      <div className="p-2.5 bg-white border border-slate-200 rounded-xl text-slate-800">
+                                        <span className="text-slate-400 block text-[9px] uppercase font-bold mb-0.5">Candidate Response:</span>
+                                        <span className="font-bold text-slate-900 text-xs whitespace-pre-wrap">{candAnswer !== undefined ? candAnswer : "No response entered."}</span>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        } catch (parseErr) {
+                          console.warn('Error parsing local storage questions/answers:', parseErr);
+                        }
+                      }
+                      return null;
+                    })()}
+                  </div>
+                </div>
+              </div>
             )}
 
             {/* Sub Tab 3: Partnership Requests */}
@@ -2432,7 +2923,7 @@ export default function AdminDashboard() {
                 {/* Main Stats Cards Grid */}
                 {(() => {
                   const totalApps = externalApplications.length;
-                  const hiredCount = externalApplications.filter(app => app.status === 'Selected' || app.status === 'Joined').length;
+                  const hiredCount = externalApplications.filter(app => app.status === 'Accepted' || app.status === 'Joined').length;
                   const interviewedCount = externalApplications.filter(app => app.status === 'Interview Scheduled' || app.status === 'Interview Completed').length;
                   const conversionRate = totalApps > 0 ? Math.round((hiredCount / totalApps) * 100) : 0;
                   const interviewRate = totalApps > 0 ? Math.round((interviewedCount / totalApps) * 100) : 0;
@@ -2492,7 +2983,7 @@ export default function AdminDashboard() {
                       {(() => {
                         const total = externalApplications.length || 1;
                         const interviewed = externalApplications.filter(app => app.status !== 'Candidates' && app.status !== 'Shortlisted').length;
-                        const hired = externalApplications.filter(app => app.status === 'Selected' || app.status === 'Joined').length;
+                        const hired = externalApplications.filter(app => app.status === 'Accepted' || app.status === 'Joined').length;
 
                         const intPct = Math.round((interviewed / total) * 100);
                         const hiredPct = Math.round((hired / total) * 100);
@@ -2792,7 +3283,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Modal for Candidate Profile Review & Interview Scheduling */}
-      {selectedApplication && (
+      {selectedApplication && activeSubTab !== 'candidateDetails' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
           <div className="relative w-full max-w-2xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 admin-scrollbar overflow-y-auto max-h-[90vh]">
             <button
@@ -2813,18 +3304,40 @@ export default function AdminDashboard() {
               {/* Stepper / Progress Tracking */}
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Candidate Hiring Progress</div>
+                <div className="text-[10px] text-slate-400 font-semibold text-center mt-0.5">Click any card below to progress/update the candidate's hiring stage.</div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                  {['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'].map((step, idx) => {
-                    const order = ['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Joined'];
+                  {['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Accepted', 'Joined'].map((step, idx) => {
+                    const order = ['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Accepted', 'Joined'];
                     const curIdx = order.indexOf(selectedApplication.status);
-                    const isCompleted = curIdx >= idx && selectedApplication.status !== 'Rejected';
+                    const hasInterview = selectedApplication.interviewDate && selectedApplication.interviewDate !== '' && selectedApplication.interviewDate !== 'null' && selectedApplication.interviewDate !== 'undefined';
+                    
+                    let isCompleted = false;
+                    if (step === 'Candidates') {
+                      isCompleted = true;
+                    } else if (step === 'Shortlisted') {
+                      isCompleted = selectedApplication.status !== 'Candidates' || selectedApplication.aptitudeStatus === 'Assessment Sent';
+                    } else if (step === 'Interview Scheduled') {
+                      isCompleted = hasInterview;
+                    } else if (step === 'Interview Completed') {
+                      isCompleted = hasInterview && (selectedApplication.status === 'Interview Completed' || selectedApplication.status === 'Accepted' || selectedApplication.status === 'Joined');
+                    } else if (step === 'Accepted') {
+                      isCompleted = selectedApplication.status === 'Accepted' || selectedApplication.status === 'Joined';
+                    } else if (step === 'Joined') {
+                      isCompleted = selectedApplication.status === 'Joined';
+                    }
+                    
                     const isCurrent = selectedApplication.status === step;
 
                     return (
                       <div
                         key={step}
-                        className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition duration-300 ${isCurrent
-                          ? 'bg-blue-600 border-transparent text-white shadow-sm'
+                        onClick={() => {
+                          if (!loading) {
+                            handleUpdateStatus(selectedApplication.id, step);
+                          }
+                        }}
+                        className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition duration-300 cursor-pointer hover:border-blue-400 hover:bg-slate-100 hover:shadow-xs ${isCurrent
+                          ? 'bg-blue-600 border-transparent text-white shadow-sm font-bold'
                           : isCompleted
                             ? 'bg-emerald-50 border-emerald-100 text-emerald-700'
                             : 'bg-white border-slate-100 text-slate-400'
@@ -2878,7 +3391,7 @@ export default function AdminDashboard() {
                           selectedApplication.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
                             selectedApplication.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                               selectedApplication.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
-                                selectedApplication.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                                selectedApplication.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                                   selectedApplication.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
                                     selectedApplication.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
                                       'bg-slate-50 text-slate-700 border border-slate-200'
@@ -2970,95 +3483,6 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Status Update Actions */}
-              <div className="border-t border-slate-100 pt-4">
-                <label className="text-xs font-bold uppercase block mb-2">Update Application Status</label>
-                <div className="flex flex-wrap gap-2">
-                  {['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Selected', 'Rejected', 'Joined'].map((status) => (
-                    <button
-                      key={status}
-                      type="button"
-                      onClick={() => handleUpdateStatus(selectedApplication.id, status)}
-                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold border transition cursor-pointer capitalize ${selectedApplication.status === status
-                        ? 'bg-slate-900 border-transparent text-white'
-                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                        }`}
-                    >
-                      {status}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Schedule Interview Form */}
-              <form onSubmit={handleScheduleInterview} className="border-t border-slate-100 pt-4 space-y-4">
-                <label className="text-xs font-bold uppercase block mb-1">Schedule Interview / Meeting</label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-slate-400 font-bold uppercase block">Date</label>
-                    <input
-                      type="date"
-                      required
-                      value={interviewDate}
-                      onChange={(e) => setInterviewDate(e.target.value)}
-                      className="w-full admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-xs transition"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-slate-400 font-bold uppercase block">Time</label>
-                    <input
-                      type="time"
-                      required
-                      value={interviewTime}
-                      onChange={(e) => setInterviewTime(e.target.value)}
-                      className="w-full admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-xs transition"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-slate-450 font-bold uppercase block">Interviewer Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={interviewer}
-                      onChange={(e) => setInterviewer(e.target.value)}
-                      placeholder="e.g. Engineering Lead"
-                      className="w-full admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-xs transition"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-slate-450 font-bold uppercase block">Meeting Link</label>
-                    <input
-                      type="url"
-                      required
-                      value={interviewLink}
-                      onChange={(e) => setInterviewLink(e.target.value)}
-                      placeholder="e.g. https://meet.google.com/xyz"
-                      className="w-full admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-xs transition"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] text-slate-450 font-bold uppercase block">Remarks</label>
-                  <textarea
-                    rows={2}
-                    value={remarks}
-                    onChange={(e) => setRemarks(e.target.value)}
-                    placeholder="e.g. Discuss system architecture alignment..."
-                    className="w-full admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-xs transition"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center justify-center space-x-2"
-                >
-                  <span>Schedule & Save Interview Details</span>
-                </button>
-              </form>
             </div>
           </div>
         </div>
