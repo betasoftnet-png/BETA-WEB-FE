@@ -2252,16 +2252,6 @@ export default function AdminDashboard() {
                                 <td className="py-4 px-6 text-center">
                                   <div className="flex items-center justify-center gap-1.5">
                                     <button
-                                      onClick={() => {
-                                        setSelectedApplication(app);
-                                        setCandidateStatus(app.status || 'Candidates');
-                                      }}
-                                      className="px-2.5 py-1.5 rounded bg-purple-50 hover:bg-purple-100 text-[#8B5CF6] border border-purple-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
-                                    >
-                                      Schedule Interview
-                                    </button>
-
-                                    <button
                                       onClick={() => handleUpdateStatus(app.id, 'Selected')}
                                       className="px-2.5 py-1.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-650 border border-emerald-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
                                     >
