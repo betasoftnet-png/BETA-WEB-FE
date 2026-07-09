@@ -2631,9 +2631,6 @@ export default function AdminDashboard() {
                                 <span>Select questions from library below.</span>
                               </p>
                             </div>
-                            <span className="bg-blue-50 text-[#004AAD] border border-blue-100 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                              {selectedQuestionsForCandidate.length} Selected
-                            </span>
                           </div>
                           
                           <div className="space-y-4 max-h-[350px] overflow-y-auto pr-1 admin-scrollbar">
@@ -2675,7 +2672,7 @@ export default function AdminDashboard() {
                             })}
                           </div>
   
-                          <div className="pt-2 border-t border-slate-100 flex justify-end">
+                          <div className="pt-2 border-t border-slate-100 flex flex-col gap-2.5">
                             <button
                               type="button"
                               onClick={handleSendAssessmentToCandidate}
@@ -2684,6 +2681,14 @@ export default function AdminDashboard() {
                             >
                               <span>{sendingAssessment ? 'Sending...' : 'Send Test to Candidate'}</span>
                             </button>
+
+                            {/* Inline success feedback after sending */}
+                            {success && success.includes('questions successfully sent') && (
+                              <div className="flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 animate-fadeIn">
+                                <CheckCircle className="h-4 w-4 text-emerald-500" />
+                                <span className="text-[11px] font-bold text-emerald-700">Sent successfully!</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
