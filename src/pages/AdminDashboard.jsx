@@ -1225,7 +1225,7 @@ export default function AdminDashboard() {
                   </div>
                 )}
               </div>
-              {((activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates') || activeSubTab === 'jobBoard') && (
+              {((activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates') || activeSubTab === 'jobsList') && (
                 <button
                   onClick={openAddJobModal}
                   className="flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-semibold admin-glow-btn"
@@ -2438,7 +2438,8 @@ export default function AdminDashboard() {
                                   if (appDate > adjustedEnd) return false;
                                 }
                                 return true;
-                              });
+                              })
+                              .sort((a, b) => b.id - a.id);
 
                             if (filtered.length === 0) {
                               return (
@@ -2452,22 +2453,29 @@ export default function AdminDashboard() {
 
                             return filtered.map(app => (
                               <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                                <td className="py-4 px-6">
-                                  <button
-                                    onClick={() => {
-                                      console.log('Candidate name clicked:', app.fullName, 'Status:', app.status);
-                                      const normalizedStatus = mapStatusToUI(app.status);
-                                      const updatedApp = { ...app, status: normalizedStatus };
-                                      setSelectedApplication(updatedApp);
-                                      setCandidateStatus(normalizedStatus);
-                                      console.log('Normalized Status:', normalizedStatus, 'selectedStatusFilter:', selectedStatusFilter);
-                                      console.log('Transitioning to candidateDetails subpage');
-                                      setActiveSubTab('candidateDetails');
-                                    }}
-                                    className="font-bold text-[#004AAD] hover:underline cursor-pointer text-left block bg-transparent border-none p-0"
-                                  >
-                                    {app.fullName}
-                                  </button>
+                                 <td className="py-4 px-6">
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <button
+                                      onClick={() => {
+                                        console.log('Candidate name clicked:', app.fullName, 'Status:', app.status);
+                                        const normalizedStatus = mapStatusToUI(app.status);
+                                        const updatedApp = { ...app, status: normalizedStatus };
+                                        setSelectedApplication(updatedApp);
+                                        setCandidateStatus(normalizedStatus);
+                                        console.log('Normalized Status:', normalizedStatus, 'selectedStatusFilter:', selectedStatusFilter);
+                                        console.log('Transitioning to candidateDetails subpage');
+                                        setActiveSubTab('candidateDetails');
+                                      }}
+                                      className="font-bold text-[#004AAD] hover:underline cursor-pointer text-left block bg-transparent border-none p-0"
+                                    >
+                                      {app.fullName}
+                                    </button>
+                                    {(selectedStatusFilter === 'Accepted' || app.status === 'Accepted') && (
+                                      <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] font-bold text-slate-500 font-mono">
+                                        ID: #{app.id}
+                                      </span>
+                                    )}
+                                  </div>
                                   <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
                                 </td>
                                 <td className="py-4 px-6">

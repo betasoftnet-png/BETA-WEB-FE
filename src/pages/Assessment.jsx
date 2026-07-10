@@ -43,7 +43,7 @@ export default function Assessment() {
     setError('');
     axios.get(`https://apply.beta-softnet.com/api/assessment/${candidateId}`)
       .then((response) => {
-        // The API now returns a wrapper object: { candidateId, candidateName, jobTitle, questions }
+        // The API now returns a wrapper object: { candidateId, candidateName, jobTitle, questions, attempts }
         const payload = response.data || {};
         const fetchedQuestions = payload.questions || [];
         setQuestions(fetchedQuestions);
@@ -52,6 +52,20 @@ export default function Assessment() {
           jobTitle: payload.jobTitle,
           id: payload.candidateId || candidateId
         });
+
+        const currentAttempts = payload.attempts || 0;
+        setAttempts(currentAttempts);
+
+        if (currentAttempts === 2) {
+          alert("You have attempted the assessment 2 times. If you attempt more than 2 times, the assessment page will be closed.");
+        } else if (currentAttempts > 2) {
+          alert("You have exceeded 2 attempts. The assessment page will now close.");
+          setError("Assessment Blocked: You have exceeded the maximum of 2 allowed attempts. This window will now close.");
+          setTimeout(() => {
+            window.close();
+            window.location.href = "about:blank";
+          }, 1500);
+        }
 
         if (fetchedQuestions.length === 0) {
           setError('No assessment questions have been assigned to you yet.');
@@ -67,6 +81,12 @@ export default function Assessment() {
         setError(errorMsg);
         if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('already submitted')) {
           setSubmitted(true);
+        } else if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('2 times')) {
+          alert("You have exceeded 2 attempts. The assessment page will now close.");
+          setTimeout(() => {
+            window.close();
+            window.location.href = "about:blank";
+          }, 1500);
         }
       })
       .finally(() => {
@@ -91,8 +111,16 @@ export default function Assessment() {
           .then((res) => {
             const updatedAttempts = res.data;
             setAttempts(updatedAttempts);
-            if (updatedAttempts > 2) {
+            if (updatedAttempts === 2) {
+              alert("You have attempted the assessment 2 times. If you attempt more than 2 times, the assessment page will be closed.");
+              setShowWarningModal(true);
+            } else if (updatedAttempts > 2) {
+              alert("You have exceeded 2 attempts. The assessment page will now close.");
               setError('Assessment blocked. You have exceeded the maximum allowed attempts/violations (2 attempts max).');
+              setTimeout(() => {
+                window.close();
+                window.location.href = "about:blank";
+              }, 1500);
             } else {
               setShowWarningModal(true);
             }
@@ -101,6 +129,13 @@ export default function Assessment() {
             console.error('Error recording attempt violation:', err);
             const errBody = err.response?.data || 'Assessment blocked due to security violation.';
             setError(errBody);
+            if (typeof errBody === 'string' && errBody.toLowerCase().includes('2 times')) {
+              alert("You have exceeded 2 attempts. The assessment page will now close.");
+              setTimeout(() => {
+                window.close();
+                window.location.href = "about:blank";
+              }, 1500);
+            }
           });
       }
     };
