@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Shield, Brain, Clock, CheckCircle, AlertTriangle, ArrowRight, RefreshCw } from 'lucide-react';
+
+const BACKEND_API_BASE =
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8081'
+    : 'https://apply.beta-softnet.com';
 
 export default function Assessment() {
   const location = useLocation();
@@ -21,6 +27,18 @@ export default function Assessment() {
   const [attempts, setAttempts] = useState(0);
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [isScreenObscured, setIsScreenObscured] = useState(false);
+  const questionsReadyRef = useRef(false); // tracks when questions are fully loaded and stable
+  const [blockedMessage, setBlockedMessage] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [securityAlert, setSecurityAlert] = useState('');
+
+  useEffect(() => {
+    if (!securityAlert) return;
+    const timer = setTimeout(() => {
+      setSecurityAlert('');
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [securityAlert]);
 
   useEffect(() => {
     if (!candidateId) {
@@ -41,10 +59,23 @@ export default function Assessment() {
 
     setLoading(true);
     setError('');
-    axios.get(`https://apply.beta-softnet.com/api/assessment/${candidateId}`)
+    axios.get(`${BACKEND_API_BASE}/api/assessment/${candidateId}`)
       .then((response) => {
-        // The API now returns a wrapper object: { candidateId, candidateName, jobTitle, questions, attempts }
+        // The API now returns a wrapper object: { candidateId, candidateName, jobTitle, questions, attempts, submitted, score }
         const payload = response.data || {};
+        
+        if (payload.submitted) {
+          setCandidate({
+            fullName: payload.candidateName,
+            jobTitle: payload.jobTitle,
+            id: payload.candidateId || candidateId
+          });
+          setScore(payload.score || 0);
+          setSubmitted(true);
+          setLoading(false);
+          return;
+        }
+
         const fetchedQuestions = payload.questions || [];
         setQuestions(fetchedQuestions);
         setCandidate({
@@ -57,14 +88,9 @@ export default function Assessment() {
         setAttempts(currentAttempts);
 
         if (currentAttempts === 2) {
-          alert("You have attempted the assessment 2 times. If you attempt more than 2 times, the assessment page will be closed.");
+          alert("You have refreshed 1 time (Count 1). If you attempt more than 2 times, the assessment page will be closed.");
         } else if (currentAttempts > 2) {
-          alert("You have exceeded 2 attempts. The assessment page will now close.");
-          setError("Assessment Blocked: You have exceeded the maximum of 2 allowed attempts. This window will now close.");
-          setTimeout(() => {
-            window.close();
-            window.location.href = "about:blank";
-          }, 1500);
+          setBlockedMessage("Assessment Blocked: You have exceeded the maximum of 2 allowed attempts.");
         }
 
         if (fetchedQuestions.length === 0) {
@@ -74,19 +100,19 @@ export default function Assessment() {
         } else {
           setTimeLeft(30 * 60); // Default fallback: 30 minutes
         }
+
+        // Mark questions as ready after a 5-second stabilization window
+        setTimeout(() => { questionsReadyRef.current = true; }, 5000);
       })
       .catch((error) => {
         console.error('Failed to load candidate questions:', error);
         const errorMsg = error.response?.data || 'Failed to fetch assigned questions from the backend.';
-        setError(errorMsg);
         if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('already submitted')) {
           setSubmitted(true);
-        } else if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('2 times')) {
-          alert("You have exceeded 2 attempts. The assessment page will now close.");
-          setTimeout(() => {
-            window.close();
-            window.location.href = "about:blank";
-          }, 1500);
+        } else if (typeof errorMsg === 'string' && (errorMsg.toLowerCase().includes('2 times') || errorMsg.toLowerCase().includes('exceeded'))) {
+          setBlockedMessage(errorMsg);
+        } else {
+          setError(errorMsg);
         }
       })
       .finally(() => {
@@ -101,26 +127,21 @@ export default function Assessment() {
     let lastViolationTime = 0;
 
     const handleVisibilityOrBlur = () => {
+      if (!questionsReadyRef.current) return; // Wait until questions are fully loaded and stable
       const now = Date.now();
       if (now - lastViolationTime < 2000) return; // Throttling: ignore events within 2 seconds
 
       if (document.visibilityState === 'hidden' || !document.hasFocus()) {
         lastViolationTime = now;
 
-        axios.post(`https://apply.beta-softnet.com/api/assessment/${candidateId}/increment-attempt`)
+        axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/increment-attempt`)
           .then((res) => {
             const updatedAttempts = res.data;
             setAttempts(updatedAttempts);
             if (updatedAttempts === 2) {
-              alert("You have attempted the assessment 2 times. If you attempt more than 2 times, the assessment page will be closed.");
               setShowWarningModal(true);
             } else if (updatedAttempts > 2) {
-              alert("You have exceeded 2 attempts. The assessment page will now close.");
-              setError('Assessment blocked. You have exceeded the maximum allowed attempts/violations (2 attempts max).');
-              setTimeout(() => {
-                window.close();
-                window.location.href = "about:blank";
-              }, 1500);
+              setBlockedMessage('Assessment blocked. You have exceeded the maximum allowed attempts/violations (2 attempts max).');
             } else {
               setShowWarningModal(true);
             }
@@ -128,13 +149,10 @@ export default function Assessment() {
           .catch((err) => {
             console.error('Error recording attempt violation:', err);
             const errBody = err.response?.data || 'Assessment blocked due to security violation.';
-            setError(errBody);
-            if (typeof errBody === 'string' && errBody.toLowerCase().includes('2 times')) {
-              alert("You have exceeded 2 attempts. The assessment page will now close.");
-              setTimeout(() => {
-                window.close();
-                window.location.href = "about:blank";
-              }, 1500);
+            if (typeof errBody === 'string' && (errBody.toLowerCase().includes('2 times') || errBody.toLowerCase().includes('exceeded'))) {
+              setBlockedMessage("Assessment Blocked: You have exceeded the maximum of 2 allowed attempts.");
+            } else {
+              setError(errBody);
             }
           });
       }
@@ -154,18 +172,24 @@ export default function Assessment() {
     if (!candidateId || loading || submitted || error) return;
 
     const handleBlur = () => {
+      if (!questionsReadyRef.current) return; // Wait until questions are stable
       setIsScreenObscured(true);
     };
 
     const handleFocus = () => {
+      if (!questionsReadyRef.current) return; // Wait until questions are stable
       // Re-verify that they aren't blocked before showing content
-      axios.get(`https://apply.beta-softnet.com/api/assessment/${candidateId}`)
+      axios.get(`${BACKEND_API_BASE}/api/assessment/${candidateId}?increment=false`)
         .then(() => {
           setIsScreenObscured(false);
         })
         .catch((err) => {
           const errBody = err.response?.data || 'Assessment blocked.';
-          setError(errBody);
+          if (typeof errBody === 'string' && (errBody.toLowerCase().includes('2 times') || errBody.toLowerCase().includes('exceeded'))) {
+            setBlockedMessage("Assessment Blocked: You have exceeded the maximum of 2 allowed attempts.");
+          } else {
+            setError(errBody);
+          }
         });
     };
 
@@ -175,6 +199,7 @@ export default function Assessment() {
     document.addEventListener('mouseenter', handleFocus);
 
     const handleVisibilityChange = () => {
+      if (!questionsReadyRef.current) return; // Wait until questions are stable
       if (document.visibilityState === 'hidden') {
         setIsScreenObscured(true);
       }
@@ -194,7 +219,7 @@ export default function Assessment() {
   useEffect(() => {
     const preventCopy = (e) => {
       e.preventDefault();
-      alert("Copying questions or options is disabled for security reasons.");
+      setSecurityAlert("Copying questions or options is disabled for security reasons.");
     };
 
     const preventKeyDown = (e) => {
@@ -206,7 +231,7 @@ export default function Assessment() {
         e.keyCode === 44 // PrintScreen
       ) {
         e.preventDefault();
-        alert("Action disabled for assessment security.");
+        setSecurityAlert("Developer tools and custom keyboard shortcuts are disabled for security reasons.");
         return false;
       }
     };
@@ -252,10 +277,6 @@ export default function Assessment() {
   const handleSubmit = async (autoSubmit = false) => {
     if (submitted || submitting) return;
 
-    if (!autoSubmit && !window.confirm('Are you sure you want to submit your assessment answers now?')) {
-      return;
-    }
-
     setSubmitting(true);
     setError('');
 
@@ -275,7 +296,7 @@ export default function Assessment() {
     try {
       // Send all answers to the backend
       const answerPromises = Object.entries(answers).map(([qId, selectedVal]) => {
-        return axios.post('https://apply.beta-softnet.com/api/answers', {
+        return axios.post(`${BACKEND_API_BASE}/api/answers`, {
           candidateId: parseInt(candidateId),
           questionId: parseInt(qId),
           selectedAnswer: selectedVal
@@ -285,7 +306,7 @@ export default function Assessment() {
       await Promise.all(answerPromises);
 
       // Finalize the assessment submission in the backend
-      const submitRes = await axios.post(`https://apply.beta-softnet.com/api/assessment/${candidateId}/submit`);
+      const submitRes = await axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/submit`);
       const finalScore = (submitRes.data && submitRes.data.score !== undefined) ? submitRes.data.score : calculatedScore;
 
       setScore(finalScore);
@@ -351,6 +372,27 @@ export default function Assessment() {
     );
   }
 
+  if (blockedMessage) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-left font-sans">
+        <div className="w-full max-w-xl bg-white border border-slate-200 shadow-2xl rounded-3xl p-8 md:p-10 text-center space-y-6">
+          <div className="h-16 w-16 bg-rose-50 border border-rose-200 text-rose-600 rounded-2xl flex items-center justify-center mx-auto shadow-sm animate-pulse">
+            <Shield className="h-8 w-8 text-rose-600 animate-pulse" />
+          </div>
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Assessment Blocked</h2>
+            <p className="text-rose-600 text-sm font-semibold mt-2 bg-rose-50 border border-rose-100 rounded-2xl p-4 leading-relaxed">
+              {blockedMessage}
+            </p>
+          </div>
+          <p className="text-slate-450 text-[11px] leading-relaxed">
+            Please contact the HR/recruiting team if you believe this is an error or to request an unlock.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (error && questions.length === 0) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-left font-sans">
@@ -403,7 +445,7 @@ export default function Assessment() {
   }
 
   return (
-    <div className={`min-h-screen bg-slate-50 text-slate-850 font-sans py-12 px-4 flex justify-center text-left select-none relative ${showWarningModal || isScreenObscured ? 'blur-md pointer-events-none' : ''}`}>
+    <div className="min-h-screen bg-slate-50 text-slate-850 font-sans py-12 px-4 flex justify-center text-left select-none relative">
       <style>{`
         @media print {
           body { display: none !important; }
@@ -416,7 +458,7 @@ export default function Assessment() {
         }
       `}</style>
       
-      <div className="w-full max-w-3xl space-y-6 animate-fadeIn">
+      <div className={`w-full max-w-3xl space-y-6 animate-fadeIn ${showWarningModal || isScreenObscured ? 'blur-md pointer-events-none' : ''}`}>
         {/* Header card */}
         <div className="bg-white border border-slate-250 shadow-md rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-2">
@@ -513,7 +555,7 @@ export default function Assessment() {
             Please review all your answers before submitting. The test will automatically finalize when the countdown reaches zero.
           </p>
           <button
-            onClick={() => handleSubmit(false)}
+            onClick={() => setShowConfirmModal(true)}
             disabled={submitting || submitted}
             className="flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition duration-200 cursor-pointer shadow-lg shadow-blue-500/10 self-end sm:self-auto border-none outline-none disabled:opacity-55 disabled:cursor-not-allowed"
           >
@@ -559,7 +601,7 @@ export default function Assessment() {
               <p className="text-slate-500 text-xs leading-relaxed mt-2 bg-slate-50 border border-slate-100 rounded-xl p-3">
                 Content is hidden because focus was lost. Screenshot tools are blocked.
               </p>
-              <p className="text-slate-400 text-[11px] leading-relaxed mt-4">
+              <p className="text-slate-450 text-[11px] leading-relaxed mt-4">
                 Click the button below to resume the assessment.
               </p>
             </div>
@@ -569,6 +611,52 @@ export default function Assessment() {
             >
               Resume Assessment
             </button>
+          </div>
+        </div>
+      )}
+
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md pointer-events-auto">
+          <div className="w-full max-w-md bg-white border border-slate-200 shadow-2xl rounded-3xl p-6 md:p-8 text-center space-y-6 animate-fadeIn">
+            <div className="h-16 w-16 bg-blue-50 border border-blue-200 text-[#004AAD] rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+              <Shield className="h-8 w-8 text-[#004AAD]" />
+            </div>
+            <div>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Submit Assessment?</h2>
+              <p className="text-slate-500 text-xs leading-relaxed mt-2 bg-slate-50 border border-slate-100 rounded-xl p-3">
+                Are you sure you want to submit your assessment answers now? You won't be able to edit them afterward.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setShowConfirmModal(false)}
+                className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition duration-200 cursor-pointer border-none outline-none"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  handleSubmit(true);
+                }}
+                className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition duration-200 cursor-pointer shadow-lg shadow-blue-500/20 border-none outline-none"
+              >
+                Yes, Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {securityAlert && (
+        <div className="fixed top-6 right-6 z-[100] max-w-sm bg-slate-900 text-white border border-slate-800 shadow-2xl rounded-2xl p-4 flex items-center gap-3 animate-slideIn">
+          <div className="h-8 w-8 bg-rose-500/20 border border-rose-500/30 text-rose-450 rounded-lg flex items-center justify-center shrink-0">
+            <AlertTriangle className="h-4.5 w-4.5 text-rose-500" />
+          </div>
+          <div className="flex-1 text-xs font-semibold leading-normal">
+            {securityAlert}
           </div>
         </div>
       )}

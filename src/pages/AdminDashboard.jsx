@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import {
@@ -141,6 +141,8 @@ export default function AdminDashboard() {
   const [fetchingQuestions, setFetchingQuestions] = useState(false);
   const [selectedQuestionsForCandidate, setSelectedQuestionsForCandidate] = useState([]);
   const [sendingAssessment, setSendingAssessment] = useState(false);
+  const [questionSearchQuery, setQuestionSearchQuery] = useState('');
+  const [questionCategoryQuery, setQuestionCategoryQuery] = useState('All');
 
   // Job Posting/Editing Modal States
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -238,7 +240,7 @@ export default function AdminDashboard() {
               interviewDate: app.interviewDate || app.interviewdate || '',
               interviewTime: app.interviewTime || app.interviewtime || '',
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
-              aptitudeScore: app.aptitudeScore || app.aptitudescore || '',
+              aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               experience: app.experience || '3 Years'
             };
           });
@@ -302,6 +304,58 @@ export default function AdminDashboard() {
       fetchData();
     }
   }, [user]);
+
+  // Silent background polling — re-fetches applications every 20s so scores/statuses update automatically
+  useEffect(() => {
+    if (!user || user.role !== 'ROLE_ADMIN') return;
+
+    const silentRefetch = async () => {
+      try {
+        const [jobsRes, appsRes] = await Promise.all([
+          axios.get(`${BACKEND_API_BASE}/api/jobs`),
+          axios.get(`${BACKEND_API_BASE}/api/admin/applications`)
+        ]);
+        const jobsList = jobsRes.data.data || jobsRes.data || [];
+        const apps = appsRes.data.data || appsRes.data || [];
+        if (apps.length > 0) {
+          const normalizedApps = apps.map(app => {
+            const matchedJob = jobsList.find(j => String(j.id) === String(app.jobId));
+            return {
+              id: app.id,
+              fullName: app.fullName || app.fullname || '',
+              email: app.email || '',
+              phone: app.phone || '',
+              resumeUrl: app.resume
+                ? `${BACKEND_API_BASE}/uploads/${app.resume}`
+                : (app.resumeUrl || app.resumeurl || ''),
+              coverLetter: app.coverLetter || app.coverletter || '',
+              status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING')
+                ? 'Interview Scheduled'
+                : mapStatusToUI(app.status),
+              createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+              appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+              jobTitle: matchedJob ? matchedJob.title : (app.jobTitle || app.jobtitle || 'Unknown Position'),
+              jobDepartment: matchedJob ? matchedJob.department : (app.jobDepartment || app.jobdepartment || 'Engineering'),
+              jobLocation: matchedJob ? matchedJob.location : (app.jobLocation || app.joblocation || 'Remote'),
+              interviewDate: app.interviewDate || app.interviewdate || '',
+              interviewTime: app.interviewTime || app.interviewtime || '',
+              aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
+              aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
+              experience: app.experience || '3 Years'
+            };
+          });
+          setExternalApplications(normalizedApps);
+          localStorage.setItem('beta_applications', JSON.stringify(normalizedApps));
+        }
+      } catch (_) {
+        // Silent — don't show error on background poll
+      }
+    };
+
+    const pollInterval = setInterval(silentRefetch, 20000);
+    return () => clearInterval(pollInterval);
+  }, [user]);
+
 
   useEffect(() => {
     if (selectedApplication) {
@@ -3873,6 +3927,8 @@ export default function AdminDashboard() {
                 setSelectedCandidateForAssessment(null);
                 setSelectedQuestionIds([]);
                 setAssignError('');
+                setQuestionSearchQuery('');
+                setQuestionCategoryQuery('All');
               }}
               className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition"
             >
@@ -3910,6 +3966,35 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+            {/* Questions Filter Bar */}
+            <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">Search Questions</label>
+                <input
+                  type="text"
+                  value={questionSearchQuery}
+                  onChange={(e) => setQuestionSearchQuery(e.target.value)}
+                  placeholder="Search questions by keyword..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 focus:outline-none text-xs text-slate-700"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">Filter by Category</label>
+                <select
+                  value={questionCategoryQuery}
+                  onChange={(e) => setQuestionCategoryQuery(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 focus:outline-none text-xs text-slate-700 cursor-pointer"
+                >
+                  <option value="All">All Categories</option>
+                  <option value="Java">Java</option>
+                  <option value="Python">Python</option>
+                  <option value="SQL">SQL</option>
+                  <option value="HTML/CSS">HTML/CSS</option>
+                  <option value="React">React</option>
+                </select>
+              </div>
+            </div>
+
             {/* Questions list wrapper */}
             <div className="flex-1 overflow-y-auto min-h-[200px] border border-slate-200 rounded-2xl p-4 mb-6 space-y-3 admin-scrollbar bg-slate-50/50">
               {loadingQuestions ? (
@@ -3922,36 +4007,84 @@ export default function AdminDashboard() {
               ) : allQuestions.length === 0 ? (
                 <p className="text-slate-500 text-center text-xs italic py-12">No questions available in the library.</p>
               ) : (
-                allQuestions.map((q) => {
-                  const isChecked = selectedQuestionIds.includes(q.id);
-                  return (
-                    <label
-                      key={q.id}
-                      className={`flex items-start gap-3 p-3 rounded-xl border text-xs font-semibold cursor-pointer transition-all duration-200 ${
-                        isChecked
-                          ? 'bg-blue-50/35 border-blue-400 text-blue-900 shadow-xs'
-                          : 'bg-white border-slate-200 hover:border-slate-350 text-slate-700'
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => handleToggleQuestion(q.id)}
-                        className="mt-0.5 h-4 w-4 border-slate-350 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                      />
-                      <div className="space-y-1">
-                        <span className="text-[10px] font-mono text-[#004AAD] uppercase font-bold">Question {q.id}</span>
-                        <p className="font-extrabold text-slate-900 leading-snug">{q.question}</p>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-1 pt-1 text-[10px] text-slate-500 font-medium">
-                          {q.optionA && <div>A: {q.optionA}</div>}
-                          {q.optionB && <div>B: {q.optionB}</div>}
-                          {q.optionC && <div>C: {q.optionC}</div>}
-                          {q.optionD && <div>D: {q.optionD}</div>}
+                (() => {
+                  const filtered = allQuestions
+                    .filter(q => {
+                      if (questionCategoryQuery !== 'All') {
+                        const cat = (q.category || '').toLowerCase();
+                        const title = (q.question || '').toLowerCase();
+                        const filterVal = questionCategoryQuery.toLowerCase();
+                        
+                        if (filterVal === 'java') {
+                          const hasJava = cat.includes('java') || title.includes('java');
+                          const hasJavaScript = cat.includes('javascript') || title.includes('javascript') || cat.includes('js');
+                          if (hasJava && hasJavaScript) {
+                            return /\bjava\b/i.test(cat) || /\bjava\b/i.test(title);
+                          }
+                          if (!hasJava) return false;
+                        } else if (filterVal === 'python') {
+                          if (!cat.includes('python') && !title.includes('python')) return false;
+                        } else if (filterVal === 'sql') {
+                          if (!cat.includes('sql') && !cat.includes('database') && !cat.includes('db') &&
+                              !title.includes('sql') && !title.includes('database') && !title.includes('query')) return false;
+                        } else if (filterVal === 'html/css') {
+                          if (!cat.includes('html') && !cat.includes('css') &&
+                              !title.includes('html') && !title.includes('css') && !title.includes('style') && !title.includes('class')) return false;
+                        } else if (filterVal === 'react') {
+                          if (!cat.includes('react') && !title.includes('react') &&
+                              !title.includes('hook') && !title.includes('component') && !title.includes('state')) return false;
+                        } else if (cat !== filterVal) {
+                          return false;
+                        }
+                      }
+                      if (questionSearchQuery) {
+                        const query = questionSearchQuery.toLowerCase();
+                        return (q.question || '').toLowerCase().includes(query) ||
+                               (q.category || '').toLowerCase().includes(query);
+                      }
+                      return true;
+                    });
+
+                  if (filtered.length === 0) {
+                    return <p className="text-slate-550 text-center text-xs italic py-12">No matching questions found.</p>;
+                  }
+
+                  return filtered.map((q) => {
+                    const isChecked = selectedQuestionIds.includes(q.id);
+                    return (
+                      <label
+                        key={q.id}
+                        className={`flex items-start gap-3 p-3 rounded-xl border text-xs font-semibold cursor-pointer transition-all duration-200 ${
+                          isChecked
+                            ? 'bg-blue-50/35 border-blue-400 text-blue-900 shadow-xs'
+                            : 'bg-white border-slate-200 hover:border-slate-350 text-slate-700'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => handleToggleQuestion(q.id)}
+                          className="mt-0.5 h-4 w-4 border-slate-350 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        />
+                        <div className="space-y-1 w-full">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-mono text-[#004AAD] uppercase font-bold">Question {q.id}</span>
+                            {q.category && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-500 uppercase font-extrabold tracking-wider">{q.category}</span>
+                            )}
+                          </div>
+                          <p className="font-extrabold text-slate-900 leading-snug">{q.question}</p>
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-1 pt-1 text-[10px] text-slate-500 font-medium">
+                            {q.optionA && <div>A: {q.optionA}</div>}
+                            {q.optionB && <div>B: {q.optionB}</div>}
+                            {q.optionC && <div>C: {q.optionC}</div>}
+                            {q.optionD && <div>D: {q.optionD}</div>}
+                          </div>
                         </div>
-                      </div>
-                    </label>
-                  );
-                })
+                      </label>
+                    );
+                  });
+                })()
               )}
             </div>
 
