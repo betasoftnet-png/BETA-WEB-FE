@@ -18,22 +18,24 @@ export default function Assessment() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [score, setScore] = useState(0);
+  const [attempts, setAttempts] = useState(0);
+  const [showWarningModal, setShowWarningModal] = useState(false);
 
   useEffect(() => {
+    if (!candidateId) {
+      setError('Invalid or missing candidate ID URL parameter.');
+      setLoading(false);
+      return;
+    }
+
     // Load candidate and applications from local storage
     const storedApps = localStorage.getItem('beta_applications');
-    if (storedApps && candidateId) {
+    if (storedApps) {
       const apps = JSON.parse(storedApps);
       const found = apps.find(app => String(app.id) === String(candidateId));
       if (found) {
         setCandidate(found);
       }
-    }
-
-    if (!candidateId) {
-      setError('Invalid or missing candidate ID URL parameter.');
-      setLoading(false);
-      return;
     }
 
     setLoading(true);
@@ -52,12 +54,94 @@ export default function Assessment() {
       })
       .catch((error) => {
         console.error('Failed to load candidate questions:', error);
-        setError('Failed to fetch assigned questions from the backend.');
+        const errorMsg = error.response?.data || 'Failed to fetch assigned questions from the backend.';
+        setError(errorMsg);
+        if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('already submitted')) {
+          setSubmitted(true);
+        }
       })
       .finally(() => {
         setLoading(false);
       });
   }, [candidateId]);
+
+  // 1. Tab Switch / Focus Loss Detection
+  useEffect(() => {
+    if (!candidateId || loading || submitted || error) return;
+
+    let lastViolationTime = 0;
+
+    const handleVisibilityOrBlur = () => {
+      const now = Date.now();
+      if (now - lastViolationTime < 2000) return; // Throttling: ignore events within 2 seconds
+
+      if (document.visibilityState === 'hidden' || !document.hasFocus()) {
+        lastViolationTime = now;
+
+        axios.post(`https://apply.beta-softnet.com/api/assessment/${candidateId}/increment-attempt`)
+          .then((res) => {
+            const updatedAttempts = res.data;
+            setAttempts(updatedAttempts);
+            if (updatedAttempts > 2) {
+              setError('Assessment blocked. You have exceeded the maximum allowed attempts/violations (2 attempts max).');
+            } else {
+              setShowWarningModal(true);
+            }
+          })
+          .catch((err) => {
+            console.error('Error recording attempt violation:', err);
+            const errBody = err.response?.data || 'Assessment blocked due to security violation.';
+            setError(errBody);
+          });
+      }
+    };
+
+    window.addEventListener('visibilitychange', handleVisibilityOrBlur);
+    window.addEventListener('blur', handleVisibilityOrBlur);
+
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityOrBlur);
+      window.removeEventListener('blur', handleVisibilityOrBlur);
+    };
+  }, [candidateId, loading, submitted, error]);
+
+  // 2. Prevent Copy/Cut/Right-Click & Keyboard Protection
+  useEffect(() => {
+    const preventCopy = (e) => {
+      e.preventDefault();
+      alert("Copying questions or options is disabled for security reasons.");
+    };
+
+    const preventKeyDown = (e) => {
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, Ctrl+P, Ctrl+C, Ctrl+V, Ctrl+X, PrintScreen
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
+        (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 80 || e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88)) || // Ctrl+U/S/P/C/V/X
+        e.keyCode === 44 // PrintScreen
+      ) {
+        e.preventDefault();
+        alert("Action disabled for assessment security.");
+        return false;
+      }
+    };
+
+    const preventContextMenu = (e) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener('copy', preventCopy);
+    window.addEventListener('cut', preventCopy);
+    window.addEventListener('contextmenu', preventContextMenu);
+    window.addEventListener('keydown', preventKeyDown);
+
+    return () => {
+      window.removeEventListener('copy', preventCopy);
+      window.removeEventListener('cut', preventCopy);
+      window.removeEventListener('contextmenu', preventContextMenu);
+      window.removeEventListener('keydown', preventKeyDown);
+    };
+  }, []);
 
   // Running Timer Countdown
   useEffect(() => {
@@ -115,8 +199,14 @@ export default function Assessment() {
 
       await Promise.all(answerPromises);
 
+      // Finalize the assessment submission in the backend
+      await axios.post(`https://apply.beta-softnet.com/api/assessment/${candidateId}/submit`);
+
       setScore(calculatedScore);
       setSubmitted(true);
+
+      // Save submission state to prevent re-entering
+      localStorage.setItem(`assessment_submitted_${candidateId}`, 'true');
 
       // Save full typed answers in localStorage
       localStorage.setItem(`assessment_answers_${candidateId}`, JSON.stringify(answers));
@@ -226,7 +316,19 @@ export default function Assessment() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-850 font-sans py-12 px-4 flex justify-center text-left">
+    <div className={`min-h-screen bg-slate-50 text-slate-850 font-sans py-12 px-4 flex justify-center text-left select-none relative ${showWarningModal ? 'blur-md pointer-events-none' : ''}`}>
+      <style>{`
+        @media print {
+          body { display: none !important; }
+        }
+        .select-none {
+          user-select: none !important;
+          -webkit-user-select: none !important;
+          -moz-user-select: none !important;
+          -ms-user-select: none !important;
+        }
+      `}</style>
+      
       <div className="w-full max-w-3xl space-y-6 animate-fadeIn">
         {/* Header card */}
         <div className="bg-white border border-slate-250 shadow-md rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -326,6 +428,33 @@ export default function Assessment() {
           </button>
         </div>
       </div>
+
+      {showWarningModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md pointer-events-auto">
+          <div className="w-full max-w-md bg-white border border-rose-100 shadow-2xl rounded-3xl p-6 md:p-8 text-center space-y-6 animate-fadeIn">
+            <div className="h-16 w-16 bg-rose-50 border border-rose-200 text-rose-600 rounded-2xl flex items-center justify-center mx-auto shadow-sm animate-bounce">
+              <AlertTriangle className="h-8 w-8" />
+            </div>
+            <div>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Security Violation Warning</h2>
+              <p className="text-rose-600 text-xs font-semibold mt-2 bg-rose-50 border border-rose-100 rounded-xl p-3 leading-relaxed">
+                You navigated away from the assessment tab or lost window focus.
+              </p>
+              <p className="text-slate-500 text-xs leading-relaxed mt-4">
+                This action has been logged as one count/attempt. You have used <strong className="text-slate-900">{attempts}</strong> of <strong className="text-slate-900">2</strong> allowed attempts.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowWarningModal(false)}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white text-xs font-bold transition duration-200 cursor-pointer shadow-lg shadow-red-500/20 border-none outline-none"
+            >
+              I Understand, Return to Assessment
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+
