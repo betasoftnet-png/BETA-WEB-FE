@@ -106,7 +106,7 @@ export default function Assessment() {
     try {
       // Send all answers to the backend
       const answerPromises = Object.entries(answers).map(([qId, selectedVal]) => {
-        return axios.post('http://localhost:8081/api/answers', {
+        return axios.post('https://apply.beta-softnet.com/api/answers', {
           candidateId: parseInt(candidateId),
           questionId: parseInt(qId),
           selectedAnswer: selectedVal
@@ -287,8 +287,8 @@ export default function Assessment() {
                       <label
                         key={opt.key}
                         className={`flex items-center gap-3 p-3.5 rounded-2xl border text-sm font-semibold cursor-pointer transition-all duration-200 ${isSelected
-                            ? 'bg-blue-50/30 border-blue-400 text-blue-900 shadow-xs'
-                            : 'bg-slate-50/50 border-slate-200 hover:border-slate-350 text-slate-700'
+                          ? 'bg-blue-50/30 border-blue-400 text-blue-900 shadow-xs'
+                          : 'bg-slate-50/50 border-slate-200 hover:border-slate-350 text-slate-700'
                           }`}
                       >
                         <input
