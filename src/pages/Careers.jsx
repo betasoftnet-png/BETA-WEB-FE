@@ -1191,7 +1191,20 @@ export default function Careers() {
                     <CheckCircle2 className="h-6 w-6" />
                   </div>
                   <h4 className="text-lg font-bold">Application Received!</h4>
-                  <p className="text-slate-500 text-xs leading-relaxed max-w-sm mx-auto">{message}</p>
+                  <div className="space-y-3">
+                    <p className="text-slate-500 text-xs leading-relaxed max-w-sm mx-auto">{message}</p>
+                    <p className="inline-block bg-purple-50 border border-purple-100 rounded-xl py-2 px-4 text-[#8B5CF6] text-xs font-semibold leading-relaxed mx-auto">
+                      You will receive mail through{' '}
+                      <a
+                        href="https://www.bnxmail.com/login"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline font-black hover:text-[#EC4899] transition-all"
+                      >
+                        BNX mail
+                      </a>.
+                    </p>
+                  </div>
                   <button
                     onClick={() => setSelectedJob(null)}
                     className="px-6 py-2.5 rounded-xl bg-purple-600/10 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-purple-500/30 text-xs font-extrabold transition cursor-pointer"
