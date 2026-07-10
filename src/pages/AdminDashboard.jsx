@@ -2642,7 +2642,7 @@ export default function AdminDashboard() {
                   {/* Left Column: Profile Info & Original Resume (7 cols) */}
                   <div className="lg:col-span-7 space-y-6">
                     {/* Information Card */}
-                    <div className="bg-white border border-slate-200 p-4.5 rounded-2xl shadow-sm space-y-3.5">
+                    <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
                       <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100">Professional Details</h3>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -2669,10 +2669,10 @@ export default function AdminDashboard() {
                       </div>
 
                       {selectedApplication.coverLetter && (
-                        <div className="pt-3 border-t border-slate-100">
+                        <div className="pt-2.5 border-t border-slate-100">
                           <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Cover Letter</label>
-                          <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl max-h-[100px] overflow-y-auto mt-1.5">
-                            <p className="text-slate-700 text-xs leading-relaxed whitespace-pre-wrap">
+                          <div className="bg-slate-50 border border-slate-200 p-2 rounded-lg max-h-[40px] overflow-y-auto mt-1">
+                            <p className="text-slate-650 text-[11px] leading-relaxed whitespace-pre-wrap">
                               {selectedApplication.coverLetter}
                             </p>
                           </div>

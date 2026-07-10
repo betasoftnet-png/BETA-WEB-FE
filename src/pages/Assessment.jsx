@@ -43,13 +43,14 @@ export default function Assessment() {
     setError('');
     axios.get(`https://apply.beta-softnet.com/api/assessment/${candidateId}`)
       .then((response) => {
-        // The API now returns a wrapper object: { candidateName, jobTitle, questions }
+        // The API now returns a wrapper object: { candidateId, candidateName, jobTitle, questions }
         const payload = response.data || {};
         const fetchedQuestions = payload.questions || [];
         setQuestions(fetchedQuestions);
         setCandidate({
           fullName: payload.candidateName,
-          jobTitle: payload.jobTitle
+          jobTitle: payload.jobTitle,
+          id: payload.candidateId || candidateId
         });
 
         if (fetchedQuestions.length === 0) {
@@ -353,6 +354,7 @@ export default function Assessment() {
             </p>
           </div>
           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs font-semibold text-slate-500">
+            {candidate?.id && <div>Candidate ID: <strong className="text-slate-800 font-mono">#{candidate.id}</strong></div>}
             <div>Candidate: <strong className="text-slate-800">{candidateName}</strong></div>
             <div>Role: <strong className="text-slate-800">{jobTitle}</strong></div>
             <div>Score: <strong className="text-emerald-600 font-extrabold">{score}%</strong></div>
@@ -391,7 +393,14 @@ export default function Assessment() {
                     'Round 1: Aptitude Screening'}
               </span>
             </div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">{candidateName}</h1>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight flex flex-wrap items-center gap-2">
+              <span>{candidateName}</span>
+              {candidate?.id && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10.5px] font-bold bg-slate-100 border border-slate-200 text-slate-500 select-all cursor-text font-mono" title="Candidate ID">
+                  ID: {candidate.id}
+                </span>
+              )}
+            </h1>
             <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{jobTitle}</p>
           </div>
 
