@@ -43,8 +43,15 @@ export default function Assessment() {
     setError('');
     axios.get(`https://apply.beta-softnet.com/api/assessment/${candidateId}`)
       .then((response) => {
-        const fetchedQuestions = response.data || [];
+        // The API now returns a wrapper object: { candidateName, jobTitle, questions }
+        const payload = response.data || {};
+        const fetchedQuestions = payload.questions || [];
         setQuestions(fetchedQuestions);
+        setCandidate({
+          fullName: payload.candidateName,
+          jobTitle: payload.jobTitle
+        });
+
         if (fetchedQuestions.length === 0) {
           setError('No assessment questions have been assigned to you yet.');
         } else if (fetchedQuestions[0].duration) {
@@ -242,9 +249,10 @@ export default function Assessment() {
       await Promise.all(answerPromises);
 
       // Finalize the assessment submission in the backend
-      await axios.post(`https://apply.beta-softnet.com/api/assessment/${candidateId}/submit`);
+      const submitRes = await axios.post(`https://apply.beta-softnet.com/api/assessment/${candidateId}/submit`);
+      const finalScore = (submitRes.data && submitRes.data.score !== undefined) ? submitRes.data.score : calculatedScore;
 
-      setScore(calculatedScore);
+      setScore(finalScore);
       setSubmitted(true);
 
       // Save submission state to prevent re-entering
@@ -264,11 +272,11 @@ export default function Assessment() {
             return {
               ...app,
               technicalStatus: isTechnical ? 'Completed' : app.technicalStatus,
-              technicalScore: isTechnical ? calculatedScore : app.technicalScore,
+              technicalScore: isTechnical ? finalScore : app.technicalScore,
               brandStatus: isBrand ? 'Completed' : app.brandStatus,
-              brandScore: isBrand ? calculatedScore : app.brandScore,
+              brandScore: isBrand ? finalScore : app.brandScore,
               aptitudeStatus: (!isTechnical && !isBrand) ? 'Completed' : app.aptitudeStatus,
-              aptitudeScore: (!isTechnical && !isBrand) ? calculatedScore : app.aptitudeScore
+              aptitudeScore: (!isTechnical && !isBrand) ? finalScore : app.aptitudeScore
             };
           }
           return app;
