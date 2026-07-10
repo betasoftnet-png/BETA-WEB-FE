@@ -38,7 +38,7 @@ export default function Assessment() {
 
     setLoading(true);
     setError('');
-    axios.get(`http://localhost:8081/api/assessment/${candidateId}`)
+    axios.get(`https://apply.beta-softnet.com/api/assessment/${candidateId}`)
       .then((response) => {
         const fetchedQuestions = response.data || [];
         setQuestions(fetchedQuestions);
@@ -89,7 +89,7 @@ export default function Assessment() {
 
     setSubmitting(true);
     setError('');
-    
+
     // Calculate a mock score based on answered questions count
     let answeredCount = 0;
     questions.forEach((q) => {
@@ -112,7 +112,7 @@ export default function Assessment() {
           selectedAnswer: selectedVal
         });
       });
-      
+
       await Promise.all(answerPromises);
 
       setScore(calculatedScore);
@@ -284,13 +284,12 @@ export default function Assessment() {
                     if (!opt.text) return null;
                     const isSelected = answers[q.id] === opt.key;
                     return (
-                      <label 
+                      <label
                         key={opt.key}
-                        className={`flex items-center gap-3 p-3.5 rounded-2xl border text-sm font-semibold cursor-pointer transition-all duration-200 ${
-                          isSelected
+                        className={`flex items-center gap-3 p-3.5 rounded-2xl border text-sm font-semibold cursor-pointer transition-all duration-200 ${isSelected
                             ? 'bg-blue-50/30 border-blue-400 text-blue-900 shadow-xs'
                             : 'bg-slate-50/50 border-slate-200 hover:border-slate-350 text-slate-700'
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"
