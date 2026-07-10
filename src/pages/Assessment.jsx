@@ -20,6 +20,7 @@ export default function Assessment() {
   const [score, setScore] = useState(0);
   const [attempts, setAttempts] = useState(0);
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const [isScreenObscured, setIsScreenObscured] = useState(false);
 
   useEffect(() => {
     if (!candidateId) {
@@ -102,6 +103,47 @@ export default function Assessment() {
     return () => {
       window.removeEventListener('visibilitychange', handleVisibilityOrBlur);
       window.removeEventListener('blur', handleVisibilityOrBlur);
+    };
+  }, [candidateId, loading, submitted, error]);
+
+  // 1.5. Screenshot and Focus Loss Obscuration
+  useEffect(() => {
+    if (!candidateId || loading || submitted || error) return;
+
+    const handleBlur = () => {
+      setIsScreenObscured(true);
+    };
+
+    const handleFocus = () => {
+      // Re-verify that they aren't blocked before showing content
+      axios.get(`https://apply.beta-softnet.com/api/assessment/${candidateId}`)
+        .then(() => {
+          setIsScreenObscured(false);
+        })
+        .catch((err) => {
+          const errBody = err.response?.data || 'Assessment blocked.';
+          setError(errBody);
+        });
+    };
+
+    window.addEventListener('blur', handleBlur);
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('mouseleave', handleBlur);
+    document.addEventListener('mouseenter', handleFocus);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        setIsScreenObscured(true);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('mouseleave', handleBlur);
+      document.removeEventListener('mouseenter', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [candidateId, loading, submitted, error]);
 
@@ -316,7 +358,7 @@ export default function Assessment() {
   }
 
   return (
-    <div className={`min-h-screen bg-slate-50 text-slate-850 font-sans py-12 px-4 flex justify-center text-left select-none relative ${showWarningModal ? 'blur-md pointer-events-none' : ''}`}>
+    <div className={`min-h-screen bg-slate-50 text-slate-850 font-sans py-12 px-4 flex justify-center text-left select-none relative ${showWarningModal || isScreenObscured ? 'blur-md pointer-events-none' : ''}`}>
       <style>{`
         @media print {
           body { display: none !important; }
@@ -449,6 +491,31 @@ export default function Assessment() {
               className="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white text-xs font-bold transition duration-200 cursor-pointer shadow-lg shadow-red-500/20 border-none outline-none"
             >
               I Understand, Return to Assessment
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isScreenObscured && !submitted && !error && !loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-xl pointer-events-auto">
+          <div className="w-full max-w-md bg-white border border-slate-200 shadow-2xl rounded-3xl p-8 text-center space-y-6 animate-fadeIn">
+            <div className="h-16 w-16 bg-blue-50 border border-blue-200 text-[#004AAD] rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+              <Shield className="h-8 w-8 animate-pulse" />
+            </div>
+            <div>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Screen Protection Active</h2>
+              <p className="text-slate-500 text-xs leading-relaxed mt-2 bg-slate-50 border border-slate-100 rounded-xl p-3">
+                Content is hidden because focus was lost. Screenshot tools are blocked.
+              </p>
+              <p className="text-slate-400 text-[11px] leading-relaxed mt-4">
+                Click the button below to resume the assessment.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsScreenObscured(false)}
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition duration-200 cursor-pointer shadow-lg shadow-blue-500/20 border-none outline-none"
+            >
+              Resume Assessment
             </button>
           </div>
         </div>
