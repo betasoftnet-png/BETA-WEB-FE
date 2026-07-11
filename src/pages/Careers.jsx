@@ -697,14 +697,7 @@ export default function Careers() {
                     )}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleMyJobsClick}
-                    className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-purple-500/20 bg-white text-slate-700 hover:bg-slate-50 transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap"
-                  >
-                    <Briefcase className="h-3.5 w-3.5 text-[#8B5CF6]" />
-                    <span>My Jobs</span>
-                  </button>
+
 
                   <button
                     type="button"

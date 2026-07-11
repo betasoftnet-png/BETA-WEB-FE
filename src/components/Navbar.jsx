@@ -35,11 +35,156 @@ export default function Navbar() {
   const [isBitToolOpen, setIsBitToolOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const notificationsRef = useRef(null);
-  const [notifications, setNotifications] = useState([
-    { id: 1, title: 'New Application Received', message: 'John Doe applied for React Developer role.', time: '5m ago', read: false },
-    { id: 2, title: 'Interview Scheduled', message: 'Round 1 Aptitude for Priya S is scheduled for 02-Jul.', time: '1h ago', read: false },
-    { id: 3, title: 'System Notice', message: 'Your login session is secure and active.', time: '2h ago', read: true }
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const [debugInfo, setDebugInfo] = useState({
+    userEmail: '',
+    localApps: '',
+    backendApps: '',
+    candId: '',
+    fetchedNotifs: '',
+    error: ''
+  });
+
+  const formatNotificationTime = (createdAtString) => {
+    if (!createdAtString) return 'just now';
+    try {
+      const date = new Date(createdAtString);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return 'just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours}h ago`;
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays}d ago`;
+    } catch (e) {
+      return 'some time ago';
+    }
+  };
+
+  const handleMarkAsRead = async (notificationId) => {
+    try {
+      await api.put(`/api/notifications/${notificationId}/read`);
+      setNotifications(prev => prev.map(n => n.id === notificationId ? { ...n, read: true } : n));
+    } catch (err) {
+      console.error("Failed to mark notification as read:", err);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    const unread = notifications.filter(n => !n.read);
+    try {
+      await Promise.all(unread.map(n => api.put(`/api/notifications/${n.id}/read`)));
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    } catch (err) {
+      console.error("Failed to mark all notifications as read:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) {
+      setNotifications([]);
+      return;
+    }
+
+    const fetchCandidateIdAndNotifications = async () => {
+      const userEmail = (user.email || user.username || '').toLowerCase();
+      let candId = null;
+      let localStr = '';
+      let appsStr = '';
+      let fetchedStr = '';
+      let errStr = '';
+      console.log("[NAVBAR DEBUG] userEmail:", userEmail);
+
+      // 1. Try local storage first
+      try {
+        const stored = localStorage.getItem('beta_applications');
+        localStr = stored || 'None';
+        console.log("[NAVBAR DEBUG] local storage applications:", stored);
+        if (stored) {
+          const localApps = JSON.parse(stored);
+          const matched = localApps.find(app => (app.email || '').toLowerCase() === userEmail);
+          console.log("[NAVBAR DEBUG] local storage matched application:", matched);
+          if (matched && matched.id && !String(matched.id).startsWith('local-')) {
+            candId = matched.id;
+          }
+        }
+      } catch (e) {
+        console.error("Local storage error in Navbar:", e);
+        errStr += "Local storage error: " + e.message + "\n";
+      }
+
+      // 2. If not found, fetch from backend
+      if (!candId) {
+        try {
+          const response = await api.get('/api/applications');
+          const apps = response.data?.data || response.data || [];
+          appsStr = JSON.stringify(apps);
+          console.log("[NAVBAR DEBUG] backend applications:", apps);
+          const matched = apps.find(app => (app.email || '').toLowerCase() === userEmail);
+          console.log("[NAVBAR DEBUG] backend matched application:", matched);
+          if (matched) {
+            candId = matched.id;
+          }
+        } catch (err) {
+          console.error("[NAVBAR DEBUG] /api/applications error:", err);
+          errStr += "/api/applications error: " + err.message + "\n";
+          try {
+            const response = await api.get('/api/admin/applications');
+            const apps = response.data || [];
+            appsStr = "Admin: " + JSON.stringify(apps);
+            console.log("[NAVBAR DEBUG] backend admin applications:", apps);
+            const matched = apps.find(app => (app.email || '').toLowerCase() === userEmail);
+            console.log("[NAVBAR DEBUG] backend admin matched application:", matched);
+            if (matched) {
+              candId = matched.id;
+            }
+          } catch (err2) {
+            console.error("Failed to fetch applications in Navbar:", err2);
+            errStr += "/api/admin/applications error: " + err2.message + "\n";
+          }
+        }
+      }
+
+      console.log("[NAVBAR DEBUG] Final candId resolved:", candId);
+
+      if (candId) {
+        try {
+          const response = await api.get(`/api/notifications/${candId}`);
+          const fetched = response.data || [];
+          fetchedStr = JSON.stringify(fetched);
+          console.log("[NAVBAR DEBUG] fetched notifications from backend:", fetched);
+          const mapped = fetched.map(n => ({
+            id: n.id,
+            title: n.title,
+            message: n.message,
+            read: n.isRead || n.read || false,
+            time: formatNotificationTime(n.createdAt)
+          }));
+          setNotifications(mapped);
+        } catch (err) {
+          console.error("Failed to fetch notifications in Navbar:", err);
+          errStr += "Fetch notifications error: " + err.message + "\n";
+        }
+      } else {
+        setNotifications([]);
+      }
+
+      setDebugInfo({
+        userEmail,
+        localApps: localStr,
+        backendApps: appsStr,
+        candId: String(candId),
+        fetchedNotifs: fetchedStr,
+        error: errStr
+      });
+    };
+
+    fetchCandidateIdAndNotifications();
+    const interval = setInterval(fetchCandidateIdAndNotifications, 10000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -552,9 +697,8 @@ export default function Navbar() {
                 <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
                 {/* Notification Count Badge */}
                 {notifications.filter(n => !n.read).length > 0 && (
-                  <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
+                    {notifications.filter(n => !n.read).length}
                   </span>
                 )}
               </button>
@@ -573,9 +717,7 @@ export default function Navbar() {
                       <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Notifications</span>
                       {notifications.filter(n => !n.read).length > 0 && (
                         <button
-                          onClick={() => {
-                            setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-                          }}
+                          onClick={handleMarkAllAsRead}
                           className="text-[10px] text-[#004AAD] font-extrabold hover:underline border-none bg-transparent cursor-pointer p-0"
                         >
                           Mark all read
@@ -589,7 +731,9 @@ export default function Navbar() {
                           <div
                             key={notif.id}
                             onClick={() => {
-                              setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read: true } : n));
+                              if (!notif.read) {
+                                handleMarkAsRead(notif.id);
+                              }
                             }}
                             className={`p-4 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/20' : ''}`}
                           >
@@ -1064,6 +1208,65 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+      {window.location.search.includes('debug_notif=true') && (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          width: '450px',
+          maxHeight: '80vh',
+          overflowY: 'auto',
+          backgroundColor: '#1e293b',
+          color: '#f8fafc',
+          padding: '20px',
+          borderRadius: '12px',
+          boxShadow: '0 20px 25px -5px rgba(0,0,0,0.5)',
+          zIndex: 99999,
+          fontSize: '11px',
+          fontFamily: 'monospace',
+          border: '1px solid #334155',
+          textAlign: 'left'
+        }}>
+          <h3 style={{ margin: '0 0 10px 0', borderBottom: '1px solid #334155', paddingBottom: '5px', fontSize: '13px', color: '#38bdf8' }}>
+            Notification System Debug Panel
+          </h3>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Logged In User:</strong> {JSON.stringify(user)}
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Resolved User Email:</strong> {debugInfo.userEmail || 'None'}
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Resolved Candidate ID (candId):</strong> {debugInfo.candId || 'None'}
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Local Applications:</strong>
+            <pre style={{ margin: '5px 0 0 0', padding: '5px', backgroundColor: '#0f172a', borderRadius: '4px', overflowX: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+              {debugInfo.localApps}
+            </pre>
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Backend Applications:</strong>
+            <pre style={{ margin: '5px 0 0 0', padding: '5px', backgroundColor: '#0f172a', borderRadius: '4px', overflowX: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+              {debugInfo.backendApps}
+            </pre>
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Fetched Notifications:</strong>
+            <pre style={{ margin: '5px 0 0 0', padding: '5px', backgroundColor: '#0f172a', borderRadius: '4px', overflowX: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+              {debugInfo.fetchedNotifs}
+            </pre>
+          </div>
+          {debugInfo.error && (
+            <div style={{ color: '#f87171' }}>
+              <strong>Errors Encountered:</strong>
+              <pre style={{ margin: '5px 0 0 0', padding: '5px', backgroundColor: '#450a0a', borderRadius: '4px', color: '#fca5a5', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                {debugInfo.error}
+              </pre>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

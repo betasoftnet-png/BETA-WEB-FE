@@ -87,14 +87,18 @@ export default function AdminDashboard() {
   // Job Board States
   const [externalJobs, setExternalJobs] = useState([]);
   const [externalApplications, setExternalApplications] = useState([]);
-  const [activeSubTab, setActiveSubTab] = useState('appsList');
+  const [activeSubTab, setActiveSubTab] = useState(() => {
+    return localStorage.getItem('admin_active_sub_tab') || 'appsList';
+  });
   const [aptitudeSubTab, setAptitudeSubTab] = useState('dashboard');
   const [selectedDomainTab, setSelectedDomainTab] = useState('React');
   const [technicalSubTab, setTechnicalSubTab] = useState('dashboard');
   const [brandSubTab, setBrandSubTab] = useState('dashboard');
   const [selectedBrandDomainTab, setSelectedBrandDomainTab] = useState('BNX Mail');
   const [selectedJobFilter, setSelectedJobFilter] = useState('All');
-  const [selectedStatusFilter, setSelectedStatusFilter] = useState('Candidates');
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState(() => {
+    return localStorage.getItem('admin_selected_status_filter') || 'Candidates';
+  });
   const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
   const [partnerships, setPartnerships] = useState([]);
   const [supports, setSupports] = useState([]);
@@ -102,6 +106,14 @@ export default function AdminDashboard() {
   const [selectedAptitudeQuestionIds, setSelectedAptitudeQuestionIds] = useState([]);
   const [selectedResumeUrl, setSelectedResumeUrl] = useState(null);
   const [selectedResumeCandidate, setSelectedResumeCandidate] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('admin_active_sub_tab', activeSubTab);
+  }, [activeSubTab]);
+
+  useEffect(() => {
+    localStorage.setItem('admin_selected_status_filter', selectedStatusFilter);
+  }, [selectedStatusFilter]);
 
   // Search & Filters State
   const [searchTerm, setSearchTerm] = useState('');
@@ -112,6 +124,14 @@ export default function AdminDashboard() {
   // Notifications State
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [readAdminNotifIds, setReadAdminNotifIds] = useState(() => {
+    try {
+      const stored = localStorage.getItem('admin_read_notif_ids');
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  });
 
   // Assign Assessment Modal States
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
@@ -274,7 +294,6 @@ export default function AdminDashboard() {
         .filter(Boolean);
       setSupports(parsedSupports.length > 0 ? parsedSupports : fallbackSupports);
     } catch (err) {
-      console.warn('Failed to fetch contact requests from /api/contact. Trying /api/contacts...', err);
       try {
         const contactRes = await api.get('/api/contacts');
         const list = contactRes.data.data || contactRes.data || [];
@@ -289,7 +308,7 @@ export default function AdminDashboard() {
           .filter(Boolean);
         setSupports(parsedSupports.length > 0 ? parsedSupports : fallbackSupports);
       } catch (err2) {
-        console.warn('Failed to fetch from live contact APIs. Loading fallbacks.', err2);
+        // Fall back to offline mock datasets silently
         setPartnerships(fallbackPartnerships);
         setSupports(fallbackSupports);
       }
@@ -381,45 +400,51 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (externalApplications.length > 0) {
-      const newApps = externalApplications.filter(app => app.status === 'Candidates').slice(0, 3);
-      const scheduled = externalApplications.filter(app => app.status === 'Interview Scheduled' || app.aptitudeStatus === 'Assessment Sent').slice(0, 2);
+      // Sort applications by ID descending so the newest candidate applications appear first in alerts
+      const sortedApplications = [...externalApplications].sort((a, b) => b.id - a.id);
 
+      const newApps = sortedApplications.filter(app => app.status === 'Candidates').slice(0, 3);
+      const scheduled = sortedApplications.filter(app => app.status === 'Interview Scheduled' || app.aptitudeStatus === 'Assessment Sent').slice(0, 2);
+
+      const sysId = 'sys-1';
       const list = [
         {
-          id: 'sys-1',
+          id: sysId,
           type: 'system',
           title: 'Database connection online',
           message: 'Local mock storage sync complete.',
           time: 'Just now',
-          unread: true
+          unread: !readAdminNotifIds.includes(sysId)
         }
       ];
 
       newApps.forEach((app, idx) => {
+        const notifId = `newapp-${app.id}-${idx}`;
         list.push({
-          id: `newapp-${app.id}-${idx}`,
+          id: notifId,
           type: 'application',
           title: 'New Candidate Application',
           message: `${app.fullName} applied for ${app.jobTitle}`,
           time: '1 hour ago',
-          unread: true
+          unread: !readAdminNotifIds.includes(notifId)
         });
       });
 
       scheduled.forEach((app, idx) => {
+        const notifId = `sch-${app.id}-${idx}`;
         list.push({
-          id: `sch-${app.id}-${idx}`,
+          id: notifId,
           type: 'reminder',
           title: 'Upcoming Assessment / Interview',
           message: `Interview reminder for ${app.fullName} (${app.jobTitle})`,
           time: app.interviewDate ? `${app.interviewDate} at ${app.interviewTime || '10:00'}` : 'Scheduled soon',
-          unread: true
+          unread: !readAdminNotifIds.includes(notifId)
         });
       });
 
       setNotifications(list);
     }
-  }, [externalApplications]);
+  }, [externalApplications, readAdminNotifIds]);
 
   const handleArrayChange = (index, value, array, setArray) => {
     const newArray = [...array];
@@ -1249,6 +1274,9 @@ export default function AdminDashboard() {
                       <span className="text-xs font-bold text-slate-900">System Notifications</span>
                       <button
                         onClick={() => {
+                          const allIds = notifications.map(n => n.id);
+                          setReadAdminNotifIds(allIds);
+                          localStorage.setItem('admin_read_notif_ids', JSON.stringify(allIds));
                           setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
                           setShowNotifications(false);
                         }}
@@ -1262,7 +1290,18 @@ export default function AdminDashboard() {
                         <p className="text-slate-400 text-xs italic text-center py-4">No new alerts.</p>
                       ) : (
                         notifications.map(n => (
-                          <div key={n.id} className="p-2.5 bg-slate-50 border border-slate-150 rounded-xl space-y-1 text-left relative">
+                          <div 
+                            key={n.id} 
+                            onClick={() => {
+                              if (n.unread) {
+                                const newReadIds = [...readAdminNotifIds, n.id];
+                                setReadAdminNotifIds(newReadIds);
+                                localStorage.setItem('admin_read_notif_ids', JSON.stringify(newReadIds));
+                                setNotifications(prev => prev.map(item => item.id === n.id ? { ...item, unread: false } : item));
+                              }
+                            }}
+                            className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-150 rounded-xl space-y-1 text-left relative cursor-pointer transition"
+                          >
                             {n.unread && <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-[#004AAD]" />}
                             <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5 pr-3">
                               {n.type === 'system' && <Shield className="h-3.5 w-3.5 text-emerald-600" />}
@@ -2506,11 +2545,27 @@ export default function AdminDashboard() {
                             }
 
                             return filtered.map(app => (
-                              <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
+                              <tr 
+                                key={app.id} 
+                                onClick={() => {
+                                  if (selectedStatusFilter === 'Accepted') {
+                                    console.log('Candidate row clicked:', app.fullName, 'Status:', app.status);
+                                    const normalizedStatus = mapStatusToUI(app.status);
+                                    const updatedApp = { ...app, status: normalizedStatus };
+                                    setSelectedApplication(updatedApp);
+                                    setCandidateStatus(normalizedStatus);
+                                    setActiveSubTab('candidateDetails');
+                                  }
+                                }}
+                                className={`transition-colors ${selectedStatusFilter === 'Accepted' ? 'hover:bg-slate-50 cursor-pointer' : 'hover:bg-slate-50/50'}`}
+                              >
                                  <td className="py-4 px-6">
                                   <div className="flex items-center gap-1.5 flex-wrap">
                                     <button
-                                      onClick={() => {
+                                      onClick={(e) => {
+                                        if (selectedStatusFilter === 'Accepted') {
+                                          e.stopPropagation();
+                                        }
                                         console.log('Candidate name clicked:', app.fullName, 'Status:', app.status);
                                         const normalizedStatus = mapStatusToUI(app.status);
                                         const updatedApp = { ...app, status: normalizedStatus };
@@ -2558,7 +2613,8 @@ export default function AdminDashboard() {
                                 <td className="py-4 px-6">
                                   {app.resumeUrl ? (
                                     <button
-                                      onClick={() => {
+                                      onClick={(e) => {
+                                        e.stopPropagation();
                                         setSelectedResumeUrl(app.resumeUrl);
                                         setSelectedResumeCandidate(app.fullName);
                                       }}
@@ -2573,11 +2629,14 @@ export default function AdminDashboard() {
                                 </td>
                                 <td className="py-4 px-6 max-w-xs">
                                   <button
-                                    onClick={() => setSelectedCoverLetter({
-                                      candidate: app.fullName,
-                                      job: app.jobTitle,
-                                      text: app.coverLetter
-                                    })}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedCoverLetter({
+                                        candidate: app.fullName,
+                                        job: app.jobTitle,
+                                        text: app.coverLetter
+                                      });
+                                    }}
                                     className="text-[#004AAD] hover:text-blue-800 font-semibold underline underline-offset-2 text-left line-clamp-2 cursor-pointer bg-transparent border-none p-0"
                                   >
                                     {app.coverLetter}
@@ -2587,7 +2646,10 @@ export default function AdminDashboard() {
                                   <div className="flex items-center justify-center gap-1.5">
                                     {selectedStatusFilter !== 'Accepted' && app.status !== 'Accepted' && (
                                       <button
-                                        onClick={() => handleUpdateStatus(app.id, 'Accepted')}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleUpdateStatus(app.id, 'Accepted');
+                                        }}
                                         className="px-2.5 py-1.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-650 border border-emerald-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
                                       >
                                         Accept
@@ -2595,7 +2657,10 @@ export default function AdminDashboard() {
                                     )}
 
                                     <button
-                                      onClick={() => handleUpdateStatus(app.id, 'Rejected')}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleUpdateStatus(app.id, 'Rejected');
+                                      }}
                                       className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-[10px] font-bold transition cursor-pointer whitespace-nowrap"
                                     >
                                       Reject
