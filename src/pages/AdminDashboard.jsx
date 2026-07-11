@@ -255,8 +255,8 @@ export default function AdminDashboard() {
                 ? `${BACKEND_API_BASE}/uploads/${app.resume}`
                 : (app.resumeUrl || app.resumeurl || ''),
               coverLetter: app.coverLetter || app.coverletter || '',
-              status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING') 
-                ? 'Interview Scheduled' 
+              status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING')
+                ? 'Interview Scheduled'
                 : mapStatusToUI(app.status),
               createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
               appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
@@ -701,8 +701,8 @@ export default function AdminDashboard() {
 
       // 3. Update local state (preserving existing status)
       const updatedApps = externalApplications.map(app =>
-        app.id === selectedCandidateForAssessment.id 
-          ? { ...app, aptitudeStatus: 'Assessment Sent' } 
+        app.id === selectedCandidateForAssessment.id
+          ? { ...app, aptitudeStatus: 'Assessment Sent' }
           : app
       );
       updateAppsAndSync(updatedApps);
@@ -769,7 +769,7 @@ export default function AdminDashboard() {
     try {
       const allQuestionsRes = await axios.get(`${BACKEND_API_BASE}/api/questions`);
       const allQuestions = allQuestionsRes.data || [];
-      
+
       let assignedIds = [];
       try {
         const assignedRes = await axios.get(`${BACKEND_API_BASE}/api/assessment/${selectedApplication.id}`);
@@ -778,10 +778,10 @@ export default function AdminDashboard() {
       } catch (errAssigned) {
         console.warn('Failed to fetch assigned questions or none assigned yet:', errAssigned);
       }
-      
+
       setFetchedQuestions(allQuestions);
       setSelectedQuestionsForCandidate(assignedIds);
-      
+
       if (allQuestions.length === 0) {
         setSuccess('No questions found in the question library database.');
       } else {
@@ -798,7 +798,7 @@ export default function AdminDashboard() {
   };
 
   const handleToggleQuestionSelection = (qId) => {
-    setSelectedQuestionsForCandidate(prev => 
+    setSelectedQuestionsForCandidate(prev =>
       prev.includes(qId) ? prev.filter(id => id !== qId) : [...prev, qId]
     );
   };
@@ -844,13 +844,13 @@ export default function AdminDashboard() {
 
       // 3. Update local state (preserving existing status)
       const updatedApps = externalApplications.map(app =>
-        app.id === selectedApplication.id 
-          ? { 
-              ...app, 
-              interviewDate: interviewDate, 
-              interviewTime: interviewTime, 
-              interviewLink: interviewLink 
-            } 
+        app.id === selectedApplication.id
+          ? {
+            ...app,
+            interviewDate: interviewDate,
+            interviewTime: interviewTime,
+            interviewLink: interviewLink
+          }
           : app
       );
       updateAppsAndSync(updatedApps);
@@ -1296,8 +1296,8 @@ export default function AdminDashboard() {
                         <p className="text-slate-400 text-xs italic text-center py-4">No new alerts.</p>
                       ) : (
                         notifications.map(n => (
-                          <div 
-                            key={n.id} 
+                          <div
+                            key={n.id}
                             onClick={() => {
                               if (n.unread) {
                                 const newReadIds = [...readAdminNotifIds, n.id];
@@ -2430,13 +2430,13 @@ export default function AdminDashboard() {
                           onChange={(e) => setStatusFilter(e.target.value)}
                           className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
                         >
-                           <option value="All">All Statuses</option>
-                           <option value="Candidates">Candidates</option>
-                           <option value="Shortlisted">Shortlisted</option>
-                           <option value="Interview Scheduled">Interview Scheduled</option>
-                           <option value="Accepted">Accepted</option>
-                           <option value="Joined">Joined</option>
-                           <option value="Rejected">Rejected</option>
+                          <option value="All">All Statuses</option>
+                          <option value="Candidates">Candidates</option>
+                          <option value="Shortlisted">Shortlisted</option>
+                          <option value="Interview Scheduled">Interview Scheduled</option>
+                          <option value="Accepted">Accepted</option>
+                          <option value="Joined">Joined</option>
+                          <option value="Rejected">Rejected</option>
                         </select>
                       </div>
 
@@ -2551,8 +2551,8 @@ export default function AdminDashboard() {
                             }
 
                             return filtered.map(app => (
-                              <tr 
-                                key={app.id} 
+                              <tr
+                                key={app.id}
                                 onClick={() => {
                                   if (selectedStatusFilter === 'Accepted') {
                                     console.log('Candidate row clicked:', app.fullName, 'Status:', app.status);
@@ -2565,7 +2565,7 @@ export default function AdminDashboard() {
                                 }}
                                 className={`transition-colors ${selectedStatusFilter === 'Accepted' ? 'hover:bg-slate-50 cursor-pointer' : 'hover:bg-slate-50/50'}`}
                               >
-                                 <td className="py-4 px-6">
+                                <td className="py-4 px-6">
                                   <div className="flex items-center gap-1.5 flex-wrap">
                                     <button
                                       onClick={(e) => {
@@ -2705,9 +2705,8 @@ export default function AdminDashboard() {
                         <h2 className="text-2xl font-black text-slate-900 leading-tight">
                           {selectedApplication.fullName}
                         </h2>
-                        <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize ${
-                          selectedApplication.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-50 text-slate-700 border border-slate-200'
-                        }`}>
+                        <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize ${selectedApplication.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-50 text-slate-700 border border-slate-200'
+                          }`}>
                           {selectedApplication.status}
                         </span>
                       </div>
@@ -2717,57 +2716,57 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                   <div className="flex items-center gap-2">
-                      {/* Premium Dynamic Assessment Score Badge */}
-                      {(() => {
-                        const scoreVal = selectedApplication.aptitudeScore;
-                        const hasScore = scoreVal !== undefined && scoreVal !== null && scoreVal !== '';
-                        
-                        if (hasScore) {
-                          const scoreNum = parseInt(scoreVal);
-                          const isHigh = scoreNum >= 70;
-                          const isMid = scoreNum >= 45 && scoreNum < 70;
-                          
-                          let badgeStyle = 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100/50';
-                          if (isHigh) badgeStyle = 'bg-emerald-50 border-emerald-250 text-emerald-700 hover:bg-emerald-100/50';
-                          else if (isMid) badgeStyle = 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100/50';
+                  <div className="flex items-center gap-2">
+                    {/* Premium Dynamic Assessment Score Badge */}
+                    {(() => {
+                      const scoreVal = selectedApplication.aptitudeScore;
+                      const hasScore = scoreVal !== undefined && scoreVal !== null && scoreVal !== '';
 
-                          return (
-                            <div className={`flex items-center gap-1.5 px-4 py-2 rounded-xl border text-xs font-black shadow-xs transition duration-200 cursor-default select-none ${badgeStyle} animate-fadeIn`}>
-                              <Award className="h-4.5 w-4.5" />
-                              <span>Score: {scoreNum}%</span>
-                            </div>
-                          );
-                        } else {
-                          return (
-                            <div className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-450 text-xs font-bold shadow-xs select-none cursor-default">
-                              <Clock className="h-4 w-4" />
-                              <span>Score: N/A</span>
-                            </div>
-                          );
-                        }
-                      })()}
+                      if (hasScore) {
+                        const scoreNum = parseInt(scoreVal);
+                        const isHigh = scoreNum >= 70;
+                        const isMid = scoreNum >= 45 && scoreNum < 70;
 
-                     <button
-                        onClick={() => handleOpenAssignModal(selectedApplication)}
-                        className="px-4 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-250 text-amber-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5"
-                      >
-                        <Brain className="h-4 w-4" />
-                        <span>Test</span>
-                      </button>
-                     <button
-                       onClick={() => handleUpdateStatus(selectedApplication.id, 'Rejected')}
-                       className="px-4 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-250 text-rose-700 text-xs font-bold rounded-xl transition cursor-pointer"
-                     >
-                       Reject Candidate
-                     </button>
-                     <button
-                       onClick={() => handleUpdateStatus(selectedApplication.id, 'Joined')}
-                       className="px-4 py-2 bg-[#004AAD] hover:bg-[#003882] text-white text-xs font-bold rounded-xl transition cursor-pointer"
-                     >
-                       Mark as Joined
-                     </button>
-                   </div>
+                        let badgeStyle = 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100/50';
+                        if (isHigh) badgeStyle = 'bg-emerald-50 border-emerald-250 text-emerald-700 hover:bg-emerald-100/50';
+                        else if (isMid) badgeStyle = 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100/50';
+
+                        return (
+                          <div className={`flex items-center gap-1.5 px-4 py-2 rounded-xl border text-xs font-black shadow-xs transition duration-200 cursor-default select-none ${badgeStyle} animate-fadeIn`}>
+                            <Award className="h-4.5 w-4.5" />
+                            <span>Score: {scoreNum}%</span>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-450 text-xs font-bold shadow-xs select-none cursor-default">
+                            <Clock className="h-4 w-4" />
+                            <span>Score: N/A</span>
+                          </div>
+                        );
+                      }
+                    })()}
+
+                    <button
+                      onClick={() => handleOpenAssignModal(selectedApplication)}
+                      className="px-4 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-250 text-amber-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Brain className="h-4 w-4" />
+                      <span>Test</span>
+                    </button>
+                    <button
+                      onClick={() => handleUpdateStatus(selectedApplication.id, 'Rejected')}
+                      className="px-4 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-250 text-rose-700 text-xs font-bold rounded-xl transition cursor-pointer"
+                    >
+                      Reject Candidate
+                    </button>
+                    <button
+                      onClick={() => handleUpdateStatus(selectedApplication.id, 'Joined')}
+                      className="px-4 py-2 bg-[#004AAD] hover:bg-[#003882] text-white text-xs font-bold rounded-xl transition cursor-pointer"
+                    >
+                      Mark as Joined
+                    </button>
+                  </div>
                 </div>
 
                 {/* Main 2-Column Grid */}
@@ -2777,7 +2776,7 @@ export default function AdminDashboard() {
                     {/* Information Card */}
                     <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
                       <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100">Professional Details</h3>
-                      
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                           <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Email Address</label>
@@ -2907,87 +2906,86 @@ export default function AdminDashboard() {
 
                   </div>
 
-                   {/* Right Column: Remarks & Assessment Responses (5 cols) */}
-                    <div className="lg:col-span-5 space-y-6">
-                      {/* Fetched Technical Questions Card */}
-                      {fetchedQuestions && (
-                        <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4 animate-fadeIn">
-                          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div>
-                              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Send Technical Test</h3>
-                              <p className="text-[10px] text-slate-500 font-semibold mt-0.5 font-medium flex items-center gap-1.5">
-                                <Clock className="h-3.5 w-3.5 text-amber-500" />
-                                <span className="text-amber-700 font-bold">Duration: 30 mins</span>
-                                <span className="text-slate-300">•</span>
-                                <span>Select questions from library below.</span>
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="space-y-4 max-h-[350px] overflow-y-auto pr-1 admin-scrollbar">
-                            {fetchedQuestions.map((q, qidx) => {
-                              const isChecked = selectedQuestionsForCandidate.includes(q.id);
-                              return (
-                                <div 
-                                  key={q.id || qidx} 
-                                  onClick={() => handleToggleQuestionSelection(q.id)}
-                                  className={`border rounded-2xl p-4 space-y-2 text-left transition-all duration-200 cursor-pointer ${
-                                    isChecked 
-                                      ? 'bg-blue-50/30 border-blue-400 ring-1 ring-blue-400/20' 
-                                      : 'bg-slate-50/50 border-slate-150 hover:border-slate-350'
-                                  }`}
-                                >
-                                  <div className="text-xs font-black text-slate-800 flex items-start gap-2.5">
-                                    <input
-                                      type="checkbox"
-                                      checked={isChecked}
-                                      onChange={() => {}} // onClick on wrapper handles toggle
-                                      className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                                    />
-                                    <div className="flex-1 flex items-center justify-between gap-2">
-                                      <span className="font-bold text-slate-900 pr-2">Q{qidx + 1}. {q.question}</span>
-                                    </div>
-                                  </div>
-                                  
-                                  {/* Render options if present */}
-                                  {(q.optionA || q.optionB || q.optionC || q.optionD) && (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6 mt-1.5 text-[11px] text-slate-650 font-semibold">
-                                      {q.optionA && <div><span className="text-slate-400 mr-1 font-bold">A.</span> {q.optionA}</div>}
-                                      {q.optionB && <div><span className="text-slate-400 mr-1 font-bold">B.</span> {q.optionB}</div>}
-                                      {q.optionC && <div><span className="text-slate-400 mr-1 font-bold">C.</span> {q.optionC}</div>}
-                                      {q.optionD && <div><span className="text-slate-400 mr-1 font-bold">D.</span> {q.optionD}</div>}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-  
-                          <div className="pt-2 border-t border-slate-100 flex flex-col gap-2.5">
-                            <button
-                              type="button"
-                              onClick={handleSendAssessmentToCandidate}
-                              disabled={sendingAssessment || selectedQuestionsForCandidate.length === 0}
-                              className="w-full flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#004AAD] hover:bg-[#003882] text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/10 border-none outline-none"
-                            >
-                              <span>{sendingAssessment ? 'Sending...' : 'Send Test to Candidate'}</span>
-                            </button>
-
-                            {/* Inline success feedback after sending */}
-                            {success && success.includes('questions successfully sent') && (
-                              <div className="flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 animate-fadeIn">
-                                <CheckCircle className="h-4 w-4 text-emerald-500" />
-                                <span className="text-[11px] font-bold text-emerald-700">Sent successfully!</span>
-                              </div>
-                            )}
+                  {/* Right Column: Remarks & Assessment Responses (5 cols) */}
+                  <div className="lg:col-span-5 space-y-6">
+                    {/* Fetched Technical Questions Card */}
+                    {fetchedQuestions && (
+                      <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4 animate-fadeIn">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                          <div>
+                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Send Technical Test</h3>
+                            <p className="text-[10px] text-slate-500 font-semibold mt-0.5 font-medium flex items-center gap-1.5">
+                              <Clock className="h-3.5 w-3.5 text-amber-500" />
+                              <span className="text-amber-700 font-bold">Duration: 30 mins</span>
+                              <span className="text-slate-300">•</span>
+                              <span>Select questions from library below.</span>
+                            </p>
                           </div>
                         </div>
-                      )}
- 
-                      {/* Evaluation Remarks Card */}
-                     <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
-                       <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">Evaluation Remarks</h3>
-                      
+
+                        <div className="space-y-4 max-h-[350px] overflow-y-auto pr-1 admin-scrollbar">
+                          {fetchedQuestions.map((q, qidx) => {
+                            const isChecked = selectedQuestionsForCandidate.includes(q.id);
+                            return (
+                              <div
+                                key={q.id || qidx}
+                                onClick={() => handleToggleQuestionSelection(q.id)}
+                                className={`border rounded-2xl p-4 space-y-2 text-left transition-all duration-200 cursor-pointer ${isChecked
+                                    ? 'bg-blue-50/30 border-blue-400 ring-1 ring-blue-400/20'
+                                    : 'bg-slate-50/50 border-slate-150 hover:border-slate-350'
+                                  }`}
+                              >
+                                <div className="text-xs font-black text-slate-800 flex items-start gap-2.5">
+                                  <input
+                                    type="checkbox"
+                                    checked={isChecked}
+                                    onChange={() => { }} // onClick on wrapper handles toggle
+                                    className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                                  />
+                                  <div className="flex-1 flex items-center justify-between gap-2">
+                                    <span className="font-bold text-slate-900 pr-2">Q{qidx + 1}. {q.question}</span>
+                                  </div>
+                                </div>
+
+                                {/* Render options if present */}
+                                {(q.optionA || q.optionB || q.optionC || q.optionD) && (
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6 mt-1.5 text-[11px] text-slate-650 font-semibold">
+                                    {q.optionA && <div><span className="text-slate-400 mr-1 font-bold">A.</span> {q.optionA}</div>}
+                                    {q.optionB && <div><span className="text-slate-400 mr-1 font-bold">B.</span> {q.optionB}</div>}
+                                    {q.optionC && <div><span className="text-slate-400 mr-1 font-bold">C.</span> {q.optionC}</div>}
+                                    {q.optionD && <div><span className="text-slate-400 mr-1 font-bold">D.</span> {q.optionD}</div>}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        <div className="pt-2 border-t border-slate-100 flex flex-col gap-2.5">
+                          <button
+                            type="button"
+                            onClick={handleSendAssessmentToCandidate}
+                            disabled={sendingAssessment || selectedQuestionsForCandidate.length === 0}
+                            className="w-full flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#004AAD] hover:bg-[#003882] text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/10 border-none outline-none"
+                          >
+                            <span>{sendingAssessment ? 'Sending...' : 'Send Test to Candidate'}</span>
+                          </button>
+
+                          {/* Inline success feedback after sending */}
+                          {success && success.includes('questions successfully sent') && (
+                            <div className="flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 animate-fadeIn">
+                              <CheckCircle className="h-4 w-4 text-emerald-500" />
+                              <span className="text-[11px] font-bold text-emerald-700">Sent successfully!</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Evaluation Remarks Card */}
+                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">Evaluation Remarks</h3>
+
                       <div className="space-y-3">
                         <textarea
                           rows={3}
@@ -3022,7 +3020,7 @@ export default function AdminDashboard() {
                         <Calendar className="h-5 w-5 text-[#004AAD]" />
                         <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Schedule Online Meeting</h3>
                       </div>
-                      
+
                       <div className="space-y-4 text-left">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
@@ -3044,7 +3042,7 @@ export default function AdminDashboard() {
                             />
                           </div>
                         </div>
-                        
+
                         <div>
                           <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">Meeting Link (Google Meet / Zoom)</label>
                           <input
@@ -3082,7 +3080,7 @@ export default function AdminDashboard() {
                           return (
                             <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
                               <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">Assessment Q&A Responses</h3>
-                              
+
                               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1 admin-scrollbar">
                                 {qList.map((q, qidx) => {
                                   const candAnswer = aList[q.id];
@@ -3657,7 +3655,7 @@ export default function AdminDashboard() {
                     const order = ['Candidates', 'Shortlisted', 'Interview Scheduled', 'Interview Completed', 'Accepted', 'Joined'];
                     const curIdx = order.indexOf(selectedApplication.status);
                     const hasInterview = selectedApplication.interviewDate && selectedApplication.interviewDate !== '' && selectedApplication.interviewDate !== 'null' && selectedApplication.interviewDate !== 'undefined';
-                    
+
                     let isCompleted = false;
                     if (step === 'Candidates') {
                       isCompleted = true;
@@ -3672,7 +3670,7 @@ export default function AdminDashboard() {
                     } else if (step === 'Joined') {
                       isCompleted = selectedApplication.status === 'Joined';
                     }
-                    
+
                     const isCurrent = selectedApplication.status === step;
 
                     return (
@@ -4177,7 +4175,7 @@ export default function AdminDashboard() {
                         const cat = (q.category || '').toLowerCase();
                         const title = (q.question || '').toLowerCase();
                         const filterVal = questionCategoryQuery.toLowerCase();
-                        
+
                         if (filterVal === 'java') {
                           const hasJava = cat.includes('java') || title.includes('java');
                           const hasJavaScript = cat.includes('javascript') || title.includes('javascript') || cat.includes('js');
@@ -4189,13 +4187,13 @@ export default function AdminDashboard() {
                           if (!cat.includes('python') && !title.includes('python')) return false;
                         } else if (filterVal === 'sql') {
                           if (!cat.includes('sql') && !cat.includes('database') && !cat.includes('db') &&
-                              !title.includes('sql') && !title.includes('database') && !title.includes('query')) return false;
+                            !title.includes('sql') && !title.includes('database') && !title.includes('query')) return false;
                         } else if (filterVal === 'html/css') {
                           if (!cat.includes('html') && !cat.includes('css') &&
-                              !title.includes('html') && !title.includes('css') && !title.includes('style') && !title.includes('class')) return false;
+                            !title.includes('html') && !title.includes('css') && !title.includes('style') && !title.includes('class')) return false;
                         } else if (filterVal === 'react') {
                           if (!cat.includes('react') && !title.includes('react') &&
-                              !title.includes('hook') && !title.includes('component') && !title.includes('state')) return false;
+                            !title.includes('hook') && !title.includes('component') && !title.includes('state')) return false;
                         } else if (cat !== filterVal) {
                           return false;
                         }
@@ -4203,7 +4201,7 @@ export default function AdminDashboard() {
                       if (questionSearchQuery) {
                         const query = questionSearchQuery.toLowerCase();
                         return (q.question || '').toLowerCase().includes(query) ||
-                               (q.category || '').toLowerCase().includes(query);
+                          (q.category || '').toLowerCase().includes(query);
                       }
                       return true;
                     });
@@ -4217,11 +4215,10 @@ export default function AdminDashboard() {
                     return (
                       <label
                         key={q.id}
-                        className={`flex items-start gap-3 p-3 rounded-xl border text-xs font-semibold cursor-pointer transition-all duration-200 ${
-                          isChecked
+                        className={`flex items-start gap-3 p-3 rounded-xl border text-xs font-semibold cursor-pointer transition-all duration-200 ${isChecked
                             ? 'bg-blue-50/35 border-blue-400 text-blue-900 shadow-xs'
                             : 'bg-white border-slate-200 hover:border-slate-350 text-slate-700'
-                        }`}
+                          }`}
                       >
                         <input
                           type="checkbox"
