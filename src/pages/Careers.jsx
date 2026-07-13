@@ -18,9 +18,10 @@ import {
   FileText,
   SlidersHorizontal,
   ArrowRight,
-  ArrowLeft
+  ArrowLeft,
+  RefreshCw
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api';
@@ -123,7 +124,7 @@ const upcomingJobs = [
 const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
   if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Candidates';
-  if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 Aptitude';
+  if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 test';
   if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 1 Technical';
   if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 2 Brand Awareness';
   if (s === 'shortlisted') return 'Shortlisted';
@@ -145,8 +146,60 @@ const formatDate = (isoString) => {
 };
 
 export default function Careers() {
-  const navigate = useNavigate();
-  const { user, redirectToSSO } = useContext(AuthContext);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const candidateId = queryParams.get('id');
+  const isTaskAssessmentRoute = location.pathname.startsWith('/careers/task-assessment');
+
+  const [taskData, setTaskData] = useState(null);
+  const [loadingTask, setLoadingTask] = useState(false);
+  const [taskError, setTaskError] = useState('');
+  const [gitLinkInput, setGitLinkInput] = useState('');
+  const [submittingTask, setSubmittingTask] = useState(false);
+  const [taskSubmitSuccess, setTaskSubmitSuccess] = useState(false);
+
+  useEffect(() => {
+    if (isTaskAssessmentRoute && candidateId) {
+      const fetchTask = async () => {
+        setLoadingTask(true);
+        setTaskError('');
+        try {
+          const res = await axios.get(`${JOB_BOARD_API_BASE}/api/task-assessment/${candidateId}`);
+          setTaskData(res.data);
+          if (res.data?.candidate?.githubLink) {
+            setGitLinkInput(res.data.candidate.githubLink);
+          }
+        } catch (err) {
+          console.error(err);
+          setTaskError('No task assessment found for this candidate, or the link is invalid.');
+        } finally {
+          setLoadingTask(false);
+        }
+      };
+      fetchTask();
+    }
+  }, [isTaskAssessmentRoute, candidateId]);
+
+  const handleTaskSubmit = async (e) => {
+    if (e) e.preventDefault();
+    if (!gitLinkInput.trim() || !candidateId) return;
+
+    setSubmittingTask(true);
+    setTaskError('');
+    try {
+      await axios.put(
+        `${JOB_BOARD_API_BASE}/api/jobs/applications/${candidateId}/github?githubLink=${encodeURIComponent(gitLinkInput.trim())}`
+      );
+      setTaskSubmitSuccess(true);
+      const res = await axios.get(`${JOB_BOARD_API_BASE}/api/task-assessment/${candidateId}`);
+      setTaskData(res.data);
+    } catch (err) {
+      console.error(err);
+      setTaskError('Failed to submit GitHub repository. Please verify the link and try again.');
+    } finally {
+      setSubmittingTask(false);
+    }
+  };
 
   const [jobsList, setJobsList] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(false);
@@ -502,6 +555,118 @@ export default function Careers() {
       fetchUserApplications();
     }
   };
+
+  if (isTaskAssessmentRoute) {
+    return (
+      <div className="auth-white-theme min-h-screen flex items-center justify-center px-4 py-12 bg-slate-50 relative overflow-hidden w-full">
+        <style>{`
+          .auth-white-theme {
+            background: linear-gradient(135deg, #F5F3FF 0%, #EFF6FF 50%, #FDF2F8 100%) !important;
+            color: #1E293B !important;
+          }
+        `}</style>
+        {/* Decorative background blobs */}
+        <div className="absolute top-[30%] left-[20%] w-[300px] h-[300px] bg-purple-600/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[30%] right-[20%] w-[300px] h-[300px] bg-pink-600/5 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="w-full max-w-2xl bg-white p-8 rounded-3xl border border-slate-200 shadow-xl relative z-10 text-left">
+          {/* Header */}
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/10">
+              <Code2 className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight">Task Assessment</h2>
+              <p className="text-slate-500 text-xs uppercase tracking-widest font-bold">BETA Recruitment Portal</p>
+            </div>
+          </div>
+
+          {loadingTask ? (
+            <div className="py-12 text-center text-slate-500 text-sm font-semibold">
+              <RefreshCw className="h-6 w-6 animate-spin mx-auto mb-3 text-purple-600" />
+              Loading task details...
+            </div>
+          ) : taskError ? (
+            <div className="py-6 text-center space-y-4">
+              <div className="h-16 w-16 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center mx-auto text-rose-500">
+                <AlertCircle className="h-8 w-8" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">Task Loading Failed</h3>
+                <p className="text-slate-500 text-sm mt-1">{taskError}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Candidate Info Card */}
+              {taskData?.candidate && (
+                <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-base font-extrabold text-slate-900">{taskData.candidate.fullName}</h4>
+                      <p className="text-slate-500 text-xs mt-0.5">Applied for <strong>{taskData.candidate.jobTitle || 'Developer'}</strong></p>
+                    </div>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                      taskData.status === 'SUBMITTED' 
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                        : 'bg-purple-50 text-purple-700 border-purple-200'
+                    }`}>
+                      {taskData.status}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Task Details Card */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Assigned Task Description</h4>
+                <div className="p-6 bg-slate-50 border border-slate-200 rounded-2xl font-sans text-sm text-slate-800 leading-relaxed whitespace-pre-line">
+                  {taskData?.taskDescription}
+                </div>
+              </div>
+
+              {/* Submission Form */}
+              <form onSubmit={handleTaskSubmit} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">GitHub Repository Link</label>
+                  <input
+                    type="url"
+                    required
+                    value={gitLinkInput}
+                    onChange={(e) => setGitLinkInput(e.target.value)}
+                    placeholder="https://github.com/yourusername/yourproject"
+                    disabled={taskData?.status === 'SUBMITTED' || submittingTask}
+                    className="w-full bg-white text-slate-900 placeholder-slate-400 border border-slate-200 rounded-xl py-3 px-4 focus:outline-none focus:border-purple-500 text-sm transition"
+                  />
+                </div>
+
+                {taskSubmitSuccess && (
+                  <div className="p-3.5 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center space-x-2 text-emerald-700 text-xs font-semibold">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500 flex-shrink-0" />
+                    <span>GitHub repository link submitted successfully! Your task status is updated to SUBMITTED.</span>
+                  </div>
+                )}
+
+                {taskData?.status !== 'SUBMITTED' ? (
+                  <button
+                    type="submit"
+                    disabled={submittingTask || !gitLinkInput.trim()}
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 hover:scale-[1.01] active:scale-[0.99] text-white text-xs font-black transition flex items-center justify-center space-x-2 shadow-lg shadow-purple-500/10 border-none cursor-pointer"
+                  >
+                    {submittingTask ? 'Submitting Repository...' : 'Submit Task Assessment'}
+                  </button>
+                ) : (
+                  <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl text-center text-xs font-bold text-emerald-800">
+                    ✓ Task Assessment Completed & Submitted
+                  </div>
+                )}
+              </form>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="careers-purple-pink-theme min-h-screen relative overflow-hidden pb-20 pt-4">
@@ -1343,7 +1508,7 @@ export default function Careers() {
                               ? 'bg-rose-50 text-rose-700 border-rose-200'
                               : 'bg-purple-50 text-purple-700 border-purple-200'
                             }`}>
-                            {statusText}
+                            {statusText === 'Round 1 Aptitude' || statusText === 'Round 1 test' ? 'Round 1 Test' : statusText}
                           </span>
                         </div>
                       </div>
@@ -1389,7 +1554,7 @@ export default function Careers() {
                       </div>
 
                       {/* Actionable status details below tracker */}
-                      {statusText === 'Round 1 Aptitude' && (
+                      {(statusText === 'Round 1 Aptitude' || statusText === 'Round 1 test') && (
                         <div className="mt-1">
                           {app.aptitudeStatus === 'Scheduled' ? (
                             <div className="p-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">

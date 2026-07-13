@@ -112,6 +112,12 @@ export default function AdminDashboard() {
   }, [activeSubTab]);
 
   useEffect(() => {
+    if (activeSubTab === 'candidateDetails' && !selectedApplication) {
+      setActiveSubTab('appsList');
+    }
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem('admin_selected_status_filter', selectedStatusFilter);
   }, [selectedStatusFilter]);
 
@@ -170,6 +176,7 @@ export default function AdminDashboard() {
   const [taskSendMessage, setTaskSendMessage] = useState('');
   const [sendingTask, setSendingTask] = useState(false);
   const [fetchedTask, setFetchedTask] = useState(null);
+  const [fetchedTaskStatus, setFetchedTaskStatus] = useState(null);
 
   // Job Posting/Editing Modal States
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -411,14 +418,17 @@ export default function AdminDashboard() {
     const fetchCandidateTask = async () => {
       if (!selectedApplication) {
         setFetchedTask(null);
+        setFetchedTaskStatus(null);
         return;
       }
       try {
         const response = await axios.get(`${BACKEND_API_BASE}/api/task-assessment/${selectedApplication.id}`);
         setFetchedTask(response.data?.taskDescription || null);
+        setFetchedTaskStatus(response.data?.status || null);
       } catch (err) {
         const localVal = localStorage.getItem(`task_assessment_${selectedApplication.id}`);
         setFetchedTask(localVal || null);
+        setFetchedTaskStatus(localVal ? 'ASSIGNED' : null);
       }
     };
     fetchCandidateTask();
@@ -2877,14 +2887,39 @@ export default function AdminDashboard() {
 
                       {/* Show existing task if any */}
                       {fetchedTask && (
-                        <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4 space-y-1.5 animate-fadeIn">
-                          <div className="flex items-center gap-1.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">Previously Assigned Task</span>
+                        <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4 space-y-2 animate-fadeIn">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1.5">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <span className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">Previously Assigned Task</span>
+                            </div>
+                            {fetchedTaskStatus && (
+                              <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${
+                                fetchedTaskStatus === 'SUBMITTED'
+                                  ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
+                                  : 'bg-violet-100 text-violet-700 border-violet-300'
+                              }`}>
+                                {fetchedTaskStatus}
+                              </span>
+                            )}
                           </div>
                           <p className="text-xs text-violet-800 font-semibold leading-relaxed whitespace-pre-wrap">{fetchedTask}</p>
+
+                          {selectedApplication.githubLink && (
+                            <div className="mt-3 pt-3 border-t border-violet-200/50">
+                              <span className="text-[9px] font-bold text-violet-600 uppercase tracking-wider block">Submitted GitHub Link :</span>
+                              <a
+                                href={selectedApplication.githubLink}
+                                target="_blank"
+                                  rel="noopener noreferrer"
+                                className="text-xs font-bold text-[#004AAD] hover:underline mt-1 block break-all"
+                              >
+                                {selectedApplication.githubLink}
+                              </a>
+                            </div>
+                          )}
                         </div>
                       )}
 
@@ -2912,6 +2947,7 @@ export default function AdminDashboard() {
                                 });
                                 localStorage.setItem(`task_assessment_${selectedApplication.id}`, taskDescription.trim());
                                 setFetchedTask(taskDescription.trim());
+                                setFetchedTaskStatus('ASSIGNED');
                                 setTaskSendStatus('success');
                                 setTaskSendMessage(`Task assigned to ${selectedApplication.fullName} successfully.`);
                                 setTaskDescription('');

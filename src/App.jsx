@@ -93,7 +93,7 @@ function AppContent() {
   }, [navigate, loginWithSSO]);
 
   // Don't render the site-wide navbar and footer on the admin dashboard, cliks business dashboard, bnx mail dashboard, or during SSO verification
-  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/admincarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || location.pathname.startsWith('/careers/assessment') || verifyingSSO || !!ssoError;
+  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/admincarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || location.pathname.startsWith('/careers/assessment') || location.pathname.startsWith('/careers/task-assessment') || verifyingSSO || !!ssoError;
 
   if (verifyingSSO || ssoError) {
     return (
@@ -176,6 +176,7 @@ function AppContent() {
           <Route path="/cliks-business/dashboard" element={<CliksBusinessDashboard />} />
           <Route path="/bnx-mail/dashboard" element={<BnxMailDashboard />} />
           <Route path="/careers/assessment" element={<Assessment />} />
+          <Route path="/careers/task-assessment" element={<Careers />} />
         </Routes>
       </main>
       {!isDashboardMode && <Footer />}
