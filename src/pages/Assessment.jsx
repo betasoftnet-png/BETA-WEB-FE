@@ -434,7 +434,6 @@ export default function Assessment() {
             {candidate?.id && <div>Candidate ID: <strong className="text-slate-800 font-mono">#{candidate.id}</strong></div>}
             <div>Candidate: <strong className="text-slate-800">{candidateName}</strong></div>
             <div>Role: <strong className="text-slate-800">{jobTitle}</strong></div>
-            <div>Score: <strong className="text-emerald-600 font-extrabold">{score}%</strong></div>
           </div>
           <p className="text-slate-400 text-xs leading-relaxed">
             Recruiting team will review your profile metrics shortly. You may close this browser window.
