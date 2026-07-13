@@ -1252,13 +1252,18 @@ export default function Careers() {
 
                   // Determine step index for progress tracker
                   let activeIdx = 0;
-                  if (statusText === 'Candidates') activeIdx = 0;
-                  else if (statusText === 'Shortlisted') activeIdx = 1;
-                  else if (['Round 1 Aptitude', 'Round 1 Technical', 'Round 2 Brand Awareness'].includes(statusText)) activeIdx = 2;
-                  else if (statusText === 'Interview Scheduled') activeIdx = 3;
-                  else if (['Selected', 'Joined'].includes(statusText)) activeIdx = 4;
+                  const s = (statusText || '').toLowerCase().trim();
+                  if (s === 'candidates' || s === 'applied' || s === 'pending' || s === 'shortlisted' || s.includes('aptitude') || s.includes('test')) {
+                    activeIdx = 0;
+                  } else if (s === 'interview scheduled' || s === 'scheduled' || s.includes('technical')) {
+                    activeIdx = 1;
+                  } else if (app.taskAssigned || s.includes('task') || s.includes('brand')) {
+                    activeIdx = 2;
+                  } else if (s.includes('selected') || s.includes('joined') || s.includes('hr')) {
+                    activeIdx = 3;
+                  }
 
-                  const steps = ['Applied', 'Screening', 'Assessment', 'Interview', 'Decision'];
+                  const steps = ['Test Round', 'Technical Interview', 'TaskAssessment', 'HR interview'];
 
                   return (
                     <div
@@ -1280,6 +1285,54 @@ export default function Careers() {
                             <span>&bull;</span>
                             <span className="text-[11px] text-slate-400 font-medium">Applied on {appliedDate}</span>
                           </div>
+
+                          {true && (
+                            <div className="mt-3.5 space-y-2 max-w-md">
+                              <span className="font-extrabold text-violet-700 text-[10px] uppercase tracking-wider block">
+                                Task Solution
+                              </span>
+                              {app.githubLink ? (
+                                <div className="p-2.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl flex items-center justify-between gap-3">
+                                  <div className="text-left overflow-hidden">
+                                    <span className="font-bold text-emerald-700 text-[10px] block">
+                                      ✓ Submitted Solution
+                                    </span>
+                                    <a
+                                      href={app.githubLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-xs font-bold text-violet-650 hover:underline break-all"
+                                    >
+                                      {app.githubLink}
+                                    </a>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    type="url"
+                                    placeholder="Paste GitHub repository URL"
+                                    value={gitLinks[app.id] || ''}
+                                    onChange={(e) => setGitLinks(prev => ({ ...prev, [app.id]: e.target.value }))}
+                                    className="bg-white text-slate-900 placeholder-slate-400 border border-purple-200 rounded-xl py-1.5 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition w-60"
+                                  />
+                                  <button
+                                    type="button"
+                                    disabled={submittingGit[app.id] || !gitLinks[app.id]?.trim()}
+                                    onClick={() => handleSubmittingGit(app.id)}
+                                    className="px-4 py-2 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-extrabold rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer border-none shadow-sm shadow-[#EC4899]/15"
+                                  >
+                                    {submittingGit[app.id] ? '...' : 'Submit'}
+                                  </button>
+                                </div>
+                              )}
+                              {gitErrors[app.id] && (
+                                <p className="text-[10px] font-bold text-rose-600">
+                                  {gitErrors[app.id]}
+                                </p>
+                              )}
+                            </div>
+                          )}
                         </div>
 
                         {/* Mapped Status Badge */}
@@ -1310,7 +1363,7 @@ export default function Careers() {
                           {steps.map((stepName, idx) => {
                             const isCompleted = idx < activeIdx;
                             const isActive = idx === activeIdx;
-                            const isRejectedDecision = idx === 4 && statusText === 'Rejected';
+                            const isRejectedDecision = idx === 3 && statusText === 'Rejected';
 
                             let circleClasses = 'bg-white border-slate-200 text-slate-400';
                             if (isCompleted) {
@@ -1322,7 +1375,7 @@ export default function Careers() {
                             }
 
                             return (
-                              <div key={stepName} className="flex flex-col items-center relative z-10 w-[20%] text-center">
+                              <div key={stepName} className="flex flex-col items-center relative z-10 flex-1 text-center">
                                 <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 text-[10px] font-black transition-all duration-300 ${circleClasses}`}>
                                   {idx + 1}
                                 </div>
@@ -1358,7 +1411,7 @@ export default function Careers() {
                             <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
                               <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Assessment Completed</span>
                               <p className="text-slate-500 font-medium">
-                                Score: <strong className="text-slate-800">{app.aptitudeScore || '0'}/5</strong>. Recruiting managers are reviewing your submission.
+                                Recruiting managers are reviewing your submission.
                               </p>
                             </div>
                           ) : (
@@ -1410,61 +1463,6 @@ export default function Careers() {
                         </div>
                       )}
 
-                      {app.taskAssigned && (
-                        <div className="mt-2 border-t border-purple-500/10 pt-4 space-y-3">
-                          <span className="font-extrabold text-violet-700 text-xs uppercase tracking-wider block">
-                            Task Assessment Submission
-                          </span>
-                          {app.githubLink ? (
-                            <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                              <div className="text-left">
-                                <span className="font-bold text-emerald-700 text-xs block mb-1">
-                                  ✓ GitHub Link Submitted
-                                </span>
-                                <a
-                                  href={app.githubLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-xs font-bold text-violet-600 hover:underline break-all"
-                                >
-                                  {app.githubLink}
-                                </a>
-                              </div>
-                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-white border border-slate-200 px-3 py-1 rounded-lg select-none">
-                                Pending Evaluation
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="p-4 bg-violet-500/5 border border-violet-500/20 rounded-2xl space-y-3">
-                              <p className="text-slate-650 text-xs leading-relaxed font-semibold">
-                                Please submit your solution's GitHub repository link once you complete the assigned assessment task.
-                              </p>
-                              <div className="flex flex-col sm:flex-row items-center gap-3">
-                                <input
-                                  type="url"
-                                  placeholder="https://github.com/username/project"
-                                  value={gitLinks[app.id] || ''}
-                                  onChange={(e) => setGitLinks(prev => ({ ...prev, [app.id]: e.target.value }))}
-                                  className="w-full flex-grow bg-white text-slate-900 placeholder-slate-400 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition"
-                                />
-                                <button
-                                  type="button"
-                                  disabled={submittingGit[app.id] || !gitLinks[app.id]?.trim()}
-                                  onClick={() => handleSubmittingGit(app.id)}
-                                  className="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-[#EC4899]/15 text-center whitespace-nowrap border-none"
-                                >
-                                  {submittingGit[app.id] ? 'Submitting...' : 'Submit Task'}
-                                </button>
-                              </div>
-                              {gitErrors[app.id] && (
-                                <p className="text-xs font-bold text-rose-600 animate-fadeIn mt-1">
-                                  {gitErrors[app.id]}
-                                </p>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
                     </div>
                   );
                 })}

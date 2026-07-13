@@ -268,6 +268,7 @@ export default function AdminDashboard() {
               interviewTime: app.interviewTime || app.interviewtime || '',
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
+              assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
               experience: app.experience || '3 Years'
             };
           });
@@ -367,6 +368,7 @@ export default function AdminDashboard() {
               interviewTime: app.interviewTime || app.interviewtime || '',
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
+              assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
               experience: app.experience || '3 Years'
             };
           });
@@ -765,10 +767,18 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${appId}/status`, { status: backendStatus });
-      setSuccess(`Candidate status updated to ${newStatus}. Notification email sent.`);
+      if (newStatus === 'Rejected') {
+        setSuccess(`Candidate status updated to ${newStatus}. Notification email sent.`);
+      } else {
+        setSuccess(`Candidate status updated to ${newStatus}.`);
+      }
     } catch {
       console.warn('API update failed. Updating locally in state.');
-      setSuccess(`Candidate status updated to ${newStatus}. (Candidate email notification sent)`);
+      if (newStatus === 'Rejected') {
+        setSuccess(`Candidate status updated to ${newStatus}. (Candidate email notification sent)`);
+      } else {
+        setSuccess(`Candidate status updated to ${newStatus}.`);
+      }
     } finally {
       // Always update locally and sync
       const updated = externalApplications.map(app => app.id === appId ? { ...app, status: newStatus } : app);
@@ -2765,6 +2775,13 @@ export default function AdminDashboard() {
                       }
                     })()}
 
+                    {selectedApplication.assessmentTimeTaken && (
+                      <div className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 text-blue-700 text-xs font-bold shadow-xs select-none cursor-default animate-fadeIn">
+                        <Clock className="h-4 w-4" />
+                        <span>Time Taken: {selectedApplication.assessmentTimeTaken}</span>
+                      </div>
+                    )}
+
                     <button
                       onClick={() => handleOpenAssignModal(selectedApplication)}
                       className="px-4 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-250 text-amber-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5"
@@ -2962,8 +2979,8 @@ export default function AdminDashboard() {
                                 key={q.id || qidx}
                                 onClick={() => handleToggleQuestionSelection(q.id)}
                                 className={`border rounded-2xl p-4 space-y-2 text-left transition-all duration-200 cursor-pointer ${isChecked
-                                    ? 'bg-blue-50/30 border-blue-400 ring-1 ring-blue-400/20'
-                                    : 'bg-slate-50/50 border-slate-150 hover:border-slate-350'
+                                  ? 'bg-blue-50/30 border-blue-400 ring-1 ring-blue-400/20'
+                                  : 'bg-slate-50/50 border-slate-150 hover:border-slate-350'
                                   }`}
                               >
                                 <div className="text-xs font-black text-slate-800 flex items-start gap-2.5">
@@ -3045,11 +3062,11 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
-                    {/* Schedule Online Meeting Card */}
+                    {/* Technical Online Meeting Card */}
                     <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
                       <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                         <Calendar className="h-5 w-5 text-[#004AAD]" />
-                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Schedule Online Meeting</h3>
+                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Technical Interview</h3>
                       </div>
 
                       <div className="space-y-4 text-left">
@@ -4247,8 +4264,8 @@ export default function AdminDashboard() {
                       <label
                         key={q.id}
                         className={`flex items-start gap-3 p-3 rounded-xl border text-xs font-semibold cursor-pointer transition-all duration-200 ${isChecked
-                            ? 'bg-blue-50/35 border-blue-400 text-blue-900 shadow-xs'
-                            : 'bg-white border-slate-200 hover:border-slate-350 text-slate-700'
+                          ? 'bg-blue-50/35 border-blue-400 text-blue-900 shadow-xs'
+                          : 'bg-white border-slate-200 hover:border-slate-350 text-slate-700'
                           }`}
                       >
                         <input
