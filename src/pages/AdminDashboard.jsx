@@ -169,6 +169,7 @@ export default function AdminDashboard() {
   const [taskSendStatus, setTaskSendStatus] = useState(''); // 'success' | 'error' | ''
   const [taskSendMessage, setTaskSendMessage] = useState('');
   const [sendingTask, setSendingTask] = useState(false);
+  const [fetchedTask, setFetchedTask] = useState(null);
 
   // Job Posting/Editing Modal States
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -403,6 +404,23 @@ export default function AdminDashboard() {
       setSelectedQuestionsForCandidate([]);
     }
   }, [selectedApplication, selectedStatusFilter]);
+
+  useEffect(() => {
+    const fetchCandidateTask = async () => {
+      if (!selectedApplication) {
+        setFetchedTask(null);
+        return;
+      }
+      try {
+        const response = await axios.get(`${BACKEND_API_BASE}/api/task-assessment/${selectedApplication.id}`);
+        setFetchedTask(response.data?.taskDescription || null);
+      } catch (err) {
+        const localVal = localStorage.getItem(`task_assessment_${selectedApplication.id}`);
+        setFetchedTask(localVal || null);
+      }
+    };
+    fetchCandidateTask();
+  }, [selectedApplication]);
 
   useEffect(() => {
     if (externalApplications.length > 0) {
@@ -2810,6 +2828,20 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                       )}
+
+                      {selectedApplication.githubLink && (
+                        <div className="pt-2.5 border-t border-slate-100">
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Submitted GitHub Link</label>
+                          <a
+                            href={selectedApplication.githubLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-bold text-violet-650 hover:underline mt-1 block break-all"
+                          >
+                            {selectedApplication.githubLink}
+                          </a>
+                        </div>
+                      )}
                     </div>
 
                     {/* Task Assessment Card */}
@@ -2827,23 +2859,17 @@ export default function AdminDashboard() {
                       </div>
 
                       {/* Show existing task if any */}
-                      {(() => {
-                        const existingTask = localStorage.getItem(`task_assessment_${selectedApplication.id}`);
-                        if (existingTask) {
-                          return (
-                            <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4 space-y-1.5">
-                              <div className="flex items-center gap-1.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">Previously Assigned Task</span>
-                              </div>
-                              <p className="text-xs text-violet-800 font-semibold leading-relaxed whitespace-pre-wrap">{existingTask}</p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      })()}
+                      {fetchedTask && (
+                        <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4 space-y-1.5 animate-fadeIn">
+                          <div className="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">Previously Assigned Task</span>
+                          </div>
+                          <p className="text-xs text-violet-800 font-semibold leading-relaxed whitespace-pre-wrap">{fetchedTask}</p>
+                        </div>
+                      )}
 
                       <div className="space-y-3">
                         <textarea
@@ -2864,12 +2890,17 @@ export default function AdminDashboard() {
                               setTaskSendStatus('');
                               setTaskSendMessage('');
                               try {
+                                await axios.post(`${BACKEND_API_BASE}/api/task-assessment/${selectedApplication.id}`, {
+                                  taskDescription: taskDescription.trim()
+                                });
                                 localStorage.setItem(`task_assessment_${selectedApplication.id}`, taskDescription.trim());
+                                setFetchedTask(taskDescription.trim());
                                 setTaskSendStatus('success');
                                 setTaskSendMessage(`Task assigned to ${selectedApplication.fullName} successfully.`);
                                 setTaskDescription('');
                                 setTimeout(() => { setTaskSendStatus(''); setTaskSendMessage(''); }, 5000);
                               } catch (err) {
+                                console.error('Error assigning task:', err);
                                 setTaskSendStatus('error');
                                 setTaskSendMessage('Failed to send task. Please try again.');
                                 setTimeout(() => { setTaskSendStatus(''); setTaskSendMessage(''); }, 5000);
