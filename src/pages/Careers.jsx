@@ -437,7 +437,9 @@ export default function Careers() {
           interviewTime: app.interviewTime || app.interviewtime || '',
           aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
           aptitudeScore: app.aptitudeScore || app.aptitudescore || '',
-          experience: app.experience || '3 Years'
+          experience: app.experience || '3 Years',
+          githubLink: app.githubLink || app.githublink || '',
+          taskAssigned: app.taskAssigned !== undefined ? app.taskAssigned : (app.taskassigned || false)
         };
 
         const localMatch = localFiltered.find((l) => l.id === app.id);
