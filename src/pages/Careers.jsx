@@ -146,6 +146,8 @@ const formatDate = (isoString) => {
 };
 
 export default function Careers() {
+  const navigate = useNavigate();
+  const { user, redirectToSSO } = useContext(AuthContext);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const candidateId = queryParams.get('id');
