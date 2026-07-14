@@ -280,6 +280,13 @@ export default function Assessment() {
     setSubmitting(true);
     setError('');
 
+    // Calculate actual time taken
+    const totalDuration = questions.length > 0 && questions[0].duration ? questions[0].duration * 60 : 30 * 60;
+    const elapsed = Math.max(0, totalDuration - timeLeft);
+    const mins = Math.floor(elapsed / 60);
+    const secs = elapsed % 60;
+    const timeTakenStr = `${mins}m ${secs}s`;
+
     // Calculate a mock score based on answered questions count
     let answeredCount = 0;
     questions.forEach((q) => {
@@ -306,7 +313,7 @@ export default function Assessment() {
       await Promise.all(answerPromises);
 
       // Finalize the assessment submission in the backend
-      const submitRes = await axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/submit`);
+      const submitRes = await axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/submit?timeTaken=${encodeURIComponent(timeTakenStr)}`);
       const finalScore = (submitRes.data && submitRes.data.score !== undefined) ? submitRes.data.score : calculatedScore;
 
       setScore(finalScore);

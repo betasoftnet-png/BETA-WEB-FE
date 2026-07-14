@@ -401,20 +401,21 @@ export default function Careers() {
 
       // Save locally to track in Candidate Workspace / My Jobs
       const newApp = {
-        id: response.data?.data?.id || `local-${Date.now()}`,
+        id: response.data?.id || response.data?.data?.id || `local-${Date.now()}`,
         fullName,
         email,
         phone,
         coverLetter,
         resumeUrl: resume ? resume.name : '',
-        status: shouldSchedule && interviewDate ? 'Interview Scheduled' : 'Candidates',
+        status: shouldSchedule && interviewDate ? 'Interview Scheduled' : 'Applied',
         createdAt: new Date().toISOString(),
         jobTitle: activeJob.title,
         jobDepartment: activeJob.team || 'Engineering',
         jobLocation: activeJob.location || 'Tiruvallur',
         interviewDate: shouldSchedule ? interviewDate : '',
         interviewTime: shouldSchedule ? interviewTime : '',
-        experience: activeJob.experience || '3 Years'
+        experience: activeJob.experience || '3 Years',
+        jobId: activeJob.id
       };
 
       try {
@@ -479,6 +480,7 @@ export default function Careers() {
 
       const mergedApps = [];
       const seenIds = new Set();
+      const seenJobKeys = new Set();
 
       // Normalize API apps and match with local storage
       apiFiltered.forEach((app) => {
@@ -501,10 +503,14 @@ export default function Careers() {
           aptitudeScore: app.aptitudeScore || app.aptitudescore || '',
           experience: app.experience || '3 Years',
           githubLink: app.githubLink || app.githublink || '',
-          taskAssigned: app.taskAssigned !== undefined ? app.taskAssigned : (app.taskassigned || false)
+          taskAssigned: app.taskAssigned !== undefined ? app.taskAssigned : (app.taskassigned || false),
+          jobId: app.jobId || app.jobid || ''
         };
 
-        const localMatch = localFiltered.find((l) => l.id === app.id);
+        const jobKey = `${(normalized.email || '').toLowerCase()}-${(normalized.jobTitle || '').toLowerCase()}-${normalized.jobId || ''}`;
+        seenJobKeys.add(jobKey);
+
+        const localMatch = localFiltered.find((l) => l.id === app.id || (l.jobTitle === normalized.jobTitle && l.email === normalized.email));
         if (localMatch) {
           if (localMatch.aptitudeStatus && !normalized.aptitudeStatus) {
             normalized.aptitudeStatus = localMatch.aptitudeStatus;
@@ -523,9 +529,11 @@ export default function Careers() {
 
       // Include local apps that are not yet on backend
       localFiltered.forEach((localApp) => {
-        if (!seenIds.has(localApp.id)) {
+        const jobKey = `${(localApp.email || '').toLowerCase()}-${(localApp.jobTitle || '').toLowerCase()}-${localApp.jobId || localApp.jobid || ''}`;
+        if (!seenIds.has(localApp.id) && !seenJobKeys.has(jobKey)) {
           mergedApps.push({
             id: localApp.id,
+            jobId: localApp.jobId || localApp.jobid || '',
             fullName: localApp.fullName || '',
             email: localApp.email || '',
             phone: localApp.phone || '',
@@ -542,6 +550,7 @@ export default function Careers() {
             aptitudeScore: localApp.aptitudeScore !== undefined && localApp.aptitudeScore !== null ? localApp.aptitudeScore : '',
             experience: localApp.experience || '3 Years'
           });
+          seenJobKeys.add(jobKey);
         }
       });
 

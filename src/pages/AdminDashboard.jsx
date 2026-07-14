@@ -4167,7 +4167,12 @@ export default function AdminDashboard() {
             </button>
 
             <div className="mb-4">
-              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Assign Assessment</h3>
+              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center justify-between">
+                <span>Assign Assessment</span>
+                <span className="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-200/50 px-3 py-1 rounded-full">
+                  {selectedQuestionIds.length} Question{selectedQuestionIds.length !== 1 ? 's' : ''} Selected
+                </span>
+              </h3>
               <p className="text-slate-500 text-xs mt-1">
                 Select assessment questions and duration for candidate: <strong className="text-slate-905">{selectedCandidateForAssessment.fullName}</strong>
               </p>
