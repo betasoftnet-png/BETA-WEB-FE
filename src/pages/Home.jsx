@@ -325,8 +325,7 @@ export default function Home() {
               ))}
             </motion.h1>
 
-            {/* Decorative line below B E T A logo base */}
-            <div className="w-28 h-1 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 mx-auto my-6 rounded-full shadow-sm shadow-blue-500/20" />
+
 
 
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-blue-700 tracking-tight leading-tight max-w-4xl mx-auto">

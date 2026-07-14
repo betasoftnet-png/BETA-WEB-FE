@@ -753,6 +753,10 @@ export default function AdminDashboard() {
       );
       updateAppsAndSync(updatedApps);
 
+      if (selectedApplication && selectedApplication.id === selectedCandidateForAssessment.id) {
+        setSelectedApplication(prev => ({ ...prev, aptitudeStatus: 'Assessment Sent' }));
+      }
+
       setSuccess(`Assessment successfully assigned to ${selectedCandidateForAssessment.fullName}.`);
       setIsAssignModalOpen(false);
       setSelectedCandidateForAssessment(null);
@@ -2840,10 +2844,11 @@ export default function AdminDashboard() {
 
                     <button
                       onClick={() => handleOpenAssignModal(selectedApplication)}
-                      className="px-4 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-250 text-amber-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5"
+                      disabled={selectedApplication.aptitudeStatus === 'Assessment Sent' || selectedApplication.aptitudeStatus === 'Completed'}
+                      className="px-4 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-250 text-amber-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed border-none outline-none"
                     >
                       <Brain className="h-4 w-4" />
-                      <span>Test</span>
+                      <span>{selectedApplication.aptitudeStatus === 'Assessment Sent' || selectedApplication.aptitudeStatus === 'Completed' ? 'Test Assigned' : 'Test'}</span>
                     </button>
                     <button
                       onClick={() => handleUpdateStatus(selectedApplication.id, 'Rejected')}
