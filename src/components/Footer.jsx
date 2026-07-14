@@ -77,7 +77,7 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-1 space-y-4 flex flex-col items-center text-center">
             <Link to="/" className="flex items-center justify-center select-none">
-              <img src="/logo.png" alt="Beta Logo" className="h-14 w-auto object-contain mx-auto" />
+              <img src="/logo.png" alt="Beta Logo" className="h-20 w-auto object-contain mx-auto" />
             </Link>
             <p className="text-sm footer-brand-description font-semibold">
               One platform for communication, security, and teamwork.

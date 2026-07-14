@@ -266,7 +266,7 @@ export default function Home() {
       {/* HERO SECTION: SIDE-BY-SIDE LAYOUT */}
       <div className="w-full mb-20 pt-4 md:pt-8 overflow-hidden">
         {/* Central main title */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 text-center -mt-6 md:-mt-10">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
