@@ -3162,38 +3162,6 @@ export default function AdminDashboard() {
                       </div>
                     )}
 
-                    {/* Evaluation Remarks Card */}
-                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">Evaluation Remarks</h3>
-
-                      <div className="space-y-3">
-                        <textarea
-                          rows={3}
-                          value={remarks}
-                          onChange={(e) => setRemarks(e.target.value)}
-                          placeholder="Enter interviewer evaluation notes, feedback remarks, or notes..."
-                          className="w-full admin-custom-input border border-slate-300 rounded-2xl py-3 px-4 focus:outline-none text-xs transition"
-                        />
-                        <div className="flex justify-end">
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              const updatedApps = externalApplications.map(app =>
-                                app.id === selectedApplication.id ? { ...app, remarks: remarks } : app
-                              );
-                              updateAppsAndSync(updatedApps);
-                              setSelectedApplication(prev => ({ ...prev, remarks: remarks }));
-                              setSuccess('Remarks updated successfully.');
-                              setTimeout(() => setSuccess(''), 3000);
-                            }}
-                            className="px-4 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#004AAD] text-xs font-bold rounded-xl transition cursor-pointer font-sans"
-                          >
-                            Save Remarks
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
                     {/* Technical Online Meeting Card */}
                     <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
                       <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
@@ -4040,36 +4008,6 @@ export default function AdminDashboard() {
                 }
                 return null;
               })()}
-
-              {/* Recruiter Evaluation Notes & Remarks */}
-              <div className="border-t border-slate-100 pt-4 space-y-2">
-                <label className="text-xs font-bold uppercase block text-slate-800">Evaluation Remarks</label>
-                <textarea
-                  rows={2}
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  placeholder="Enter interviewer evaluation notes, feedback remarks, or notes..."
-                  className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-xs transition"
-                />
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      const updatedApps = externalApplications.map(app =>
-                        app.id === selectedApplication.id ? { ...app, remarks: remarks } : app
-                      );
-                      updateAppsAndSync(updatedApps);
-                      setSelectedApplication(prev => ({ ...prev, remarks: remarks }));
-                      setSuccess('Remarks updated successfully.');
-                      setTimeout(() => setSuccess(''), 3000);
-                    }}
-                    className="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#004AAD] text-xs font-bold rounded-lg transition cursor-pointer font-sans"
-                  >
-                    Save Remarks
-                  </button>
-                </div>
-              </div>
-
             </div>
           </div>
         </div>

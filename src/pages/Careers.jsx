@@ -1421,17 +1421,19 @@ export default function Careers() {
                   // Determine step index for progress tracker
                   let activeIdx = 0;
                   const s = (statusText || '').toLowerCase().trim();
-                  if (s === 'candidates' || s === 'applied' || s === 'pending' || s === 'shortlisted' || s.includes('aptitude') || s.includes('test')) {
+                  if (s === 'candidates' || s === 'applied' || s === 'pending') {
                     activeIdx = 0;
-                  } else if (s === 'interview scheduled' || s === 'scheduled' || s.includes('technical')) {
+                  } else if (s === 'shortlisted' || s.includes('aptitude') || s.includes('test') || s.includes('assessment')) {
                     activeIdx = 1;
-                  } else if (app.taskAssigned || s.includes('task') || s.includes('brand')) {
+                  } else if (s === 'interview scheduled' || s === 'scheduled' || s.includes('technical')) {
                     activeIdx = 2;
-                  } else if (s.includes('selected') || s.includes('joined') || s.includes('hr')) {
+                  } else if (app.taskAssigned || s.includes('task') || s.includes('brand')) {
                     activeIdx = 3;
+                  } else if (s.includes('selected') || s.includes('joined') || s.includes('hr')) {
+                    activeIdx = 4;
                   }
 
-                  const steps = ['Test Round', 'Technical Interview', 'TaskAssessment', 'HR interview'];
+                  const steps = ['Apply', 'Test Round', 'Technical Interview', 'TaskAssessment', 'HR interview'];
 
                   return (
                     <div
@@ -1531,7 +1533,7 @@ export default function Careers() {
                           {steps.map((stepName, idx) => {
                             const isCompleted = idx < activeIdx;
                             const isActive = idx === activeIdx;
-                            const isRejectedDecision = idx === 3 && statusText === 'Rejected';
+                            const isRejectedDecision = idx === (steps.length - 1) && statusText === 'Rejected';
 
                             let circleClasses = 'bg-white border-slate-200 text-slate-400';
                             if (isCompleted) {
