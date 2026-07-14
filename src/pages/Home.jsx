@@ -59,7 +59,7 @@ export default function Home() {
   ];
 
   const stats = [
-    { label: 'Active Users', value: '1000', icon: Users, color: 'text-blue-600' },
+    { label: 'Active Users', value: '1000+', icon: Users, color: 'text-blue-600' },
     { label: 'Uptime SLA', value: '99.99%', icon: Activity, color: 'text-emerald-600' },
     { label: 'Enterprise Clients', value: '50+', icon: Globe, color: 'text-indigo-600' },
     { label: 'Data Protected', value: '25 PB', icon: Shield, color: 'text-cyan-600' },
@@ -350,9 +350,9 @@ export default function Home() {
               <motion.h2
                 variants={itemVariants}
                 className="text-3xl md:text-4xl lg:text-5xl font-extrabold 
-             text-slate-900 leading-tight -ml-20"
+             text-slate-900 leading-tight -ml-28"
               >
-                Unified Software <span className="whitespace-nowrap">for <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline font-extrabold">Connected Generation</span></span>
+                Unified Software for <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline font-extrabold whitespace-nowrap">Connected Generation</span>
               </motion.h2>
 
 
@@ -360,7 +360,7 @@ export default function Home() {
               <motion.p
                 variants={itemVariants}
                 className="mt-1 text-slate-600 text-base md:text-lg leading-relaxed 
-             text-left w-full -ml-20 max-w-xl 
+             text-left w-full -ml-28 max-w-xl 
              tracking-wide"
               >
                 Beta builds secure, real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
@@ -372,7 +372,7 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full md:w-[62%] max-w-2xl h-full flex flex-col justify-center text-left">
+          <div className="w-full md:w-[62%] max-w-2xl h-full flex flex-col justify-center text-left md:translate-x-28">
 
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
@@ -537,75 +537,158 @@ export default function Home() {
         </div>
       </div>
 
-      {/* SECTION: TECHNOLOGIES USED */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
-        <div className="max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
-            <Cpu className="h-3.5 w-3.5" />
-            <span>Our Tech Stack</span>
+
+
+      {/* SECTION: INNOVATION & PHILOSOPHY */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Our Core Philosophy</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
-            Powered by Next-Gen Technologies
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+            How We Shape the Future
           </h2>
-          <p className="text-slate-500 text-lg">
-            We leverage a modern, enterprise-grade tech stack built for exceptional speed, reliability, and security.
+          <p className="text-slate-500 text-lg leading-relaxed font-medium">
+            Driven by innovation, engineering excellence, clean code, and continuous growth.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {techStack.map((tech, idx) => {
-            const Icon = tech.icon;
-            return (
-              <motion.div
-                key={tech.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col items-start justify-between h-full hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
-              >
-                {/* Background glow hover effect */}
-                <div className={`absolute -right-10 -top-10 w-24 h-24 rounded-full bg-gradient-to-br ${tech.gradient} opacity-5 group-hover:opacity-15 blur-xl transition-opacity duration-300`} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          {/* Card 1: What We Build */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+            className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+          >
+            {/* Ambient Background Glow on Hover */}
+            <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-blue-500/10 to-cyan-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                <div className="space-y-4 w-full">
-                  <div className={`p-3 rounded-2xl border flex-shrink-0 inline-flex ${tech.bg}`}>
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-extrabold text-slate-900 mb-1.5 flex items-center gap-1.5">
-                      {tech.name}
-                    </h3>
-                    <p className="text-slate-500 text-xs leading-relaxed font-medium">
-                      {tech.description}
-                    </p>
-                  </div>
-                </div>
+            <div className="space-y-6">
+              <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-blue-50 text-blue-600 border border-blue-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                <Cpu className="h-6 w-6" />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-blue-650 transition-colors">
+                  What We Build
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                  At Beta Softnet, we develop intelligent software products that help businesses improve efficiency, automate workflows, and accelerate digital transformation. Our products are designed with scalability, security, and user experience at their core, enabling organizations to adapt and grow in an ever-changing digital world.
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-blue-600 select-none group-hover:translate-x-1 transition-transform">
+              <span>View our products suite</span>
+              <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </div>
+          </motion.div>
 
-                {/* Small indicator pill at the bottom */}
-                <div className="mt-6 flex items-center justify-between w-full">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-2.5 py-0.5">
-                    {tech.category}
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
+          {/* Card 2: Engineering Excellence */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+          >
+            {/* Ambient Background Glow on Hover */}
+            <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-amber-500/10 to-orange-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            <div className="space-y-6">
+              <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-amber-50 text-amber-600 border border-amber-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                <Terminal className="h-6 w-6" />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-amber-650 transition-colors">
+                  Engineering Excellence
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                  We believe that great products are built with strong engineering practices. Our teams focus on clean architecture, modern technologies, continuous improvement, and high-quality code to deliver reliable and innovative software solutions.
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-amber-600 select-none group-hover:translate-x-1 transition-transform">
+              <span>Explore our codebase standards</span>
+              <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </div>
+          </motion.div>
+
+          {/* Card 3: Technology & Innovation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+          >
+            {/* Ambient Background Glow on Hover */}
+            <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            <div className="space-y-6">
+              <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-purple-50 text-purple-600 border border-purple-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                <Workflow className="h-6 w-6" />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-purple-650 transition-colors">
+                  Technology & Innovation
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                  Innovation drives everything we do. We continuously explore emerging technologies, modern development practices, and creative ideas to build products that solve real-world business challenges and create lasting value.
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-purple-600 select-none group-hover:translate-x-1 transition-transform">
+              <span>See our roadmap</span>
+              <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </div>
+          </motion.div>
+
+          {/* Card 4: Grow With Us */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+          >
+            {/* Ambient Background Glow on Hover */}
+            <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-emerald-500/10 to-teal-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            <div className="space-y-6">
+              <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                <Users className="h-6 w-6" />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-emerald-650 transition-colors">
+                  Grow With Us
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                  We provide an environment where learning never stops. Through real-world projects, mentorship, and collaborative teamwork, you'll gain valuable experience, expand your technical expertise, and build a successful career in product development.
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-emerald-600 select-none group-hover:translate-x-1 transition-transform">
+              <span>Explore active career roles</span>
+              <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* SECTION: WHY CHOOSE OUR PROGRAMS */}
+      {/* SECTION: WHY CHOOSE OUR PRODUCTS */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
         <div className="max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
             <Award className="h-3.5 w-3.5" />
-            <span>Growth & Learning</span>
+            <span>Product Highlights</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
-            Why Choose Us?
+            Why Choose Our Products?
           </h2>
           <p className="text-slate-500 text-lg">
-            Accelerate your career with structured mentorship, real-world deployments, and clear paths to full-time roles.
+            Engineered for low-latency synchronization, enterprise-grade security, and seamless workflow integration.
           </p>
         </div>
 
@@ -621,16 +704,16 @@ export default function Home() {
                     <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
                     <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                   </div>
-                  <span className="text-[9px] font-mono text-slate-500">program_pipeline.json</span>
+                  <span className="text-[9px] font-mono text-slate-500">product_architecture.json</span>
                 </div>
 
                 {/* Pipeline visual steps */}
                 <div className="space-y-3">
                   {[
-                    { phase: 'Month 1', title: 'Onboarding & Core Tech Mastery', status: 'Completed', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
-                    { phase: 'Month 2-3', title: 'Production Feature Dev & Deploy', status: 'Active', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-                    { phase: 'Month 4', title: 'Architecture & Scaling Reviews', status: 'Pending', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
-                    { phase: 'Month 5-6', title: 'Graduation & PPO Assessment', status: 'Final', color: 'text-slate-400 bg-slate-800 border-slate-700' }
+                    { phase: 'Layer 1', title: 'Secure SMTP & Real-Time Sync', status: 'Active', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+                    { phase: 'Layer 2', title: 'SSO & Multi-Factor Auth Gateway', status: 'Verified', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
+                    { phase: 'Layer 3', title: 'Live WebSocket Channels & Boards', status: 'Connected', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+                    { phase: 'Layer 4', title: 'Centralized Scalable Workspace DB', status: 'Synced', color: 'text-slate-400 bg-slate-800 border-slate-700' }
                   ].map((step, idx) => (
                     <motion.div
                       key={step.phase}
@@ -638,7 +721,7 @@ export default function Home() {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: idx * 0.12 }}
-                      className="flex items-center justify-between p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 hover:border-slate-700/80 transition-colors"
+                      className="flex items-center justify-between p-3 rounded-xl bg-slate-955/85 border border-slate-800 hover:border-slate-700 transition-colors"
                     >
                       <div className="flex items-center space-x-3 overflow-hidden mr-2">
                         <span className="text-[10px] font-mono text-slate-500 w-14 flex-shrink-0">{step.phase}</span>
@@ -658,26 +741,26 @@ export default function Home() {
           <div className="lg:col-span-7 space-y-4">
             {[
               {
-                title: 'Real-World Production Impact',
-                desc: 'Collaborate on active projects, ship actual code, and launch features that serve enterprise scale and users daily.',
+                title: 'Real-Time Collaboration',
+                desc: 'Sync team messages, sprint boards, and document revisions instantly across teams using optimized bi-directional WebSocket protocols.',
                 icon: Zap,
                 bg: 'bg-amber-50 text-amber-600 border-amber-100'
               },
               {
-                title: '1-on-1 Senior Mentorship',
-                desc: 'Get paired with core engineers and senior product architects. Participate in structured design and code reviews daily.',
+                title: 'Enterprise Security & SSO',
+                desc: 'Protect corporate workloads with cryptographically signed JSON Web Tokens (JWT) and multi-factor validation flows.',
                 icon: Users,
                 bg: 'bg-blue-50 text-blue-600 border-blue-100'
               },
               {
-                title: 'Modern Stack Experience',
-                desc: 'Gain expert-level command of React 18, Node.js, WebSockets, MongoDB, and secure cryptographically-signed JWT/SSO platforms.',
+                title: 'High Availability Relays',
+                desc: 'Our BNX mail relays feature a 99.99% uptime SLA with active load balancers and robust queue managers.',
                 icon: Workflow,
                 bg: 'bg-emerald-50 text-emerald-600 border-emerald-100'
               },
               {
-                title: 'Direct Career Pathways (PPO)',
-                desc: 'Our program is a talent incubator. High performing program graduates receive pre-placement offers to join full-time.',
+                title: 'Centralized Workspaces',
+                desc: 'Consolidate your business toolchain. Seamlessly bridge email threads into sprint tasks or live discussion boards.',
                 icon: Award,
                 bg: 'bg-purple-50 text-purple-600 border-purple-100'
               }

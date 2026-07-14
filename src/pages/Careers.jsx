@@ -609,11 +609,10 @@ export default function Careers() {
                       <h4 className="text-base font-extrabold text-slate-900">{taskData.candidate.fullName}</h4>
                       <p className="text-slate-500 text-xs mt-0.5">Applied for <strong>{taskData.candidate.jobTitle || 'Developer'}</strong></p>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
-                      taskData.status === 'SUBMITTED' 
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${taskData.status === 'SUBMITTED'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         : 'bg-purple-50 text-purple-700 border-purple-200'
-                    }`}>
+                      }`}>
                       {taskData.status}
                     </span>
                   </div>
@@ -821,9 +820,9 @@ export default function Careers() {
           <>
             {/* COMBINED HERO & OPEN ROLES GROUP */}
             <div className="space-y-12">
-          {/* HERO SECTION */}
-          <div className="text-center max-w-3xl mx-auto pt-8 pb-4 space-y-6">
-            {/* <motion.div
+              {/* HERO SECTION */}
+              <div className="text-center max-w-3xl mx-auto pt-8 pb-4 space-y-6">
+                {/* <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider"
@@ -832,518 +831,518 @@ export default function Careers() {
               <span>Join Our Team</span>
             </motion.div> */}
 
-            <motion.h1
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-slate-900"
-            >
-              Shape Tomorrow
-              <span className="block bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-purple-600 bg-clip-text text-transparent mt-1">
-                With Us
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.15 }}
-              className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
-            >
-              At Beta, we design and deliver high-performance real-time enterprise software. We respect developer focus, async workflow, and premium user experience design.
-            </motion.p>
-          </div>
-
-          {/* SECTION 3: OPEN ROLES SECTION */}
-          <div id="search-roles" className="space-y-6">
-            <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
-
-
-
-
-            </div>
-
-            <div className="w-full max-w-5xl mx-auto hacker-layout-box unified-openings-box p-6 sm:p-8 rounded-2xl shadow-xl shadow-purple-500/5 text-left space-y-6">
-              {/* Header inside Box with Centered Title, and Search Bar + Filter Button */}
-              <div className="flex flex-col items-center justify-center gap-4 border-b border-purple-500/10 pb-6 w-full">
-                <div className="text-center">
-                  <h3 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">
-                    Open Roles
-                  </h3>
-                  <span className="text-xs md:text-sm font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-1">
-                    Explore Opportunities
+                <motion.h1
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-slate-900"
+                >
+                  Shape Tomorrow
+                  <span className="block bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-purple-600 bg-clip-text text-transparent mt-1">
+                    With Us
                   </span>
-                </div>
+                </motion.h1>
 
-                <div className="flex items-center justify-center gap-3 w-full">
-                  <div className="relative flex-grow max-w-md flex items-center">
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search roles..."
-                      className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-xl py-2 pl-9 pr-8 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-sm shadow-sm transition duration-300"
-                    />
-                    <Search className="absolute left-3 h-4 w-4 text-slate-400 pointer-events-none" />
-                    {searchQuery && (
-                      <button
-                        type="button"
-                        onClick={() => setSearchQuery('')}
-                        className="absolute right-3 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    )}
-                  </div>
-
-
-
-                  <button
-                    type="button"
-                    onClick={() => setShowFilters(!showFilters)}
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap ${showFilters
-                      ? 'bg-[#8B5CF6] border-transparent text-white shadow-[#8B5CF6]/20'
-                      : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 shadow-purple-500/5'
-                      }`}
-                  >
-                    <SlidersHorizontal className="h-3.5 w-3.5" />
-                    <span>Filters</span>
-                    {(selectedTeam || selectedLocation || selectedType) && (
-                      <span className="flex h-1.5 w-1.5 rounded-full bg-[#EC4899] animate-pulse"></span>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleMyJobsClick}
-                    className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-purple-500/20 bg-white text-slate-700 hover:bg-slate-50 hover:border-purple-500/40 hover:shadow-purple-500/10 transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap"
-                  >
-                    <Briefcase className="h-3.5 w-3.5 text-purple-600" />
-                    <span>My Jobs</span>
-                  </button>
-                </div>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.15 }}
+                  className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+                >
+                  At Beta, we design and deliver high-performance real-time enterprise software. We respect developer focus, async workflow, and premium user experience design.
+                </motion.p>
               </div>
 
-              {/* Expandable Filter Panel inside Box */}
-              <AnimatePresence>
-                {showFilters && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                    animate={{ opacity: 1, height: 'auto', marginTop: 0 }}
-                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className="overflow-hidden w-full border-b border-purple-500/10 pb-6"
-                  >
-                    <div className="bg-white/80 border border-purple-500/10 rounded-xl p-4 shadow-sm flex flex-col gap-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {/* Department Filter */}
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Department</label>
-                          <select
-                            value={selectedTeam}
-                            onChange={(e) => setSelectedTeam(e.target.value)}
-                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
-                          >
-                            <option value="">All Departments</option>
-                            {teams.map(team => (
-                              <option key={team} value={team}>{team}</option>
-                            ))}
-                          </select>
-                        </div>
+              {/* SECTION 3: OPEN ROLES SECTION */}
+              <div id="search-roles" className="space-y-6">
+                <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
 
-                        {/* Location Filter */}
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Location</label>
-                          <select
-                            value={selectedLocation}
-                            onChange={(e) => setSelectedLocation(e.target.value)}
-                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
-                          >
-                            <option value="">All Locations</option>
-                            {locations.map(loc => (
-                              <option key={loc} value={loc}>{loc}</option>
-                            ))}
-                          </select>
-                        </div>
 
-                        {/* Job Type Filter */}
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Job Type</label>
-                          <select
-                            value={selectedType}
-                            onChange={(e) => setSelectedType(e.target.value)}
-                            className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
-                          >
-                            <option value="">All Types</option>
-                            {types.map(type => (
-                              <option key={type} value={type}>{type}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
 
-                      {/* Active Filter Pills and Clear Button */}
-                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-purple-500/10 pt-3">
-                        <div className="flex flex-wrap gap-2">
-                          {selectedTeam && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-700 text-[10px] font-semibold">
-                              Dept: {selectedTeam}
-                              <button onClick={() => setSelectedTeam('')} className="hover:text-purple-900 cursor-pointer">
-                                <X className="h-3 w-3" />
-                              </button>
-                            </span>
-                          )}
-                          {selectedLocation && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-700 text-[10px] font-semibold">
-                              Loc: {selectedLocation}
-                              <button onClick={() => setSelectedLocation('')} className="hover:text-pink-900 cursor-pointer">
-                                <X className="h-3 w-3" />
-                              </button>
-                            </span>
-                          )}
-                          {selectedType && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 text-[10px] font-semibold">
-                              Type: {selectedType}
-                              <button onClick={() => setSelectedType('')} className="hover:text-amber-900 cursor-pointer">
-                                <X className="h-3 w-3" />
-                              </button>
-                            </span>
-                          )}
-                        </div>
 
-                        {(selectedTeam || selectedLocation || selectedType) && (
+                </div>
+
+                <div className="w-full max-w-5xl mx-auto hacker-layout-box unified-openings-box p-6 sm:p-8 rounded-2xl shadow-xl shadow-purple-500/5 text-left space-y-6">
+                  {/* Header inside Box with Centered Title, and Search Bar + Filter Button */}
+                  <div className="flex flex-col items-center justify-center gap-4 border-b border-purple-500/10 pb-6 w-full">
+                    <div className="text-center">
+                      <h3 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">
+                        Open Roles
+                      </h3>
+                      <span className="text-xs md:text-sm font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-1">
+                        Explore Opportunities
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-3 w-full">
+                      <div className="relative flex-grow max-w-md flex items-center">
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Search roles..."
+                          className="w-full bg-white text-slate-900 placeholder-slate-400 border border-purple-500/20 rounded-xl py-2 pl-9 pr-8 focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] text-sm shadow-sm transition duration-300"
+                        />
+                        <Search className="absolute left-3 h-4 w-4 text-slate-400 pointer-events-none" />
+                        {searchQuery && (
                           <button
                             type="button"
-                            onClick={() => {
-                              setSelectedTeam('');
-                              setSelectedLocation('');
-                              setSelectedType('');
-                            }}
-                            className="text-xs font-semibold text-[#EC4899] hover:underline cursor-pointer"
+                            onClick={() => setSearchQuery('')}
+                            className="absolute right-3 p-0.5 hover:bg-slate-100 rounded-full transition text-slate-400 cursor-pointer"
                           >
-                            Clear All Filters
+                            <X className="h-3 w-3" />
                           </button>
                         )}
                       </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
-              {/* Job list inside container */}
-              <div className="flex flex-col gap-4 w-full">
-                <AnimatePresence mode="wait">
-                  {displayedJobs.length > 0 ? (
-                    displayedJobs.map((job) => (
-                      <motion.div
-                        key={job.id}
-                        layout
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.3 }}
-                        className="p-5 rounded-xl border border-blue-500/20 bg-[#dbeafe]/60 hover:bg-[#dbeafe]/85 hover:border-blue-500/35 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
+
+
+                      <button
+                        type="button"
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap ${showFilters
+                          ? 'bg-[#8B5CF6] border-transparent text-white shadow-[#8B5CF6]/20'
+                          : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 shadow-purple-500/5'
+                          }`}
                       >
-                        <div className="space-y-4 flex-grow">
-                          <div>
-                            <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300 flex flex-wrap items-center gap-2">
-                              {job.title}
-                              {currentPage === 'upcoming' && (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-extrabold bg-[#EC4899]/15 text-[#EC4899] border border-[#EC4899]/20 uppercase tracking-widest select-none">
-                                  Coming Soon
-                                </span>
-                              )}
-                            </h3>
-                            <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
-                              {job.team}
-                            </span>
+                        <SlidersHorizontal className="h-3.5 w-3.5" />
+                        <span>Filters</span>
+                        {(selectedTeam || selectedLocation || selectedType) && (
+                          <span className="flex h-1.5 w-1.5 rounded-full bg-[#EC4899] animate-pulse"></span>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleMyJobsClick}
+                        className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-purple-500/20 bg-white text-slate-700 hover:bg-slate-50 hover:border-purple-500/40 hover:shadow-purple-500/10 transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap"
+                      >
+                        <Briefcase className="h-3.5 w-3.5 text-purple-600" />
+                        <span>My Jobs</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Expandable Filter Panel inside Box */}
+                  <AnimatePresence>
+                    {showFilters && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{ opacity: 1, height: 'auto', marginTop: 0 }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="overflow-hidden w-full border-b border-purple-500/10 pb-6"
+                      >
+                        <div className="bg-white/80 border border-purple-500/10 rounded-xl p-4 shadow-sm flex flex-col gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {/* Department Filter */}
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Department</label>
+                              <select
+                                value={selectedTeam}
+                                onChange={(e) => setSelectedTeam(e.target.value)}
+                                className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                              >
+                                <option value="">All Departments</option>
+                                {teams.map(team => (
+                                  <option key={team} value={team}>{team}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Location Filter */}
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Location</label>
+                              <select
+                                value={selectedLocation}
+                                onChange={(e) => setSelectedLocation(e.target.value)}
+                                className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                              >
+                                <option value="">All Locations</option>
+                                {locations.map(loc => (
+                                  <option key={loc} value={loc}>{loc}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Job Type Filter */}
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Job Type</label>
+                              <select
+                                value={selectedType}
+                                onChange={(e) => setSelectedType(e.target.value)}
+                                className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2 px-3 focus:outline-none focus:border-[#8B5CF6] text-xs transition cursor-pointer"
+                              >
+                                <option value="">All Types</option>
+                                {types.map(type => (
+                                  <option key={type} value={type}>{type}</option>
+                                ))}
+                              </select>
+                            </div>
                           </div>
 
-                          <div className="space-y-2 border-t border-b border-blue-500/15 py-3 text-xs text-slate-600 font-medium">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-[#EC4899]">•</span>
-                              <span>{job.location} • {job.type}</span>
+                          {/* Active Filter Pills and Clear Button */}
+                          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-purple-500/10 pt-3">
+                            <div className="flex flex-wrap gap-2">
+                              {selectedTeam && (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-700 text-[10px] font-semibold">
+                                  Dept: {selectedTeam}
+                                  <button onClick={() => setSelectedTeam('')} className="hover:text-purple-900 cursor-pointer">
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                </span>
+                              )}
+                              {selectedLocation && (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-700 text-[10px] font-semibold">
+                                  Loc: {selectedLocation}
+                                  <button onClick={() => setSelectedLocation('')} className="hover:text-pink-900 cursor-pointer">
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                </span>
+                              )}
+                              {selectedType && (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 text-[10px] font-semibold">
+                                  Type: {selectedType}
+                                  <button onClick={() => setSelectedType('')} className="hover:text-amber-900 cursor-pointer">
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                </span>
+                              )}
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-[#EC4899]">•</span>
-                              <span>{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
-                            </div>
-                            {job.description && (
-                              <div className="flex items-start space-x-2">
-                                <span className="text-[#EC4899] select-none">•</span>
-                                <span className="text-slate-500 leading-relaxed">{job.description}</span>
-                              </div>
+
+                            {(selectedTeam || selectedLocation || selectedType) && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedTeam('');
+                                  setSelectedLocation('');
+                                  setSelectedType('');
+                                }}
+                                className="text-xs font-semibold text-[#EC4899] hover:underline cursor-pointer"
+                              >
+                                Clear All Filters
+                              </button>
                             )}
                           </div>
                         </div>
-
-                        <div className="flex-shrink-0 w-full sm:w-auto">
-                          {currentPage === 'upcoming' ? (
-                            <button
-                              onClick={() => setSelectedJob(job)}
-                              className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-[#EC4899]/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#EC4899] hover:text-white border border-[#EC4899]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap animate-pulse"
-                            >
-                              Express Interest
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => setSelectedJob(job)}
-                              className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
-                            >
-                              Apply Now
-                            </button>
-                          )}
-                        </div>
                       </motion.div>
-                    ))
-                  ) : (
-                    <div className="text-center py-12 text-slate-400 italic text-sm">
-                      No positions found. Try adjusting filters or search keywords.
+                    )}
+                  </AnimatePresence>
+
+                  {/* Job list inside container */}
+                  <div className="flex flex-col gap-4 w-full">
+                    <AnimatePresence mode="wait">
+                      {displayedJobs.length > 0 ? (
+                        displayedJobs.map((job) => (
+                          <motion.div
+                            key={job.id}
+                            layout
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.3 }}
+                            className="p-5 rounded-xl border border-blue-500/20 bg-[#dbeafe]/60 hover:bg-[#dbeafe]/85 hover:border-blue-500/35 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
+                          >
+                            <div className="space-y-4 flex-grow">
+                              <div>
+                                <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300 flex flex-wrap items-center gap-2">
+                                  {job.title}
+                                  {currentPage === 'upcoming' && (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-extrabold bg-[#EC4899]/15 text-[#EC4899] border border-[#EC4899]/20 uppercase tracking-widest select-none">
+                                      Coming Soon
+                                    </span>
+                                  )}
+                                </h3>
+                                <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
+                                  {job.team}
+                                </span>
+                              </div>
+
+                              <div className="space-y-2 border-t border-b border-blue-500/15 py-3 text-xs text-slate-600 font-medium">
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-[#EC4899]">•</span>
+                                  <span>{job.location} • {job.type}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-[#EC4899]">•</span>
+                                  <span>{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
+                                </div>
+                                {job.description && (
+                                  <div className="flex items-start space-x-2">
+                                    <span className="text-[#EC4899] select-none">•</span>
+                                    <span className="text-slate-500 leading-relaxed">{job.description}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="flex-shrink-0 w-full sm:w-auto">
+                              {currentPage === 'upcoming' ? (
+                                <button
+                                  onClick={() => setSelectedJob(job)}
+                                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-[#EC4899]/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#EC4899] hover:text-white border border-[#EC4899]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap animate-pulse"
+                                >
+                                  Express Interest
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => setSelectedJob(job)}
+                                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
+                                >
+                                  Apply Now
+                                </button>
+                              )}
+                            </div>
+                          </motion.div>
+                        ))
+                      ) : (
+                        <div className="text-center py-12 text-slate-400 italic text-sm">
+                          No positions found. Try adjusting filters or search keywords.
+                        </div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Pagination / Toggle Next button inside the white box */}
+                    <div className="flex justify-end pt-4 border-t border-purple-500/10 w-full mt-2">
+                      {currentPage === 'active' ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCurrentPage('upcoming');
+                            document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                          className="px-5 py-2.5 rounded-xl text-xs font-black bg-white hover:bg-slate-50 text-[#8B5CF6] hover:text-[#EC4899] border border-purple-500/20 shadow-sm transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <span>See Upcoming Openings</span>
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCurrentPage('active');
+                            document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                          className="px-5 py-2.5 rounded-xl text-xs font-black bg-white hover:bg-slate-50 text-slate-700 hover:text-[#8B5CF6] border border-purple-500/20 shadow-sm transition-all duration-300 flex items-center gap-1.5 cursor-pointer mr-auto"
+                        >
+                          <ArrowLeft className="h-3.5 w-3.5" />
+                          <span>Back to Active Roles</span>
+                        </button>
+                      )}
                     </div>
-                  )}
-                </AnimatePresence>
-
-                {/* Pagination / Toggle Next button inside the white box */}
-                <div className="flex justify-end pt-4 border-t border-purple-500/10 w-full mt-2">
-                  {currentPage === 'active' ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCurrentPage('upcoming');
-                        document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="px-5 py-2.5 rounded-xl text-xs font-black bg-white hover:bg-slate-50 text-[#8B5CF6] hover:text-[#EC4899] border border-purple-500/20 shadow-sm transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <span>See Upcoming Openings</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCurrentPage('active');
-                        document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="px-5 py-2.5 rounded-xl text-xs font-black bg-white hover:bg-slate-50 text-slate-700 hover:text-[#8B5CF6] border border-purple-500/20 shadow-sm transition-all duration-300 flex items-center gap-1.5 cursor-pointer mr-auto"
-                    >
-                      <ArrowLeft className="h-3.5 w-3.5" />
-                      <span>Back to Active Roles</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* SECTION 6: HIRING PROCESS */}
-        <div className="space-y-16">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
-              <CheckSquare className="h-3.5 w-3.5" />
-              <span>Hiring Pipeline</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold">Our Hiring Process</h2>
-            <p className="text-slate-500 text-sm">A quick outline of how we validate core competencies and welcome new team members.</p>
-          </div>
-
-          {/* Connected Glowing Nodes Timeline */}
-          <div className="relative max-w-4xl mx-auto pt-6 flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-between gap-8 md:gap-4">
-            {processSteps.map((step, idx) => {
-              const Icon = step.icon;
-              return (
-                <React.Fragment key={step.id}>
-                  {/* Glowing Node Circle */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-full md:w-[18%] group relative"
-                  >
-                    <div className={`h-12 w-12 rounded-full flex items-center justify-center border ${step.bg} mb-3 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105`}>
-                      <Icon className={`h-5.5 w-5.5 ${step.color}`} />
-                    </div>
-                    <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest mb-1">
-                      Step {step.id}
-                    </span>
-                    <h4 className="text-xs font-black group-hover:text-[#EC4899] transition-colors">
-                      {step.title}
-                    </h4>
-                    <p className="text-[10px] text-slate-500 leading-relaxed mt-1 font-medium">
-                      {step.desc}
-                    </p>
-                  </motion.div>
-
-                  {/* Node Connector Line */}
-                  {idx < processSteps.length - 1 && (
-                    <div className="hidden md:block h-[2px] flex-grow bg-gradient-to-r from-[#8B5CF6]/50 to-[#EC4899]/50 relative z-0 mx-2" />
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* SECTION 4: TEAM CULTURE MASONRY */}
-        <div className="space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
-              <Users className="h-3.5 w-3.5" />
-              <span>Team Culture</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold">Our Team Culture</h2>
-            <p className="text-slate-500 text-sm">A look inside our technical sprints, hackathons, and global offsites.</p>
-          </div>
-
-          {/* Sequential Grid Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {/* Box 1 (Text Quote) */}
-            <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
-              <Quote className="h-8 w-8 text-[#EC4899] opacity-40 mb-4" />
-              <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
-                "We don't build software to hit corporate metrics. We design and deliver real-time systems that solve actual production bottlenecks for customers globally."
-              </p>
-              <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
-                <img src="/marcus_avatar.png" alt="Marcus" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
-                <div className="text-left">
-                  <h5 className="text-xs font-bold">Marcus Sterling</h5>
-                  <p className="text-[10px] text-[#EC4899] font-semibold">Chief Technology Officer</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Box 2 (Text Highlight Content) */}
-            <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
-              <Code2 className="h-8 w-8 text-[#8B5CF6] opacity-40 mb-4" />
-              <div className="space-y-3 flex-grow text-left">
-                <h4 className="text-sm font-bold text-slate-800">Interactive Technology</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  We develop premium user interfaces using React, Tailwind CSS, and custom WebSocket pipelines (STOMP). Our engineers focus on low-latency state synchronization, smooth keyframe animations, and highly responsive layouts that delight users.
-                </p>
-              </div>
-              <div className="border-t border-purple-500/10 pt-4 mt-6 text-left">
-                <span className="text-[10px] uppercase font-bold text-[#8B5CF6] tracking-wider">
-                  Our Engineering Core
-                </span>
-              </div>
-            </div>
-
-            {/* Box 3 (Text Quote) */}
-            <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
-              <Quote className="h-8 w-8 text-[#8B5CF6] opacity-40 mb-4" />
-              <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
-                "Our designs prioritize aesthetics and responsiveness. Using HSL palettes and custom-built tokens, we create interfaces that look absolutely premium."
-              </p>
-              <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
-                <img src="/ananya_avatar.png" alt="Ananya" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
-                <div className="text-left">
-                  <h5 className="text-xs font-bold">Ananya Nair</h5>
-                  <p className="text-[10px] text-[#8B5CF6] font-semibold">Head of Design</p>
+            {/* SECTION 6: HIRING PROCESS */}
+            <div className="space-y-16">
+              <div className="text-center max-w-2xl mx-auto space-y-3">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
+                  <CheckSquare className="h-3.5 w-3.5" />
+                  <span>Hiring Pipeline</span>
                 </div>
+                <h2 className="text-3xl md:text-5xl font-extrabold">Our Hiring Process</h2>
+                <p className="text-slate-500 text-sm">A quick outline of how we validate core competencies and welcome new team members.</p>
+              </div>
+
+              {/* Connected Glowing Nodes Timeline */}
+              <div className="relative max-w-4xl mx-auto pt-6 flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-between gap-8 md:gap-4">
+                {processSteps.map((step, idx) => {
+                  const Icon = step.icon;
+                  return (
+                    <React.Fragment key={step.id}>
+                      {/* Glowing Node Circle */}
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: idx * 0.1 }}
+                        className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-full md:w-[18%] group relative"
+                      >
+                        <div className={`h-12 w-12 rounded-full flex items-center justify-center border ${step.bg} mb-3 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105`}>
+                          <Icon className={`h-5.5 w-5.5 ${step.color}`} />
+                        </div>
+                        <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest mb-1">
+                          Step {step.id}
+                        </span>
+                        <h4 className="text-xs font-black group-hover:text-[#EC4899] transition-colors">
+                          {step.title}
+                        </h4>
+                        <p className="text-[10px] text-slate-500 leading-relaxed mt-1 font-medium">
+                          {step.desc}
+                        </p>
+                      </motion.div>
+
+                      {/* Node Connector Line */}
+                      {idx < processSteps.length - 1 && (
+                        <div className="hidden md:block h-[2px] flex-grow bg-gradient-to-r from-[#8B5CF6]/50 to-[#EC4899]/50 relative z-0 mx-2" />
+                      )}
+                    </React.Fragment>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Box 4 (Small Card) */}
-            <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 shadow-md relative overflow-hidden text-left flex flex-col justify-between group">
-              <div>
-                <h4 className="text-base font-bold mb-2">No-Meeting Wednesdays</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  We protect developers' deep focus. Mid-week days are dedicated purely to code, research, and flow.
-                </p>
-              </div>
-              <div className="border-t border-purple-500/10 pt-4 mt-6">
-                <span className="text-[10px] font-extrabold text-[#F59E0B] uppercase tracking-wider">Async Focus block</span>
-              </div>
-            </div>
-
-            {/* Box 5 (Quote) */}
-            <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
-              <Quote className="h-8 w-8 text-[#EC4899] opacity-40 mb-4" />
-              <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
-                "Working asynchronously is our superpower. We pair program over codebases and communicate through design RFCs instead of sitting in long daily standups."
-              </p>
-              <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
-                <img src="/rohan_avatar.png" alt="Rohan" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
-                <div className="text-left">
-                  <h5 className="text-xs font-bold">Rohan Sen</h5>
-                  <p className="text-[10px] text-[#EC4899] font-semibold">Frontend Architect</p>
+            {/* SECTION 4: TEAM CULTURE MASONRY */}
+            <div className="space-y-12">
+              <div className="text-center max-w-2xl mx-auto space-y-3">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
+                  <Users className="h-3.5 w-3.5" />
+                  <span>Team Culture</span>
                 </div>
+                <h2 className="text-3xl md:text-5xl font-extrabold">Our Team Culture</h2>
+                <p className="text-slate-500 text-sm">A look inside our technical sprints, hackathons, and global offsites.</p>
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* SECTION 5: BENEFITS SECTION */}
-        <div className="space-y-16">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
-              <Award className="h-3.5 w-3.5" />
-              <span>Compensation & Benefits</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold">Perks & Benefits</h2>
-            <p className="text-slate-500 text-sm">We provide everything you need to deliver high-quality work, grow your skillset, and stay healthy.</p>
-          </div>
-
-          {/* Floating Circular Cards Layout */}
-          <div className="flex flex-wrap items-center justify-center gap-10 max-w-5xl mx-auto">
-            {benefits.map((ben, idx) => {
-              const isEven = idx % 2 === 0;
-              return (
-                <motion.div
-                  key={ben.title}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className={`h-48 w-48 rounded-full border border-purple-200 bg-white/80 shadow-lg shadow-purple-500/5 flex flex-col items-center justify-center p-6 text-center space-y-2 relative group overflow-hidden ${isEven ? 'float-circle-even' : 'float-circle-odd'
-                    }`}
-                >
-                  {/* Backdrop glow */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-[#8B5CF6]/10 to-[#EC4899]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                  <span className="text-3xl select-none" role="img" aria-label={ben.title}>
-                    {ben.emoji}
-                  </span>
-                  <h4 className="text-sm font-extrabold group-hover:text-[#EC4899] transition-colors">
-                    {ben.title}
-                  </h4>
-                  <p className="text-[10px] text-slate-500 leading-relaxed line-clamp-3 select-none">
-                    {ben.desc}
+              {/* Sequential Grid Layout */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {/* Box 1 (Text Quote) */}
+                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
+                  <Quote className="h-8 w-8 text-[#EC4899] opacity-40 mb-4" />
+                  <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
+                    "We don't build software to hit corporate metrics. We design and deliver real-time systems that solve actual production bottlenecks for customers globally."
                   </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+                  <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
+                    <img src="/marcus_avatar.png" alt="Marcus" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
+                    <div className="text-left">
+                      <h5 className="text-xs font-bold">Marcus Sterling</h5>
+                      <p className="text-[10px] text-[#EC4899] font-semibold">Chief Technology Officer</p>
+                    </div>
+                  </div>
+                </div>
 
+                {/* Box 2 (Text Highlight Content) */}
+                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
+                  <Code2 className="h-8 w-8 text-[#8B5CF6] opacity-40 mb-4" />
+                  <div className="space-y-3 flex-grow text-left">
+                    <h4 className="text-sm font-bold text-slate-800">Interactive Technology</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">
+                      We develop premium user interfaces using React, Tailwind CSS, and custom WebSocket pipelines (STOMP). Our engineers focus on low-latency state synchronization, smooth keyframe animations, and highly responsive layouts that delight users.
+                    </p>
+                  </div>
+                  <div className="border-t border-purple-500/10 pt-4 mt-6 text-left">
+                    <span className="text-[10px] uppercase font-bold text-[#8B5CF6] tracking-wider">
+                      Our Engineering Core
+                    </span>
+                  </div>
+                </div>
 
+                {/* Box 3 (Text Quote) */}
+                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
+                  <Quote className="h-8 w-8 text-[#8B5CF6] opacity-40 mb-4" />
+                  <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
+                    "Our designs prioritize aesthetics and responsiveness. Using HSL palettes and custom-built tokens, we create interfaces that look absolutely premium."
+                  </p>
+                  <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
+                    <img src="/ananya_avatar.png" alt="Ananya" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
+                    <div className="text-left">
+                      <h5 className="text-xs font-bold">Ananya Nair</h5>
+                      <p className="text-[10px] text-[#8B5CF6] font-semibold">Head of Design</p>
+                    </div>
+                  </div>
+                </div>
 
-        {/* SECTION 8: CALL TO ACTION SECTION */}
-        <div className="cta-block relative overflow-hidden rounded-3xl p-10 md:p-16 border border-purple-500/30 text-center shadow-2xl" style={{ background: 'linear-gradient(135deg, #8B5CF6, #EC4899)' }}>
-          {/* Floating glow circles inside CTA */}
-          <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+                {/* Box 4 (Small Card) */}
+                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 shadow-md relative overflow-hidden text-left flex flex-col justify-between group">
+                  <div>
+                    <h4 className="text-base font-bold mb-2">No-Meeting Wednesdays</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">
+                      We protect developers' deep focus. Mid-week days are dedicated purely to code, research, and flow.
+                    </p>
+                  </div>
+                  <div className="border-t border-purple-500/10 pt-4 mt-6">
+                    <span className="text-[10px] font-extrabold text-[#F59E0B] uppercase tracking-wider">Async Focus block</span>
+                  </div>
+                </div>
 
-          <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">
-              Ready to Build Something Amazing?
-            </h2>
-            <p className="text-white/80 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-medium">
-              Join a team of creators, system architects, and designers scaling software to thousands of businesses globally.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
-              <a
-                href="#search-roles"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-purple-950/20 hover:bg-purple-950/45 text-white border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02]"
-              >
-                Apply Now
-              </a>
+                {/* Box 5 (Quote) */}
+                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
+                  <Quote className="h-8 w-8 text-[#EC4899] opacity-40 mb-4" />
+                  <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
+                    "Working asynchronously is our superpower. We pair program over codebases and communicate through design RFCs instead of sitting in long daily standups."
+                  </p>
+                  <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
+                    <img src="/rohan_avatar.png" alt="Rohan" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
+                    <div className="text-left">
+                      <h5 className="text-xs font-bold">Rohan Sen</h5>
+                      <p className="text-[10px] text-[#EC4899] font-semibold">Frontend Architect</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </>
-    ) : (
-      <motion.div
+
+            {/* SECTION 5: BENEFITS SECTION */}
+            <div className="space-y-16">
+              <div className="text-center max-w-2xl mx-auto space-y-3">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
+                  <Award className="h-3.5 w-3.5" />
+                  <span>Compensation & Benefits</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-extrabold">Perks & Benefits</h2>
+                <p className="text-slate-500 text-sm">We provide everything you need to deliver high-quality work, grow your skillset, and stay healthy.</p>
+              </div>
+
+              {/* Floating Circular Cards Layout */}
+              <div className="flex flex-wrap items-center justify-center gap-10 max-w-5xl mx-auto">
+                {benefits.map((ben, idx) => {
+                  const isEven = idx % 2 === 0;
+                  return (
+                    <motion.div
+                      key={ben.title}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: idx * 0.1 }}
+                      className={`h-48 w-48 rounded-full border border-purple-200 bg-white/80 shadow-lg shadow-purple-500/5 flex flex-col items-center justify-center p-6 text-center space-y-2 relative group overflow-hidden ${isEven ? 'float-circle-even' : 'float-circle-odd'
+                        }`}
+                    >
+                      {/* Backdrop glow */}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-[#8B5CF6]/10 to-[#EC4899]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                      <span className="text-3xl select-none" role="img" aria-label={ben.title}>
+                        {ben.emoji}
+                      </span>
+                      <h4 className="text-sm font-extrabold group-hover:text-[#EC4899] transition-colors">
+                        {ben.title}
+                      </h4>
+                      <p className="text-[10px] text-slate-500 leading-relaxed line-clamp-3 select-none">
+                        {ben.desc}
+                      </p>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+
+
+            {/* SECTION 8: CALL TO ACTION SECTION */}
+            <div className="cta-block relative overflow-hidden rounded-3xl p-10 md:p-16 border border-purple-500/30 text-center shadow-2xl" style={{ background: 'linear-gradient(135deg, #8B5CF6, #EC4899)' }}>
+              {/* Floating glow circles inside CTA */}
+              <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
+                <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">
+                  Ready to Build Something Amazing?
+                </h2>
+                <p className="text-white/80 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-medium">
+                  Join a team of creators, system architects, and designers scaling software to thousands of businesses globally.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+                  <a
+                    href="#search-roles"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-purple-950/20 hover:bg-purple-950/45 text-white border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    Apply Now
+                  </a>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -1433,7 +1432,7 @@ export default function Careers() {
                     activeIdx = 4;
                   }
 
-                  const steps = ['Apply', 'Test Round', 'Technical Interview', 'TaskAssessment', 'HR interview'];
+                  const steps = ['Apply', 'Test Round', 'Technical Interview', 'Task Assessment', 'HR interview'];
 
                   return (
                     <div
