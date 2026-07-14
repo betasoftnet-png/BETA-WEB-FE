@@ -457,7 +457,7 @@ export default function Navbar() {
                                       </div>
 
                                       {/* Divider Line below Base */}
-                                      <div className="border-t border-slate-200 -ml-6 -mr-2 opacity-80" />
+                                      <hr className="border-t border-slate-200 -ml-6 -mr-2 opacity-80" />
 
                                       {/* Aligns with B2Auth */}
                                       <div className="h-[60px] flex items-center animate-fadeIn">

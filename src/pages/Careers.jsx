@@ -123,7 +123,7 @@ const upcomingJobs = [
 
 const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
-  if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Candidates';
+  if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Applied';
   if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 test';
   if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 1 Technical';
   if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 2 Brand Awareness';
@@ -132,7 +132,7 @@ const mapStatusToUI = (status) => {
   if (s === 'approved' || s === 'selected') return 'Selected';
   if (s === 'rejected') return 'Rejected';
   if (s === 'joined') return 'Joined';
-  return 'Candidates';
+  return 'Applied';
 };
 
 const formatDate = (isoString) => {
@@ -365,6 +365,12 @@ export default function Careers() {
       return;
     }
 
+    if (phone.replace(/\D/g, '').length !== 10) {
+      setStatus("error");
+      setMessage("Phone number must be exactly 10 digits.");
+      return;
+    }
+
     setStatus("loading");
     setMessage("");
 
@@ -506,7 +512,7 @@ export default function Careers() {
           if (localMatch.aptitudeScore !== undefined && localMatch.aptitudeScore !== null && normalized.aptitudeScore === '') {
             normalized.aptitudeScore = localMatch.aptitudeScore;
           }
-          if (localMatch.status && localMatch.status !== normalized.status && localMatch.status !== 'Candidates') {
+          if (localMatch.status && localMatch.status !== normalized.status && localMatch.status !== 'Applied') {
             normalized.status = localMatch.status;
           }
         }
@@ -525,7 +531,7 @@ export default function Careers() {
             phone: localApp.phone || '',
             resumeUrl: localApp.resumeUrl || '',
             coverLetter: localApp.coverLetter || '',
-            status: localApp.status || 'Candidates',
+            status: localApp.status || 'Applied',
             createdAt: localApp.createdAt || new Date().toISOString(),
             jobTitle: localApp.jobTitle || '',
             jobDepartment: localApp.jobDepartment || 'Engineering',
@@ -1711,52 +1717,29 @@ export default function Careers() {
                 </div>
               ) : (
                 <form onSubmit={handleApply} className="space-y-4">
+                  {/* Pre-fetched Logged-in User Information */}
+                  <div className="p-4 bg-purple-50/50 border border-purple-100 rounded-2xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold animate-fadeIn">
+                    <div>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Full Name</span>
+                      <span className="text-slate-800 text-sm font-bold">{fullName || "Not Available"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Email Address</span>
+                      <span className="text-slate-850 text-sm font-bold">{email || "Not Available"}</span>
+                    </div>
+                  </div>
+
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-500 uppercase">Full Name</label>
+                    <label className="text-xs font-bold text-slate-500 uppercase">Phone Number</label>
                     <input
-                      type="text"
+                      type="tel"
+                      pattern="[0-9]{10}"
+                      maxLength="10"
                       required
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      placeholder="e.g. Robert Downey"
-                      className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-500 uppercase">Email Address</label>
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="e.g. rob@domain.com"
-                        className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-500 uppercase">Phone Number</label>
-                      <input
-                        type="text"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="e.g. +1 555-0199"
-                        className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-500 uppercase">Cover Letter</label>
-                    <textarea
-                      required
-                      rows="3"
-                      value={coverLetter}
-                      onChange={(e) => setCoverLetter(e.target.value)}
-                      placeholder="Introduce yourself and state why you're a fit..."
-                      className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                      placeholder="e.g. 9876543210"
+                      className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition font-semibold"
                     />
                   </div>
 

@@ -13,7 +13,7 @@ import api from '../api';
 
 const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
-  if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Candidates';
+  if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Applied';
   if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 Aptitude';
   if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 2 Technical';
   if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 3 Brand Awareness';
@@ -22,7 +22,7 @@ const mapStatusToUI = (status) => {
   if (s === 'approved' || s === 'selected' || s === 'accepted') return 'Accepted';
   if (s === 'rejected') return 'Rejected';
   if (s === 'joined') return 'Joined';
-  return 'Candidates';
+  return 'Applied';
 };
 
 const BACKEND_API_BASE =
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
   const [selectedBrandDomainTab, setSelectedBrandDomainTab] = useState('BNX Mail');
   const [selectedJobFilter, setSelectedJobFilter] = useState('All');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState(() => {
-    return localStorage.getItem('admin_selected_status_filter') || 'Candidates';
+    return localStorage.getItem('admin_selected_status_filter') || 'Applied';
   });
   const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
   const [partnerships, setPartnerships] = useState([]);
@@ -410,7 +410,7 @@ export default function AdminDashboard() {
       setInterviewLink(selectedApplication.interviewLink || 'https://meet.google.com/abc-defg-hij');
       setHrInterviewDate(selectedApplication.hrInterviewDate || '');
       setHrInterviewTime(selectedApplication.hrInterviewTime || '');
-      setHrInterviewLocation(selectedApplication.hrInterviewLocation || '');
+      setHrInterviewLocation(selectedApplication.hrInterviewLocation || 'Beta Towers, No. 12, Main Road, Tiruvallur, Tamil Nadu 602001, India');
       setFetchedQuestions(null);
       setSelectedQuestionsForCandidate([]);
       const normStatus = mapStatusToUI(selectedApplication.status);
@@ -1193,14 +1193,14 @@ export default function AdminDashboard() {
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">
                 Candidate Pipeline
               </p>
-              {/* Candidates flat item */}
+              {/* Applied flat item */}
               {(() => {
-                const isActive = activeSubTab === 'appsList' && selectedStatusFilter === 'Candidates';
-                const count = externalApplications.filter(app => app.status === 'Candidates').length;
+                const isActive = activeSubTab === 'appsList' && selectedStatusFilter === 'Applied';
+                const count = externalApplications.filter(app => app.status === 'Applied').length;
                 return (
                   <button
                     onClick={() => {
-                      setSelectedStatusFilter('Candidates');
+                      setSelectedStatusFilter('Applied');
                       setActiveSubTab('appsList');
                     }}
                     className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[11px] font-semibold transition cursor-pointer text-left ${isActive
@@ -1208,7 +1208,7 @@ export default function AdminDashboard() {
                       : 'text-slate-400 hover:bg-slate-800/25 hover:text-white border border-transparent'
                       }`}
                   >
-                    <span>Candidates</span>
+                    <span>Applied</span>
                     <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-blue-600 text-white font-extrabold' : 'bg-slate-800 text-slate-450'
                       }`}>
                       {count}
@@ -2609,7 +2609,6 @@ export default function AdminDashboard() {
                             <th className="py-4 px-6 font-bold">Status</th>
                             <th className="py-4 px-6 font-bold">Date</th>
                             <th className="py-4 px-6 font-bold">Resume</th>
-                            <th className="py-4 px-6 font-bold">Cover Letter</th>
                             <th className="py-4 px-6 font-bold text-center">Action</th>
                           </tr>
                         </thead>
@@ -2619,7 +2618,7 @@ export default function AdminDashboard() {
                               .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
                               .filter(app => {
                                 if (statusFilter === 'All') return app.status === selectedStatusFilter;
-                                if (statusFilter === 'Pending') return app.status === 'Candidates';
+                                if (statusFilter === 'Pending') return app.status === 'Applied';
                                 return app.status === statusFilter;
                               })
                               .filter(app => {
@@ -2732,21 +2731,6 @@ export default function AdminDashboard() {
                                   ) : (
                                     <span className="text-slate-400 italic">No resume</span>
                                   )}
-                                </td>
-                                <td className="py-4 px-6 max-w-xs">
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setSelectedCoverLetter({
-                                        candidate: app.fullName,
-                                        job: app.jobTitle,
-                                        text: app.coverLetter
-                                      });
-                                    }}
-                                    className="text-[#004AAD] hover:text-blue-800 font-semibold underline underline-offset-2 text-left line-clamp-2 cursor-pointer bg-transparent border-none p-0"
-                                  >
-                                    {app.coverLetter}
-                                  </button>
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                   <div className="flex items-center justify-center gap-1.5">
@@ -2906,17 +2890,6 @@ export default function AdminDashboard() {
                           </div>
                         )}
                       </div>
-
-                      {selectedApplication.coverLetter && (
-                        <div className="pt-2.5 border-t border-slate-100">
-                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Cover Letter</label>
-                          <div className="bg-slate-50 border border-slate-200 p-2 rounded-lg max-h-[40px] overflow-y-auto mt-1">
-                            <p className="text-slate-650 text-[11px] leading-relaxed whitespace-pre-wrap">
-                              {selectedApplication.coverLetter}
-                            </p>
-                          </div>
-                        </div>
-                      )}
 
                       {selectedApplication.githubLink && (
                         <div className="pt-2.5 border-t border-slate-100">
@@ -3170,10 +3143,10 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={handleScheduleMeeting}
-                          disabled={schedulingMeeting || !interviewDate || !interviewTime || !interviewLink}
+                          disabled={schedulingMeeting || !interviewDate || !interviewTime || !interviewLink || selectedApplication?.interviewDate}
                           className="w-full flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#004AAD] hover:bg-[#003882] text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/10 border-none outline-none cursor-pointer"
                         >
-                          <span>{schedulingMeeting ? 'Scheduling & Emailing...' : 'Schedule & Send BNX Mail'}</span>
+                          <span>{schedulingMeeting ? 'Scheduling & Emailing...' : selectedApplication?.interviewDate ? 'Technical Interview Sent' : 'Schedule & Send BNX Mail'}</span>
                         </button>
                       </div>
                     </div>
@@ -3221,10 +3194,10 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={handleSaveHrInterview}
-                          disabled={savingHrInterview || !hrInterviewDate || !hrInterviewTime}
+                          disabled={savingHrInterview || !hrInterviewDate || !hrInterviewTime || !hrInterviewLocation || !hrInterviewLocation.trim() || selectedApplication?.hrInterviewDate}
                           className="w-full flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#004AAD] hover:bg-[#003882] text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/10 border-none outline-none cursor-pointer"
                         >
-                          <span>{savingHrInterview ? 'Sending...' : 'Send HR Interview Date & Time'}</span>
+                          <span>{savingHrInterview ? 'Sending...' : selectedApplication?.hrInterviewDate ? 'HR Interview Sent' : 'Send HR Interview Date & Time'}</span>
                         </button>
                       </div>
                     </div>
@@ -3910,18 +3883,6 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Cover Letter */}
-              {selectedApplication.coverLetter && (
-                <div>
-                  <label className="text-xs font-bold uppercase text-slate-800">Cover Letter</label>
-                  <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl max-h-[140px] overflow-y-auto mt-1.5">
-                    <p className="text-slate-700 text-xs leading-relaxed whitespace-pre-wrap">
-                      {selectedApplication.coverLetter}
-                    </p>
-                  </div>
-                </div>
-              )}
-
               {/* View Candidate Answers */}
               {(() => {
                 const assignedQuestionsKey = `assessment_questions_${selectedApplication.id}`;
@@ -3967,32 +3928,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Modal for Cover Letter Preview */}
-      {selectedCoverLetter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left">
-            <button
-              onClick={() => setSelectedCoverLetter(null)}
-              className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-650 transition"
-            >
-              <X className="h-5 w-5" />
-            </button>
 
-            <h3 className="text-xl font-extrabold text-slate-900 mb-2">
-              Cover Letter
-            </h3>
-            <p className="text-xs text-slate-500 mb-6">
-              Submitted by <strong className="text-slate-905">{selectedCoverLetter.candidate}</strong> for the position of <strong className="text-slate-905">{selectedCoverLetter.job}</strong>
-            </p>
-
-            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl max-h-[60vh] overflow-y-auto admin-scrollbar">
-              <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap no-override">
-                {selectedCoverLetter.text}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Modal for Aptitude Category Questions */}
       {selectedAptitudeCategory && (
