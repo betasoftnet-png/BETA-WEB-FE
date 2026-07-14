@@ -165,7 +165,6 @@ export default function AdminDashboard() {
   const [hrInterviewLocation, setHrInterviewLocation] = useState('');
   const [schedulingMeeting, setSchedulingMeeting] = useState(false);
   const [savingHrInterview, setSavingHrInterview] = useState(false);
-  const [detectingLocation, setDetectingLocation] = useState(false);
   const [interviewer, setInterviewer] = useState('Tech Team Lead');
   const [remarks, setRemarks] = useState('');
   const [fetchedQuestions, setFetchedQuestions] = useState(null);
@@ -926,40 +925,6 @@ export default function AdminDashboard() {
     } finally {
       setSchedulingMeeting(false);
     }
-  };
-
-  const handleFetchGPSLocation = () => {
-    if (!navigator.geolocation) {
-      setError("Geolocation is not supported by this browser.");
-      setTimeout(() => setError(''), 5000);
-      return;
-    }
-    setDetectingLocation(true);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        try {
-          const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-          if (res.data && res.data.display_name) {
-            setHrInterviewLocation(res.data.display_name);
-          } else {
-            setHrInterviewLocation(`Lat: ${latitude.toFixed(6)}, Lon: ${longitude.toFixed(6)}`);
-          }
-        } catch (err) {
-          console.error("Reverse geocoding failed: ", err);
-          setHrInterviewLocation(`Lat: ${latitude.toFixed(6)}, Lon: ${longitude.toFixed(6)}`);
-        } finally {
-          setDetectingLocation(false);
-        }
-      },
-      (error) => {
-        console.error("Error getting location: ", error);
-        setError("Failed to fetch GPS coordinates. Please ensure location permissions are enabled.");
-        setTimeout(() => setError(''), 5000);
-        setDetectingLocation(false);
-      },
-      { enableHighAccuracy: true, timeout: 8000 }
-    );
   };
 
   const handleSaveHrInterview = async (e) => {
@@ -2994,8 +2959,8 @@ export default function AdminDashboard() {
                             </div>
                             {fetchedTaskStatus && (
                               <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${fetchedTaskStatus === 'SUBMITTED'
-                                  ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
-                                  : 'bg-violet-100 text-violet-700 border-violet-300'
+                                ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
+                                : 'bg-violet-100 text-violet-700 border-violet-300'
                                 }`}>
                                 {fetchedTaskStatus}
                               </span>
@@ -3243,25 +3208,14 @@ export default function AdminDashboard() {
                         </div>
 
                         <div>
-                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">HR Interview Venue / Location</label>
-                          <div className="flex gap-2">
-                            <input
-                              type="text"
-                              value={hrInterviewLocation}
-                              onChange={(e) => setHrInterviewLocation(e.target.value)}
-                              placeholder="Detect location or enter custom venue address"
-                              className="flex-1 admin-custom-input border border-slate-350 rounded-xl py-2.5 px-3.5 focus:outline-none text-xs text-slate-700 bg-white font-semibold"
-                            />
-                            <button
-                              type="button"
-                              onClick={handleFetchGPSLocation}
-                              disabled={detectingLocation}
-                              className="px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#004AAD] text-xs font-bold rounded-xl transition cursor-pointer font-sans flex items-center justify-center gap-1.5 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              <MapPin className="h-4 w-4" />
-                              <span>{detectingLocation ? 'Detecting...' : 'Detect GPS'}</span>
-                            </button>
-                          </div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1"> Location</label>
+                          <input
+                            type="text"
+                            value={hrInterviewLocation}
+                            onChange={(e) => setHrInterviewLocation(e.target.value)}
+                            placeholder="Enter interview venue address"
+                            className="w-full admin-custom-input border border-slate-350 rounded-xl py-2.5 px-3.5 focus:outline-none text-xs text-slate-700 bg-white font-semibold"
+                          />
                         </div>
 
                         <button
