@@ -2941,17 +2941,35 @@ export default function AdminDashboard() {
                           </div>
                           <p className="text-xs text-violet-800 font-semibold leading-relaxed whitespace-pre-wrap">{fetchedTask}</p>
 
-                          {selectedApplication.githubLink && (
-                            <div className="mt-3 pt-3 border-t border-violet-200/50">
-                              <span className="text-[9px] font-bold text-violet-600 uppercase tracking-wider block">Submitted GitHub Link :</span>
-                              <a
-                                href={selectedApplication.githubLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs font-bold text-[#004AAD] hover:underline mt-1 block break-all"
-                              >
-                                {selectedApplication.githubLink}
-                              </a>
+                          {selectedApplication.githubLink ? (
+                            <div className="mt-3 pt-3 border-t border-violet-200/50 space-y-1.5 text-left">
+                              <span className="text-[9px] font-bold text-violet-600 uppercase tracking-wider block">Submitted GitHub Link</span>
+                              <div className="flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                                <input
+                                  type="text"
+                                  readOnly
+                                  value={selectedApplication.githubLink}
+                                  className="w-full bg-transparent border-none text-[11px] font-semibold text-slate-800 focus:outline-none select-all"
+                                />
+                                <a
+                                  href={selectedApplication.githubLink && (selectedApplication.githubLink.startsWith('http://') || selectedApplication.githubLink.startsWith('https://')) ? selectedApplication.githubLink : `https://${selectedApplication.githubLink}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-2.5 py-1 bg-violet-100 hover:bg-violet-200 text-violet-700 font-extrabold rounded-lg text-[10px] transition shrink-0 uppercase tracking-wide no-underline cursor-pointer"
+                                >
+                                  Open
+                                </a>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="mt-3 pt-3 border-t border-violet-200/50 space-y-1.5 text-left">
+                              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Submitted GitHub Link</span>
+                              <div className="p-2.5 bg-slate-100/50 border border-slate-200 border-dashed rounded-xl text-center text-[10px] text-slate-400 italic font-semibold">
+                                Solution pending submission from candidate
+                              </div>
                             </div>
                           )}
                         </div>

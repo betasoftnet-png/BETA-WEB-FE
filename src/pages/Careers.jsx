@@ -643,17 +643,17 @@ export default function Careers() {
               </div>
 
               {/* Submission Status */}
-              {taskData?.candidate?.githubLink ? (
+              {taskData?.candidate?.githubLink || taskData?.status === 'SUBMITTED' ? (
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Submitted Task Solution</h4>
                   <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-between">
                     <a
-                      href={taskData.candidate.githubLink}
+                      href={taskData?.candidate?.githubLink && (taskData.candidate.githubLink.startsWith('http://') || taskData.candidate.githubLink.startsWith('https://')) ? taskData.candidate.githubLink : `https://${taskData?.candidate?.githubLink || ''}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm font-bold text-violet-650 hover:underline break-all"
                     >
-                      {taskData.candidate.githubLink}
+                      {taskData?.candidate?.githubLink || taskData?.githubLink}
                     </a>
                     <span className="px-3 py-1 bg-emerald-500/10 text-emerald-700 text-[10px] font-black rounded-full uppercase tracking-wider">
                       ✓ Submitted
@@ -661,9 +661,35 @@ export default function Careers() {
                   </div>
                 </div>
               ) : (
-                <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl text-center text-xs font-bold text-amber-800">
-                  Task Solution Pending Submission
-                </div>
+                <form onSubmit={handleTaskSubmit} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">GitHub Repository Link</label>
+                    <input
+                      type="url"
+                      required
+                      value={gitLinkInput}
+                      onChange={(e) => setGitLinkInput(e.target.value)}
+                      placeholder="https://github.com/yourusername/yourproject"
+                      disabled={submittingTask}
+                      className="w-full bg-white text-slate-900 placeholder-slate-400 border border-slate-200 rounded-xl py-3 px-4 focus:outline-none focus:border-purple-500 text-sm transition"
+                    />
+                  </div>
+
+                  {taskSubmitSuccess && (
+                    <div className="p-3.5 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center space-x-2 text-emerald-700 text-xs font-semibold">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-500 flex-shrink-0" />
+                      <span>GitHub repository link submitted successfully! Your task status is updated to SUBMITTED.</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={submittingTask || !gitLinkInput.trim()}
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 hover:scale-[1.01] active:scale-[0.99] text-white text-xs font-black transition flex items-center justify-center space-x-2 shadow-lg shadow-purple-500/10 border-none cursor-pointer"
+                  >
+                    {submittingTask ? 'Submitting Repository...' : 'Submit Task Assessment'}
+                  </button>
+                </form>
               )}
             </div>
           )}
