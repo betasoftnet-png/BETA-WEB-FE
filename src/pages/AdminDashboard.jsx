@@ -2896,11 +2896,10 @@ export default function AdminDashboard() {
                               <span className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">Previously Assigned Task</span>
                             </div>
                             {fetchedTaskStatus && (
-                              <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${
-                                fetchedTaskStatus === 'SUBMITTED'
+                              <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${fetchedTaskStatus === 'SUBMITTED'
                                   ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
                                   : 'bg-violet-100 text-violet-700 border-violet-300'
-                              }`}>
+                                }`}>
                                 {fetchedTaskStatus}
                               </span>
                             )}
@@ -2913,7 +2912,7 @@ export default function AdminDashboard() {
                               <a
                                 href={selectedApplication.githubLink}
                                 target="_blank"
-                                  rel="noopener noreferrer"
+                                rel="noopener noreferrer"
                                 className="text-xs font-bold text-[#004AAD] hover:underline mt-1 block break-all"
                               >
                                 {selectedApplication.githubLink}

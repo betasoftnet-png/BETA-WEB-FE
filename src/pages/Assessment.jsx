@@ -5,7 +5,7 @@ import { Shield, Brain, Clock, CheckCircle, AlertTriangle, ArrowRight, RefreshCw
 
 const BACKEND_API_BASE =
   window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
+    window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
 
@@ -63,7 +63,7 @@ export default function Assessment() {
       .then((response) => {
         // The API now returns a wrapper object: { candidateId, candidateName, jobTitle, questions, attempts, submitted, score }
         const payload = response.data || {};
-        
+
         if (payload.submitted) {
           setCandidate({
             fullName: payload.candidateName,
@@ -456,7 +456,7 @@ export default function Assessment() {
           -ms-user-select: none !important;
         }
       `}</style>
-      
+
       <div className={`w-full max-w-3xl space-y-6 animate-fadeIn ${showWarningModal || isScreenObscured ? 'blur-md pointer-events-none' : ''}`}>
         {/* Header card */}
         <div className="bg-white border border-slate-250 shadow-md rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">

@@ -151,7 +151,7 @@ export default function Careers() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const candidateId = queryParams.get('id');
-  const isTaskAssessmentRoute = location.pathname.startsWith('/careers/task-assessment');
+  const isTaskAssessmentRoute = location.pathname.startsWith('/careers/task-assessment') || ((location.pathname === '/careers' || location.pathname === '/careers/') && candidateId);
 
   const [taskData, setTaskData] = useState(null);
   const [loadingTask, setLoadingTask] = useState(false);
@@ -189,8 +189,9 @@ export default function Careers() {
     setSubmittingTask(true);
     setTaskError('');
     try {
-      await axios.put(
-        `${JOB_BOARD_API_BASE}/api/jobs/applications/${candidateId}/github?githubLink=${encodeURIComponent(gitLinkInput.trim())}`
+      await axios.post(
+        `${JOB_BOARD_API_BASE}/api/task-assessment/${candidateId}/submit`,
+        { githubLink: gitLinkInput.trim() }
       );
       setTaskSubmitSuccess(true);
       const res = await axios.get(`${JOB_BOARD_API_BASE}/api/task-assessment/${candidateId}`);
