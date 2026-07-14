@@ -1726,15 +1726,23 @@ export default function Careers() {
               ) : (
                 <form onSubmit={handleApply} className="space-y-4">
                   {/* Pre-fetched Logged-in User Information */}
-                  <div className="p-4 bg-purple-50/50 border border-purple-100 rounded-2xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold animate-fadeIn">
-                    <div>
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Full Name</span>
-                      <span className="text-slate-800 text-sm font-bold">{fullName || "Not Available"}</span>
-                    </div>
+                  <div className="p-4 bg-purple-50/50 border border-purple-100 rounded-2xl text-xs font-semibold animate-fadeIn text-left">
                     <div>
                       <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Email Address</span>
                       <span className="text-slate-850 text-sm font-bold">{email || "Not Available"}</span>
                     </div>
+                  </div>
+
+                  <div className="space-y-1 text-left">
+                    <label className="text-xs font-bold text-slate-500 uppercase">Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Enter your full name"
+                      className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition font-semibold"
+                    />
                   </div>
 
                   <div className="space-y-1">
