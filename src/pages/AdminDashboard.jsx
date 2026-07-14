@@ -6,7 +6,7 @@ import {
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
   Lock, Mail, Calculator, Brain, BookOpen, BarChart3, Bell,
   Upload, Download, ChevronRight, Calendar, Sliders,
-  Handshake, ArrowLeft, Clock, Award
+  Handshake, ArrowLeft, Clock, Award, MapPin
 } from 'lucide-react';
 import axios from 'axios';
 import api from '../api';
@@ -160,7 +160,12 @@ export default function AdminDashboard() {
   const [interviewDate, setInterviewDate] = useState('');
   const [interviewTime, setInterviewTime] = useState('');
   const [interviewLink, setInterviewLink] = useState('https://meet.google.com/abc-defg-hij');
+  const [hrInterviewDate, setHrInterviewDate] = useState('');
+  const [hrInterviewTime, setHrInterviewTime] = useState('');
+  const [hrInterviewLocation, setHrInterviewLocation] = useState('');
   const [schedulingMeeting, setSchedulingMeeting] = useState(false);
+  const [savingHrInterview, setSavingHrInterview] = useState(false);
+  const [detectingLocation, setDetectingLocation] = useState(false);
   const [interviewer, setInterviewer] = useState('Tech Team Lead');
   const [remarks, setRemarks] = useState('');
   const [fetchedQuestions, setFetchedQuestions] = useState(null);
@@ -273,6 +278,9 @@ export default function AdminDashboard() {
               jobLocation: matchedJob ? matchedJob.location : (app.jobLocation || app.joblocation || 'Remote'),
               interviewDate: app.interviewDate || app.interviewdate || '',
               interviewTime: app.interviewTime || app.interviewtime || '',
+              hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
+              hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
+              hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
@@ -373,6 +381,9 @@ export default function AdminDashboard() {
               jobLocation: matchedJob ? matchedJob.location : (app.jobLocation || app.joblocation || 'Remote'),
               interviewDate: app.interviewDate || app.interviewdate || '',
               interviewTime: app.interviewTime || app.interviewtime || '',
+              hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
+              hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
+              hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
@@ -398,6 +409,9 @@ export default function AdminDashboard() {
       setInterviewDate(selectedApplication.interviewDate || '');
       setInterviewTime(selectedApplication.interviewTime || '');
       setInterviewLink(selectedApplication.interviewLink || 'https://meet.google.com/abc-defg-hij');
+      setHrInterviewDate(selectedApplication.hrInterviewDate || '');
+      setHrInterviewTime(selectedApplication.hrInterviewTime || '');
+      setHrInterviewLocation(selectedApplication.hrInterviewLocation || '');
       setFetchedQuestions(null);
       setSelectedQuestionsForCandidate([]);
       const normStatus = mapStatusToUI(selectedApplication.status);
@@ -409,6 +423,9 @@ export default function AdminDashboard() {
       setInterviewDate('');
       setInterviewTime('');
       setInterviewLink('https://meet.google.com/abc-defg-hij');
+      setHrInterviewDate('');
+      setHrInterviewTime('');
+      setHrInterviewLocation('');
       setFetchedQuestions(null);
       setSelectedQuestionsForCandidate([]);
     }
@@ -908,6 +925,86 @@ export default function AdminDashboard() {
       setError(err.response?.data?.message || err.response?.data || 'Failed to schedule meeting. Please verify inputs and try again.');
     } finally {
       setSchedulingMeeting(false);
+    }
+  };
+
+  const handleFetchGPSLocation = () => {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by this browser.");
+      setTimeout(() => setError(''), 5000);
+      return;
+    }
+    setDetectingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          if (res.data && res.data.display_name) {
+            setHrInterviewLocation(res.data.display_name);
+          } else {
+            setHrInterviewLocation(`Lat: ${latitude.toFixed(6)}, Lon: ${longitude.toFixed(6)}`);
+          }
+        } catch (err) {
+          console.error("Reverse geocoding failed: ", err);
+          setHrInterviewLocation(`Lat: ${latitude.toFixed(6)}, Lon: ${longitude.toFixed(6)}`);
+        } finally {
+          setDetectingLocation(false);
+        }
+      },
+      (error) => {
+        console.error("Error getting location: ", error);
+        setError("Failed to fetch GPS coordinates. Please ensure location permissions are enabled.");
+        setTimeout(() => setError(''), 5000);
+        setDetectingLocation(false);
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
+  const handleSaveHrInterview = async (e) => {
+    if (e) e.preventDefault();
+    if (!selectedApplication) return;
+    setError('');
+    setSuccess('');
+    setSavingHrInterview(true);
+
+    const payload = {
+      date: hrInterviewDate,
+      time: hrInterviewTime,
+      location: hrInterviewLocation
+    };
+
+    try {
+      const response = await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${selectedApplication.id}/hr-interview`, payload);
+
+      const updatedApps = externalApplications.map(app =>
+        app.id === selectedApplication.id
+          ? {
+            ...app,
+            hrInterviewDate: hrInterviewDate,
+            hrInterviewTime: hrInterviewTime,
+            hrInterviewLocation: hrInterviewLocation
+          }
+          : app
+      );
+      updateAppsAndSync(updatedApps);
+
+      setSelectedApplication(prev => ({
+        ...prev,
+        hrInterviewDate: hrInterviewDate,
+        hrInterviewTime: hrInterviewTime,
+        hrInterviewLocation: hrInterviewLocation
+      }));
+
+      setSuccess(`HR Interview details sent successfully for ${selectedApplication.fullName}!`);
+      setTimeout(() => setSuccess(''), 5000);
+    } catch (err) {
+      console.error('Error sending HR interview:', err);
+      setError(err.response?.data?.message || err.response?.data || 'Failed to send HR interview details. Please try again.');
+      setTimeout(() => setError(''), 5000);
+    } finally {
+      setSavingHrInterview(false);
     }
   };
 
@@ -3144,6 +3241,68 @@ export default function AdminDashboard() {
                           className="w-full flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#004AAD] hover:bg-[#003882] text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/10 border-none outline-none cursor-pointer"
                         >
                           <span>{schedulingMeeting ? 'Scheduling & Emailing...' : 'Schedule & Send BNX Mail'}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* HR Interview Date & Time Card */}
+                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                      <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <Calendar className="h-5 w-5 text-[#004AAD]" />
+                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">HR Interview</h3>
+                      </div>
+
+                      <div className="space-y-4 text-left">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">HR Interview Date</label>
+                            <input
+                              type="date"
+                              value={hrInterviewDate}
+                              onChange={(e) => setHrInterviewDate(e.target.value)}
+                              className="w-full admin-custom-input border border-slate-350 rounded-xl py-2 px-3 focus:outline-none text-xs text-slate-700 bg-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">HR Interview Time</label>
+                            <input
+                              type="time"
+                              value={hrInterviewTime}
+                              onChange={(e) => setHrInterviewTime(e.target.value)}
+                              className="w-full admin-custom-input border border-slate-350 rounded-xl py-2 px-3 focus:outline-none text-xs text-slate-700 bg-white"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1">HR Interview Venue / Location</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={hrInterviewLocation}
+                              onChange={(e) => setHrInterviewLocation(e.target.value)}
+                              placeholder="Detect location or enter custom venue address"
+                              className="flex-1 admin-custom-input border border-slate-350 rounded-xl py-2.5 px-3.5 focus:outline-none text-xs text-slate-700 bg-white font-semibold"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleFetchGPSLocation}
+                              disabled={detectingLocation}
+                              className="px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#004AAD] text-xs font-bold rounded-xl transition cursor-pointer font-sans flex items-center justify-center gap-1.5 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <MapPin className="h-4 w-4" />
+                              <span>{detectingLocation ? 'Detecting...' : 'Detect GPS'}</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={handleSaveHrInterview}
+                          disabled={savingHrInterview || !hrInterviewDate || !hrInterviewTime}
+                          className="w-full flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#004AAD] hover:bg-[#003882] text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/10 border-none outline-none cursor-pointer"
+                        >
+                          <span>{savingHrInterview ? 'Sending...' : 'Send HR Interview Date & Time'}</span>
                         </button>
                       </div>
                     </div>
