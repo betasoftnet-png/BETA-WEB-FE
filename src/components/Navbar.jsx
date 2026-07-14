@@ -624,7 +624,7 @@ export default function Navbar() {
                               {/* Row 2: Beta Ecosystem footer bar */}
                               <tr className="border-t border-slate-200">
                                 <td className="bg-slate-50 border-t border-slate-200 border-r border-slate-200 rounded-bl-xl pl-6 pr-2"></td>
-                                <td colSpan={2} className="pt-4.5 pb-2.5 pr-20 text-center select-none bg-slate-50 border-t border-slate-200 rounded-br-xl">
+                                <td colSpan={2} className="pt-4.5 pb-2.5 pr-0 text-center select-none bg-slate-50 border-t border-slate-200 rounded-br-xl">
                                   <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest">
                                     Beta Ecosystem
                                   </span>
