@@ -456,6 +456,9 @@ export default function Navbar() {
                                         </button>
                                       </div>
 
+                                      {/* Divider Line below Base */}
+                                      <div className="border-t border-slate-200 -ml-6 -mr-2 opacity-80" />
+
                                       {/* Aligns with B2Auth */}
                                       <div className="h-[60px] flex items-center animate-fadeIn">
                                         <button
@@ -776,7 +779,10 @@ export default function Navbar() {
                     <User className="h-3.5 w-3.5" />
                   </div>
                   <span className="text-sm font-semibold tracking-wide pr-1 text-slate-700">
-                    {user.fullName || user.firstName || (user.username ? user.username.split('@')[0] : 'User')}
+                    {(() => {
+                      const name = user.fullName || user.firstName || (user.username ? user.username.split('@')[0] : 'User');
+                      return name.length > 5 ? name.substring(0, 5) + '...' : name;
+                    })()}
                   </span>
                   <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
                 </button>
