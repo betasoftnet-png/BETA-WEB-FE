@@ -2896,6 +2896,13 @@ export default function AdminDashboard() {
                         )}
                       </div>
 
+                      {selectedApplication.coverLetter && (
+                        <div className="pt-2.5 border-t border-slate-100">
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Cover Letter</label>
+                          <p className="text-xs font-semibold text-slate-700 mt-1 whitespace-pre-wrap leading-relaxed">{selectedApplication.coverLetter}</p>
+                        </div>
+                      )}
+
                       {selectedApplication.githubLink && (
                         <div className="pt-2.5 border-t border-slate-100">
                           <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Submitted GitHub Link</label>
