@@ -340,6 +340,34 @@ export default function Careers() {
       return;
     }
 
+    // Check for duplicate application locally
+    const emailToCheck = email.trim().toLowerCase();
+    const jobIdToCheck = activeJob.id;
+
+    let localApps = [];
+    try {
+      const stored = localStorage.getItem('beta_applications');
+      localApps = stored ? JSON.parse(stored) : [];
+    } catch (err) {
+      console.error('Local storage read failed:', err);
+    }
+
+    const hasAppliedLocally = localApps.some(app => 
+      (app.email || '').toLowerCase() === emailToCheck && 
+      Number(app.jobId) === Number(jobIdToCheck)
+    );
+
+    const hasAppliedInState = userApplications.some(app => 
+      (app.email || '').toLowerCase() === emailToCheck && 
+      Number(app.jobId) === Number(jobIdToCheck)
+    );
+
+    if (hasAppliedLocally || hasAppliedInState) {
+      setStatus("error");
+      setMessage("You have already applied for this job using this email address.");
+      return;
+    }
+
     setStatus("loading");
     setMessage("");
 

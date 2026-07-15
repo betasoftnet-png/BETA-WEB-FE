@@ -352,7 +352,7 @@ export default function Home() {
               <motion.h2
                 variants={itemVariants}
                 className="text-3xl md:text-4xl lg:text-5xl font-extrabold 
-             text-slate-900 leading-tight -ml-16"
+             text-slate-900 leading-tight -ml-18"
               >
                 Unified Software for <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline font-extrabold whitespace-nowrap">Connected Generation</span>
               </motion.h2>
