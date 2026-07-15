@@ -1199,41 +1199,64 @@ export default function Careers() {
                                   {job.team}
                                 </span>
 
-                                {/* Role Description Section */}
-                                {job.description && (
-                                  <div className="mt-3.5 mb-1 text-xs">
-                                    <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
-                                      Role Description
-                                    </span>
-                                    <p className={`text-slate-600 leading-relaxed font-semibold transition-all duration-300 ${
-                                      expandedJobDescs[job.id] ? "" : "line-clamp-2"
-                                    }`}>
-                                      {job.description}
-                                    </p>
-                                    {job.description.length > 80 && (
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          toggleJobDesc(job.id);
-                                        }}
-                                        className="text-[#EC4899] hover:text-[#db3c8b] font-bold mt-1 text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 inline-block transition-colors duration-200"
-                                      >
-                                        {expandedJobDescs[job.id] ? "See Less" : "See More"}
-                                      </button>
-                                    )}
-                                  </div>
-                                )}
-                              </div>
+                                {/* Role Description, Qualifications, and Location Consolidated Block */}
+                                <div className="mt-3.5 text-xs space-y-3">
+                                  {job.description && (
+                                    <div>
+                                      <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
+                                        Role Description
+                                      </span>
+                                      <p className="text-slate-600 leading-relaxed font-semibold">
+                                        {expandedJobDescs[job.id] ? (
+                                          <>
+                                            {job.description}{" "}
+                                            <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleJobDesc(job.id);
+                                              }}
+                                              className="text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 inline-block transition-colors duration-200"
+                                            >
+                                              See Less
+                                            </button>
+                                          </>
+                                        ) : (
+                                          <>
+                                            {job.description.length > 110 ? (
+                                              <>
+                                                {job.description.slice(0, 110)}...{" "}
+                                                <button
+                                                  type="button"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleJobDesc(job.id);
+                                                  }}
+                                                  className="text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 inline-block transition-colors duration-200"
+                                                >
+                                                  See More
+                                                </button>
+                                              </>
+                                            ) : (
+                                              job.description
+                                            )}
+                                          </>
+                                        )}
+                                      </p>
+                                    </div>
+                                  )}
 
-                              <div className="space-y-1.5 border-t border-blue-500/15 pt-3 text-xs text-slate-600 font-semibold text-left">
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Location:</span>
-                                  <span className="text-slate-500">{job.location} • {job.type}</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Qualifications:</span>
-                                  <span className="text-slate-500">{job.skills.slice(0, 2).join(' / ')}</span>
+                                  {/* Qualifications & Location Section */}
+                                  <div className="space-y-1.5 text-slate-500 font-semibold pt-1">
+                                    <div className="flex items-center space-x-2">
+                                      <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Qualifications:</span>
+                                      <span className="text-slate-600">{job.skills ? job.skills.slice(0, 2).join(' / ') : ''}</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Location:</span>
+                                      <span className="text-slate-600">{job.location} • {job.type}</span>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
