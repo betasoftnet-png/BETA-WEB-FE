@@ -126,6 +126,7 @@ export default function Careers() {
   const queryParams = new URLSearchParams(location.search);
   const candidateId = queryParams.get('id');
   const isTaskAssessmentRoute = location.pathname.startsWith('/careers/task-assessment') || ((location.pathname === '/careers' || location.pathname === '/careers/') && candidateId);
+  const isLikedJobsRoute = location.pathname.startsWith('/careers/liked-jobs');
 
   const [taskData, setTaskData] = useState(null);
   const [loadingTask, setLoadingTask] = useState(false);
@@ -155,6 +156,16 @@ export default function Careers() {
       fetchTask();
     }
   }, [isTaskAssessmentRoute, candidateId]);
+
+  useEffect(() => {
+    setJobsPage(1);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (isLikedJobsRoute && !user) {
+      setShowLoginPrompt(true);
+    }
+  }, [isLikedJobsRoute, user]);
 
   const handleTaskSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -210,25 +221,63 @@ export default function Careers() {
   const [userApplications, setUserApplications] = useState([]);
 
   // Like, Share, Report states & handlers
-  const [likedJobs, setLikedJobs] = useState(() => {
-    try {
-      const saved = localStorage.getItem('beta_liked_jobs');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [likedJobs, setLikedJobs] = useState([]);
+
+  useEffect(() => {
+    const fetchLikedJobs = async () => {
+      if (user?.email) {
+        try {
+          const res = await axios.get(`${JOB_BOARD_API_BASE}/api/liked-jobs?email=${encodeURIComponent(user.email)}`);
+          const ids = res.data.map(item => item.jobId);
+          setLikedJobs(ids);
+        } catch (err) {
+          console.error('Failed to fetch liked jobs from backend:', err);
+        }
+      } else {
+        setLikedJobs([]);
+      }
+    };
+    fetchLikedJobs();
+  }, [user]);
 
   const [activeReportJobId, setActiveReportJobId] = useState(null);
 
-  const handleLikeJob = (jobId) => {
-    setLikedJobs(prev => {
-      const newLiked = prev.includes(jobId)
-        ? prev.filter(id => id !== jobId)
-        : [...prev, jobId];
-      localStorage.setItem('beta_liked_jobs', JSON.stringify(newLiked));
-      return newLiked;
-    });
+  const handleLikeJob = async (jobId) => {
+    if (!user) {
+      setShowLoginPrompt(true);
+      return;
+    }
+    const isLiked = likedJobs.includes(jobId);
+    try {
+      if (isLiked) {
+        await axios.delete(`${JOB_BOARD_API_BASE}/api/liked-jobs?email=${encodeURIComponent(user.email)}&jobId=${jobId}`);
+        setLikedJobs(prev => prev.filter(id => id !== jobId));
+      } else {
+        await axios.post(`${JOB_BOARD_API_BASE}/api/liked-jobs`, {
+          email: user.email,
+          jobId: jobId
+        });
+        setLikedJobs(prev => {
+          if (prev.includes(jobId)) return prev;
+          return [...prev, jobId];
+        });
+      }
+    } catch (err) {
+      console.error('Failed to update liked job on backend:', err);
+    }
+  };
+
+  const handleLikedJobsClick = () => {
+    if (!user) {
+      setShowLoginPrompt(true);
+    } else {
+      navigate('/careers/liked-jobs');
+      // If candidate workspace is active (showMyJobs is true), switch back to search-roles view
+      setShowMyJobs(false);
+      setTimeout(() => {
+        document.getElementById('search-roles')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
   };
 
   const handleShareJob = (job) => {
@@ -375,7 +424,9 @@ export default function Careers() {
     return matchesSearch && matchesTeam && matchesLocation && matchesType;
   });
 
-  const displayedJobs = filteredJobs;
+  const displayedJobs = isLikedJobsRoute
+    ? filteredJobs.filter(job => likedJobs.includes(job.id))
+    : filteredJobs;
 
   const jobsPerPage = 3;
   const indexOfLastJob = jobsPage * jobsPerPage;
@@ -963,14 +1014,26 @@ export default function Careers() {
                   <div className="flex flex-col items-center justify-center gap-4 border-b border-purple-500/10 pb-6 w-full">
                     <div className="text-center">
                       <h3 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">
-                        Open Roles
+                        {isLikedJobsRoute ? 'Liked Roles' : 'Open Roles'}
                       </h3>
                       <span className="text-xs md:text-sm font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-1">
-                        Explore Opportunities
+                        {isLikedJobsRoute ? 'Your Saved Jobs' : 'Explore Opportunities'}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-center gap-3 w-full">
+                      {isLikedJobsRoute && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigate('/careers');
+                          }}
+                          className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-purple-500/20 bg-white text-slate-700 hover:bg-slate-50 hover:border-purple-500/40 hover:shadow-purple-500/10 transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap"
+                        >
+                          <ArrowLeft className="h-3.5 w-3.5" />
+                          <span>All Jobs</span>
+                        </button>
+                      )}
                       <div className="relative flex-grow max-w-md flex items-center">
                         <input
                           type="text"
@@ -1015,6 +1078,15 @@ export default function Careers() {
                       >
                         <Briefcase className="h-3.5 w-3.5 text-purple-600" />
                         <span>My Jobs</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleLikedJobsClick}
+                        className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-purple-500/20 bg-white text-slate-700 hover:bg-slate-50 hover:border-purple-500/40 hover:shadow-purple-500/10 transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap"
+                      >
+                        <Heart className="h-3.5 w-3.5 text-rose-500" fill={likedJobs.length > 0 ? "currentColor" : "none"} />
+                        <span>Liked Jobs</span>
                       </button>
                     </div>
                   </div>
@@ -1199,17 +1271,18 @@ export default function Careers() {
                                   {job.team}
                                 </span>
 
-                                {/* Role Description, Qualifications, and Location Consolidated Block */}
-                                <div className="mt-3.5 text-xs space-y-3">
-                                  {job.description && (
-                                    <div>
+                                {/* Role Description Block */}
+                                {(() => {
+                                  const combinedDesc = `${job.description || ''} Qualifications: ${job.skills ? job.skills.slice(0, 2).join(' / ') : 'N/A'}. Location: ${job.location || 'Remote'} • ${job.type || 'Full-time'}.`;
+                                  return (
+                                    <div className="mt-3.5 text-xs">
                                       <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
                                         Role Description
                                       </span>
                                       <p className="text-slate-600 leading-relaxed font-semibold">
                                         {expandedJobDescs[job.id] ? (
                                           <>
-                                            {job.description}{" "}
+                                            {combinedDesc}{" "}
                                             <button
                                               type="button"
                                               onClick={(e) => {
@@ -1223,9 +1296,9 @@ export default function Careers() {
                                           </>
                                         ) : (
                                           <>
-                                            {job.description.length > 110 ? (
+                                            {combinedDesc.length > 110 ? (
                                               <>
-                                                {job.description.slice(0, 110)}...{" "}
+                                                {combinedDesc.slice(0, 110)}...{" "}
                                                 <button
                                                   type="button"
                                                   onClick={(e) => {
@@ -1238,26 +1311,14 @@ export default function Careers() {
                                                 </button>
                                               </>
                                             ) : (
-                                              job.description
+                                              combinedDesc
                                             )}
                                           </>
                                         )}
                                       </p>
                                     </div>
-                                  )}
-
-                                  {/* Qualifications & Location Section */}
-                                  <div className="space-y-1.5 text-slate-500 font-semibold pt-1">
-                                    <div className="flex items-center space-x-2">
-                                      <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Qualifications:</span>
-                                      <span className="text-slate-600">{job.skills ? job.skills.slice(0, 2).join(' / ') : ''}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                      <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Location:</span>
-                                      <span className="text-slate-600">{job.location} • {job.type}</span>
-                                    </div>
-                                  </div>
-                                </div>
+                                  );
+                                })()}
                               </div>
                             </div>
 

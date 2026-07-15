@@ -177,6 +177,7 @@ function AppContent() {
           <Route path="/bnx-mail/dashboard" element={<BnxMailDashboard />} />
           <Route path="/careers/assessment" element={<Assessment />} />
           <Route path="/careers/task-assessment" element={<Careers />} />
+          <Route path="/careers/liked-jobs" element={<Careers />} />
         </Routes>
       </main>
       {!isDashboardMode && <Footer />}

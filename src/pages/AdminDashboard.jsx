@@ -195,6 +195,7 @@ export default function AdminDashboard() {
   const [jobResponsibilities, setJobResponsibilities] = useState(['']);
   const [jobRequirements, setJobRequirements] = useState(['']);
   const [jobSkills, setJobSkills] = useState(['']);
+  const [jobExperience, setJobExperience] = useState('');
 
   // Load/Alert States
   const [loading, setLoading] = useState(false);
@@ -534,6 +535,7 @@ export default function AdminDashboard() {
     setJobResponsibilities(['']);
     setJobRequirements(['']);
     setJobSkills(['']);
+    setJobExperience('');
     setIsJobModalOpen(true);
   };
 
@@ -545,6 +547,7 @@ export default function AdminDashboard() {
     setJobType(job.type || 'Full-time');
     setJobSalary(job.salary);
     setJobDesc(job.description);
+    setJobExperience(job.experience || '');
 
     // Parse arrays (handling both parsed arrays and raw string representations)
     let resp;
@@ -584,7 +587,8 @@ export default function AdminDashboard() {
       description: jobDesc,
       responsibilities,
       requirements,
-      skills
+      skills,
+      experience: jobExperience
     };
 
     try {
@@ -3746,7 +3750,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-xs font-bold uppercase">Location</label>
                   <input
@@ -3778,6 +3782,16 @@ export default function AdminDashboard() {
                     value={jobSalary}
                     onChange={(e) => setJobSalary(e.target.value)}
                     placeholder="e.g. ₹10k - ₹15k"
+                    className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-sm transition"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase">Experience Requirement</label>
+                  <input
+                    type="text"
+                    value={jobExperience}
+                    onChange={(e) => setJobExperience(e.target.value)}
+                    placeholder="e.g. 3 Years, 2-5 Years"
                     className="w-full admin-custom-input border border-slate-300 rounded-lg py-2 px-3 focus:outline-none text-sm transition"
                   />
                 </div>
