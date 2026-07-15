@@ -21,7 +21,11 @@ import {
   ArrowLeft,
   RefreshCw,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Heart,
+  Share2,
+  MoreHorizontal,
+  AlertTriangle
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -204,6 +208,59 @@ export default function Careers() {
   const [myJobsLoading, setMyJobsLoading] = useState(false);
   const [myJobsError, setMyJobsError] = useState('');
   const [userApplications, setUserApplications] = useState([]);
+
+  // Like, Share, Report states & handlers
+  const [likedJobs, setLikedJobs] = useState(() => {
+    try {
+      const saved = localStorage.getItem('beta_liked_jobs');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [activeReportJobId, setActiveReportJobId] = useState(null);
+
+  const handleLikeJob = (jobId) => {
+    setLikedJobs(prev => {
+      const newLiked = prev.includes(jobId)
+        ? prev.filter(id => id !== jobId)
+        : [...prev, jobId];
+      localStorage.setItem('beta_liked_jobs', JSON.stringify(newLiked));
+      return newLiked;
+    });
+  };
+
+  const handleShareJob = (job) => {
+    const shareUrl = `${window.location.origin}/careers?job=${job.id}`;
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        alert(`Link to share "${job.title}" copied to clipboard!`);
+      })
+      .catch(() => {
+        alert(`Failed to copy share link.`);
+      });
+  };
+
+  const handleToggleReportMenu = (jobId) => {
+    setActiveReportJobId(prev => prev === jobId ? null : jobId);
+  };
+
+  const handleReportJob = (job) => {
+    setActiveReportJobId(null);
+    const reason = prompt(`Please enter your reason for reporting the "${job.title}" job posting:`);
+    if (reason && reason.trim()) {
+      alert(`Thank you for your report. Our recruitment compliance team will investigate this job posting.`);
+    }
+  };
+
+  const [expandedJobDescs, setExpandedJobDescs] = useState({});
+  const toggleJobDesc = (jobId) => {
+    setExpandedJobDescs(prev => ({
+      ...prev,
+      [jobId]: !prev[jobId]
+    }));
+  };
 
   // GitHub task submission state
   const [gitLinks, setGitLinks] = useState({});
@@ -1080,37 +1137,108 @@ export default function Careers() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.3 }}
-                            className="p-5 rounded-xl border border-blue-500/20 bg-[#dbeafe]/60 hover:bg-[#dbeafe]/85 hover:border-blue-500/35 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
+                            className="relative p-5 rounded-xl border border-blue-500/20 bg-[#dbeafe]/60 hover:bg-[#dbeafe]/85 hover:border-blue-500/35 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
                           >
-                            <div className="space-y-4 flex-grow">
-                              <div>
-                                <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300 flex flex-wrap items-center gap-2">
-                                  {job.title}
-                                </h3>
-                                <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
-                                  {job.team}
-                                </span>
-                              </div>
+                            {/* Action Row: Like, Share, Report (Three Dots) - absolutely positioned at top-right corner of card */}
+                            <div className="absolute top-4 right-4 flex items-center gap-2">
+                              {/* Like button */}
+                              <button
+                                type="button"
+                                onClick={() => handleLikeJob(job.id)}
+                                className={`p-2 rounded-xl border transition-all duration-300 flex items-center justify-center cursor-pointer ${
+                                  likedJobs.includes(job.id)
+                                    ? 'bg-rose-50 border-rose-200 text-rose-500 hover:bg-rose-100'
+                                    : 'bg-white border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50/30'
+                                }`}
+                                title="Like Job"
+                              >
+                                <Heart className="h-4 w-4" fill={likedJobs.includes(job.id) ? "currentColor" : "none"} />
+                              </button>
 
-                              <div className="space-y-2 border-t border-b border-blue-500/15 py-3 text-xs text-slate-600 font-medium">
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-[#EC4899]">•</span>
-                                  <span>{job.location} • {job.type}</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-[#EC4899]">•</span>
-                                  <span>{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
-                                </div>
-                                {job.description && (
-                                  <div className="flex items-start space-x-2">
-                                    <span className="text-[#EC4899] select-none">•</span>
-                                    <span className="text-slate-500 leading-relaxed">{job.description}</span>
+                              {/* Share button */}
+                              <button
+                                type="button"
+                                onClick={() => handleShareJob(job)}
+                                className="p-2 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/30 hover:border-blue-200 text-slate-400 hover:text-blue-500 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                                title="Share Job"
+                              >
+                                <Share2 className="h-4 w-4" />
+                              </button>
+
+                              {/* Three dots (Report) menu */}
+                              <div className="relative">
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleReportMenu(job.id)}
+                                  className="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-350 text-slate-400 hover:text-slate-700 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                                  title="Options"
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </button>
+                                {activeReportJobId === job.id && (
+                                  <div className="absolute right-0 mt-1 w-28 bg-white border border-slate-200 rounded-xl shadow-lg z-30 p-1 animate-fadeIn">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleReportJob(job)}
+                                      className="w-full text-left px-3 py-1.5 hover:bg-rose-50 text-rose-600 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border-none bg-transparent"
+                                    >
+                                      <AlertTriangle className="h-3.5 w-3.5 text-rose-500" />
+                                      Report Job
+                                    </button>
                                   </div>
                                 )}
                               </div>
                             </div>
 
-                            <div className="flex-shrink-0 w-full sm:w-auto">
+                            <div className="space-y-4 flex-grow">
+                              <div className="pr-28 sm:pr-0 text-left">
+                                <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300 flex flex-wrap items-center gap-2">
+                                  {job.title}
+                                </h3>
+                                <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5 mb-2">
+                                  {job.team}
+                                </span>
+
+                                {/* Role Description Section */}
+                                {job.description && (
+                                  <div className="mt-3.5 mb-1 text-xs">
+                                    <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
+                                      Role Description
+                                    </span>
+                                    <p className={`text-slate-600 leading-relaxed font-semibold transition-all duration-300 ${
+                                      expandedJobDescs[job.id] ? "" : "line-clamp-2"
+                                    }`}>
+                                      {job.description}
+                                    </p>
+                                    {job.description.length > 80 && (
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          toggleJobDesc(job.id);
+                                        }}
+                                        className="text-[#EC4899] hover:text-[#db3c8b] font-bold mt-1 text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 inline-block transition-colors duration-200"
+                                      >
+                                        {expandedJobDescs[job.id] ? "See Less" : "See More"}
+                                      </button>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="space-y-1.5 border-t border-blue-500/15 pt-3 text-xs text-slate-600 font-semibold text-left">
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Location:</span>
+                                  <span className="text-slate-500">{job.location} • {job.type}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Qualifications:</span>
+                                  <span className="text-slate-500">{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
                               <button
                                 onClick={() => setSelectedJob(job)}
                                 className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
