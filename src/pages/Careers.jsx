@@ -247,20 +247,23 @@ export default function Careers() {
       setShowLoginPrompt(true);
       return;
     }
-    const isLiked = likedJobs.includes(jobId);
+    const isLiked = likedJobs.some(id => Number(id) === Number(jobId));
     try {
       if (isLiked) {
         await axios.delete(`${JOB_BOARD_API_BASE}/api/liked-jobs?email=${encodeURIComponent(user.email)}&jobId=${jobId}`);
-        setLikedJobs(prev => prev.filter(id => id !== jobId));
+        setLikedJobs(prev => prev.filter(id => Number(id) !== Number(jobId)));
       } else {
         await axios.post(`${JOB_BOARD_API_BASE}/api/liked-jobs`, {
           email: user.email,
           jobId: jobId
         });
         setLikedJobs(prev => {
-          if (prev.includes(jobId)) return prev;
+          if (prev.some(id => Number(id) === Number(jobId))) return prev;
           return [...prev, jobId];
         });
+        // Navigate to the Liked Jobs page/section immediately
+        navigate('/careers/liked-jobs');
+        setShowMyJobs(false);
       }
     } catch (err) {
       console.error('Failed to update liked job on backend:', err);
@@ -425,7 +428,7 @@ export default function Careers() {
   });
 
   const displayedJobs = isLikedJobsRoute
-    ? filteredJobs.filter(job => likedJobs.includes(job.id))
+    ? filteredJobs.filter(job => likedJobs.some(id => Number(id) === Number(job.id)))
     : filteredJobs;
 
   const jobsPerPage = 3;
