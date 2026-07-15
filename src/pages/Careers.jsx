@@ -291,11 +291,17 @@ export default function Careers() {
 
 
   const [jobsPage, setJobsPage] = useState(1);
+  const [myJobsPage, setMyJobsPage] = useState(1);
 
   // Reset pagination on filter change
   useEffect(() => {
     setJobsPage(1);
   }, [searchQuery, selectedTeam, selectedLocation, selectedType]);
+
+  // Reset my jobs pagination when applications reload or view toggled
+  useEffect(() => {
+    setMyJobsPage(1);
+  }, [userApplications.length, showMyJobs]);
 
   // Filter logic
   const filteredJobs = jobsList.filter(job => {
@@ -319,6 +325,12 @@ export default function Careers() {
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = displayedJobs.slice(indexOfFirstJob, indexOfLastJob);
   const totalJobsPages = Math.ceil(displayedJobs.length / jobsPerPage);
+
+  const myJobsPerPage = 3;
+  const indexOfLastMyJob = myJobsPage * myJobsPerPage;
+  const indexOfFirstMyJob = indexOfLastMyJob - myJobsPerPage;
+  const currentMyJobs = userApplications.slice(indexOfFirstMyJob, indexOfLastMyJob);
+  const totalMyJobsPages = Math.ceil(userApplications.length / myJobsPerPage);
 
   const handleApply = async (e, jobOverride = null) => {
     e.preventDefault();
@@ -1397,7 +1409,7 @@ export default function Careers() {
             className="w-full max-w-4xl mx-auto space-y-8 py-8 animate-fadeIn"
           >
             {/* Header / Navigation Bar for My Jobs */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-500/10 pb-6">
+            <div id="my-apps-header" className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-500/10 pb-6">
               <div className="space-y-1">
                 <span className="text-xs font-bold text-[#EC4899] uppercase tracking-widest block">Candidate Workspace</span>
                 <h2 className="text-3xl font-black text-slate-900">My Applications</h2>
@@ -1460,8 +1472,9 @@ export default function Careers() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-6">
-                {userApplications.map((app) => {
+              <>
+                <div className="space-y-6">
+                {currentMyJobs.map((app) => {
                   const statusText = app.status;
                   const appliedDate = formatDate(app.appliedDate || app.createdAt);
 
@@ -1670,7 +1683,69 @@ export default function Careers() {
                   );
                 })}
               </div>
-            )}
+
+              {/* Pagination Controls */}
+              {totalMyJobsPages > 1 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-purple-500/10 w-full mt-4">
+                  <span className="text-xs font-semibold text-slate-500">
+                    Showing {indexOfFirstMyJob + 1}-{Math.min(indexOfLastMyJob, userApplications.length)} of {userApplications.length} applications
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={myJobsPage === 1}
+                      onClick={() => {
+                        setMyJobsPage(prev => Math.max(prev - 1, 1));
+                        document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${myJobsPage === 1
+                        ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                        : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
+                        }`}
+                    >
+                      <ChevronLeft className="h-3.5 w-3.5" />
+                      <span>Previous</span>
+                    </button>
+
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalMyJobsPages }, (_, idx) => idx + 1).map((pNum) => (
+                        <button
+                          key={pNum}
+                          type="button"
+                          onClick={() => {
+                            setMyJobsPage(pNum);
+                            document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                          className={`h-8 w-8 rounded-xl text-xs font-bold transition duration-300 cursor-pointer ${myJobsPage === pNum
+                            ? 'bg-[#8B5CF6] text-white shadow-sm'
+                            : 'bg-white border border-purple-500/10 text-slate-700 hover:bg-slate-50'
+                            }`}
+                        >
+                          {pNum}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      disabled={myJobsPage === totalMyJobsPages}
+                      onClick={() => {
+                        setMyJobsPage(prev => Math.min(prev + 1, totalMyJobsPages));
+                        document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${myJobsPage === totalMyJobsPages
+                        ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                        : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
+                        }`}
+                    >
+                      <span>Next</span>
+                      <ChevronRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
           </motion.div>
         )}
       </div>
@@ -1678,18 +1753,23 @@ export default function Careers() {
       {/* APPLICATION FORM MODAL (FEATURED JOBS TARGET) */}
       <AnimatePresence>
         {selectedJob && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+          <div 
+            onClick={() => setSelectedJob(null)}
+            className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-start justify-center p-4 py-8 sm:py-12"
+          >
             <motion.div
+              onClick={(e) => e.stopPropagation()}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 border border-purple-100 shadow-2xl text-left"
+              className="relative w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 border border-purple-100 shadow-2xl text-left my-auto"
             >
               <button
+                type="button"
                 onClick={() => setSelectedJob(null)}
-                className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-purple-50 text-purple-400 hover:text-purple-600 transition cursor-pointer"
+                className="absolute right-4 top-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 border-none transition duration-200 cursor-pointer flex items-center justify-center shadow-sm"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
               <div className="mb-6 space-y-1">
                 <span className="text-xs font-bold text-[#EC4899] uppercase tracking-widest">Apply for position</span>
@@ -1816,20 +1896,29 @@ export default function Careers() {
                     </div>
                   )}
 
-                  <button
-                    type="submit"
-                    disabled={status === 'loading'}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black transition flex items-center justify-center space-x-2 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 cursor-pointer"
-                  >
-                    {status === 'loading' ? (
-                      <span>Submitting...</span>
-                    ) : (
-                      <>
-                        <Briefcase className="h-4.5 w-4.5" />
-                        <span>Submit Application</span>
-                      </>
-                    )}
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedJob(null)}
+                      className="flex-1 py-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition cursor-pointer text-center"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={status === 'loading'}
+                      className="flex-[2] py-3 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black transition flex items-center justify-center space-x-2 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 cursor-pointer border-none"
+                    >
+                      {status === 'loading' ? (
+                        <span>Submitting...</span>
+                      ) : (
+                        <>
+                          <Briefcase className="h-4.5 w-4.5 text-white" />
+                          <span>Submit Application</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </form>
               )}
             </motion.div>
@@ -1842,18 +1931,23 @@ export default function Careers() {
       {/* SIGN IN REQUIRED FOR MY JOBS */}
       <AnimatePresence>
         {showLoginPrompt && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+          <div 
+            onClick={() => setShowLoginPrompt(false)}
+            className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4"
+          >
             <motion.div
+              onClick={(e) => e.stopPropagation()}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-sm bg-white rounded-3xl p-6 md:p-8 border border-purple-100 shadow-2xl text-left"
+              className="relative w-full max-w-sm bg-white rounded-3xl p-6 md:p-8 border border-purple-100 shadow-2xl text-left my-auto"
             >
               <button
+                type="button"
                 onClick={() => setShowLoginPrompt(false)}
-                className="absolute right-4 top-4 p-1.5 rounded-lg hover:bg-purple-50 text-purple-400 hover:text-purple-600 transition cursor-pointer"
+                className="absolute right-4 top-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 border-none transition duration-200 cursor-pointer flex items-center justify-center shadow-sm"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
               <div className="py-6 text-center space-y-6">
                 <div className="h-16 w-16 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center mx-auto text-[#EC4899] shadow-sm">

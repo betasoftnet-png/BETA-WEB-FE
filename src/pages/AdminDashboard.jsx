@@ -283,7 +283,8 @@ export default function AdminDashboard() {
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
-              experience: app.experience || '3 Years'
+              experience: app.experience || '3 Years',
+              githubLink: app.githubLink || app.githublink || ''
             };
           });
 
@@ -386,7 +387,8 @@ export default function AdminDashboard() {
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
-              experience: app.experience || '3 Years'
+              experience: app.experience || '3 Years',
+              githubLink: app.githubLink || app.githublink || ''
             };
           });
           setExternalApplications(normalizedApps);
@@ -897,10 +899,11 @@ export default function AdminDashboard() {
     };
 
     try {
-      // 1. Submit scheduling to database (sends BNX Mail automatically on backend)
+      // Calls backend which saves the schedule AND sends the Technical Interview
+      // invitation email to the candidate via the backend EmailService automatically.
       await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${selectedApplication.id}/schedule`, payload);
 
-      // 3. Update local state (preserving existing status)
+      // Update local state
       const updatedApps = externalApplications.map(app =>
         app.id === selectedApplication.id
           ? {
@@ -913,7 +916,7 @@ export default function AdminDashboard() {
       );
       updateAppsAndSync(updatedApps);
 
-      // 4. Update currently selected application in view
+      // Update currently selected application in view
       setSelectedApplication(prev => ({
         ...prev,
         interviewDate: interviewDate,
@@ -921,7 +924,7 @@ export default function AdminDashboard() {
         interviewLink: interviewLink
       }));
 
-      setSuccess(`Meeting scheduled successfully for ${selectedApplication.fullName}. BNX invitation mail sent!`);
+      setSuccess(`Meeting scheduled successfully for ${selectedApplication.fullName}. Interview invitation email sent to ${selectedApplication.email}!`);
       setTimeout(() => setSuccess(''), 5000);
     } catch (err) {
       console.error('Error scheduling interview meeting:', err);
@@ -930,6 +933,7 @@ export default function AdminDashboard() {
       setSchedulingMeeting(false);
     }
   };
+
 
   const handleSaveHrInterview = async (e) => {
     if (e) e.preventDefault();

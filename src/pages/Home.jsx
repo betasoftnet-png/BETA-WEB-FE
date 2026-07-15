@@ -352,7 +352,7 @@ export default function Home() {
               <motion.h2
                 variants={itemVariants}
                 className="text-3xl md:text-4xl lg:text-5xl font-extrabold 
-             text-slate-900 leading-tight -ml-18"
+             text-slate-900 leading-tight -ml-12"
               >
                 Unified Software for <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline font-extrabold whitespace-nowrap">Connected Generation</span>
               </motion.h2>
@@ -362,7 +362,7 @@ export default function Home() {
               <motion.p
                 variants={itemVariants}
                 className="mt-1 text-slate-600 text-base md:text-lg leading-relaxed 
-             text-left w-full -ml-16 max-w-xl 
+             text-left w-full -ml-8 max-w-xl 
              tracking-wide"
               >
                 Beta builds secure, real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
