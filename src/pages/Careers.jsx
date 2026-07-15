@@ -1233,7 +1233,7 @@ export default function Careers() {
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <span className="text-[#EC4899] font-extrabold text-[10px] uppercase tracking-wider">Qualifications:</span>
-                                  <span className="text-slate-500">{job.skills.slice(0, 2).join(' / ')} • {job.experience}</span>
+                                  <span className="text-slate-500">{job.skills.slice(0, 2).join(' / ')}</span>
                                 </div>
                               </div>
                             </div>
