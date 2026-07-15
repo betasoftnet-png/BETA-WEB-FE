@@ -86,6 +86,7 @@ export default function AdminDashboard() {
 
   // Job Board States
   const [externalJobs, setExternalJobs] = useState([]);
+  const [deletedJobs, setDeletedJobs] = useState([]);
   const [externalApplications, setExternalApplications] = useState([]);
   const [activeSubTab, setActiveSubTab] = useState(() => {
     return localStorage.getItem('admin_active_sub_tab') || 'appsList';
@@ -228,12 +229,15 @@ export default function AdminDashboard() {
     setLoading(true);
     setError('');
     try {
-      const [jobsRes, appsRes] = await Promise.all([
+      const [jobsRes, appsRes, deletedRes] = await Promise.all([
         axios.get(`${BACKEND_API_BASE}/api/jobs`),
-        axios.get(`${BACKEND_API_BASE}/api/admin/applications`)
+        axios.get(`${BACKEND_API_BASE}/api/admin/applications`),
+        axios.get(`${BACKEND_API_BASE}/api/jobs?status=DELETED`)
       ]);
       const jobsList = jobsRes.data.data || jobsRes.data || [];
       setExternalJobs(jobsList);
+      const deletedList = deletedRes.data.data || deletedRes.data || [];
+      setDeletedJobs(deletedList);
 
       // const applicationsList = appsRes.data.data || appsRes.data || [];
 
@@ -603,7 +607,7 @@ export default function AdminDashboard() {
   };
 
   const handleJobDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this job posting permanently? This will also remove any candidate applications for this role.')) return;
+    if (!window.confirm('Are you sure you want to delete this job posting? It will be moved to the Deleted Jobs tab.')) return;
     setError('');
     setSuccess('');
     try {
@@ -1196,6 +1200,20 @@ export default function AdminDashboard() {
               <span className="font-bold">Analytics Panel</span>
             </button>
 
+            <button
+              onClick={() => {
+                setActiveSubTab('deletedJobsList');
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-2.5 mt-1 rounded-xl text-xs font-semibold transition cursor-pointer text-left ${activeSubTab === 'deletedJobsList'
+                ? 'bg-[#004AAD] text-white font-bold'
+                : 'text-slate-400 hover:bg-slate-800/20 hover:text-white'
+                }`}
+              style={activeSubTab === 'deletedJobsList' ? { color: '#ffffff' } : {}}
+            >
+              <Trash className="h-4 w-4 text-blue-200" />
+              <span className="font-bold">Deleted Jobs</span>
+            </button>
+
             {/* Pipeline Stage Filters */}
             <div className="pt-4 mt-4 border-t border-slate-800/80 space-y-1 max-h-[60vh] overflow-y-auto admin-scrollbar">
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">
@@ -1354,10 +1372,15 @@ export default function AdminDashboard() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
               <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-                External Job Board - Candidate Tracking System</h1>
+                {activeSubTab === 'deletedJobsList'
+                  ? 'Deleted Jobs Archive'
+                  : 'External Job Board - Candidate Tracking System'}
+              </h1>
 
               <p className="text-slate-550 text-sm mt-1">
-                Post careers to apply.beta-softnet.com and manage candidate applications.
+                {activeSubTab === 'deletedJobsList'
+                  ? 'Review soft-deleted jobs or restore them back to the active job board.'
+                  : 'Post careers to apply.beta-softnet.com and manage candidate applications.'}
               </p>
             </div>
 
@@ -1469,6 +1492,13 @@ export default function AdminDashboard() {
                 >
                   Candidate Applications ({externalApplications.length})
                 </button>
+                <button
+                  onClick={() => setActiveSubTab('deletedJobsList')}
+                  className={`pb-2 text-sm font-bold border-b-2 transition cursor-pointer ${activeSubTab === 'deletedJobsList' ? 'border-[#004AAD] text-[#004AAD]' : 'border-transparent text-slate-500 hover:text-slate-800'
+                    }`}
+                >
+                  Deleted Jobs ({deletedJobs.length})
+                </button>
               </div>
             )}
 
@@ -1555,6 +1585,89 @@ export default function AdminDashboard() {
                             <Trash className="h-3.5 w-3.5 text-red-500" />
                           </button>
                         </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            {/* Sub Tab: Deleted Jobs list */}
+            {activeSubTab === 'deletedJobsList' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                {deletedJobs.length === 0 ? (
+                  <div className="col-span-full admin-glass-card p-12 text-center text-slate-500 rounded-2xl bg-white border border-slate-200">
+                    No deleted jobs found.
+                  </div>
+                ) : (
+                  deletedJobs.map(job => (
+                    <div key={job.id} className="admin-glass-card p-6 rounded-2xl flex flex-col justify-between text-left border-rose-100 bg-rose-50/5 relative overflow-hidden">
+                      <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-rose-50 text-rose-700 text-[9px] font-black uppercase tracking-wider border border-rose-200">
+                        Deleted
+                      </div>
+                      <div>
+                        <div className="flex items-start justify-between gap-4 mb-3">
+                          <div>
+                            <h3 className="text-lg font-bold text-slate-850 leading-snug">{job.title}</h3>
+                            <div className="flex flex-wrap gap-1.5 mt-2">
+                              <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
+                                {job.department}
+                              </span>
+                              <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
+                                {job.location}
+                              </span>
+                              <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
+                                {job.type}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="text-xs font-bold text-slate-500 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-lg flex-shrink-0">
+                            {job.salary}
+                          </span>
+                        </div>
+
+                        <p className="text-slate-505 text-xs mb-5 leading-relaxed line-clamp-3">
+                          {job.description}
+                        </p>
+
+                        {job.skills && job.skills.length > 0 && (
+                          <div className="mb-4">
+                            <div className="text-[10px] uppercase font-bold text-slate-400 mb-1.5">Required Skills</div>
+                            <div className="flex flex-wrap gap-1">
+                              {job.skills.map((skill, idx) => (
+                                <span key={idx} className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-[#004AAD] text-[10px] font-medium">
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-2">
+                        <span className="text-[10px] text-slate-400">
+                          Posted on {new Date(job.createdat || job.createdAt).toLocaleDateString()}
+                        </span>
+                        
+                        <button
+                          onClick={async () => {
+                            try {
+                              setLoading(true);
+                              const restoredJob = { ...job, status: 'ACTIVE' };
+                              await axios.put(`${BACKEND_API_BASE}/api/jobs/${job.id}`, restoredJob);
+                              setSuccess('Job opening restored successfully.');
+                              fetchData();
+                            } catch {
+                              setError('Failed to restore job opening.');
+                            } finally {
+                              setLoading(false);
+                            }
+                          }}
+                          className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-250 text-[10px] font-bold transition flex items-center space-x-1 cursor-pointer"
+                          title="Restore this job to active board"
+                        >
+                          <span>Restore Job</span>
+                        </button>
                       </div>
                     </div>
                   ))
