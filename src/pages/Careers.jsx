@@ -475,13 +475,13 @@ export default function Careers() {
       console.error('Local storage read failed:', err);
     }
 
-    const hasAppliedLocally = localApps.some(app => 
-      (app.email || '').toLowerCase() === emailToCheck && 
+    const hasAppliedLocally = localApps.some(app =>
+      (app.email || '').toLowerCase() === emailToCheck &&
       Number(app.jobId) === Number(jobIdToCheck)
     );
 
-    const hasAppliedInState = userApplications.some(app => 
-      (app.email || '').toLowerCase() === emailToCheck && 
+    const hasAppliedInState = userApplications.some(app =>
+      (app.email || '').toLowerCase() === emailToCheck &&
       Number(app.jobId) === Number(jobIdToCheck)
     );
 
@@ -1220,11 +1220,10 @@ export default function Careers() {
                               <button
                                 type="button"
                                 onClick={() => handleLikeJob(job.id)}
-                                className={`p-2 rounded-xl border transition-all duration-300 flex items-center justify-center cursor-pointer ${
-                                  likedJobs.includes(job.id)
-                                    ? 'bg-rose-50 border-rose-200 text-rose-500 hover:bg-rose-100'
-                                    : 'bg-white border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50/30'
-                                }`}
+                                className={`p-2 rounded-xl border transition-all duration-300 flex items-center justify-center cursor-pointer ${likedJobs.includes(job.id)
+                                  ? 'bg-rose-50 border-rose-200 text-rose-500 hover:bg-rose-100'
+                                  : 'bg-white border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50/30'
+                                  }`}
                                 title="Like Job"
                               >
                                 <Heart className="h-4 w-4" fill={likedJobs.includes(job.id) ? "currentColor" : "none"} />
@@ -1325,7 +1324,7 @@ export default function Careers() {
                               </div>
                             </div>
 
-                            <div className="flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
+                            <div className="flex-shrink-0 w-full sm:w-auto mt-8">
                               <button
                                 onClick={() => setSelectedJob(job)}
                                 className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
@@ -1689,278 +1688,278 @@ export default function Careers() {
             ) : (
               <>
                 <div className="space-y-6">
-                {currentMyJobs.map((app) => {
-                  const statusText = app.status;
-                  const appliedDate = formatDate(app.appliedDate || app.createdAt);
+                  {currentMyJobs.map((app) => {
+                    const statusText = app.status;
+                    const appliedDate = formatDate(app.appliedDate || app.createdAt);
 
-                  // Determine step index for progress tracker
-                  let activeIdx = 0;
-                  const s = (statusText || '').toLowerCase().trim();
-                  if (s === 'candidates' || s === 'applied' || s === 'pending') {
-                    activeIdx = 0;
-                  } else if (s === 'shortlisted' || s.includes('aptitude') || s.includes('test') || s.includes('assessment')) {
-                    activeIdx = 1;
-                  } else if (s === 'interview scheduled' || s === 'scheduled' || s.includes('technical')) {
-                    activeIdx = 2;
-                  } else if (app.taskAssigned || s.includes('task') || s.includes('brand')) {
-                    activeIdx = 3;
-                  } else if (s.includes('selected') || s.includes('joined') || s.includes('hr')) {
-                    activeIdx = 4;
-                  }
+                    // Determine step index for progress tracker
+                    let activeIdx = 0;
+                    const s = (statusText || '').toLowerCase().trim();
+                    if (s === 'candidates' || s === 'applied' || s === 'pending') {
+                      activeIdx = 0;
+                    } else if (s === 'shortlisted' || s.includes('aptitude') || s.includes('test') || s.includes('assessment')) {
+                      activeIdx = 1;
+                    } else if (s === 'interview scheduled' || s === 'scheduled' || s.includes('technical')) {
+                      activeIdx = 2;
+                    } else if (app.taskAssigned || s.includes('task') || s.includes('brand')) {
+                      activeIdx = 3;
+                    } else if (s.includes('selected') || s.includes('joined') || s.includes('hr')) {
+                      activeIdx = 4;
+                    }
 
-                  const steps = ['Applied', 'Test Round', 'Technical Interview', 'Task Assessment', 'HR interview'];
+                    const steps = ['Applied', 'Test Round', 'Technical Interview', 'Task Assessment', 'HR interview'];
 
-                  return (
-                    <div
-                      key={app.id}
-                      className="glass-card-purple p-6 rounded-3xl border border-purple-500/10 flex flex-col gap-6 relative overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-300"
-                    >
-                      {/* Upper card header */}
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                        <div>
-                          <h4 className="text-lg font-black text-slate-900 group-hover:text-[#EC4899] transition-colors">
-                            {app.jobTitle || 'General Opening'}
-                          </h4>
-                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs text-slate-500 font-semibold">
-                            <span className="text-[#EC4899] font-extrabold uppercase tracking-wide text-[10px]">
-                              {app.jobDepartment || 'Engineering'}
-                            </span>
-                            <span>&bull;</span>
-                            <span>{app.jobLocation || 'Tiruvallur'}</span>
-                            <span>&bull;</span>
-                            <span className="text-[11px] text-slate-400 font-medium">Applied on {appliedDate}</span>
-                          </div>
-
-                          {(app.githubLink || activeIdx >= 3) && (
-                            <div className="mt-3.5 space-y-2 max-w-md">
-                              <span className="font-extrabold text-violet-700 text-[10px] uppercase tracking-wider block">
-                                Task Solution
+                    return (
+                      <div
+                        key={app.id}
+                        className="glass-card-purple p-6 rounded-3xl border border-purple-500/10 flex flex-col gap-6 relative overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-300"
+                      >
+                        {/* Upper card header */}
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                          <div>
+                            <h4 className="text-lg font-black text-slate-900 group-hover:text-[#EC4899] transition-colors">
+                              {app.jobTitle || 'General Opening'}
+                            </h4>
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs text-slate-500 font-semibold">
+                              <span className="text-[#EC4899] font-extrabold uppercase tracking-wide text-[10px]">
+                                {app.jobDepartment || 'Engineering'}
                               </span>
-                              {app.githubLink ? (
-                                <div className="p-2.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl flex items-center justify-between gap-3">
-                                  <div className="text-left overflow-hidden">
-                                    <span className="font-bold text-emerald-700 text-[10px] block">
-                                      ✓ Submitted Solution
-                                    </span>
-                                    <a
-                                      href={app.githubLink}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-xs font-bold text-violet-650 hover:underline break-all"
-                                    >
-                                      {app.githubLink}
-                                    </a>
-                                  </div>
-                                </div>
-                              ) : (
-                                <p className="text-[11px] font-bold text-slate-450 italic">
-                                  Pending task submission
-                                </p>
-                              )}
-                              {gitErrors[app.id] && (
-                                <p className="text-[10px] font-bold text-rose-600">
-                                  {gitErrors[app.id]}
-                                </p>
-                              )}
+                              <span>&bull;</span>
+                              <span>{app.jobLocation || 'Tiruvallur'}</span>
+                              <span>&bull;</span>
+                              <span className="text-[11px] text-slate-400 font-medium">Applied on {appliedDate}</span>
                             </div>
-                          )}
-                        </div>
 
-                        {/* Mapped Status Badge */}
-                        <div className="flex-shrink-0">
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${['Selected', 'Joined'].includes(statusText)
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                            : statusText === 'Rejected'
-                              ? 'bg-rose-50 text-rose-700 border-rose-200'
-                              : 'bg-purple-50 text-purple-700 border-purple-200'
-                            }`}>
-                            {statusText === 'Round 1 Aptitude' || statusText === 'Round 1 test' ? 'Round 1 Test' : statusText}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Interactive Steps Visualizer */}
-                      <div className="border-t border-purple-500/10 pt-4 pb-2">
-                        <div className="relative flex items-center justify-between w-full">
-                          {/* Connector Line */}
-                          <div className="absolute left-3 right-3 top-3 h-[2px] bg-slate-100 z-0">
-                            <div
-                              className="h-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] transition-all duration-500"
-                              style={{ width: `${(activeIdx / (steps.length - 1)) * 100}%` }}
-                            />
-                          </div>
-
-                          {/* Node Circles */}
-                          {steps.map((stepName, idx) => {
-                            const isCompleted = idx < activeIdx;
-                            const isActive = idx === activeIdx;
-                            const isRejectedDecision = idx === (steps.length - 1) && statusText === 'Rejected';
-
-                            let circleClasses = 'bg-white border-slate-200 text-slate-400';
-                            if (isCompleted) {
-                              circleClasses = 'bg-[#8B5CF6] border-[#8B5CF6] text-white shadow-sm';
-                            } else if (isActive) {
-                              circleClasses = isRejectedDecision
-                                ? 'bg-rose-500 border-rose-500 text-white shadow-md shadow-rose-200 animate-pulse'
-                                : 'bg-[#EC4899] border-[#EC4899] text-white shadow-md shadow-pink-200 animate-pulse';
-                            }
-
-                            return (
-                              <div key={stepName} className="flex flex-col items-center relative z-10 flex-1 text-center">
-                                <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 text-[10px] font-black transition-all duration-300 ${circleClasses}`}>
-                                  {idx + 1}
-                                </div>
-                                <span className={`text-[8.5px] font-bold mt-1.5 uppercase tracking-wide block ${isActive ? 'text-[#EC4899]' : isCompleted ? 'text-slate-600' : 'text-slate-400'}`}>
-                                  {stepName}
+                            {(app.githubLink || activeIdx >= 3) && (
+                              <div className="mt-3.5 space-y-2 max-w-md">
+                                <span className="font-extrabold text-violet-700 text-[10px] uppercase tracking-wider block">
+                                  Task Solution
                                 </span>
+                                {app.githubLink ? (
+                                  <div className="p-2.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl flex items-center justify-between gap-3">
+                                    <div className="text-left overflow-hidden">
+                                      <span className="font-bold text-emerald-700 text-[10px] block">
+                                        ✓ Submitted Solution
+                                      </span>
+                                      <a
+                                        href={app.githubLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-xs font-bold text-violet-650 hover:underline break-all"
+                                      >
+                                        {app.githubLink}
+                                      </a>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <p className="text-[11px] font-bold text-slate-450 italic">
+                                    Pending task submission
+                                  </p>
+                                )}
+                                {gitErrors[app.id] && (
+                                  <p className="text-[10px] font-bold text-rose-600">
+                                    {gitErrors[app.id]}
+                                  </p>
+                                )}
                               </div>
-                            );
-                          })}
+                            )}
+                          </div>
+
+                          {/* Mapped Status Badge */}
+                          <div className="flex-shrink-0">
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${['Selected', 'Joined'].includes(statusText)
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : statusText === 'Rejected'
+                                ? 'bg-rose-50 text-rose-700 border-rose-200'
+                                : 'bg-purple-50 text-purple-700 border-purple-200'
+                              }`}>
+                              {statusText === 'Round 1 Aptitude' || statusText === 'Round 1 test' ? 'Round 1 Test' : statusText}
+                            </span>
+                          </div>
                         </div>
+
+                        {/* Interactive Steps Visualizer */}
+                        <div className="border-t border-purple-500/10 pt-4 pb-2">
+                          <div className="relative flex items-center justify-between w-full">
+                            {/* Connector Line */}
+                            <div className="absolute left-3 right-3 top-3 h-[2px] bg-slate-100 z-0">
+                              <div
+                                className="h-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] transition-all duration-500"
+                                style={{ width: `${(activeIdx / (steps.length - 1)) * 100}%` }}
+                              />
+                            </div>
+
+                            {/* Node Circles */}
+                            {steps.map((stepName, idx) => {
+                              const isCompleted = idx < activeIdx;
+                              const isActive = idx === activeIdx;
+                              const isRejectedDecision = idx === (steps.length - 1) && statusText === 'Rejected';
+
+                              let circleClasses = 'bg-white border-slate-200 text-slate-400';
+                              if (isCompleted) {
+                                circleClasses = 'bg-[#8B5CF6] border-[#8B5CF6] text-white shadow-sm';
+                              } else if (isActive) {
+                                circleClasses = isRejectedDecision
+                                  ? 'bg-rose-500 border-rose-500 text-white shadow-md shadow-rose-200 animate-pulse'
+                                  : 'bg-[#EC4899] border-[#EC4899] text-white shadow-md shadow-pink-200 animate-pulse';
+                              }
+
+                              return (
+                                <div key={stepName} className="flex flex-col items-center relative z-10 flex-1 text-center">
+                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 text-[10px] font-black transition-all duration-300 ${circleClasses}`}>
+                                    {idx + 1}
+                                  </div>
+                                  <span className={`text-[8.5px] font-bold mt-1.5 uppercase tracking-wide block ${isActive ? 'text-[#EC4899]' : isCompleted ? 'text-slate-600' : 'text-slate-400'}`}>
+                                    {stepName}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Actionable status details below tracker */}
+                        {(statusText === 'Round 1 Aptitude' || statusText === 'Round 1 test') && (
+                          <div className="mt-1">
+                            {app.aptitudeStatus === 'Scheduled' ? (
+                              <div className="p-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                                <div className="text-left">
+                                  <span className="font-extrabold text-[#F59E0B] uppercase tracking-wider block mb-0.5">Online Assessment Available</span>
+                                  <p className="text-slate-500 font-medium">Your 10-minute automated coding assessment is ready to begin.</p>
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    setShowMyJobs(false);
+                                    navigate(`/careers/assessment?id=${app.id}`);
+                                  }}
+                                  className="w-full sm:w-auto px-4.5 py-2.5 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-[#EC4899]/15 text-center whitespace-nowrap"
+                                >
+                                  Take Assessment
+                                </button>
+                              </div>
+                            ) : app.aptitudeStatus === 'Completed' ? (
+                              <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Assessment Completed</span>
+                                <p className="text-slate-500 font-medium">
+                                  Recruiting managers are reviewing your submission.
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Awaiting Scheduling</span>
+                                <p className="text-slate-500 font-medium">We are preparing your online coding screening questions. Check back soon.</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {statusText === 'Interview Scheduled' && (
+                          <div className="mt-1">
+                            {app.interviewDate && app.interviewTime ? (
+                              <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Interview Scheduled</span>
+                                <p className="text-slate-500 font-medium">
+                                  📅 Date: <strong className="text-slate-800">{app.interviewDate}</strong> at <strong className="text-slate-800">{app.interviewTime}</strong>. A calendar invite has been sent to your email.
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Scheduling In Progress</span>
+                                <p className="text-slate-500 font-medium">Recruiting coordinators are finalizing interview slots. Check your email for invites shortly.</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {['Selected', 'Joined'].includes(statusText) && (
+                          <div className="mt-1">
+                            <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
+                              <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Application Selected!</span>
+                              <p className="text-slate-500 font-medium">
+                                Congratulations! You have successfully cleared our rounds. An onboarding specialist will contact you with the offer proposal and equity schedule.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {statusText === 'Rejected' && (
+                          <div className="mt-1">
+                            <div className="p-3.5 bg-rose-500/5 border border-rose-500/20 rounded-xl text-left text-xs">
+                              <span className="font-extrabold text-rose-600 uppercase tracking-wider block mb-0.5">Application Closed</span>
+                              <p className="text-slate-500 font-medium">
+                                We sincerely appreciate the time you took to interview with us. While we are not moving forward with this opening, we will retain your file for matching roles.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Pagination Controls */}
+                {totalMyJobsPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-purple-500/10 w-full mt-4">
+                    <span className="text-xs font-semibold text-slate-500">
+                      Showing {indexOfFirstMyJob + 1}-{Math.min(indexOfLastMyJob, userApplications.length)} of {userApplications.length} applications
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={myJobsPage === 1}
+                        onClick={() => {
+                          setMyJobsPage(prev => Math.max(prev - 1, 1));
+                          document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${myJobsPage === 1
+                          ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                          : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
+                          }`}
+                      >
+                        <ChevronLeft className="h-3.5 w-3.5" />
+                        <span>Previous</span>
+                      </button>
+
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: totalMyJobsPages }, (_, idx) => idx + 1).map((pNum) => (
+                          <button
+                            key={pNum}
+                            type="button"
+                            onClick={() => {
+                              setMyJobsPage(pNum);
+                              document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className={`h-8 w-8 rounded-xl text-xs font-bold transition duration-300 cursor-pointer ${myJobsPage === pNum
+                              ? 'bg-[#8B5CF6] text-white shadow-sm'
+                              : 'bg-white border border-purple-500/10 text-slate-700 hover:bg-slate-50'
+                              }`}
+                          >
+                            {pNum}
+                          </button>
+                        ))}
                       </div>
 
-                      {/* Actionable status details below tracker */}
-                      {(statusText === 'Round 1 Aptitude' || statusText === 'Round 1 test') && (
-                        <div className="mt-1">
-                          {app.aptitudeStatus === 'Scheduled' ? (
-                            <div className="p-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-                              <div className="text-left">
-                                <span className="font-extrabold text-[#F59E0B] uppercase tracking-wider block mb-0.5">Online Assessment Available</span>
-                                <p className="text-slate-500 font-medium">Your 10-minute automated coding assessment is ready to begin.</p>
-                              </div>
-                              <button
-                                onClick={() => {
-                                  setShowMyJobs(false);
-                                  navigate(`/careers/assessment?id=${app.id}`);
-                                }}
-                                className="w-full sm:w-auto px-4.5 py-2.5 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-[#EC4899]/15 text-center whitespace-nowrap"
-                              >
-                                Take Assessment
-                              </button>
-                            </div>
-                          ) : app.aptitudeStatus === 'Completed' ? (
-                            <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
-                              <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Assessment Completed</span>
-                              <p className="text-slate-500 font-medium">
-                                Recruiting managers are reviewing your submission.
-                              </p>
-                            </div>
-                          ) : (
-                            <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs">
-                              <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Awaiting Scheduling</span>
-                              <p className="text-slate-500 font-medium">We are preparing your online coding screening questions. Check back soon.</p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {statusText === 'Interview Scheduled' && (
-                        <div className="mt-1">
-                          {app.interviewDate && app.interviewTime ? (
-                            <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
-                              <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Interview Scheduled</span>
-                              <p className="text-slate-500 font-medium">
-                                📅 Date: <strong className="text-slate-800">{app.interviewDate}</strong> at <strong className="text-slate-800">{app.interviewTime}</strong>. A calendar invite has been sent to your email.
-                              </p>
-                            </div>
-                          ) : (
-                            <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
-                              <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Scheduling In Progress</span>
-                              <p className="text-slate-500 font-medium">Recruiting coordinators are finalizing interview slots. Check your email for invites shortly.</p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {['Selected', 'Joined'].includes(statusText) && (
-                        <div className="mt-1">
-                          <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
-                            <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Application Selected!</span>
-                            <p className="text-slate-500 font-medium">
-                              Congratulations! You have successfully cleared our rounds. An onboarding specialist will contact you with the offer proposal and equity schedule.
-                            </p>
-                          </div>
-                        </div>
-                      )}
-
-                      {statusText === 'Rejected' && (
-                        <div className="mt-1">
-                          <div className="p-3.5 bg-rose-500/5 border border-rose-500/20 rounded-xl text-left text-xs">
-                            <span className="font-extrabold text-rose-600 uppercase tracking-wider block mb-0.5">Application Closed</span>
-                            <p className="text-slate-500 font-medium">
-                              We sincerely appreciate the time you took to interview with us. While we are not moving forward with this opening, we will retain your file for matching roles.
-                            </p>
-                          </div>
-                        </div>
-                      )}
-
+                      <button
+                        type="button"
+                        disabled={myJobsPage === totalMyJobsPages}
+                        onClick={() => {
+                          setMyJobsPage(prev => Math.min(prev + 1, totalMyJobsPages));
+                          document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${myJobsPage === totalMyJobsPages
+                          ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                          : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
+                          }`}
+                      >
+                        <span>Next</span>
+                        <ChevronRight className="h-3.5 w-3.5" />
+                      </button>
                     </div>
-                  );
-                })}
-              </div>
-
-              {/* Pagination Controls */}
-              {totalMyJobsPages > 1 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-purple-500/10 w-full mt-4">
-                  <span className="text-xs font-semibold text-slate-500">
-                    Showing {indexOfFirstMyJob + 1}-{Math.min(indexOfLastMyJob, userApplications.length)} of {userApplications.length} applications
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      disabled={myJobsPage === 1}
-                      onClick={() => {
-                        setMyJobsPage(prev => Math.max(prev - 1, 1));
-                        document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${myJobsPage === 1
-                        ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
-                        : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
-                        }`}
-                    >
-                      <ChevronLeft className="h-3.5 w-3.5" />
-                      <span>Previous</span>
-                    </button>
-
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: totalMyJobsPages }, (_, idx) => idx + 1).map((pNum) => (
-                        <button
-                          key={pNum}
-                          type="button"
-                          onClick={() => {
-                            setMyJobsPage(pNum);
-                            document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
-                          }}
-                          className={`h-8 w-8 rounded-xl text-xs font-bold transition duration-300 cursor-pointer ${myJobsPage === pNum
-                            ? 'bg-[#8B5CF6] text-white shadow-sm'
-                            : 'bg-white border border-purple-500/10 text-slate-700 hover:bg-slate-50'
-                            }`}
-                        >
-                          {pNum}
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      type="button"
-                      disabled={myJobsPage === totalMyJobsPages}
-                      onClick={() => {
-                        setMyJobsPage(prev => Math.min(prev + 1, totalMyJobsPages));
-                        document.getElementById('my-apps-header')?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${myJobsPage === totalMyJobsPages
-                        ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
-                        : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
-                        }`}
-                    >
-                      <span>Next</span>
-                      <ChevronRight className="h-3.5 w-3.5" />
-                    </button>
                   </div>
-                </div>
-              )}
-            </>
-          )}
+                )}
+              </>
+            )}
           </motion.div>
         )}
       </div>
@@ -1968,7 +1967,7 @@ export default function Careers() {
       {/* APPLICATION FORM MODAL (FEATURED JOBS TARGET) */}
       <AnimatePresence>
         {selectedJob && (
-          <div 
+          <div
             onClick={() => setSelectedJob(null)}
             className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-start justify-center p-4 py-8 sm:py-12"
           >
@@ -2146,7 +2145,7 @@ export default function Careers() {
       {/* SIGN IN REQUIRED FOR MY JOBS */}
       <AnimatePresence>
         {showLoginPrompt && (
-          <div 
+          <div
             onClick={() => setShowLoginPrompt(false)}
             className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4"
           >
