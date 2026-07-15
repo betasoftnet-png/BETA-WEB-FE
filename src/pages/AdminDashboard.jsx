@@ -1700,7 +1700,7 @@ export default function AdminDashboard() {
                                           {(statusVal === 'Assessment Sent' || statusVal === 'Scheduled' || statusVal === 'Pending') && (
                                             <button
                                               onClick={() => {
-                                                const url = `https://apply.beta-softnet.com/careers/assessment?id=${app.id}`;
+                                                const url = `https://www.beta-softnet.com/careers/assessment?id=${app.id}`;
                                                 navigator.clipboard.writeText(url);
                                                 alert(`Test Link copied to clipboard:\n${url}`);
                                               }}

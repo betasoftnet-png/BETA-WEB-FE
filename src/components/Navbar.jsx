@@ -317,7 +317,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center ml-4 sm:ml-12 space-x-2 flex-1 justify-start">
             <Link to="/" className="flex items-center select-none">
-              <img src="/logo.png" alt="Beta Logo" className="h-12 w-auto object-contain" />
+              <img src="/logo.png" alt="Beta Logo" className="h-14 w-auto object-contain" />
             </Link>
 
             <div className="relative animate-fadeIn ml-6" ref={locationRef}>

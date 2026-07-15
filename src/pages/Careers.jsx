@@ -19,7 +19,9 @@ import {
   SlidersHorizontal,
   ArrowRight,
   ArrowLeft,
-  RefreshCw
+  RefreshCw,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -321,6 +323,12 @@ export default function Careers() {
 
 
   const [currentPage, setCurrentPage] = useState('active'); // 'active' or 'upcoming'
+  const [jobsPage, setJobsPage] = useState(1);
+
+  // Reset pagination on filter or page change
+  useEffect(() => {
+    setJobsPage(1);
+  }, [searchQuery, selectedTeam, selectedLocation, selectedType, currentPage]);
 
   // Filter logic
   const filteredJobs = jobsList.filter(job => {
@@ -350,6 +358,12 @@ export default function Careers() {
 
     return matchesSearch && matchesTeam && matchesLocation && matchesType;
   });
+
+  const jobsPerPage = 3;
+  const indexOfLastJob = jobsPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = displayedJobs.slice(indexOfFirstJob, indexOfLastJob);
+  const totalJobsPages = Math.ceil(displayedJobs.length / jobsPerPage);
 
   const handleApply = async (e, jobOverride = null) => {
     e.preventDefault();
@@ -843,13 +857,13 @@ export default function Careers() {
 
 
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 space-y-32">
         {!showMyJobs ? (
           <>
             {/* COMBINED HERO & OPEN ROLES GROUP */}
             <div className="space-y-12">
               {/* HERO SECTION */}
-              <div className="text-center max-w-3xl mx-auto pt-8 pb-4 space-y-6">
+              <div className="text-center max-w-3xl mx-auto pt-2 pb-4 space-y-6">
                 {/* <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1059,8 +1073,8 @@ export default function Careers() {
                   {/* Job list inside container */}
                   <div className="flex flex-col gap-4 w-full">
                     <AnimatePresence mode="wait">
-                      {displayedJobs.length > 0 ? (
-                        displayedJobs.map((job) => (
+                      {currentJobs.length > 0 ? (
+                        currentJobs.map((job) => (
                           <motion.div
                             key={job.id}
                             layout
@@ -1129,8 +1143,72 @@ export default function Careers() {
                       )}
                     </AnimatePresence>
 
+                    {/* Pagination Controls */}
+                    {totalJobsPages > 1 && (
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-purple-500/10 w-full mt-4">
+                        <span className="text-xs font-semibold text-slate-500">
+                          Showing {indexOfFirstJob + 1}-{Math.min(indexOfLastJob, displayedJobs.length)} of {displayedJobs.length} roles
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            disabled={jobsPage === 1}
+                            onClick={() => {
+                              setJobsPage(prev => Math.max(prev - 1, 1));
+                              document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${
+                              jobsPage === 1
+                                ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                                : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
+                            }`}
+                          >
+                            <ChevronLeft className="h-3.5 w-3.5" />
+                            <span>Previous</span>
+                          </button>
+                          
+                          <div className="flex items-center gap-1">
+                            {Array.from({ length: totalJobsPages }, (_, idx) => idx + 1).map((pNum) => (
+                              <button
+                                key={pNum}
+                                type="button"
+                                onClick={() => {
+                                  setJobsPage(pNum);
+                                  document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
+                                }}
+                                className={`h-8 w-8 rounded-xl text-xs font-bold transition duration-300 cursor-pointer ${
+                                  jobsPage === pNum
+                                    ? 'bg-[#8B5CF6] text-white shadow-sm'
+                                    : 'bg-white border border-purple-500/10 text-slate-700 hover:bg-slate-50'
+                                }`}
+                              >
+                                {pNum}
+                              </button>
+                            ))}
+                          </div>
+
+                          <button
+                            type="button"
+                            disabled={jobsPage === totalJobsPages}
+                            onClick={() => {
+                              setJobsPage(prev => Math.min(prev + 1, totalJobsPages));
+                              document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${
+                              jobsPage === totalJobsPages
+                                ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                                : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
+                            }`}
+                          >
+                            <span>Next</span>
+                            <ChevronRight className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Pagination / Toggle Next button inside the white box */}
-                    <div className="flex justify-end pt-4 border-t border-purple-500/10 w-full mt-2">
+                    <div className="flex justify-end pt-4 border-t border-[#8B5CF6]/10 w-full mt-2">
                       {currentPage === 'active' ? (
                         <button
                           type="button"
@@ -1460,7 +1538,7 @@ export default function Careers() {
                     activeIdx = 4;
                   }
 
-                  const steps = ['Apply', 'Test Round', 'Technical Interview', 'Task Assessment', 'HR interview'];
+                  const steps = ['Applied', 'Test Round', 'Technical Interview', 'Task Assessment', 'HR interview'];
 
                   return (
                     <div
@@ -1483,7 +1561,7 @@ export default function Careers() {
                             <span className="text-[11px] text-slate-400 font-medium">Applied on {appliedDate}</span>
                           </div>
 
-                          {true && (
+                          {(app.githubLink || activeIdx >= 3) && (
                             <div className="mt-3.5 space-y-2 max-w-md">
                               <span className="font-extrabold text-violet-700 text-[10px] uppercase tracking-wider block">
                                 Task Solution
