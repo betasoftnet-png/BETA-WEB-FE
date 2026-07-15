@@ -597,8 +597,8 @@ export default function Careers() {
                       <p className="text-slate-500 text-xs mt-0.5">Applied for <strong>{taskData.candidate.jobTitle || 'Developer'}</strong></p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${taskData.status === 'SUBMITTED'
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                        : 'bg-purple-50 text-purple-700 border-purple-200'
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-purple-50 text-purple-700 border-purple-200'
                       }`}>
                       {taskData.status}
                     </span>
@@ -1101,16 +1101,15 @@ export default function Careers() {
                               setJobsPage(prev => Math.max(prev - 1, 1));
                               document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${
-                              jobsPage === 1
-                                ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
-                                : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
-                            }`}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${jobsPage === 1
+                              ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                              : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
+                              }`}
                           >
                             <ChevronLeft className="h-3.5 w-3.5" />
                             <span>Previous</span>
                           </button>
-                          
+
                           <div className="flex items-center gap-1">
                             {Array.from({ length: totalJobsPages }, (_, idx) => idx + 1).map((pNum) => (
                               <button
@@ -1120,11 +1119,10 @@ export default function Careers() {
                                   setJobsPage(pNum);
                                   document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
                                 }}
-                                className={`h-8 w-8 rounded-xl text-xs font-bold transition duration-300 cursor-pointer ${
-                                  jobsPage === pNum
-                                    ? 'bg-[#8B5CF6] text-white shadow-sm'
-                                    : 'bg-white border border-purple-500/10 text-slate-700 hover:bg-slate-50'
-                                }`}
+                                className={`h-8 w-8 rounded-xl text-xs font-bold transition duration-300 cursor-pointer ${jobsPage === pNum
+                                  ? 'bg-[#8B5CF6] text-white shadow-sm'
+                                  : 'bg-white border border-purple-500/10 text-slate-700 hover:bg-slate-50'
+                                  }`}
                               >
                                 {pNum}
                               </button>
@@ -1138,11 +1136,10 @@ export default function Careers() {
                               setJobsPage(prev => Math.min(prev + 1, totalJobsPages));
                               document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${
-                              jobsPage === totalJobsPages
-                                ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
-                                : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
-                            }`}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition duration-300 flex items-center gap-1 ${jobsPage === totalJobsPages
+                              ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                              : 'bg-white border-purple-500/20 text-slate-700 hover:bg-slate-50 cursor-pointer hover:border-purple-500/40 hover:text-purple-600'
+                              }`}
                           >
                             <span>Next</span>
                             <ChevronRight className="h-3.5 w-3.5" />
