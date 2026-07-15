@@ -90,38 +90,6 @@ const fallbackJobs = [
   }
 ];
 
-const upcomingJobs = [
-  {
-    id: 6,
-    title: 'Data Analyst & BI Specialist',
-    location: 'Tiruvallur',
-    type: 'Full-Time',
-    experience: '2+ Years',
-    skills: ['Python', 'SQL', 'Tableau', 'Power BI'],
-    description: 'We are looking for a Data Analyst to transform data into insights, design BI dashboards, and support product metrics.',
-    team: 'Data Science'
-  },
-  {
-    id: 7,
-    title: 'Cybersecurity Analyst',
-    location: 'Vellore',
-    type: 'Full-Time',
-    experience: '3+ Years',
-    skills: ['Penetration Testing', 'SIEM', 'Network Security', 'OWASP'],
-    description: 'Protect our applications and infrastructure by performing regular audits, vulnerability assessments, and security compliance operations.',
-    team: 'Security'
-  },
-  {
-    id: 8,
-    title: 'Senior Product Manager',
-    location: 'Tiruvallur',
-    type: 'Full-Time',
-    experience: '5+ Years',
-    skills: ['Product Roadmap', 'Agile', 'Jira', 'UX Strategy'],
-    description: 'Lead product design, collaborate with engineering leads, and define product strategies for our SaaS client applications.',
-    team: 'Product Management'
-  }
-];
 
 const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
@@ -322,13 +290,12 @@ export default function Careers() {
   }, [selectedJob]);
 
 
-  const [currentPage, setCurrentPage] = useState('active'); // 'active' or 'upcoming'
   const [jobsPage, setJobsPage] = useState(1);
 
-  // Reset pagination on filter or page change
+  // Reset pagination on filter change
   useEffect(() => {
     setJobsPage(1);
-  }, [searchQuery, selectedTeam, selectedLocation, selectedType, currentPage]);
+  }, [searchQuery, selectedTeam, selectedLocation, selectedType]);
 
   // Filter logic
   const filteredJobs = jobsList.filter(job => {
@@ -345,19 +312,7 @@ export default function Careers() {
     return matchesSearch && matchesTeam && matchesLocation && matchesType;
   });
 
-  const displayedJobs = currentPage === 'active' ? filteredJobs : upcomingJobs.filter(job => {
-    const matchesSearch = !searchQuery ||
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (job.skills && job.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))) ||
-      (job.team && job.team.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    const matchesTeam = !selectedTeam || job.team === selectedTeam;
-    const matchesLocation = !selectedLocation || job.location === selectedLocation;
-    const matchesType = !selectedType || job.type === selectedType;
-
-    return matchesSearch && matchesTeam && matchesLocation && matchesType;
-  });
+  const displayedJobs = filteredJobs;
 
   const jobsPerPage = 3;
   const indexOfLastJob = jobsPage * jobsPerPage;
@@ -423,6 +378,7 @@ export default function Careers() {
         resumeUrl: resume ? resume.name : '',
         status: shouldSchedule && interviewDate ? 'Interview Scheduled' : 'Applied',
         createdAt: new Date().toISOString(),
+        appliedDate: new Date().toISOString(),
         jobTitle: activeJob.title,
         jobDepartment: activeJob.team || 'Engineering',
         jobLocation: activeJob.location || 'Tiruvallur',
@@ -508,6 +464,7 @@ export default function Careers() {
           coverLetter: app.coverLetter || app.coverletter || '',
           status: mapStatusToUI(app.status),
           createdAt: app.createdAt || app.createdat || '',
+          appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
           jobTitle: app.jobTitle || app.jobtitle || '',
           jobDepartment: app.jobDepartment || app.jobdepartment || '',
           jobLocation: app.jobLocation || app.joblocation || '',
@@ -555,6 +512,7 @@ export default function Careers() {
             coverLetter: localApp.coverLetter || '',
             status: localApp.status || 'Applied',
             createdAt: localApp.createdAt || new Date().toISOString(),
+            appliedDate: localApp.appliedDate || localApp.applieddate || localApp.createdAt || new Date().toISOString(),
             jobTitle: localApp.jobTitle || '',
             jobDepartment: localApp.jobDepartment || 'Engineering',
             jobLocation: localApp.jobLocation || 'Tiruvallur',
@@ -1088,11 +1046,6 @@ export default function Careers() {
                               <div>
                                 <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300 flex flex-wrap items-center gap-2">
                                   {job.title}
-                                  {currentPage === 'upcoming' && (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-extrabold bg-[#EC4899]/15 text-[#EC4899] border border-[#EC4899]/20 uppercase tracking-widest select-none">
-                                      Coming Soon
-                                    </span>
-                                  )}
                                 </h3>
                                 <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5">
                                   {job.team}
@@ -1118,21 +1071,12 @@ export default function Careers() {
                             </div>
 
                             <div className="flex-shrink-0 w-full sm:w-auto">
-                              {currentPage === 'upcoming' ? (
-                                <button
-                                  onClick={() => setSelectedJob(job)}
-                                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-[#EC4899]/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#EC4899] hover:text-white border border-[#EC4899]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap animate-pulse"
-                                >
-                                  Express Interest
-                                </button>
-                              ) : (
-                                <button
-                                  onClick={() => setSelectedJob(job)}
-                                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
-                                >
-                                  Apply Now
-                                </button>
-                              )}
+                              <button
+                                onClick={() => setSelectedJob(job)}
+                                className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
+                              >
+                                Apply Now
+                              </button>
                             </div>
                           </motion.div>
                         ))
@@ -1207,34 +1151,7 @@ export default function Careers() {
                       </div>
                     )}
 
-                    {/* Pagination / Toggle Next button inside the white box */}
-                    <div className="flex justify-end pt-4 border-t border-[#8B5CF6]/10 w-full mt-2">
-                      {currentPage === 'active' ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setCurrentPage('upcoming');
-                            document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
-                          }}
-                          className="px-5 py-2.5 rounded-xl text-xs font-black bg-white hover:bg-slate-50 text-[#8B5CF6] hover:text-[#EC4899] border border-purple-500/20 shadow-sm transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
-                        >
-                          <span>See Upcoming Openings</span>
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setCurrentPage('active');
-                            document.querySelector('.unified-openings-box')?.scrollIntoView({ behavior: 'smooth' });
-                          }}
-                          className="px-5 py-2.5 rounded-xl text-xs font-black bg-white hover:bg-slate-50 text-slate-700 hover:text-[#8B5CF6] border border-purple-500/20 shadow-sm transition-all duration-300 flex items-center gap-1.5 cursor-pointer mr-auto"
-                        >
-                          <ArrowLeft className="h-3.5 w-3.5" />
-                          <span>Back to Active Roles</span>
-                        </button>
-                      )}
-                    </div>
+
                   </div>
                 </div>
               </div>
@@ -1521,7 +1438,7 @@ export default function Careers() {
               <div className="space-y-6">
                 {userApplications.map((app) => {
                   const statusText = app.status;
-                  const appliedDate = formatDate(app.createdAt);
+                  const appliedDate = formatDate(app.appliedDate || app.createdAt);
 
                   // Determine step index for progress tracker
                   let activeIdx = 0;
