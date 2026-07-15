@@ -311,7 +311,8 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#e2f0e8] shadow-sm text-slate-800">
+    <>
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#e2f0e8] shadow-sm text-slate-800">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-14">
           {/* Logo */}
@@ -406,23 +407,23 @@ export default function Navbar() {
                         <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl pt-4 px-0 pb-0 overflow-hidden z-50 text-left text-slate-800">
                           <table className="w-full text-left border-collapse">
                             <thead>
-                              <tr className="bg-emerald-50 border-b border-emerald-100/30 text-emerald-800 text-xs uppercase tracking-wider font-extrabold select-none">
+                              <tr className="bg-white border-b border-slate-200 text-slate-700 text-xs uppercase tracking-wider font-extrabold select-none">
                                 <th
-                                  className="py-2.5 pl-6 pr-2 rounded-l-lg text-emerald-800 w-1/5 select-none"
+                                  className="py-2.5 pl-6 pr-2 rounded-l-lg text-slate-700 w-1/5 select-none"
                                 >
                                   <div className="flex items-center space-x-1">
                                     <span>Category</span>
                                   </div>
                                 </th>
                                 <th
-                                  className="py-2.5 px-6 text-emerald-800 w-2/5 select-none"
+                                  className="py-2.5 px-6 text-slate-700 w-2/5 select-none"
                                 >
                                   <div className="flex items-center space-x-1">
                                     <span>Public</span>
                                   </div>
                                 </th>
                                 <th
-                                  className="py-2.5 pl-4 pr-6 rounded-r-lg text-emerald-800 w-2/5 select-none"
+                                  className="py-2.5 pl-4 pr-6 rounded-r-lg text-slate-700 w-2/5 select-none"
                                 >
                                   <div className="flex items-center space-x-1">
                                     <span>Business</span>
@@ -445,11 +446,11 @@ export default function Navbar() {
                                           title="Show Base products list"
                                         >
                                           {activeCategory === 'base' ? (
-                                            <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-600 text-white text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm">
+                                            <span className="inline-block px-2.5 py-1 rounded-full bg-[#004AAD] text-white text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm">
                                               Base
                                             </span>
                                           ) : (
-                                            <span className="inline-block px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest select-none text-left hover:bg-emerald-100 transition-colors">
+                                            <span className="inline-block px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-700 text-xs font-extrabold uppercase tracking-widest select-none text-left hover:bg-slate-100 transition-colors">
                                               Base
                                             </span>
                                           )}
@@ -526,20 +527,22 @@ export default function Navbar() {
                                             </div>
                                           </a>
 
-                                          <a
-                                            href="https://bittool.beta-softnet.com/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setIsBitToolOpen(true);
+                                              setIsDropdownOpen(false);
+                                            }}
+                                            className="w-full flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block border-none bg-transparent focus:outline-none"
                                           >
                                             <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                               <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
                                             </div>
                                             <div>
-                                              <p className="font-semibold text-slate-800 text-xs">Bit-Tool</p>
-                                              <p className="text-[10px] text-slate-450 font-medium">User's daily utility assistant</p>
+                                              <p className="font-semibold text-slate-800 text-xs text-left">Bit-Tool</p>
+                                              <p className="text-[10px] text-slate-450 font-medium text-left">User's daily utility assistant</p>
                                             </div>
-                                          </a>
+                                          </button>
 
                                           <a
                                             href="https://cliks.beta-softnet.com/"
@@ -847,18 +850,7 @@ export default function Navbar() {
                 </button>
               </div>
             )}
-            {user && (
-              <>
-                <div className="h-6 w-px bg-slate-300 self-center" />
-                <button
-                  onClick={() => setIsBitToolOpen(true)}
-                  className="p-1 rounded-xl hover:bg-slate-100 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent ml-2"
-                  title="Bit Tool"
-                >
-                  <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-7 w-7 object-contain rounded-lg shadow-sm" />
-                </button>
-              </>
-            )}
+
           </div>
 
           {/* Mobile Menu Button */}
@@ -982,18 +974,7 @@ export default function Navbar() {
                                 <span className="coming-soon-badge">Coming Soon</span>
                               </span>
                             </a>
-                            <a
-                              href="https://bittool.beta-softnet.com/"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                            >
-                              <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-4 w-4 object-contain" />
-                              <span className="font-semibold flex items-center">
-                                Bit-Tool
-                                <span className="coming-soon-badge">Coming Soon</span>
-                              </span>
-                            </a>
+
                             <a
                               href="https://cliks.beta-softnet.com/"
                               target="_blank"
@@ -1099,122 +1080,113 @@ export default function Navbar() {
           </div>
         </div>
       )}
+    </nav>
 
-
-
-      {/* Bit Tool Side Drawer */}
-      <AnimatePresence>
-        {isBitToolOpen && (
-          <motion.div
-            key="bit-tool-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsBitToolOpen(false)}
-            className="fixed inset-0 bg-slate-900/10 backdrop-blur-xs z-50 cursor-pointer"
-          />
-        )}
-        {isBitToolOpen && (
-          <motion.div
-            key="bit-tool-panel"
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="fixed right-0 top-0 bottom-0 w-[80px] bg-white border-l border-slate-200 shadow-2xl z-50 flex flex-col items-center py-6 justify-between select-none"
-          >
-            {/* Top Section: Features */}
-            <div className="flex flex-col items-center space-y-5 w-full">
-              {/* Close Button */}
-              <button
-                onClick={() => setIsBitToolOpen(false)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition cursor-pointer mb-2"
-                title="Close Bit Tool"
-              >
-                <X className="h-4.5 w-4.5" />
+    {/* Bit Tool Side Drawer */}
+    <AnimatePresence>
+      {isBitToolOpen && (
+        <motion.div
+          key="bit-tool-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setIsBitToolOpen(false)}
+          className="fixed inset-x-0 bottom-0 top-[57px] bg-transparent z-50 cursor-pointer"
+        />
+      )}
+      {isBitToolOpen && (
+        <motion.div
+          key="bit-tool-panel"
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+          className="fixed right-0 top-[57px] bottom-0 w-[64px] bg-white border-l border-slate-200 shadow-2xl z-50 flex flex-col items-center py-6 justify-between select-none"
+        >
+          {/* Top Section: Features */}
+          <div className="flex flex-col items-center space-y-4 w-full">
+            {/* Calendar Feature */}
+            <div className="relative group">
+              <button className="h-10 w-10 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-100/50 text-amber-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-amber-500/10 cursor-pointer">
+                <Calendar className="h-4.5 w-4.5" />
               </button>
-
-              {/* Calendar Feature */}
-              <div className="relative group">
-                <button className="h-12 w-12 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-100/50 text-amber-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-amber-500/10 cursor-pointer">
-                  <Calendar className="h-5.5 w-5.5" />
-                </button>
-                {/* Tooltip */}
-                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
-                  Calendar Sync
-                </div>
-              </div>
-
-              {/* Calculator Feature */}
-              <div className="relative group">
-                <button className="h-12 w-12 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-100/50 text-emerald-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-emerald-500/10 cursor-pointer">
-                  <Calculator className="h-5.5 w-5.5" />
-                </button>
-                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
-                  GST Calculator
-                </div>
-              </div>
-
-              {/* Identity Feature */}
-              <div className="relative group">
-                <button className="h-12 w-12 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-100/50 text-blue-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-blue-500/10 cursor-pointer">
-                  <Contact className="h-5.5 w-5.5" />
-                </button>
-                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
-                  Identity Guard
-                </div>
-              </div>
-
-              {/* Security Feature */}
-              <div className="relative group">
-                <button className="h-12 w-12 rounded-2xl bg-teal-50 hover:bg-teal-100 border border-teal-100/50 text-teal-650 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-teal-500/10 cursor-pointer">
-                  <ShieldCheck className="h-5.5 w-5.5" />
-                </button>
-                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
-                  Security Center
-                </div>
-              </div>
-
-              {/* Plus / Add Feature */}
-              <div className="relative group">
-                <button className="h-12 w-12 rounded-2xl border border-dashed border-slate-200 hover:border-slate-350 bg-slate-50/30 hover:bg-slate-50 text-slate-400 flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer">
-                  <Plus className="h-5 w-5" />
-                </button>
-                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
-                  Add custom tool
-                </div>
+              {/* Tooltip */}
+              <div className="absolute right-12 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                Calendar Sync
               </div>
             </div>
 
-            {/* Bottom Section: Separator and Settings */}
-            <div className="flex flex-col items-center w-full space-y-4">
-              {/* Horizontal Separator */}
-              <div className="w-10 h-px bg-slate-100" />
-
-              {/* Memo Compose */}
-              <div className="relative group">
-                <button className="h-11 w-11 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer">
-                  <SquarePen className="h-5 w-5" />
-                </button>
-                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
-                  Quick Memo
-                </div>
-              </div>
-
-              {/* Settings / Controls */}
-              <div className="relative group">
-                <button className="h-11 w-11 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer">
-                  <Sliders className="h-5 w-5" />
-                </button>
-                <div className="absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-slate-950 text-white text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
-                  Settings
-                </div>
+            {/* Calculator Feature */}
+            <div className="relative group">
+              <button className="h-10 w-10 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-100/50 text-emerald-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-emerald-500/10 cursor-pointer">
+                <Calculator className="h-4.5 w-4.5" />
+              </button>
+              <div className="absolute right-12 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                GST Calculator
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      {window.location.search.includes('debug_notif=true') && (
+
+            {/* Identity Feature */}
+            <div className="relative group">
+              <button className="h-10 w-10 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-100/50 text-blue-600 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-blue-500/10 cursor-pointer">
+                <Contact className="h-4.5 w-4.5" />
+              </button>
+              <div className="absolute right-12 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                Identity Guard
+              </div>
+            </div>
+
+            {/* Security Feature */}
+            <div className="relative group">
+              <button className="h-10 w-10 rounded-xl bg-teal-50 hover:bg-teal-100 border border-teal-100/50 text-teal-650 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-teal-500/10 cursor-pointer">
+                <ShieldCheck className="h-4.5 w-4.5" />
+              </button>
+              <div className="absolute right-12 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                Security Center
+              </div>
+            </div>
+
+            {/* Plus / Add Feature */}
+            <div className="relative group">
+              <button className="h-10 w-10 rounded-xl border border-dashed border-slate-200 hover:border-slate-350 bg-white hover:bg-slate-50 text-slate-400 flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer">
+                <Plus className="h-4.5 w-4.5" />
+              </button>
+              <div className="absolute right-12 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                Add custom tool
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Section: Separator and Settings */}
+          <div className="flex flex-col items-center w-full space-y-4">
+            {/* Horizontal Separator */}
+            <div className="w-10 h-px bg-slate-100" />
+
+            {/* Memo Compose */}
+            <div className="relative group">
+              <button className="h-9 w-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer">
+                <SquarePen className="h-4 w-4" />
+              </button>
+              <div className="absolute right-12 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                Quick Memo
+              </div>
+            </div>
+
+            {/* Settings / Controls */}
+            <div className="relative group">
+              <button className="h-9 w-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer">
+                <Sliders className="h-4 w-4" />
+              </button>
+              <div className="absolute right-12 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 text-[10px] font-bold tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-50">
+                Settings
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {window.location.search.includes('debug_notif=true') && (
         <div style={{
           position: 'fixed',
           bottom: '20px',
@@ -1273,6 +1245,6 @@ export default function Navbar() {
           )}
         </div>
       )}
-    </nav>
+    </>
   );
 }

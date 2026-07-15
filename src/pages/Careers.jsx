@@ -1751,6 +1751,17 @@ export default function Careers() {
                     />
                   </div>
 
+                  <div className="space-y-1 text-left">
+                    <label className="text-xs font-bold text-slate-500 uppercase">Cover Letter</label>
+                    <textarea
+                      value={coverLetter}
+                      onChange={(e) => setCoverLetter(e.target.value)}
+                      placeholder="Write your cover letter or introduction..."
+                      rows={4}
+                      className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition font-semibold resize-none"
+                    />
+                  </div>
+
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-500 uppercase">Resume Upload (PDF Only)</label>
                     <div className="relative border border-dashed border-purple-300 rounded-xl p-6 bg-slate-50 hover:bg-slate-100/60 transition flex flex-col items-center justify-center cursor-pointer">
