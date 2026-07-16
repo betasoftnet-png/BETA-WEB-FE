@@ -45,10 +45,11 @@ const benefits = [
 
 const processSteps = [
   { id: '1', title: 'Application', desc: 'Profile & PDF resume upload', icon: FileText, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
-  { id: '2', title: 'Assessment', desc: 'Async technical coding sprint', icon: Code2, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
-  { id: '3', title: 'Interview', desc: 'Systems architecture alignment', icon: User, color: 'text-amber-405', bg: 'bg-amber-500/10 border-amber-500/20' },
-  { id: '4', title: 'Offer', desc: 'Proposal and equity breakdown', icon: Award, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
-  { id: '5', title: 'Welcome', desc: 'Developer bootcamp onboarding', icon: CheckCircle2, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' }
+  { id: '2', title: 'Assessment', desc: 'Initial evaluation test', icon: Code2, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
+  { id: '3', title: 'Technical interview', desc: 'Systems architecture alignment', icon: User, color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
+  { id: '4', title: 'Task Assessment', desc: 'GitHub task and code review', icon: CheckSquare, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
+  { id: '5', title: 'HR  Interview', desc: 'Culture fit & team alignment', icon: Users, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
+  { id: '6', title: 'Offer ', desc: 'Final proposal discussions', icon: Award, color: 'text-[#F59E0B]', bg: 'bg-amber-500/10 border-amber-500/20' }
 ];
 
 const fallbackJobs = [
@@ -1087,7 +1088,7 @@ export default function Careers() {
                       </span>
                     </div>
 
-                     <div className="flex flex-wrap items-center justify-center gap-3 w-full">
+                    <div className="flex flex-wrap items-center justify-center gap-3 w-full">
                       {isSavedJobsRoute && (
                         <button
                           type="button"
@@ -1278,7 +1279,7 @@ export default function Careers() {
                             className="relative p-5 rounded-xl border border-blue-500/20 bg-[#dbeafe]/60 hover:bg-[#dbeafe]/85 hover:border-blue-500/35 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
                           >
                             {/* Action Row: Location, Salary, Save, Share, Report - flex on mobile, absolute on desktop */}
-                             <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-0 sm:absolute sm:top-4 sm:right-4 z-10">
+                            <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-0 sm:absolute sm:top-4 sm:right-4 z-10">
                               {job.location && (
                                 <span className="px-2.5 py-1 rounded-xl text-[10px] font-black text-blue-600 bg-blue-50 border border-blue-500/10 mr-1 shadow-sm uppercase tracking-wider flex items-center gap-1">
                                   <MapPin className="h-3 w-3 text-blue-500" />
@@ -1339,43 +1340,51 @@ export default function Careers() {
                             </div>
 
                             <div className="space-y-4 flex-grow">
-                               <div className="pr-0 sm:pr-72 text-left">
+                              <div className="pr-0 sm:pr-72 text-left">
                                 <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300 flex flex-wrap items-center gap-2">
                                   {job.title}
                                 </h3>
-                                 <div className="flex flex-wrap items-center gap-2 mt-0.5 mb-2">
-                                   <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block">
-                                     {job.team}
-                                   </span>
-                                   {job.type && (
-                                     <>
-                                       <span className="text-slate-350 text-[9px] font-extrabold">•</span>
-                                       <span className="text-[9px] font-extrabold text-[#10B981] uppercase tracking-widest block">
-                                         {job.type}
-                                       </span>
-                                     </>
-                                   )}
-                                   {job.experience && (
-                                     <>
-                                       <span className="text-slate-350 text-[9px] font-extrabold">•</span>
-                                       <span className="text-[9px] font-extrabold text-[#8B5CF6] uppercase tracking-widest block">
-                                         {job.experience}
-                                       </span>
-                                     </>
-                                   )}
-                                 </div>
-
-                                {/* Role Description Block */}
-                                {(() => {
-                                  const descriptionText = job.description || '';
-                                  return (
-                                    <div className="mt-3.5 text-xs">
-                                      <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
-                                        Role Description
+                                <div className="flex flex-wrap items-center gap-2 mt-0.5 mb-2">
+                                  <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block">
+                                    {job.team}
+                                  </span>
+                                  {job.type && (
+                                    <>
+                                      <span className="text-slate-350 text-[9px] font-extrabold">•</span>
+                                      <span className="text-[9px] font-extrabold text-[#10B981] uppercase tracking-widest block">
+                                        {job.type}
                                       </span>
-                                        {expandedJobDescs[job.id] ? (
-                                          <p className="text-slate-600 leading-relaxed font-semibold">
-                                            {descriptionText}{" "}
+                                    </>
+                                  )}
+                                  {job.experience && (
+                                    <>
+                                      <span className="text-slate-350 text-[9px] font-extrabold">•</span>
+                                      <span className="text-[9px] font-extrabold text-[#8B5CF6] uppercase tracking-widest block">
+                                        {job.experience}
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Role Description Block */}
+                              {(() => {
+                                const descriptionText = job.description || '';
+                                const limit = 220;
+                                return (
+                                  <div className="mt-3.5 text-xs text-left">
+                                    <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
+                                      Role Description
+                                    </span>
+                                    {expandedJobDescs[job.id] ? (
+                                      <p className="text-slate-600 leading-relaxed font-semibold">
+                                        {descriptionText}
+                                      </p>
+                                    ) : (
+                                      <p className="text-slate-600 leading-relaxed font-semibold">
+                                        {descriptionText.length > limit ? (
+                                          <>
+                                            {descriptionText.slice(0, limit)}...{" "}
                                             <button
                                               type="button"
                                               onClick={(e) => {
@@ -1384,53 +1393,52 @@ export default function Careers() {
                                               }}
                                               className="text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 inline-block transition-colors duration-200"
                                             >
-                                              See Less
+                                              See More
                                             </button>
-                                          </p>
+                                          </>
                                         ) : (
-                                          <p className="text-slate-600 leading-relaxed font-semibold">
-                                            {descriptionText.length > 150 ? (
-                                              <>
-                                                {descriptionText.slice(0, 150)}...{" "}
-                                                <button
-                                                  type="button"
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleJobDesc(job.id);
-                                                  }}
-                                                  className="text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 inline-block transition-colors duration-200"
-                                                >
-                                                  See More
-                                                </button>
-                                              </>
-                                            ) : (
-                                              descriptionText
-                                            )}
-                                          </p>
+                                          descriptionText
                                         )}
-                                    </div>
-                                  );
-                                })()}
-
-                                {/* Required Skills Block */}
-                                {job.skills && job.skills.length > 0 && (
-                                  <div className="mt-3.5 text-left">
-                                    <span className="font-extrabold text-[#EC4899] text-[10px] uppercase tracking-wider block mb-1.5">
-                                      Required Skills
-                                    </span>
-                                    <div className="flex flex-wrap gap-1.5">
-                                      {job.skills.map((skill, idx) => (
-                                        <span key={idx} className="px-2.5 py-1 rounded-xl bg-purple-50 border border-purple-500/10 text-[#8B5CF6] text-[10px] font-black shadow-sm">
-                                          {skill}
-                                        </span>
-                                      ))}
-                                    </div>
+                                      </p>
+                                    )}
                                   </div>
-                                )}
-                              </div>
+                                );
+                              })()}
+
+                              {/* Required Skills Block */}
+                              {((job.description || '').length <= 220 || expandedJobDescs[job.id]) && job.skills && job.skills.length > 0 && (
+                                <div className="mt-3.5 text-left">
+                                  <span className="font-extrabold text-[#EC4899] text-[10px] uppercase tracking-wider block mb-1.5">
+                                    Required Skills
+                                  </span>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {job.skills.map((skill, idx) => (
+                                      <span key={idx} className="px-2.5 py-1 rounded-xl bg-purple-50 border border-purple-500/10 text-[#8B5CF6] text-[10px] font-black shadow-sm">
+                                        {skill}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* See Less Button (for expanded long description) */}
+                              {expandedJobDescs[job.id] && (job.description || '').length > 220 && (
+                                <div className="mt-3 text-left">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleJobDesc(job.id);
+                                    }}
+                                    className="text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 transition-colors duration-200"
+                                  >
+                                    See Less
+                                  </button>
+                                </div>
+                              )}
                             </div>
 
-                            <div className="flex-shrink-0 w-full sm:w-auto mt-8">
+                            <div className="flex-shrink-0 w-full sm:w-auto mt-8 sm:mt-0">
                               <button
                                 onClick={() => setSelectedJob(job)}
                                 className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-black bg-purple-600/15 hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#EC4899] text-[#8B5CF6] hover:text-white border border-[#8B5CF6]/30 hover:border-transparent transition-all duration-300 text-center cursor-pointer shadow-sm whitespace-nowrap"
@@ -1537,9 +1545,9 @@ export default function Careers() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: idx * 0.1 }}
-                        className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-full md:w-[18%] group relative"
+                        className="glass-card-purple p-4 pb-5 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-start shadow-md w-full md:w-[15%] md:h-[210px] group relative"
                       >
-                        <div className={`h-12 w-12 rounded-full flex items-center justify-center border ${step.bg} mb-3 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105`}>
+                        <div className={`h-12 w-12 rounded-full flex items-center justify-center border ${step.bg} mb-3 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105 shrink-0`}>
                           <Icon className={`h-5.5 w-5.5 ${step.color}`} />
                         </div>
                         <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest mb-1">
@@ -1808,11 +1816,13 @@ export default function Careers() {
                       activeIdx = 2;
                     } else if (app.taskAssigned || s.includes('task') || s.includes('brand')) {
                       activeIdx = 3;
-                    } else if (s.includes('selected') || s.includes('joined') || s.includes('hr')) {
+                    } else if (s.includes('hr')) {
                       activeIdx = 4;
+                    } else if (s.includes('selected') || s.includes('joined') || s.includes('approved')) {
+                      activeIdx = 5;
                     }
 
-                    const steps = ['Applied', 'Test Round', 'Technical Assessment', 'Task Assessment', 'HR interview'];
+                    const steps = ['Application', 'Assessment', 'Technical interview', 'Task Assessment', 'HR  Interview', 'Offer in the pipeline'];
 
                     return (
                       <div

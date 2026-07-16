@@ -1561,8 +1561,9 @@ export default function AdminDashboard() {
                       </div>
 
                       <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-2">
-                        <span className="text-[10px] text-slate-400">
-                          Posted on {new Date(job.createdat || job.createdAt).toLocaleDateString()}
+                        <span className="text-[10px] text-slate-400 flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          Posted on {job.postedDate ? new Date(job.postedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Today'}
                         </span>
 
                         <div className="flex space-x-2">
@@ -1648,8 +1649,9 @@ export default function AdminDashboard() {
                       </div>
 
                       <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-2">
-                        <span className="text-[10px] text-slate-400">
-                          Posted on {new Date(job.createdat || job.createdAt).toLocaleDateString()}
+                        <span className="text-[10px] text-slate-400 flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          Posted on {job.postedDate ? new Date(job.postedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Today'}
                         </span>
                         
                         <button
