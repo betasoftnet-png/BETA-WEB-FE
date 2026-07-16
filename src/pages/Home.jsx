@@ -422,7 +422,7 @@ export default function Home() {
                     href="https://www.bnxmail.com/login"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-100 hover:border-blue-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-1"
+                    className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50/50 hover:bg-slate-100 transition-all duration-300 group cursor-pointer text-left gap-1"
                   >
                     <div className="flex items-center gap-2.5">
                       {/* Logo */}
@@ -448,7 +448,7 @@ export default function Home() {
                     href="https://www.cliksbusiness.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-100 hover:border-violet-500/25 bg-slate-50/50 hover:bg-slate-50 transition-all duration-300 group cursor-pointer text-left gap-1"
+                    className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50/50 hover:bg-slate-100 transition-all duration-300 group cursor-pointer text-left gap-1"
                   >
                     <div className="flex items-center gap-2.5">
                       {/* Logo */}

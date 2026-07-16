@@ -499,7 +499,7 @@ export default function Navbar() {
                                             href="https://www.bnxmail.com/login"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                            className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                           >
                                             <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                               <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
@@ -516,7 +516,7 @@ export default function Navbar() {
                                             href="https://www.b2auth.com/"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                            className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                           >
                                             <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                               <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
@@ -533,7 +533,7 @@ export default function Navbar() {
                                               setIsBitToolOpen(true);
                                               setIsDropdownOpen(false);
                                             }}
-                                            className="w-full flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block border-none bg-transparent focus:outline-none"
+                                            className="w-full flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block focus:outline-none"
                                           >
                                             <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                               <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
@@ -548,7 +548,7 @@ export default function Navbar() {
                                             href="https://cliks.beta-softnet.com/"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                            className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
                                           >
                                             <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                               <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
@@ -609,7 +609,7 @@ export default function Navbar() {
                                           href="https://www.cliksbusiness.com/"
                                           target="_blank"
                                           rel="noopener noreferrer"
-                                          className="flex items-center space-x-2.5 p-1.5 rounded-lg transition group hover:bg-white/95 hover:shadow-sm cursor-pointer text-left block"
+                                          className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block"
                                         >
                                           <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                                             <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />

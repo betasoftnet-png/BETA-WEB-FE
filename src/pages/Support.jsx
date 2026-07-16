@@ -185,7 +185,7 @@ export default function Support() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* BNX Mail Card */}
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between transition hover:bg-slate-100 hover:border-slate-350 duration-300">
               <div className="space-y-3">
                 <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                   <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
@@ -210,7 +210,7 @@ export default function Support() {
             </div>
 
             {/* B2Auth Security Card */}
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between transition hover:bg-slate-100 hover:border-slate-350 duration-300">
               <div className="space-y-3">
                 <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                   <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
@@ -235,7 +235,7 @@ export default function Support() {
             </div>
 
             {/* Cliks Business Card */}
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between transition hover:bg-slate-100 hover:border-slate-350 duration-300">
               <div className="space-y-3">
                 <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
                   <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />

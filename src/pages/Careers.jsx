@@ -1293,6 +1293,11 @@ export default function Careers() {
                           >
                             {/* Action Row: Like, Share, Report (Three Dots) - absolutely positioned at top-right corner of card */}
                             <div className="absolute top-4 right-4 flex items-center gap-2">
+                              {job.location && (
+                                <span className="px-2.5 py-1 rounded-xl text-[10px] font-black text-blue-600 bg-blue-50 border border-blue-500/10 mr-1 shadow-sm uppercase tracking-wider">
+                                  {job.location}
+                                </span>
+                              )}
                               {job.salary && (
                                 <span className="px-2.5 py-1 rounded-xl text-[10px] font-black text-emerald-600 bg-emerald-50 border border-emerald-500/10 mr-1 shadow-sm uppercase tracking-wider">
                                   {job.salary}
@@ -1355,6 +1360,14 @@ export default function Careers() {
                                    <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block">
                                      {job.team}
                                    </span>
+                                   {job.type && (
+                                     <>
+                                       <span className="text-slate-350 text-[9px] font-extrabold">•</span>
+                                       <span className="text-[9px] font-extrabold text-[#10B981] uppercase tracking-widest block">
+                                         {job.type}
+                                       </span>
+                                     </>
+                                   )}
                                  </div>
 
                                 {/* Role Description Block */}
@@ -1421,23 +1434,6 @@ export default function Careers() {
                                     </div>
                                   </div>
                                 )}
-
-                                {/* Location & Job Type Block */}
-                                <div className="mt-3.5 flex items-center gap-6 text-left text-xs">
-                                  <div>
-                                    <span className="font-extrabold text-[#F59E0B] text-[10px] uppercase tracking-wider block mb-1">
-                                      Location
-                                    </span>
-                                    <span className="text-slate-600 font-semibold">{job.location || 'Remote'}</span>
-                                  </div>
-                                  <div className="h-6 w-px bg-slate-200 self-end mb-1" />
-                                  <div>
-                                    <span className="font-extrabold text-[#10B981] text-[10px] uppercase tracking-wider block mb-1">
-                                      Job Type
-                                    </span>
-                                    <span className="text-slate-600 font-semibold">{job.type || 'Full-time'}</span>
-                                  </div>
-                                </div>
                               </div>
                             </div>
 
