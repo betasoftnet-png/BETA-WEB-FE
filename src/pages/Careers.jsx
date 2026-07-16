@@ -22,7 +22,7 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
-  Heart,
+  Bookmark,
   Share2,
   MoreHorizontal,
   AlertTriangle
@@ -176,7 +176,7 @@ export default function Careers() {
   const queryParams = new URLSearchParams(location.search);
   const candidateId = queryParams.get('id');
   const isTaskAssessmentRoute = location.pathname.startsWith('/careers/task-assessment') || ((location.pathname === '/careers' || location.pathname === '/careers/') && candidateId);
-  const isLikedJobsRoute = location.pathname.startsWith('/careers/liked-jobs');
+  const isSavedJobsRoute = location.pathname.startsWith('/careers/saved-jobs');
 
   const [taskData, setTaskData] = useState(null);
   const [loadingTask, setLoadingTask] = useState(false);
@@ -212,10 +212,10 @@ export default function Careers() {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (isLikedJobsRoute && !user) {
+    if (isSavedJobsRoute && !user) {
       setShowLoginPrompt(true);
     }
-  }, [isLikedJobsRoute, user]);
+  }, [isSavedJobsRoute, user]);
 
   const handleTaskSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -270,61 +270,61 @@ export default function Careers() {
   const [myJobsError, setMyJobsError] = useState('');
   const [userApplications, setUserApplications] = useState([]);
 
-  // Like, Share, Report states & handlers
-  const [likedJobs, setLikedJobs] = useState([]);
+  // Save, Share, Report states & handlers
+  const [savedJobs, setSavedJobs] = useState([]);
 
   useEffect(() => {
-    const fetchLikedJobs = async () => {
+    const fetchSavedJobs = async () => {
       if (user?.email) {
         try {
           const res = await axios.get(`${JOB_BOARD_API_BASE}/api/liked-jobs?email=${encodeURIComponent(user.email)}`);
           const ids = res.data.map(item => item.jobId);
-          setLikedJobs(ids);
+          setSavedJobs(ids);
         } catch (err) {
-          console.error('Failed to fetch liked jobs from backend:', err);
+          console.error('Failed to fetch saved jobs from backend:', err);
         }
       } else {
-        setLikedJobs([]);
+        setSavedJobs([]);
       }
     };
-    fetchLikedJobs();
+    fetchSavedJobs();
   }, [user]);
 
   const [activeReportJobId, setActiveReportJobId] = useState(null);
 
-  const handleLikeJob = async (jobId) => {
+  const handleSaveJob = async (jobId) => {
     if (!user) {
       setShowLoginPrompt(true);
       return;
     }
-    const isLiked = likedJobs.some(id => Number(id) === Number(jobId));
+    const isSaved = savedJobs.some(id => Number(id) === Number(jobId));
     try {
-      if (isLiked) {
+      if (isSaved) {
         await axios.delete(`${JOB_BOARD_API_BASE}/api/liked-jobs?email=${encodeURIComponent(user.email)}&jobId=${jobId}`);
-        setLikedJobs(prev => prev.filter(id => Number(id) !== Number(jobId)));
+        setSavedJobs(prev => prev.filter(id => Number(id) !== Number(jobId)));
       } else {
         await axios.post(`${JOB_BOARD_API_BASE}/api/liked-jobs`, {
           email: user.email,
           jobId: jobId
         });
-        setLikedJobs(prev => {
+        setSavedJobs(prev => {
           if (prev.some(id => Number(id) === Number(jobId))) return prev;
           return [...prev, jobId];
         });
-        // Navigate to the Liked Jobs page/section immediately
-        navigate('/careers/liked-jobs');
+        // Navigate to the Saved Jobs page/section immediately
+        navigate('/careers/saved-jobs');
         setShowMyJobs(false);
       }
     } catch (err) {
-      console.error('Failed to update liked job on backend:', err);
+      console.error('Failed to update saved job on backend:', err);
     }
   };
 
-  const handleLikedJobsClick = () => {
+  const handleSavedJobsClick = () => {
     if (!user) {
       setShowLoginPrompt(true);
     } else {
-      navigate('/careers/liked-jobs');
+      navigate('/careers/saved-jobs');
       // If candidate workspace is active (showMyJobs is true), switch back to search-roles view
       setShowMyJobs(false);
       setTimeout(() => {
@@ -489,8 +489,8 @@ export default function Careers() {
     return matchesSearch && matchesTeam && matchesLocation && matchesType;
   });
 
-  const displayedJobs = isLikedJobsRoute
-    ? filteredJobs.filter(job => likedJobs.some(id => Number(id) === Number(job.id)))
+  const displayedJobs = isSavedJobsRoute
+    ? filteredJobs.filter(job => savedJobs.some(id => Number(id) === Number(job.id)))
     : filteredJobs;
 
   const jobsPerPage = 3;
@@ -1094,15 +1094,15 @@ export default function Careers() {
                   <div className="flex flex-col items-center justify-center gap-4 border-b border-purple-500/10 pb-6 w-full">
                     <div className="text-center">
                       <h3 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">
-                        {isLikedJobsRoute ? 'Liked Roles' : 'Open Roles'}
+                        {isSavedJobsRoute ? 'Saved Roles' : 'Open Roles'}
                       </h3>
                       <span className="text-xs md:text-sm font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-1">
-                        {isLikedJobsRoute ? 'Your Saved Jobs' : 'Explore Opportunities'}
+                        {isSavedJobsRoute ? 'Your Saved Jobs' : 'Explore Opportunities'}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-center gap-3 w-full">
-                      {isLikedJobsRoute && (
+                      {isSavedJobsRoute && (
                         <button
                           type="button"
                           onClick={() => {
@@ -1162,11 +1162,11 @@ export default function Careers() {
 
                       <button
                         type="button"
-                        onClick={handleLikedJobsClick}
+                        onClick={handleSavedJobsClick}
                         className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-purple-500/20 bg-white text-slate-700 hover:bg-slate-50 hover:border-purple-500/40 hover:shadow-purple-500/10 transition-all duration-300 text-xs font-bold shadow-sm cursor-pointer whitespace-nowrap"
                       >
-                        <Heart className="h-3.5 w-3.5 text-rose-500" fill={likedJobs.length > 0 ? "currentColor" : "none"} />
-                        <span>Liked Jobs</span>
+                        <Bookmark className="h-3.5 w-3.5 text-purple-600" fill={savedJobs.length > 0 ? "currentColor" : "none"} />
+                        <span>Saved Jobs</span>
                       </button>
                     </div>
                   </div>
@@ -1298,17 +1298,17 @@ export default function Careers() {
                                   {job.salary}
                                 </span>
                               )}
-                              {/* Like button */}
+                              {/* Save button */}
                               <button
                                 type="button"
-                                onClick={() => handleLikeJob(job.id)}
-                                className={`p-2 rounded-xl border transition-all duration-300 flex items-center justify-center cursor-pointer ${likedJobs.includes(job.id)
-                                  ? 'bg-rose-50 border-rose-200 text-rose-500 hover:bg-rose-100'
-                                  : 'bg-white border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50/30'
+                                onClick={() => handleSaveJob(job.id)}
+                                className={`p-2 rounded-xl border transition-all duration-300 flex items-center justify-center cursor-pointer ${savedJobs.includes(job.id)
+                                  ? 'bg-purple-50 border-purple-200 text-purple-600 hover:bg-purple-100'
+                                  : 'bg-white border-slate-200 text-slate-400 hover:text-purple-600 hover:border-purple-200 hover:bg-purple-50/30'
                                   }`}
-                                title="Like Job"
+                                title="Save Job"
                               >
-                                <Heart className="h-4 w-4" fill={likedJobs.includes(job.id) ? "currentColor" : "none"} />
+                                <Bookmark className="h-4 w-4" fill={savedJobs.includes(job.id) ? "currentColor" : "none"} />
                               </button>
 
                               {/* Share button */}
