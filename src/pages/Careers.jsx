@@ -409,7 +409,7 @@ export default function Careers() {
           ...job,
           location: job.location || 'Remote',
           team: job.department || job.team || 'Engineering',
-          experience: job.experience || '',
+          experience: job.experience || '2+ Years',
           skills: Array.isArray(job.skills) ? job.skills : []
         }));
         if (fetched.length > 0) {
