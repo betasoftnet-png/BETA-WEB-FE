@@ -1530,6 +1530,11 @@ export default function AdminDashboard() {
                               <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
                                 {job.type}
                               </span>
+                              {job.experience && (
+                                <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
+                                  {job.experience}
+                                </span>
+                              )}
                             </div>
                           </div>
                           <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg flex-shrink-0">
@@ -1612,6 +1617,11 @@ export default function AdminDashboard() {
                               <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
                                 {job.type}
                               </span>
+                              {job.experience && (
+                                <span className="px-2.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold">
+                                  {job.experience}
+                                </span>
+                              )}
                             </div>
                           </div>
                           <span className="text-xs font-bold text-slate-500 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-lg flex-shrink-0">
