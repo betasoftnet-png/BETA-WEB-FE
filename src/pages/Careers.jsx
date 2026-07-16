@@ -1402,23 +1402,25 @@ export default function Careers() {
                                             </button>
                                           </p>
                                         ) : (
-                                          <div className="relative group/desc">
-                                            <p className="text-slate-600 leading-relaxed font-semibold line-clamp-2 pr-16">
-                                              {descriptionText}
-                                            </p>
-                                            {descriptionText.length > 100 && (
-                                              <button
-                                                type="button"
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  toggleJobDesc(job.id);
-                                                }}
-                                                className="absolute bottom-0 right-0 bg-gradient-to-l from-[#e0ecfc] via-[#e2edfc] to-transparent pl-8 text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer border-none p-0 transition-colors duration-200"
-                                              >
-                                                See More
-                                              </button>
+                                          <p className="text-slate-600 leading-relaxed font-semibold">
+                                            {descriptionText.length > 150 ? (
+                                              <>
+                                                {descriptionText.slice(0, 150)}...{" "}
+                                                <button
+                                                  type="button"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleJobDesc(job.id);
+                                                  }}
+                                                  className="text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 inline-block transition-colors duration-200"
+                                                >
+                                                  See More
+                                                </button>
+                                              </>
+                                            ) : (
+                                              descriptionText
                                             )}
-                                          </div>
+                                          </p>
                                         )}
                                     </div>
                                   );
