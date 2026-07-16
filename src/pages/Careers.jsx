@@ -1047,7 +1047,7 @@ export default function Careers() {
         {!showMyJobs ? (
           <>
             {/* COMBINED HERO & OPEN ROLES GROUP */}
-            <div className="space-y-12">
+            <div className="space-y-6">
               {/* HERO SECTION */}
               <div className="text-center max-w-3xl mx-auto pt-2 pb-4 space-y-6">
                 {/* <motion.div
@@ -1080,15 +1080,7 @@ export default function Careers() {
                 </motion.p>
               </div>
 
-              {/* SECTION 3: OPEN ROLES SECTION */}
-              <div id="search-roles" className="space-y-6">
-                <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
-
-
-
-
-                </div>
-
+              <div id="search-roles" className="space-y-4">
                 <div className="w-full max-w-5xl mx-auto hacker-layout-box unified-openings-box p-6 sm:p-8 rounded-2xl shadow-xl shadow-purple-500/5 text-left space-y-6">
                   {/* Header inside Box with Centered Title, and Search Bar + Filter Button */}
                   <div className="flex flex-col items-center justify-center gap-4 border-b border-purple-500/10 pb-6 w-full">
@@ -1101,7 +1093,7 @@ export default function Careers() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-center gap-3 w-full">
+                     <div className="flex flex-wrap items-center justify-center gap-3 w-full">
                       {isSavedJobsRoute && (
                         <button
                           type="button"
@@ -1291,8 +1283,8 @@ export default function Careers() {
                             transition={{ duration: 0.3 }}
                             className="relative p-5 rounded-xl border border-blue-500/20 bg-[#dbeafe]/60 hover:bg-[#dbeafe]/85 hover:border-blue-500/35 hover:shadow-sm transition-all duration-300 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-6 group"
                           >
-                            {/* Action Row: Like, Share, Report (Three Dots) - absolutely positioned at top-right corner of card */}
-                            <div className="absolute top-4 right-4 flex items-center gap-2">
+                            {/* Action Row: Location, Salary, Save, Share, Report - flex on mobile, absolute on desktop */}
+                             <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-0 sm:absolute sm:top-4 sm:right-4 z-10">
                               {job.location && (
                                 <span className="px-2.5 py-1 rounded-xl text-[10px] font-black text-blue-600 bg-blue-50 border border-blue-500/10 mr-1 shadow-sm uppercase tracking-wider flex items-center gap-1">
                                   <MapPin className="h-3 w-3 text-blue-500" />
@@ -1353,7 +1345,7 @@ export default function Careers() {
                             </div>
 
                             <div className="space-y-4 flex-grow">
-                              <div className="pr-28 sm:pr-0 text-left">
+                               <div className="pr-0 sm:pr-72 text-left">
                                 <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300 flex flex-wrap items-center gap-2">
                                   {job.title}
                                 </h3>
