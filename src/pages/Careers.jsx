@@ -1818,7 +1818,7 @@ export default function Careers() {
                       activeIdx = 4;
                     }
 
-                    const steps = ['Applied', 'Test Round', 'Technical Interview', 'Task Assessment', 'HR interview'];
+                    const steps = ['Applied', 'Test Round', 'Technical Assessment', 'Task Assessment', 'HR interview'];
 
                     return (
                       <div

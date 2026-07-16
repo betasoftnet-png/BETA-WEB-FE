@@ -446,7 +446,7 @@ export default function Navbar() {
                                           title="Show Base products list"
                                         >
                                           {activeCategory === 'base' ? (
-                                            <span className="inline-block px-2.5 py-1 rounded-full bg-[#004AAD] text-white text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm">
+                                            <span className="inline-block px-2.5 py-1 rounded-full bg-white text-[#004AAD] border border-[#004AAD]/30 text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm">
                                               Base
                                             </span>
                                           ) : (
