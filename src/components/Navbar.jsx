@@ -446,11 +446,11 @@ export default function Navbar() {
                                           title="Show Base products list"
                                         >
                                           {activeCategory === 'base' ? (
-                                            <span className="inline-block px-2.5 py-1 rounded-full bg-white text-[#004AAD] border border-[#004AAD]/30 text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm">
+                                            <span className="inline-block px-2.5 py-1 rounded-full bg-white text-[#004AAD] border border-[#004AAD]/30 text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm hover:bg-[#004AAD]/5 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
                                               Base
                                             </span>
                                           ) : (
-                                            <span className="inline-block px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-700 text-xs font-extrabold uppercase tracking-widest select-none text-left hover:bg-slate-100 transition-colors">
+                                            <span className="inline-block px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-700 text-xs font-extrabold uppercase tracking-widest select-none text-left hover:bg-slate-200 hover:border-slate-300 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
                                               Base
                                             </span>
                                           )}
@@ -470,13 +470,13 @@ export default function Navbar() {
                                         >
                                           {activeCategory === 'comingsoon' ? (
                                             <span
-                                              className="inline-flex items-center justify-center text-[8px] font-extrabold uppercase tracking-wider px-2.5 py-1.5 rounded-md bg-amber-600 text-white border border-amber-700 shadow-sm animate-pulse"
+                                              className="inline-flex items-center justify-center text-[8px] font-extrabold uppercase tracking-wider px-2.5 py-1.5 rounded-md bg-amber-600 text-white border border-amber-700 shadow-sm hover:bg-amber-700 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
                                               style={{ lineHeight: 1 }}
                                             >
                                               Coming Soon
                                             </span>
                                           ) : (
-                                            <span className="coming-soon-badge !ml-0 hover:bg-amber-500/20 transition-colors">
+                                            <span className="coming-soon-badge !ml-0 transition-all duration-200 cursor-pointer hover:scale-105 hover:shadow-md hover:!bg-amber-500/20 hover:!text-amber-800">
                                               Coming Soon
                                             </span>
                                           )}
