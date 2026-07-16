@@ -334,7 +334,9 @@ export default function Careers() {
   };
 
   const handleShareJob = (job) => {
-    const shareUrl = `${JOB_BOARD_API_BASE}/share/jobs/${job.id}?redirect=${encodeURIComponent(window.location.origin + '/careers')}`;
+    const prodApiBase = 'https://www.beta-softnet.com';
+    const prodFrontOrigin = 'https://www.beta-softnet.com';
+    const shareUrl = `${prodApiBase}/share/jobs/${job.id}?redirect=${encodeURIComponent(prodFrontOrigin + '/careers')}`;
     navigator.clipboard.writeText(shareUrl)
       .then(() => {
         alert(`Link to share "${job.title}" copied to clipboard!`);
