@@ -119,6 +119,56 @@ const formatDate = (isoString) => {
   }
 };
 
+const AppliedTime = ({ timestamp }) => {
+  const [timeAgo, setTimeAgo] = useState('');
+
+  useEffect(() => {
+    const calculateTimeAgo = () => {
+      if (!timestamp) return '';
+      try {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffSecs = Math.floor(diffMs / 1000);
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffSecs < 30) {
+          return 'Applied just now';
+        }
+        if (diffSecs < 60) {
+          return 'Applied less than a minute ago';
+        }
+        if (diffMins < 60) {
+          return `Applied ${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
+        }
+        if (diffHours < 24) {
+          return `Applied ${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+        }
+        if (diffDays < 7) {
+          return `Applied ${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+        }
+        const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        return `Applied on ${formattedDate} at ${formattedTime}`;
+      } catch {
+        return 'Applied';
+      }
+    };
+
+    setTimeAgo(calculateTimeAgo());
+
+    const interval = setInterval(() => {
+      setTimeAgo(calculateTimeAgo());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [timestamp]);
+
+  return <span>{timeAgo || 'Applied'}</span>;
+};
+
 export default function Careers() {
   const navigate = useNavigate();
   const { user, redirectToSSO } = useContext(AuthContext);
@@ -548,6 +598,9 @@ export default function Careers() {
         console.error('Error saving local application backup:', err);
       }
 
+      // Refresh applications list dynamically
+      fetchUserApplications();
+
     } catch (error) {
       console.error("Error:", error);
       console.error("Response:", error.response);
@@ -634,6 +687,12 @@ export default function Careers() {
 
         const localMatch = localFiltered.find((l) => l.id === app.id || (l.jobTitle === normalized.jobTitle && l.email === normalized.email));
         if (localMatch) {
+          if (localMatch.createdAt) {
+            normalized.createdAt = localMatch.createdAt;
+          }
+          if (localMatch.appliedDate) {
+            normalized.appliedDate = localMatch.appliedDate;
+          }
           if (localMatch.aptitudeStatus && !normalized.aptitudeStatus) {
             normalized.aptitudeStatus = localMatch.aptitudeStatus;
           }
@@ -1269,13 +1328,23 @@ export default function Careers() {
                                 <h3 className="text-lg font-black tracking-tight group-hover:text-[#EC4899] transition-colors duration-300 flex flex-wrap items-center gap-2">
                                   {job.title}
                                 </h3>
-                                <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block mt-0.5 mb-2">
-                                  {job.team}
-                                </span>
+                                 <div className="flex flex-wrap items-center gap-2 mt-0.5 mb-2">
+                                   <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block">
+                                     {job.team}
+                                   </span>
+                                   {job.salary && (
+                                     <>
+                                       <span className="text-slate-350 text-[9px] font-extrabold">•</span>
+                                       <span className="text-[9px] font-extrabold text-emerald-600 uppercase tracking-widest block">
+                                         {job.salary}
+                                       </span>
+                                     </>
+                                   )}
+                                 </div>
 
                                 {/* Role Description Block */}
                                 {(() => {
-                                  const combinedDesc = `${job.description || ''} Qualifications: ${job.skills ? job.skills.slice(0, 2).join(' / ') : 'N/A'}. Location: ${job.location || 'Remote'} • ${job.type || 'Full-time'}.`;
+                                  const combinedDesc = `${job.description || ''} Skills: ${job.skills ? job.skills.join(' / ') : 'N/A'}. Location: ${job.location || 'Remote'} • ${job.type || 'Full-time'}${job.salary ? ` • Salary: ${job.salary}` : ''}.`;
                                   return (
                                     <div className="mt-3.5 text-xs">
                                       <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
@@ -1690,7 +1759,6 @@ export default function Careers() {
                 <div className="space-y-6">
                   {currentMyJobs.map((app) => {
                     const statusText = app.status;
-                    const appliedDate = formatDate(app.appliedDate || app.createdAt);
 
                     // Determine step index for progress tracker
                     let activeIdx = 0;
@@ -1727,7 +1795,9 @@ export default function Careers() {
                               <span>&bull;</span>
                               <span>{app.jobLocation || 'Tiruvallur'}</span>
                               <span>&bull;</span>
-                              <span className="text-[11px] text-slate-400 font-medium">Applied on {appliedDate}</span>
+                              <span className="text-[11px] text-slate-400 font-medium">
+                                <AppliedTime timestamp={app.appliedDate || app.createdAt} />
+                              </span>
                             </div>
 
                             {(app.githubLink || activeIdx >= 3) && (
@@ -1988,7 +2058,10 @@ export default function Careers() {
               <div className="mb-6 space-y-1">
                 <span className="text-xs font-bold text-[#EC4899] uppercase tracking-widest">Apply for position</span>
                 <h3 className="text-2xl font-black">{selectedJob.title}</h3>
-                <p className="text-slate-500 text-xs font-medium">{selectedJob.team} &bull; {selectedJob.location}</p>
+                <p className="text-slate-500 text-xs font-medium">
+                   {selectedJob.team} &bull; {selectedJob.location}
+                   {selectedJob.salary && ` • ${selectedJob.salary}`}
+                 </p>
               </div>
 
               {!user ? (

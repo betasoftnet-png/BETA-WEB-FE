@@ -1561,17 +1561,6 @@ export default function AdminDashboard() {
                         </span>
 
                         <div className="flex space-x-2">
-                          <button
-                            onClick={() => {
-                              setSelectedJobFilter(job.title);
-                              setActiveSubTab('appsList');
-                            }}
-                            className="px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 text-[#004AAD] border border-slate-200 text-[10px] font-bold transition flex items-center space-x-1 cursor-pointer"
-                            title="View applications for this job"
-                          >
-                            <Users className="h-3 w-3" />
-                            <span>Apps</span>
-                          </button>
 
                           <button
                             onClick={() => openEditJobModal(job)}
