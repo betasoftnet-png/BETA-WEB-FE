@@ -405,13 +405,11 @@ export default function Careers() {
         setJobsError('');
         const response = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs`);
         const data = response.data.data || response.data || [];
-        const fetched = data.map((job, idx) => ({
+        const fetched = data.map((job) => ({
           ...job,
-          location: job.location && (job.location.toLowerCase().includes('tiruvallur') || job.location.toLowerCase().includes('vellore'))
-            ? (job.location.toLowerCase().includes('tiruvallur') ? 'Tiruvallur' : 'Vellore')
-            : (idx % 2 === 0 ? 'Tiruvallur' : 'Vellore'),
+          location: job.location || 'Remote',
           team: job.department || job.team || 'Engineering',
-          experience: job.experience || '2+ Years',
+          experience: job.experience || '',
           skills: Array.isArray(job.skills) ? job.skills : []
         }));
         if (fetched.length > 0) {
@@ -1367,6 +1365,14 @@ export default function Careers() {
                                        <span className="text-slate-350 text-[9px] font-extrabold">•</span>
                                        <span className="text-[9px] font-extrabold text-[#10B981] uppercase tracking-widest block">
                                          {job.type}
+                                       </span>
+                                     </>
+                                   )}
+                                   {job.experience && (
+                                     <>
+                                       <span className="text-slate-350 text-[9px] font-extrabold">•</span>
+                                       <span className="text-[9px] font-extrabold text-[#8B5CF6] uppercase tracking-widest block">
+                                         {job.experience}
                                        </span>
                                      </>
                                    )}
