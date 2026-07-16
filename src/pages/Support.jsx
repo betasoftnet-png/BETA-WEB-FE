@@ -94,7 +94,7 @@ export default function Support() {
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight select-none text-[#0A3161]">
             How Can We Help You?
           </h1>
-          <p className="text-emerald-100 text-sm md:text-base max-w-xl mx-auto font-medium select-none">
+          <p className="text-slate-600 text-sm md:text-base max-w-xl mx-auto font-medium select-none">
             Search our knowledge base, browse core product resources, or lodge a direct developer request to our support engineering squad.
           </p>
 
@@ -114,7 +114,7 @@ export default function Support() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 space-y-16">
         {/* Help Center Resources Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {/* Operational status */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start space-x-4">
             <div className="h-10 w-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 flex-shrink-0">
@@ -460,8 +460,8 @@ export default function Support() {
         </div>
 
         {/* Business Enquiries Callout Banner */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between text-left gap-6 shadow-sm">
-          <div className="flex items-start space-x-4">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between text-left gap-6 shadow-sm">
+          <div className="flex items-start space-x-4 min-w-0">
             <div className="h-12 w-12 rounded-2xl bg-white border border-blue-200 flex items-center justify-center text-blue-600 shrink-0 shadow-sm">
               <Briefcase className="h-6 w-6" />
             </div>
@@ -474,7 +474,7 @@ export default function Support() {
           </div>
           <Link
             to="/partners"
-            className="bg-[#004AAD] hover:bg-[#003882] !text-white text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-full transition duration-300 shadow-md shadow-blue-950/10 shrink-0 cursor-pointer text-center"
+            className="bg-[#004AAD] hover:bg-[#003882] !text-white text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-full transition duration-300 shadow-md shadow-blue-950/10 shrink-0 cursor-pointer text-center w-full md:w-auto"
           >
             Connect with Partner Desk
           </Link>
@@ -488,7 +488,7 @@ export default function Support() {
           </div>
 
           <div className="bg-slate-950 rounded-3xl border border-slate-900 overflow-hidden shadow-xl text-left font-mono text-xs">
-            <div className="bg-slate-900 border-b border-slate-800 px-4 py-3.5 flex items-center justify-between select-none">
+            <div className="bg-slate-900 border-b border-slate-800 px-4 py-3.5 flex flex-wrap items-center justify-between gap-2 select-none">
               <div className="flex items-center space-x-2">
                 <Code className="h-4 w-4 text-[#004AAD]" />
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Beta Javascript Node-SDK</span>

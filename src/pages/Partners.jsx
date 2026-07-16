@@ -498,90 +498,116 @@ export default function Partners() {
           </div>
 
           {/* Central Interactive Orbit Node Map */}
-          <div className="relative max-w-2xl mx-auto h-[450px] flex items-center justify-center rounded-3xl bg-gradient-to-r from-yellow-100 via-amber-100 to-yellow-200 border border-[#FF6325]/15 shadow-2xl p-6 overflow-hidden">
+          <div className="relative max-w-2xl mx-auto rounded-3xl bg-gradient-to-r from-yellow-100 via-amber-100 to-yellow-200 border border-[#FF6325]/15 shadow-2xl overflow-hidden flex items-center justify-center"
+            style={{ height: 'clamp(220px, 60vw, 450px)' }}>
             {/* Background grids */}
             <div className="absolute inset-0 bg-[radial-gradient(rgba(255,99,37,0.05)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none opacity-40" />
 
-            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 600 450">
-              {/* Connected Orbit paths */}
-              <circle cx="300" cy="225" r="160" fill="none" stroke="rgba(255, 99, 37, 0.15)" strokeWidth="1.5" className="orbit-connection-path" />
-              <circle cx="300" cy="225" r="100" fill="none" stroke="rgba(14, 15, 137, 0.15)" strokeWidth="1" />
-
-              {/* Pulsing connections to central hub */}
-              <line x1="300" y1="225" x2="300" y2="65" stroke="#FF6325" strokeWidth="1.5" className="flow-vector-line" />
-              <line x1="300" y1="225" x2="455" y2="155" stroke="#0E0F89" strokeWidth="1.5" className="flow-vector-line" style={{ animationDelay: '0.4s' }} />
-              <line x1="300" y1="225" x2="395" y2="335" stroke="#135029" strokeWidth="1.5" className="flow-vector-line" style={{ animationDelay: '0.8s' }} />
-              <line x1="300" y1="225" x2="205" y2="335" stroke="#FF6325" strokeWidth="1.5" className="flow-vector-line" style={{ animationDelay: '1.2s' }} />
-              <line x1="300" y1="225" x2="145" y2="155" stroke="#0E0F89" strokeWidth="1.5" className="flow-vector-line" style={{ animationDelay: '1.6s' }} />
-            </svg>
-
-            {/* Central Hub Node */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="absolute z-10 h-28 w-28 rounded-full bg-white border-4 border-[#FF6325] flex flex-col items-center justify-center text-center shadow-lg shadow-[#FF6325]/20 cursor-pointer select-none"
+            {/* Scaled inner map — 600×450 canvas that shrinks on small screens */}
+            <div
+              className="relative flex-shrink-0 origin-center transition-transform duration-300"
+              style={{
+                width: '600px',
+                height: '450px',
+                transform: 'scale(var(--orbit-scale, 1))',
+              }}
             >
-              <Building className="h-7 w-7 text-[#FF6325] mb-1 animate-pulse" />
-              <span className="text-[10px] font-black text-[#0A3161] uppercase tracking-wider">
-                BETA HUB
-              </span>
-            </motion.div>
+              <style>{`
+                :root { --orbit-scale: 0.48; }
+                @media (min-width: 375px) { :root { --orbit-scale: 0.58; } }
+                @media (min-width: 480px) { :root { --orbit-scale: 0.72; } }
+                @media (min-width: 640px) { :root { --orbit-scale: 0.88; } }
+                @media (min-width: 768px) { :root { --orbit-scale: 1; } }
+              `}</style>
 
-            {/* Outer Nodes */}
-            {/* Node 1: Cloud (Top Center) */}
-            <motion.div
-              whileHover={{ scale: 1.08 }}
-              className="absolute top-[35px] left-1/2 -translate-x-1/2 z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#FF6325] flex items-center justify-center shadow-md cursor-pointer group"
-            >
-              <div className="absolute -top-6 px-2 py-0.5 rounded bg-[#FF6325]/10 border border-[#FF6325]/20 text-[#FF6325] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-                Cloud
-              </div>
-              <Globe className="h-5 w-5 text-white group-hover:text-[#FF6325] transition-colors" />
-            </motion.div>
+              <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 600 450">
+                {/* Connected Orbit paths */}
+                <circle cx="300" cy="225" r="160" fill="none" stroke="rgba(255, 99, 37, 0.15)" strokeWidth="1.5" className="orbit-connection-path" />
+                <circle cx="300" cy="225" r="100" fill="none" stroke="rgba(14, 15, 137, 0.15)" strokeWidth="1" />
 
-            {/* Node 2: Technology (Top Right) */}
-            <motion.div
-              whileHover={{ scale: 1.08 }}
-              className="absolute top-[125px] right-[115px] z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#0E0F89] flex items-center justify-center shadow-md cursor-pointer group"
-            >
-              <div className="absolute -top-6 px-2 py-0.5 rounded bg-[#0E0F89]/10 border border-[#0E0F89]/20 text-[#3B82F6] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-                Technology
-              </div>
-              <Code2 className="h-5 w-5 text-white group-hover:text-[#3B82F6] transition-colors" />
-            </motion.div>
+                {/* Pulsing connections to central hub */}
+                <line x1="300" y1="225" x2="300" y2="65" stroke="#FF6325" strokeWidth="1.5" className="flow-vector-line" />
+                <line x1="300" y1="225" x2="455" y2="155" stroke="#0E0F89" strokeWidth="1.5" className="flow-vector-line" style={{ animationDelay: '0.4s' }} />
+                <line x1="300" y1="225" x2="395" y2="335" stroke="#135029" strokeWidth="1.5" className="flow-vector-line" style={{ animationDelay: '0.8s' }} />
+                <line x1="300" y1="225" x2="205" y2="335" stroke="#FF6325" strokeWidth="1.5" className="flow-vector-line" style={{ animationDelay: '1.2s' }} />
+                <line x1="300" y1="225" x2="145" y2="155" stroke="#0E0F89" strokeWidth="1.5" className="flow-vector-line" style={{ animationDelay: '1.6s' }} />
+              </svg>
 
-            {/* Node 3: Integration (Bottom Right) */}
-            <motion.div
-              whileHover={{ scale: 1.08 }}
-              className="absolute bottom-[85px] right-[170px] z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#135029] flex items-center justify-center shadow-md cursor-pointer group"
-            >
-              <div className="absolute -bottom-6 px-2 py-0.5 rounded bg-[#135029]/10 border border-[#135029]/20 text-[#10B981] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-                Integration
-              </div>
-              <Cpu className="h-5 w-5 text-white group-hover:text-[#10B981] transition-colors" />
-            </motion.div>
+              {/* Central Hub Node — centred at (300,225) in the 600×450 canvas */}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="absolute z-10 h-28 w-28 rounded-full bg-white border-4 border-[#FF6325] flex flex-col items-center justify-center text-center shadow-lg shadow-[#FF6325]/20 cursor-pointer select-none"
+                style={{ top: '161px', left: '236px' }}
+              >
+                <Building className="h-7 w-7 text-[#FF6325] mb-1 animate-pulse" />
+                <span className="text-[10px] font-black text-[#0A3161] uppercase tracking-wider">
+                  BETA HUB
+                </span>
+              </motion.div>
 
-            {/* Node 4: Reseller (Bottom Left) */}
-            <motion.div
-              whileHover={{ scale: 1.08 }}
-              className="absolute bottom-[85px] left-[170px] z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#FF6325] flex items-center justify-center shadow-md cursor-pointer group"
-            >
-              <div className="absolute -bottom-6 px-2 py-0.5 rounded bg-[#FF6325]/10 border border-[#FF6325]/20 text-[#FF6325] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-                Reseller
-              </div>
-              <Users className="h-5 w-5 text-white group-hover:text-[#FF6325] transition-colors" />
-            </motion.div>
+              {/* Outer Nodes */}
+              {/* Node 1: Cloud (Top Center) — svg target: 300,65 → top≈35px, left=300-32=268px */}
+              <motion.div
+                whileHover={{ scale: 1.08 }}
+                className="absolute z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#FF6325] flex items-center justify-center shadow-md cursor-pointer group"
+                style={{ top: '35px', left: '268px' }}
+              >
+                <div className="absolute -top-6 px-2 py-0.5 rounded bg-[#FF6325]/10 border border-[#FF6325]/20 text-[#FF6325] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  Cloud
+                </div>
+                <Globe className="h-5 w-5 text-white group-hover:text-[#FF6325] transition-colors" />
+              </motion.div>
 
-            {/* Node 5: Strategic (Top Left) */}
-            <motion.div
-              whileHover={{ scale: 1.08 }}
-              className="absolute top-[125px] left-[115px] z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#0E0F89] flex items-center justify-center shadow-md cursor-pointer group"
-            >
-              <div className="absolute -top-6 px-2 py-0.5 rounded bg-[#0E0F89]/10 border border-[#0E0F89]/20 text-[#3B82F6] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-                Strategic
-              </div>
-              <Layers className="h-5 w-5 text-white group-hover:text-[#3B82F6] transition-colors" />
-            </motion.div>
+              {/* Node 2: Technology (Top Right) — svg target: 455,155 → top=125px, left=455-32=423px */}
+              <motion.div
+                whileHover={{ scale: 1.08 }}
+                className="absolute z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#0E0F89] flex items-center justify-center shadow-md cursor-pointer group"
+                style={{ top: '125px', left: '423px' }}
+              >
+                <div className="absolute -top-6 px-2 py-0.5 rounded bg-[#0E0F89]/10 border border-[#0E0F89]/20 text-[#3B82F6] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  Technology
+                </div>
+                <Code2 className="h-5 w-5 text-white group-hover:text-[#3B82F6] transition-colors" />
+              </motion.div>
+
+              {/* Node 3: Integration (Bottom Right) — svg target: 395,335 → top=335-32=303px, left=395-32=363px */}
+              <motion.div
+                whileHover={{ scale: 1.08 }}
+                className="absolute z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#135029] flex items-center justify-center shadow-md cursor-pointer group"
+                style={{ top: '303px', left: '363px' }}
+              >
+                <div className="absolute -bottom-6 px-2 py-0.5 rounded bg-[#135029]/10 border border-[#135029]/20 text-[#10B981] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  Integration
+                </div>
+                <Cpu className="h-5 w-5 text-white group-hover:text-[#10B981] transition-colors" />
+              </motion.div>
+
+              {/* Node 4: Reseller (Bottom Left) — svg target: 205,335 → top=303px, left=205-32=173px */}
+              <motion.div
+                whileHover={{ scale: 1.08 }}
+                className="absolute z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#FF6325] flex items-center justify-center shadow-md cursor-pointer group"
+                style={{ top: '303px', left: '173px' }}
+              >
+                <div className="absolute -bottom-6 px-2 py-0.5 rounded bg-[#FF6325]/10 border border-[#FF6325]/20 text-[#FF6325] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  Reseller
+                </div>
+                <Users className="h-5 w-5 text-white group-hover:text-[#FF6325] transition-colors" />
+              </motion.div>
+
+              {/* Node 5: Strategic (Top Left) — svg target: 145,155 → top=125px, left=145-32=113px */}
+              <motion.div
+                whileHover={{ scale: 1.08 }}
+                className="absolute z-10 h-16 w-16 rounded-full bg-slate-900 border border-[#0E0F89] flex items-center justify-center shadow-md cursor-pointer group"
+                style={{ top: '125px', left: '113px' }}
+              >
+                <div className="absolute -top-6 px-2 py-0.5 rounded bg-[#0E0F89]/10 border border-[#0E0F89]/20 text-[#3B82F6] text-[8px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  Strategic
+                </div>
+                <Layers className="h-5 w-5 text-white group-hover:text-[#3B82F6] transition-colors" />
+              </motion.div>
+            </div>
           </div>
+
         </div>
 
         {/* SECTION 3: PARTNER BENEFITS SECTION */}
