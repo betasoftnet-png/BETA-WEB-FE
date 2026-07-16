@@ -31,6 +31,17 @@ export default function Assessment() {
   const [blockedMessage, setBlockedMessage] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [securityAlert, setSecurityAlert] = useState('');
+  const terminateAssessmentDueToScreenshot = () => {
+    const msg = "Screenshot activity detected. Your assessment has been terminated.";
+    setBlockedMessage(msg);
+    localStorage.setItem(`assessment_blocked_${candidateId}`, "screenshot_terminated");
+
+    if (candidateId) {
+      axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/increment-attempt`)
+        .then(() => axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/increment-attempt`))
+        .catch(err => console.error("Error logging screenshot violation:", err));
+    }
+  };
 
   useEffect(() => {
     if (!securityAlert) return;
@@ -43,6 +54,14 @@ export default function Assessment() {
   useEffect(() => {
     if (!candidateId) {
       setError('Invalid or missing candidate ID URL parameter.');
+      setLoading(false);
+      return;
+    }
+
+    // Check if previously blocked due to screenshot
+    const isPreviouslyBlocked = localStorage.getItem(`assessment_blocked_${candidateId}`);
+    if (isPreviouslyBlocked === "screenshot_terminated") {
+      setBlockedMessage("Screenshot activity detected. Your assessment has been terminated.");
       setLoading(false);
       return;
     }
@@ -223,12 +242,28 @@ export default function Assessment() {
     };
 
     const preventKeyDown = (e) => {
-      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, Ctrl+P, Ctrl+C, Ctrl+V, Ctrl+X, PrintScreen
+      // 1. Detect screenshot combinations
+      const isPrintScreen = e.key === 'PrintScreen' || e.keyCode === 44 || e.code === 'PrintScreen';
+      const isWinShiftS = e.metaKey && e.shiftKey && (e.key === 's' || e.key === 'S' || e.keyCode === 83);
+      const isMacScreenshot = e.metaKey && e.shiftKey && (e.key === '3' || e.key === '4' || e.key === '5' || (e.keyCode >= 51 && e.keyCode <= 53));
+      const isCtrlShiftS = e.ctrlKey && e.shiftKey && (e.key === 's' || e.key === 'S' || e.keyCode === 83);
+
+      if (isPrintScreen || isWinShiftS || isMacScreenshot || isCtrlShiftS) {
+        e.preventDefault();
+        try {
+          navigator.clipboard.writeText("Screenshot blocked by Beta Softnet security policy.");
+        } catch (err) {
+          // Ignore
+        }
+        terminateAssessmentDueToScreenshot();
+        return false;
+      }
+
+      // 2. Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, Ctrl+P, Ctrl+C, Ctrl+V, Ctrl+X
       if (
         e.keyCode === 123 || // F12
         (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
-        (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 80 || e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88)) || // Ctrl+U/S/P/C/V/X
-        e.keyCode === 44 // PrintScreen
+        (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 80 || e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88)) // Ctrl+U/S/P/C/V/X
       ) {
         e.preventDefault();
         setSecurityAlert("Developer tools and custom keyboard shortcuts are disabled for security reasons.");
@@ -244,14 +279,16 @@ export default function Assessment() {
     window.addEventListener('cut', preventCopy);
     window.addEventListener('contextmenu', preventContextMenu);
     window.addEventListener('keydown', preventKeyDown);
+    window.addEventListener('keyup', preventKeyDown);
 
     return () => {
       window.removeEventListener('copy', preventCopy);
       window.removeEventListener('cut', preventCopy);
       window.removeEventListener('contextmenu', preventContextMenu);
       window.removeEventListener('keydown', preventKeyDown);
+      window.removeEventListener('keyup', preventKeyDown);
     };
-  }, []);
+  }, [candidateId]);
 
   // Running Timer Countdown
   useEffect(() => {
