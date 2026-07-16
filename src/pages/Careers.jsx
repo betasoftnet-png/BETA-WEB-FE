@@ -1837,6 +1837,12 @@ export default function Careers() {
                               </span>
                               <span>&bull;</span>
                               <span>{app.jobLocation || 'Tiruvallur'}</span>
+                              {app.experience && (
+                                <>
+                                  <span>&bull;</span>
+                                  <span>{app.experience}</span>
+                                </>
+                              )}
                               <span>&bull;</span>
                               <span className="text-[11px] text-slate-400 font-medium">
                                 <AppliedTime timestamp={app.appliedTime || app.appliedDate || app.createdAt} />
@@ -2101,10 +2107,11 @@ export default function Careers() {
               <div className="mb-6 space-y-1">
                 <span className="text-xs font-bold text-[#EC4899] uppercase tracking-widest">Apply for position</span>
                 <h3 className="text-2xl font-black">{selectedJob.title}</h3>
-                <p className="text-slate-500 text-xs font-medium">
-                   {selectedJob.team} &bull; {selectedJob.location}
-                   {selectedJob.salary && ` • ${selectedJob.salary}`}
-                 </p>
+                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
+                  {selectedJob.team} &bull; {selectedJob.location}
+                  {selectedJob.salary && ` • ${selectedJob.salary}`}
+                  {selectedJob.experience && ` • ${selectedJob.experience}`}
+                </p>
               </div>
 
               {!user ? (
