@@ -16,7 +16,9 @@ import CliksBusinessDashboard from './pages/CliksBusinessDashboard';
 import BnxMailDashboard from './pages/BnxMailDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Assessment from './pages/Assessment';
+import ShareJob from './pages/ShareJob';
 import { AuthProvider } from './context/AuthContext';
+
 import ScrollToTop from './components/ScrollToTop';
 
 
@@ -178,7 +180,9 @@ function AppContent() {
           <Route path="/careers/assessment" element={<Assessment />} />
           <Route path="/careers/task-assessment" element={<Careers />} />
           <Route path="/careers/saved-jobs" element={<Careers />} />
+          <Route path="/share/jobs/:id" element={<ShareJob />} />
         </Routes>
+
       </main>
       {!isDashboardMode && <Footer />}
     </div>
