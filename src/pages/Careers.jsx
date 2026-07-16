@@ -1294,13 +1294,14 @@ export default function Careers() {
                             {/* Action Row: Like, Share, Report (Three Dots) - absolutely positioned at top-right corner of card */}
                             <div className="absolute top-4 right-4 flex items-center gap-2">
                               {job.location && (
-                                <span className="px-2.5 py-1 rounded-xl text-[10px] font-black text-blue-600 bg-blue-50 border border-blue-500/10 mr-1 shadow-sm uppercase tracking-wider">
+                                <span className="px-2.5 py-1 rounded-xl text-[10px] font-black text-blue-600 bg-blue-50 border border-blue-500/10 mr-1 shadow-sm uppercase tracking-wider flex items-center gap-1">
+                                  <MapPin className="h-3 w-3 text-blue-500" />
                                   {job.location}
                                 </span>
                               )}
                               {job.salary && (
                                 <span className="px-2.5 py-1 rounded-xl text-[10px] font-black text-emerald-600 bg-emerald-50 border border-emerald-500/10 mr-1 shadow-sm uppercase tracking-wider">
-                                  {job.salary}
+                                  {job.salary.startsWith('₹') || job.salary.startsWith('Rs') ? job.salary : `₹${job.salary}`}
                                 </span>
                               )}
                               {/* Save button */}
@@ -1386,9 +1387,8 @@ export default function Careers() {
                                       <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
                                         Role Description
                                       </span>
-                                      <p className="text-slate-600 leading-relaxed font-semibold">
                                         {expandedJobDescs[job.id] ? (
-                                          <>
+                                          <p className="text-slate-600 leading-relaxed font-semibold">
                                             {descriptionText}{" "}
                                             <button
                                               type="button"
@@ -1400,29 +1400,26 @@ export default function Careers() {
                                             >
                                               See Less
                                             </button>
-                                          </>
+                                          </p>
                                         ) : (
-                                          <>
-                                            {descriptionText.length > 110 ? (
-                                              <>
-                                                {descriptionText.slice(0, 110)}...{" "}
-                                                <button
-                                                  type="button"
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleJobDesc(job.id);
-                                                  }}
-                                                  className="text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer bg-transparent border-none p-0 inline-block transition-colors duration-200"
-                                                >
-                                                  See More
-                                                </button>
-                                              </>
-                                            ) : (
-                                              descriptionText
+                                          <div className="relative group/desc">
+                                            <p className="text-slate-600 leading-relaxed font-semibold line-clamp-2 pr-16">
+                                              {descriptionText}
+                                            </p>
+                                            {descriptionText.length > 100 && (
+                                              <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  toggleJobDesc(job.id);
+                                                }}
+                                                className="absolute bottom-0 right-0 bg-gradient-to-l from-[#e0ecfc] via-[#e2edfc] to-transparent pl-8 text-[#EC4899] hover:text-[#db3c8b] font-bold text-[11px] hover:underline cursor-pointer border-none p-0 transition-colors duration-200"
+                                              >
+                                                See More
+                                              </button>
                                             )}
-                                          </>
+                                          </div>
                                         )}
-                                      </p>
                                     </div>
                                   );
                                 })()}
