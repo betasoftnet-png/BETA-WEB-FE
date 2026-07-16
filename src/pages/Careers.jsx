@@ -334,7 +334,7 @@ export default function Careers() {
   };
 
   const handleShareJob = (job) => {
-    const shareUrl = `${window.location.origin}/careers?job=${job.id}`;
+    const shareUrl = `${JOB_BOARD_API_BASE}/share/jobs/${job.id}?redirect=${encodeURIComponent(window.location.origin + '/careers')}`;
     navigator.clipboard.writeText(shareUrl)
       .then(() => {
         alert(`Link to share "${job.title}" copied to clipboard!`);
@@ -462,6 +462,18 @@ export default function Careers() {
     setMyJobsPage(1);
   }, [userApplications.length, showMyJobs]);
 
+  // Auto-select job from URL query parameter (e.g. ?job=5)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const jobId = params.get('job');
+    if (jobId && jobsList.length > 0) {
+      const match = jobsList.find(j => String(j.id) === String(jobId));
+      if (match) {
+        setSelectedJob(match);
+      }
+    }
+  }, [jobsList, location.search]);
+
   // Filter logic
   const filteredJobs = jobsList.filter(job => {
     const matchesSearch = !searchQuery ||
@@ -580,6 +592,7 @@ export default function Careers() {
         status: shouldSchedule && interviewDate ? 'Interview Scheduled' : 'Applied',
         createdAt: new Date().toISOString(),
         appliedDate: new Date().toISOString(),
+        appliedTime: new Date().toISOString(),
         jobTitle: activeJob.title,
         jobDepartment: activeJob.team || 'Engineering',
         jobLocation: activeJob.location || 'Tiruvallur',
@@ -679,7 +692,8 @@ export default function Careers() {
           experience: app.experience || '3 Years',
           githubLink: app.githubLink || app.githublink || '',
           taskAssigned: app.taskAssigned !== undefined ? app.taskAssigned : (app.taskassigned || false),
-          jobId: app.jobId || app.jobid || ''
+          jobId: app.jobId || app.jobid || '',
+          appliedTime: app.appliedTime || app.appliedtime || ''
         };
 
         const jobKey = `${(normalized.email || '').toLowerCase()}-${(normalized.jobTitle || '').toLowerCase()}-${normalized.jobId || ''}`;
@@ -692,6 +706,9 @@ export default function Careers() {
           }
           if (localMatch.appliedDate) {
             normalized.appliedDate = localMatch.appliedDate;
+          }
+          if (localMatch.appliedTime) {
+            normalized.appliedTime = localMatch.appliedTime;
           }
           if (localMatch.aptitudeStatus && !normalized.aptitudeStatus) {
             normalized.aptitudeStatus = localMatch.aptitudeStatus;
@@ -723,6 +740,7 @@ export default function Careers() {
             status: localApp.status || 'Applied',
             createdAt: localApp.createdAt || new Date().toISOString(),
             appliedDate: localApp.appliedDate || localApp.applieddate || localApp.createdAt || new Date().toISOString(),
+            appliedTime: localApp.appliedTime || localApp.appliedTime || localApp.createdAt || new Date().toISOString(),
             jobTitle: localApp.jobTitle || '',
             jobDepartment: localApp.jobDepartment || 'Engineering',
             jobLocation: localApp.jobLocation || 'Tiruvallur',
@@ -1275,6 +1293,11 @@ export default function Careers() {
                           >
                             {/* Action Row: Like, Share, Report (Three Dots) - absolutely positioned at top-right corner of card */}
                             <div className="absolute top-4 right-4 flex items-center gap-2">
+                              {job.salary && (
+                                <span className="px-2.5 py-1 rounded-xl text-[10px] font-black text-emerald-600 bg-emerald-50 border border-emerald-500/10 mr-1 shadow-sm uppercase tracking-wider">
+                                  {job.salary}
+                                </span>
+                              )}
                               {/* Like button */}
                               <button
                                 type="button"
@@ -1332,19 +1355,11 @@ export default function Careers() {
                                    <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest block">
                                      {job.team}
                                    </span>
-                                   {job.salary && (
-                                     <>
-                                       <span className="text-slate-350 text-[9px] font-extrabold">•</span>
-                                       <span className="text-[9px] font-extrabold text-emerald-600 uppercase tracking-widest block">
-                                         {job.salary}
-                                       </span>
-                                     </>
-                                   )}
                                  </div>
 
                                 {/* Role Description Block */}
                                 {(() => {
-                                  const combinedDesc = `${job.description || ''} Skills: ${job.skills ? job.skills.join(' / ') : 'N/A'}. Location: ${job.location || 'Remote'} • ${job.type || 'Full-time'}${job.salary ? ` • Salary: ${job.salary}` : ''}.`;
+                                  const descriptionText = job.description || '';
                                   return (
                                     <div className="mt-3.5 text-xs">
                                       <span className="font-extrabold text-[#8B5CF6] text-[10px] uppercase tracking-wider block mb-1">
@@ -1353,7 +1368,7 @@ export default function Careers() {
                                       <p className="text-slate-600 leading-relaxed font-semibold">
                                         {expandedJobDescs[job.id] ? (
                                           <>
-                                            {combinedDesc}{" "}
+                                            {descriptionText}{" "}
                                             <button
                                               type="button"
                                               onClick={(e) => {
@@ -1367,9 +1382,9 @@ export default function Careers() {
                                           </>
                                         ) : (
                                           <>
-                                            {combinedDesc.length > 110 ? (
+                                            {descriptionText.length > 110 ? (
                                               <>
-                                                {combinedDesc.slice(0, 110)}...{" "}
+                                                {descriptionText.slice(0, 110)}...{" "}
                                                 <button
                                                   type="button"
                                                   onClick={(e) => {
@@ -1382,7 +1397,7 @@ export default function Careers() {
                                                 </button>
                                               </>
                                             ) : (
-                                              combinedDesc
+                                              descriptionText
                                             )}
                                           </>
                                         )}
@@ -1390,6 +1405,39 @@ export default function Careers() {
                                     </div>
                                   );
                                 })()}
+
+                                {/* Required Skills Block */}
+                                {job.skills && job.skills.length > 0 && (
+                                  <div className="mt-3.5 text-left">
+                                    <span className="font-extrabold text-[#EC4899] text-[10px] uppercase tracking-wider block mb-1.5">
+                                      Required Skills
+                                    </span>
+                                    <div className="flex flex-wrap gap-1.5">
+                                      {job.skills.map((skill, idx) => (
+                                        <span key={idx} className="px-2.5 py-1 rounded-xl bg-purple-50 border border-purple-500/10 text-[#8B5CF6] text-[10px] font-black shadow-sm">
+                                          {skill}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Location & Job Type Block */}
+                                <div className="mt-3.5 flex items-center gap-6 text-left text-xs">
+                                  <div>
+                                    <span className="font-extrabold text-[#F59E0B] text-[10px] uppercase tracking-wider block mb-1">
+                                      Location
+                                    </span>
+                                    <span className="text-slate-600 font-semibold">{job.location || 'Remote'}</span>
+                                  </div>
+                                  <div className="h-6 w-px bg-slate-200 self-end mb-1" />
+                                  <div>
+                                    <span className="font-extrabold text-[#10B981] text-[10px] uppercase tracking-wider block mb-1">
+                                      Job Type
+                                    </span>
+                                    <span className="text-slate-600 font-semibold">{job.type || 'Full-time'}</span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
 
@@ -1796,7 +1844,7 @@ export default function Careers() {
                               <span>{app.jobLocation || 'Tiruvallur'}</span>
                               <span>&bull;</span>
                               <span className="text-[11px] text-slate-400 font-medium">
-                                <AppliedTime timestamp={app.appliedDate || app.createdAt} />
+                                <AppliedTime timestamp={app.appliedTime || app.appliedDate || app.createdAt} />
                               </span>
                             </div>
 
