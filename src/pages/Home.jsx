@@ -374,7 +374,7 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full md:w-[62%] max-w-2xl h-full flex flex-col justify-center text-left md:translate-x-28">
+          <div className="w-full md:w-[50%] max-w-xl h-full flex flex-col justify-center text-left md:translate-x-8">
 
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
@@ -387,7 +387,7 @@ export default function Home() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
                 {/* Left Side inside Box: Styled BNX Showcase Card */}
-                <div className="lg:col-span-1 w-full h-80 text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg rounded-2xl">
+                <div className="lg:col-span-1 w-full h-72 text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg rounded-2xl">
                   {/* Deep Glowing Tech Starfield Particles */}
                   <div className="absolute w-2 h-2 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
                   <div className="absolute w-1 h-1 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
@@ -410,7 +410,7 @@ export default function Home() {
                   <div className="relative z-10 transition-transform duration-300 hover:scale-105">
                     <div className="bg-white border border-blue-500/45 w-24 h-24 rounded-2xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
                       <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/25 via-cyan-500/10 to-transparent pointer-events-none" />
-                      <img src="/logo.png" alt="Beta Logo" className="h-14 w-14 object-contain relative z-10 animate-pulse" />
+                      <img src="/logo.png" alt="Beta Logo" className="h-20 w-20 object-contain relative z-10 animate-pulse" />
                     </div>
                   </div>
                 </div>

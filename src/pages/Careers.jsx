@@ -335,7 +335,7 @@ export default function Careers() {
   };
 
   const handleShareJob = (job) => {
-    const shareUrl = `${window.location.origin}/share/jobs/${job.id}`;
+    const shareUrl = `https://www.beta-softnet.com/share/jobs/${job.id}`;
     navigator.clipboard.writeText(shareUrl)
       .then(() => {
         alert(`Link to share "${job.title}" copied to clipboard!`);
