@@ -21,6 +21,7 @@ const mapStatusToUI = (status) => {
   if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
   if (s === 'approved' || s === 'selected' || s === 'accepted') return 'Accepted';
   if (s === 'rejected') return 'Rejected';
+  if (s === 'terminated (malpractice)' || s === 'terminated') return 'Terminated';
   if (s === 'joined') return 'Joined';
   return 'Applied';
 };
@@ -180,6 +181,11 @@ export default function AdminDashboard() {
   const [taskSendStatus, setTaskSendStatus] = useState(''); // 'success' | 'error' | ''
   const [taskSendMessage, setTaskSendMessage] = useState('');
   const [sendingTask, setSendingTask] = useState(false);
+
+  // Inline job-title editing for accepted candidates with orphaned/deleted jobs
+  const [editingAppJobTitleId, setEditingAppJobTitleId] = useState(null);
+  const [editAppJobTitleValue, setEditAppJobTitleValue] = useState('');
+  const [savingAppJobTitle, setSavingAppJobTitle] = useState(false);
   const [fetchedTask, setFetchedTask] = useState(null);
   const [fetchedTaskStatus, setFetchedTaskStatus] = useState(null);
 
@@ -261,6 +267,10 @@ export default function AdminDashboard() {
       } else {
         const normalizedApps = apps
           .map(app => {
+            // The backend already resolves jobTitle: persisted DB value first,
+            // then falls back to the live/soft-deleted job when the stored value is null.
+            // On the frontend we still match the job for dept/location (if missing from DB)
+            // but we NEVER override the jobTitle the backend has already resolved.
             const matchedJob = jobsList.find(j => String(j.id) === String(app.jobId));
 
             return {
@@ -277,9 +287,10 @@ export default function AdminDashboard() {
                 : mapStatusToUI(app.status),
               createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
               appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
-              jobTitle: matchedJob ? matchedJob.title : (app.jobTitle || app.jobtitle || 'Unknown Position'),
-              jobDepartment: matchedJob ? matchedJob.department : (app.jobDepartment || app.jobdepartment || 'Engineering'),
-              jobLocation: matchedJob ? matchedJob.location : (app.jobLocation || app.joblocation || 'Remote'),
+              // Trust the backend-resolved title (persisted column > live job lookup)
+              jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
+              jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
+              jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
               interviewDate: app.interviewDate || app.interviewdate || '',
               interviewTime: app.interviewTime || app.interviewtime || '',
               hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
@@ -381,9 +392,10 @@ export default function AdminDashboard() {
                 : mapStatusToUI(app.status),
               createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
               appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
-              jobTitle: matchedJob ? matchedJob.title : (app.jobTitle || app.jobtitle || 'Unknown Position'),
-              jobDepartment: matchedJob ? matchedJob.department : (app.jobDepartment || app.jobdepartment || 'Engineering'),
-              jobLocation: matchedJob ? matchedJob.location : (app.jobLocation || app.joblocation || 'Remote'),
+              // Trust the backend-resolved title (persisted column > live job lookup)
+              jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
+              jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
+              jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
               interviewDate: app.interviewDate || app.interviewdate || '',
               interviewTime: app.interviewTime || app.interviewtime || '',
               hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
@@ -396,6 +408,8 @@ export default function AdminDashboard() {
               githubLink: app.githubLink || app.githublink || ''
             };
           });
+
+
           setExternalApplications(normalizedApps);
           localStorage.setItem('beta_applications', JSON.stringify(normalizedApps));
         }
@@ -1653,7 +1667,7 @@ export default function AdminDashboard() {
                           <Calendar className="h-3 w-3" />
                           Posted on {job.postedDate ? new Date(job.postedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Today'}
                         </span>
-                        
+
                         <button
                           onClick={async () => {
                             try {
@@ -2819,7 +2833,96 @@ export default function AdminDashboard() {
                                   <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
                                 </td>
                                 <td className="py-4 px-6">
-                                  <div className="font-semibold text-slate-900">{app.jobTitle}</div>
+                                  {editingAppJobTitleId === app.id ? (
+                                    /* ── Inline edit mode ── */
+                                    <form
+                                      onSubmit={async (e) => {
+                                        e.preventDefault();
+                                        if (!editAppJobTitleValue.trim()) return;
+                                        setSavingAppJobTitle(true);
+                                        try {
+                                          await api.patch(`/api/admin/applications/${app.id}/job-title`, { jobTitle: editAppJobTitleValue.trim() });
+                                          // Update local state so UI reflects instantly
+                                          setExternalApplications(prev => prev.map(a =>
+                                            a.id === app.id ? { ...a, jobTitle: editAppJobTitleValue.trim() } : a
+                                          ));
+                                          localStorage.setItem('beta_applications', JSON.stringify(
+                                            externalApplications.map(a => a.id === app.id ? { ...a, jobTitle: editAppJobTitleValue.trim() } : a)
+                                          ));
+                                        } catch (err) {
+                                          console.error('Failed to update job title:', err);
+                                        } finally {
+                                          setSavingAppJobTitle(false);
+                                          setEditingAppJobTitleId(null);
+                                        }
+                                      }}
+                                      className="flex items-center gap-1"
+                                    >
+                                      <input
+                                        autoFocus
+                                        type="text"
+                                        value={editAppJobTitleValue}
+                                        onChange={e => setEditAppJobTitleValue(e.target.value)}
+                                        onBlur={async () => {
+                                          if (!editAppJobTitleValue.trim()) { setEditingAppJobTitleId(null); return; }
+                                          setSavingAppJobTitle(true);
+                                          try {
+                                            await api.patch(`/api/admin/applications/${app.id}/job-title`, { jobTitle: editAppJobTitleValue.trim() });
+                                            setExternalApplications(prev => prev.map(a =>
+                                              a.id === app.id ? { ...a, jobTitle: editAppJobTitleValue.trim() } : a
+                                            ));
+                                          } catch (err) { console.error('Failed to update job title:', err); }
+                                          finally { setSavingAppJobTitle(false); setEditingAppJobTitleId(null); }
+                                        }}
+                                        className="border border-blue-300 rounded px-2 py-0.5 text-sm font-semibold text-slate-900 w-44 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        placeholder="Enter job title…"
+                                        disabled={savingAppJobTitle}
+                                      />
+                                      <button type="submit" disabled={savingAppJobTitle} className="text-[10px] px-2 py-0.5 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 font-bold">
+                                        {savingAppJobTitle ? '…' : '✓'}
+                                      </button>
+                                    </form>
+                                  ) : (
+                                    /* ── Display mode ── */
+                                    <div className="flex items-center gap-1.5 group">
+                                      <div className="font-semibold text-slate-900">
+                                        {app.jobTitle
+                                          ? app.jobTitle
+                                          : (
+                                            /* Only shown for truly orphaned legacy applications whose job was hard-deleted
+                                               before the title was ever persisted. Admin can click to set it. */
+                                            <button
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setEditingAppJobTitleId(app.id);
+                                                setEditAppJobTitleValue('');
+                                              }}
+                                              className="text-blue-500 hover:text-blue-700 text-xs font-medium underline underline-offset-2"
+                                            >
+                                              Click to set title
+                                            </button>
+                                          )
+                                        }
+                                      </div>
+                                      {/* Hover pencil — always available to correct the title */}
+                                      {app.jobTitle && (
+                                        <button
+                                          title="Edit job title"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setEditingAppJobTitleId(app.id);
+                                            setEditAppJobTitleValue(app.jobTitle || '');
+                                          }}
+                                          className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-blue-600 p-0.5 rounded"
+                                        >
+                                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A2 2 0 0110 16H8v-2a2 2 0 01.586-1.414z" />
+                                          </svg>
+                                        </button>
+                                      )}
+                                    </div>
+                                  )}
+
                                   <div className="text-slate-450 text-[10px] mt-0.5">{app.jobDepartment} • {app.jobLocation}</div>
                                 </td>
                                 <td className="py-4 px-6">
@@ -2832,8 +2935,9 @@ export default function AdminDashboard() {
                                               app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
                                                 app.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                                                   app.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
-                                                    app.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
-                                                      'bg-slate-50 text-slate-700 border border-slate-200'
+                                                    app.status === 'Terminated' ? 'bg-red-50 text-red-700 border border-red-200' :
+                                                      app.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
+                                                        'bg-slate-50 text-slate-700 border border-slate-200'
                                     }`}>
                                     {app.status}
                                   </span>
@@ -2915,7 +3019,9 @@ export default function AdminDashboard() {
                         <h2 className="text-2xl font-black text-slate-900 leading-tight">
                           {selectedApplication.fullName}
                         </h2>
-                        <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize ${selectedApplication.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-50 text-slate-700 border border-slate-200'
+                        <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize ${selectedApplication.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                          selectedApplication.status === 'Terminated' ? 'bg-red-50 text-red-700 border border-red-200' :
+                            'bg-slate-50 text-slate-700 border border-slate-200'
                           }`}>
                           {selectedApplication.status}
                         </span>
@@ -4037,8 +4143,9 @@ export default function AdminDashboard() {
                               selectedApplication.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
                                 selectedApplication.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                                   selectedApplication.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
-                                    selectedApplication.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
-                                      'bg-slate-50 text-slate-700 border border-slate-200'
+                                    selectedApplication.status === 'Terminated' ? 'bg-red-50 text-red-700 border border-red-200' :
+                                      selectedApplication.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
+                                        'bg-slate-50 text-slate-700 border border-slate-200'
                     }`}>
                     {selectedApplication.status}
                   </span>

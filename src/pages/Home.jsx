@@ -338,10 +338,11 @@ export default function Home() {
 
           </motion.div>
         </div>
-        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 lg:gap-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8
+                flex flex-col md:flex-row items-center gap-12">
 
           {/* Left Column: Heading and description */}
-          <div className="w-full md:w-[32%] flex flex-col items-start text-left space-y-6">
+          <div className="w-full md:w-[55%] flex flex-col items-start text-left space-y-6">
 
             <motion.div
               variants={containerVariants}
@@ -374,9 +375,9 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full md:w-[50%] max-w-xl h-full flex flex-col justify-center text-left md:translate-x-8">
+          <div className="w-full md:w-[55%] max-w-xl h-full flex flex-col justify-center text-left md:translate-x-8">
 
-            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
+            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-4 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
                   Enterprise Suite
