@@ -34,7 +34,11 @@ import api from '../api';
 
 
 
-const JOB_BOARD_API_BASE = 'https://apply.beta-softnet.com';
+const JOB_BOARD_API_BASE =
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8081'
+    : 'https://apply.beta-softnet.com';
 
 const benefits = [
   { emoji: '💰', title: 'Bonus', desc: 'Competitive base package with performance bonuses tied to milestones.' },
@@ -331,7 +335,7 @@ export default function Careers() {
   };
 
   const handleShareJob = (job) => {
-    const shareUrl = `https://www.beta-softnet.com/share/jobs/${job.id}`;
+    const shareUrl = `${window.location.origin}/share/jobs/${job.id}`;
     navigator.clipboard.writeText(shareUrl)
       .then(() => {
         alert(`Link to share "${job.title}" copied to clipboard!`);
