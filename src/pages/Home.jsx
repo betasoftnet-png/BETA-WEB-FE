@@ -366,7 +366,7 @@ export default function Home() {
              text-left w-full md:-ml-8 max-w-xl 
              tracking-wide"
               >
-                Beta builds secure, real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
+                Beta builds secure,real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
 
             </motion.div>

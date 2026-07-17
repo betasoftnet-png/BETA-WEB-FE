@@ -36,7 +36,7 @@ import api from '../api';
 
 const JOB_BOARD_API_BASE =
   window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
+    window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
 
@@ -55,47 +55,6 @@ const processSteps = [
   { id: '5', title: 'HR  Interview', desc: 'Culture fit & team alignment', icon: Users, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
   { id: '6', title: 'Offer ', desc: 'Final proposal discussions', icon: Award, color: 'text-[#F59E0B]', bg: 'bg-amber-500/10 border-amber-500/20' }
 ];
-
-const fallbackJobs = [
-  {
-    id: 1,
-    title: 'Senior Full Stack Engineer',
-    location: 'Tiruvallur',
-    type: 'Full-Time',
-    experience: '3+ Years',
-    skills: ['React', 'Node.js', 'MongoDB', 'Express'],
-    description: 'We are seeking a talented Senior Full Stack Engineer to lead development of our client-facing portal, APIs, and key features.'
-  },
-  {
-    id: 2,
-    title: 'UI/UX Designer & Developer',
-    location: 'Vellore',
-    type: 'Full-Time',
-    experience: '2+ Years',
-    skills: ['Figma', 'React', 'Tailwind CSS', 'Framer Motion'],
-    description: 'Join us to design beautiful user experiences and translate them into high-fidelity web components.'
-  },
-  {
-    id: 3,
-    title: 'DevOps & Infrastructure Lead',
-    location: 'Tiruvallur',
-    type: 'Full-Time',
-    experience: '4+ Years',
-    skills: ['AWS', 'Kubernetes', 'CI/CD Pipelines', 'Docker'],
-    description: 'Own our deployment architecture, monitoring pipeline, database clustering, and security controls.'
-  },
-  {
-    id: 4,
-    title: 'QA Automation Engineer',
-    location: 'Vellore',
-    type: 'Full-Time',
-    experience: '2+ Years',
-    skills: ['Selenium', 'Cypress', 'JavaScript', 'Postman'],
-    description: 'Help build automated end-to-end testing scripts, integration tests, and performance benchmark suites.'
-  }
-];
-
-
 const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
   if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Applied';
