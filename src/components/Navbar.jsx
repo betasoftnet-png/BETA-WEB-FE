@@ -381,7 +381,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Nav Links (Absolutely centered) */}
-          <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 z-20">
+          <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 z-30">
             {/* Desktop Nav Links */}
             <div className="flex items-center space-x-0.5 bg-slate-100/90 p-1 rounded-full border border-slate-200/80 shadow-inner nav-pill-container">
               {navLinks.map((link) => {
@@ -658,10 +658,10 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Search, Profile & Auth CTA */}
-          <div className="hidden md:flex items-center justify-end space-x-4 flex-1 z-20">
+          <div className="hidden md:flex items-center justify-end space-x-4 flex-1 z-20 pointer-events-none">
 
             {/* Header Search Bar */}
-            <div ref={searchContainerRef} className="mr-2 flex items-center justify-center">
+            <div ref={searchContainerRef} className="mr-2 flex items-center justify-center pointer-events-auto">
               {isSearchExpanded ? (
                 <div className="relative w-28 lg:w-36 xl:w-40 nav-search-container animate-fadeIn">
                   <button
@@ -695,7 +695,7 @@ export default function Navbar() {
             </div>
 
             {/* Header Notification Icon Bell Dropdown */}
-            <div className="relative" ref={notificationsRef}>
+            <div className="relative pointer-events-auto" ref={notificationsRef}>
               <button
                 type="button"
                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
@@ -775,7 +775,7 @@ export default function Navbar() {
             </div>
 
             {user ? (
-              <div className="relative" ref={profileRef}>
+              <div className="relative pointer-events-auto" ref={profileRef}>
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                   className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100/95 border border-slate-200/80 hover:bg-slate-200/60 transition duration-300 cursor-pointer text-slate-700 focus:outline-none"
@@ -842,7 +842,7 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <div className="flex items-center space-x-2 flex-shrink-0">
+              <div className="flex items-center space-x-2 flex-shrink-0 pointer-events-auto">
                 <button
                   onClick={() => redirectToSSO(location.pathname)}
                   className="flex items-center space-x-1.5 px-4 py-1.5 rounded-full bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 text-xs font-bold cursor-pointer header-signin-btn whitespace-nowrap flex-shrink-0 shadow-md shadow-blue-950/20"
