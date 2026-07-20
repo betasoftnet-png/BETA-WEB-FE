@@ -18,8 +18,8 @@ export default function Support() {
   const [feedbackMsg, setFeedbackMsg] = useState('');
 
   const supportContactInfo = {
-    phone: '+1 (800) 555-0199',
-    email: 'support@betasoftnet.com',
+    phone: '+91 9444369625',
+    email: 'betasoftnet2025@gmail.com',
     hours: 'Mon - Fri, 9:00 AM - 6:00 PM IST',
     address: 'Beta Towers, No. 12, Main Road, Tiruvallur, Tamil Nadu 602001, India'
   };
