@@ -62,19 +62,37 @@ export default function Navbar() {
     }
   };
 
+  const getReadNotifIds = () => {
+    try {
+      const stored = localStorage.getItem('beta_read_notifications');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  };
+
   const handleMarkAsRead = async (notificationId) => {
     try {
-      await api.put(`/api/notifications/${notificationId}/read`);
-      setNotifications(prev => prev.map(n => n.id === notificationId ? { ...n, read: true } : n));
+      const readIds = getReadNotifIds();
+      if (!readIds.includes(String(notificationId))) {
+        readIds.push(String(notificationId));
+        localStorage.setItem('beta_read_notifications', JSON.stringify(readIds));
+      }
+      if (typeof notificationId === 'number' || (!isNaN(notificationId) && Number(notificationId) > 0)) {
+        await api.put(`/api/notifications/${notificationId}/read`).catch(() => null);
+      }
+      setNotifications(prev => prev.map(n => String(n.id) === String(notificationId) ? { ...n, read: true } : n));
     } catch (err) {
       console.error("Failed to mark notification as read:", err);
     }
   };
 
   const handleMarkAllAsRead = async () => {
-    const unread = notifications.filter(n => !n.read);
     try {
-      await Promise.all(unread.map(n => api.put(`/api/notifications/${n.id}/read`)));
+      const allIds = notifications.map(n => String(n.id));
+      localStorage.setItem('beta_read_notifications', JSON.stringify(allIds));
+      const numericUnread = notifications.filter(n => !n.read && (typeof n.id === 'number' || !isNaN(n.id)));
+      await Promise.all(numericUnread.map(n => api.put(`/api/notifications/${n.id}/read`).catch(() => null)));
       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     } catch (err) {
       console.error("Failed to mark all notifications as read:", err);
@@ -82,106 +100,196 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    if (!user) {
-      setNotifications([]);
-      return;
-    }
+    const fetchDynamicNotifications = async () => {
+      const readIds = getReadNotifIds();
+      const dynamicList = [];
+      const seenIds = new Set();
 
-    const fetchCandidateIdAndNotifications = async () => {
-      const userEmail = (user.email || user.username || '').toLowerCase();
-      let candId = null;
-      let localStr = '';
-      let appsStr = '';
-      let fetchedStr = '';
-      let errStr = '';
-      console.log("[NAVBAR DEBUG] userEmail:", userEmail);
-
-      // 1. Try local storage first
-      try {
-        const stored = localStorage.getItem('beta_applications');
-        localStr = stored || 'None';
-        console.log("[NAVBAR DEBUG] local storage applications:", stored);
-        if (stored) {
-          const localApps = JSON.parse(stored);
-          const matched = localApps.find(app => (app.email || '').toLowerCase() === userEmail);
-          console.log("[NAVBAR DEBUG] local storage matched application:", matched);
-          if (matched && matched.id && !String(matched.id).startsWith('local-')) {
-            candId = matched.id;
+      // Determine user / candidate email
+      let userEmail = (user?.email || user?.username || localStorage.getItem('candidateEmail') || '').toLowerCase().trim();
+      if (!userEmail) {
+        try {
+          const betaUserStr = localStorage.getItem('beta_user');
+          if (betaUserStr) {
+            const parsed = JSON.parse(betaUserStr);
+            userEmail = (parsed.email || parsed.username || '').toLowerCase().trim();
           }
+        } catch (_) {}
+      }
+
+      // 1. DYNAMIC JOB OPENINGS & HIRINGS (For all candidates/visitors)
+      try {
+        const jobsRes = await api.get('/api/jobs').catch(() => null);
+        const jobsList = jobsRes?.data?.data || jobsRes?.data || [];
+        if (Array.isArray(jobsList)) {
+          // Sort newest jobs first
+          const sortedJobs = [...jobsList].sort((a, b) => (b.id || 0) - (a.id || 0));
+          sortedJobs.slice(0, 5).forEach((job) => {
+            const notifId = `job-opening-${job.id}`;
+            if (!seenIds.has(notifId)) {
+              seenIds.add(notifId);
+              dynamicList.push({
+                id: notifId,
+                title: `🚀 New Opening: ${job.title || 'Role'}`,
+                message: `Beta is hiring for ${job.title || 'Positions'} in ${job.location || 'Tiruvallur / Remote'} (${job.type || 'Full Time'}). Tap to explore opportunities.`,
+                read: readIds.includes(notifId),
+                time: 'Active Hiring',
+                category: 'job_opening'
+              });
+            }
+          });
         }
       } catch (e) {
-        console.error("Local storage error in Navbar:", e);
-        errStr += "Local storage error: " + e.message + "\n";
+        console.warn("Failed to fetch dynamic job openings:", e);
       }
 
-      // 2. If not found, fetch from backend
-      if (!candId) {
+      // 2. DYNAMIC CANDIDATE APPLICATION PIPELINE NOTIFICATIONS
+      if (userEmail) {
         try {
-          const response = await api.get('/api/applications');
-          const apps = response.data?.data || response.data || [];
-          appsStr = JSON.stringify(apps);
-          console.log("[NAVBAR DEBUG] backend applications:", apps);
-          const matched = apps.find(app => (app.email || '').toLowerCase() === userEmail);
-          console.log("[NAVBAR DEBUG] backend matched application:", matched);
-          if (matched) {
-            candId = matched.id;
+          const appsRes = await api.get(`/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
+          let candApps = appsRes?.data?.data || appsRes?.data || [];
+
+          if (!Array.isArray(candApps) || candApps.length === 0) {
+            // Fallback: search in /api/admin/applications
+            const adminAppsRes = await api.get('/api/admin/applications').catch(() => null);
+            const allApps = adminAppsRes?.data || [];
+            candApps = allApps.filter(app => (app.email || '').toLowerCase() === userEmail);
           }
-        } catch (err) {
-          console.error("[NAVBAR DEBUG] /api/applications error:", err);
-          errStr += "/api/applications error: " + err.message + "\n";
-          try {
-            const response = await api.get('/api/admin/applications');
-            const apps = response.data || [];
-            appsStr = "Admin: " + JSON.stringify(apps);
-            console.log("[NAVBAR DEBUG] backend admin applications:", apps);
-            const matched = apps.find(app => (app.email || '').toLowerCase() === userEmail);
-            console.log("[NAVBAR DEBUG] backend admin matched application:", matched);
-            if (matched) {
-              candId = matched.id;
-            }
-          } catch (err2) {
-            console.error("Failed to fetch applications in Navbar:", err2);
-            errStr += "/api/admin/applications error: " + err2.message + "\n";
+
+          if (Array.isArray(candApps) && candApps.length > 0) {
+            candApps.forEach((app) => {
+              const statusLower = (app.status || '').toLowerCase();
+
+              // Stage 6: Offer Proposal
+              if (['accepted', 'selected', 'approved', 'joined'].includes(statusLower)) {
+                const notifId = `offer-${app.id}`;
+                if (!seenIds.has(notifId)) {
+                  seenIds.add(notifId);
+                  dynamicList.push({
+                    id: notifId,
+                    title: `🎉 Offer Issued for ${app.jobTitle || 'Role'}`,
+                    message: `Congratulations! You cleared all selection rounds for ${app.jobTitle}. An onboarding specialist will contact you.`,
+                    read: readIds.includes(notifId),
+                    time: 'Selection Clear',
+                    category: 'offer'
+                  });
+                }
+              }
+
+              // Stage 5: HR Interview Scheduled
+              if (app.hrInterviewDate || statusLower.includes('hr')) {
+                const notifId = `hr-interview-${app.id}`;
+                if (!seenIds.has(notifId)) {
+                  seenIds.add(notifId);
+                  dynamicList.push({
+                    id: notifId,
+                    title: `🤝 HR Interview Scheduled`,
+                    message: `HR Interview for ${app.jobTitle} is scheduled on ${app.hrInterviewDate || 'soon'} at ${app.hrInterviewTime || '11:00 AM'}.${app.hrInterviewLocation ? ` Venue: ${app.hrInterviewLocation}` : ''}`,
+                    read: readIds.includes(notifId),
+                    time: 'Interview Update',
+                    category: 'hr_interview'
+                  });
+                }
+              }
+
+              // Stage 4: Task Assessment Assigned
+              if (app.taskAssigned || app.githubLink || statusLower.includes('task')) {
+                const notifId = `task-assessment-${app.id}`;
+                if (!seenIds.has(notifId)) {
+                  seenIds.add(notifId);
+                  dynamicList.push({
+                    id: notifId,
+                    title: `🛠️ Task Assessment Assigned`,
+                    message: app.githubLink 
+                      ? `Solution repository submitted for ${app.jobTitle}. Solution is under code review.`
+                      : `Admin assigned a practical GitHub code review task for ${app.jobTitle}. Check My Applications to submit your repository.`,
+                    read: readIds.includes(notifId),
+                    time: 'Task Assessment',
+                    category: 'task_assessment'
+                  });
+                }
+              }
+
+              // Stage 3: Technical Interview Scheduled
+              if (app.interviewDate || statusLower.includes('interview')) {
+                const notifId = `tech-interview-${app.id}`;
+                if (!seenIds.has(notifId)) {
+                  seenIds.add(notifId);
+                  dynamicList.push({
+                    id: notifId,
+                    title: `💻 Technical Interview Scheduled`,
+                    message: `Technical interview for ${app.jobTitle} scheduled on ${app.interviewDate || 'soon'} at ${app.interviewTime || '10:00 AM'}.${app.interviewLink ? ` Link: ${app.interviewLink}` : ''}`,
+                    read: readIds.includes(notifId),
+                    time: 'Interview Update',
+                    category: 'tech_interview'
+                  });
+                }
+              }
+
+              // Stage 2: Assessment Sent
+              if (app.aptitudeStatus === 'Assessment Sent' || statusLower.includes('assessment') || statusLower === 'shortlisted') {
+                const notifId = `assessment-${app.id}`;
+                if (!seenIds.has(notifId)) {
+                  seenIds.add(notifId);
+                  dynamicList.push({
+                    id: notifId,
+                    title: `📝 Screening Assessment Link Sent`,
+                    message: `Screening assessment link for ${app.jobTitle} is generated. Link expires 24 hours after sending.`,
+                    read: readIds.includes(notifId),
+                    time: 'Assessment Update',
+                    category: 'assessment'
+                  });
+                }
+              }
+
+              // Stage 1: Application Received
+              const notifId = `app-received-${app.id}`;
+              if (!seenIds.has(notifId)) {
+                seenIds.add(notifId);
+                dynamicList.push({
+                  id: notifId,
+                  title: `📋 Application Submitted: ${app.jobTitle || 'Role'}`,
+                  message: `Your application for ${app.jobTitle} was received. Status: ${app.status || 'Under Review'}.`,
+                  read: readIds.includes(notifId),
+                  time: formatNotificationTime(app.createdAt || app.appliedDate),
+                  category: 'application'
+                });
+              }
+
+              // Also fetch backend notifications table for candidate
+              if (app.id && !String(app.id).startsWith('local-')) {
+                api.get(`/api/notifications/${app.id}`).then(backendNotifRes => {
+                  const dbNotifs = backendNotifRes?.data || [];
+                  if (Array.isArray(dbNotifs)) {
+                    dbNotifs.forEach(dbN => {
+                      const dbNotifId = `db-${dbN.id}`;
+                      if (!seenIds.has(dbNotifId)) {
+                        seenIds.add(dbNotifId);
+                        dynamicList.push({
+                          id: dbNotifId,
+                          title: dbN.title,
+                          message: dbN.message,
+                          read: dbN.isRead || dbN.read || readIds.includes(dbNotifId),
+                          time: formatNotificationTime(dbN.createdAt),
+                          category: 'db_notification'
+                        });
+                      }
+                    });
+                  }
+                }).catch(() => null);
+              }
+            });
           }
+        } catch (e) {
+          console.warn("Failed to fetch dynamic candidate application notifications:", e);
         }
       }
 
-      console.log("[NAVBAR DEBUG] Final candId resolved:", candId);
-
-      if (candId) {
-        try {
-          const response = await api.get(`/api/notifications/${candId}`);
-          const fetched = response.data || [];
-          fetchedStr = JSON.stringify(fetched);
-          console.log("[NAVBAR DEBUG] fetched notifications from backend:", fetched);
-          const mapped = fetched.map(n => ({
-            id: n.id,
-            title: n.title,
-            message: n.message,
-            read: n.isRead || n.read || false,
-            time: formatNotificationTime(n.createdAt)
-          }));
-          setNotifications(mapped);
-        } catch (err) {
-          console.error("Failed to fetch notifications in Navbar:", err);
-          errStr += "Fetch notifications error: " + err.message + "\n";
-        }
-      } else {
-        setNotifications([]);
-      }
-
-      setDebugInfo({
-        userEmail,
-        localApps: localStr,
-        backendApps: appsStr,
-        candId: String(candId),
-        fetchedNotifs: fetchedStr,
-        error: errStr
-      });
+      setNotifications(dynamicList);
     };
 
-    fetchCandidateIdAndNotifications();
-    const interval = setInterval(fetchCandidateIdAndNotifications, 10000);
+    fetchDynamicNotifications();
+    const interval = setInterval(fetchDynamicNotifications, 5000);
     return () => clearInterval(interval);
   }, [user]);
 
@@ -430,7 +538,7 @@ export default function Navbar() {
                                 </th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100 text-slate-750 text-xs">
+                            <tbody className="text-slate-750 text-xs">
                               {/* Row 1: Base */}
                               <tr className="bg-transparent hover:bg-slate-50/40 transition-colors">
                                 <td className="py-3 pl-6 pr-2 align-top pt-3 w-1/5 border-r border-slate-200">
@@ -624,9 +732,9 @@ export default function Navbar() {
                                 )}
                               </tr>
                               {/* Row 2: Beta Ecosystem footer bar */}
-                              <tr>
-                                <td className="bg-slate-50 border-r border-slate-200 rounded-bl-xl pl-6 pr-2"></td>
-                                <td colSpan={2} className="pt-4.5 pb-2.5 pr-0 text-center select-none bg-slate-50 rounded-br-xl">
+                              <tr className="border-t-0 border-none">
+                                <td className="bg-slate-50 border-r border-slate-200 border-t-0 rounded-bl-xl pl-6 pr-2"></td>
+                                <td colSpan={2} className="pt-4.5 pb-2.5 pr-0 text-center select-none bg-slate-50 border-t-0 rounded-br-xl">
                                   <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest">
                                     Beta Ecosystem
                                   </span>
@@ -739,24 +847,32 @@ export default function Navbar() {
                               if (!notif.read) {
                                 handleMarkAsRead(notif.id);
                               }
+                              setIsNotificationsOpen(false);
+                              navigate('/careers');
                             }}
-                            className={`p-4 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/20' : ''}`}
+                            className={`p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/30' : ''}`}
                           >
-                            <div className="mt-0.5">
-                              {notif.title.includes('Interview') ? (
-                                <Calendar className="h-4 w-4 text-amber-500 flex-shrink-0" />
-                              ) : notif.title.includes('Application') ? (
-                                <User className="h-4 w-4 text-[#004AAD] flex-shrink-0" />
+                            <div className="mt-0.5 shrink-0">
+                              {notif.category === 'job_opening' ? (
+                                <Briefcase className="h-4 w-4 text-purple-600" />
+                              ) : notif.category === 'offer' ? (
+                                <Sparkles className="h-4 w-4 text-amber-500" />
+                              ) : notif.category === 'tech_interview' || notif.category === 'hr_interview' ? (
+                                <Clock className="h-4 w-4 text-emerald-600" />
+                              ) : notif.category === 'task_assessment' ? (
+                                <CheckCircle2 className="h-4 w-4 text-indigo-600" />
+                              ) : notif.category === 'assessment' ? (
+                                <AlertCircle className="h-4 w-4 text-pink-600" />
                               ) : (
-                                <Bell className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                                <Bell className="h-4 w-4 text-[#004AAD]" />
                               )}
                             </div>
-                            <div className="space-y-0.5 flex-grow min-w-0">
+                            <div className="space-y-0.5 flex-grow min-w-0 text-left">
                               <div className="flex items-center justify-between gap-2">
-                                <p className={`text-xs font-bold truncate ${!notif.read ? 'text-slate-900' : 'text-slate-700'}`}>{notif.title}</p>
-                                <span className="text-[9px] text-slate-400 font-medium flex-shrink-0">{notif.time}</span>
+                                <p className={`text-xs font-bold truncate ${!notif.read ? 'text-slate-900 font-extrabold' : 'text-slate-700'}`}>{notif.title}</p>
+                                <span className="text-[9px] text-slate-400 font-bold flex-shrink-0">{notif.time}</span>
                               </div>
-                              <p className="text-[11px] text-slate-500 leading-normal font-semibold line-clamp-2">{notif.message}</p>
+                              <p className="text-[11px] text-slate-600 leading-snug font-medium line-clamp-2">{notif.message}</p>
                             </div>
                           </div>
                         ))

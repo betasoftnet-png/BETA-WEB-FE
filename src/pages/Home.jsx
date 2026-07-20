@@ -264,21 +264,21 @@ export default function Home() {
       `}</style>
 
       {/* HERO SECTION: SIDE-BY-SIDE LAYOUT */}
-      <div className="w-full mb-20 pt-4 md:pt-8 overflow-hidden">
+      <div className="w-full mb-16 pt-0 overflow-hidden">
         {/* Central main title */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 text-center -mt-6 md:-mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 text-center pt-0 mt-0">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="space-y-4"
+            className="space-y-2"
           >
             {/* <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
               <Sparkles className="h-3.5 w-3.5" />
               <span>Vision</span>
             </span> */}
             <motion.h1
-              className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter cursor-pointer select-none flex items-center justify-center gap-0 my-4"
+              className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter cursor-pointer select-none flex items-center justify-center gap-0 my-1"
               style={{ fontFamily: '"Saira Stencil One", sans-serif' }}
               variants={{
                 hidden: { opacity: 0 },
@@ -342,7 +342,7 @@ export default function Home() {
                 flex flex-col md:flex-row items-center gap-12">
 
           {/* Left Column: Heading and description */}
-          <div className="w-full md:w-[55%] flex flex-col items-start text-left space-y-6">
+          <div className="w-full md:w-[52%] flex flex-col items-start text-left space-y-6">
 
             <motion.div
               variants={containerVariants}
@@ -352,21 +352,23 @@ export default function Home() {
             >
               <motion.h2
                 variants={itemVariants}
-                className="text-3xl md:text-4xl lg:text-5xl font-extrabold 
-             text-slate-900 leading-tight md:-ml-0"
+                className="w-full text-slate-900 leading-tight tracking-tight"
               >
-                Unified Software for <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline font-extrabold whitespace-nowrap">Connected Generation</span>
+                <span className="block text-3xl md:text-4xl lg:text-[44px] font-black text-slate-900 tracking-wide whitespace-nowrap ml-15">
+                  Unified Software for
+                </span>
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block text-2xl md:text-3xl font-extrabold mt-1 ml-25">
+                  Connected Generation
+                </span>
               </motion.h2>
-
-
 
               <motion.p
                 variants={itemVariants}
                 className="mt-1 text-slate-600 text-base md:text-lg leading-relaxed 
-             text-left w-full md:-ml-0 max-w-xl 
+             text-left w-full max-w-xl 
              tracking-wide"
               >
-                Beta builds secure,real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
+                Beta builds secure, real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
 
             </motion.div>

@@ -911,9 +911,8 @@ export default function Careers() {
           color: #94A3B8 !important;
         }
         .careers-purple-pink-theme .cta-block h2,
-        .careers-purple-pink-theme .cta-block p,
-        .careers-purple-pink-theme .cta-block a {
-          color: #ffffff !important;
+        .careers-purple-pink-theme .cta-block p {
+          color: #5B3A00 !important;
         }
 
         /* Animated gradient blobs */
@@ -1007,7 +1006,7 @@ export default function Careers() {
 
 
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 space-y-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 space-y-16 md:space-y-20">
         {!showMyJobs ? (
           <>
             {/* COMBINED HERO & OPEN ROLES GROUP */}
@@ -1492,8 +1491,8 @@ export default function Careers() {
             </div>
 
             {/* SECTION 6: HIRING PROCESS */}
-            <div className="space-y-16">
-              <div className="text-center max-w-2xl mx-auto space-y-3">
+            <div className="space-y-10 -mt-6 md:-mt-8">
+              <div className="text-center max-w-2xl mx-auto space-y-2.5">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
                   <CheckSquare className="h-3.5 w-3.5" />
                   <span>Hiring Pipeline</span>
@@ -1503,7 +1502,7 @@ export default function Careers() {
               </div>
 
               {/* Connected Glowing Nodes Timeline */}
-              <div className="relative max-w-4xl mx-auto pt-6 flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-between gap-8 md:gap-4">
+              <div className="relative max-w-4xl mx-auto pt-2 flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-between gap-8 md:gap-4">
                 {processSteps.map((step, idx) => {
                   const Icon = step.icon;
                   return (
@@ -1675,22 +1674,22 @@ export default function Careers() {
 
 
             {/* SECTION 8: CALL TO ACTION SECTION */}
-            <div className="cta-block relative overflow-hidden rounded-3xl p-10 md:p-16 border border-purple-500/30 text-center shadow-2xl" style={{ background: 'linear-gradient(135deg, #8B5CF6, #EC4899)' }}>
-              {/* Floating glow circles inside CTA */}
-              <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="cta-block relative overflow-hidden rounded-3xl p-10 md:p-16 border border-amber-200/80 bg-gradient-to-r from-amber-50/90 via-yellow-50/80 to-amber-50/90 text-center shadow-xl shadow-amber-500/5">
+              {/* Subtle yellow background glow circles inside CTA */}
+              <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-yellow-200/40 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-amber-200/40 rounded-full blur-2xl pointer-events-none" />
 
               <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
-                <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">
+                <h2 className="text-3xl md:text-5xl font-black text-[#5B3A00] leading-tight tracking-tight">
                   Ready to Build Something Amazing?
                 </h2>
-                <p className="text-white/80 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-medium">
+                <p className="text-[#5B3A00]/90 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-semibold">
                   Join a team of creators, system architects, and designers scaling software to thousands of businesses globally.
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                   <a
                     href="#search-roles"
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-purple-950/20 hover:bg-purple-950/45 text-white border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02]"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 transition-all duration-300 hover:scale-[1.02] shadow-md shadow-amber-500/20 no-underline"
                   >
                     Apply Now
                   </a>
