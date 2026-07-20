@@ -299,7 +299,7 @@ export default function AdminDashboard() {
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
-              experience: app.experience || '3 Years',
+              experience: app.experience || app.experience || 'Fresher / 0-1 Years',
               githubLink: app.githubLink || app.githublink || ''
             };
           });
@@ -404,7 +404,7 @@ export default function AdminDashboard() {
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
-              experience: app.experience || '3 Years',
+              experience: app.experience || app.experience || 'Fresher / 0-1 Years',
               githubLink: app.githubLink || app.githublink || ''
             };
           });
@@ -2477,7 +2477,7 @@ export default function AdminDashboard() {
                                       <td className="py-3.5 px-4 font-medium text-slate-600">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4 text-slate-500">{app.email}</td>
                                       <td className="py-3.5 px-4 font-semibold text-slate-700">
-                                        {app.experience || '3 Years'}
+                                        {app.experience || 'Fresher / 0-1 Years'}
                                       </td>
                                       <td className="py-3.5 px-4">
                                         <button
@@ -2746,6 +2746,7 @@ export default function AdminDashboard() {
                           <tr>
                             <th className="py-4 px-6 font-bold">Candidate</th>
                             <th className="py-4 px-6 font-bold">Job Applied</th>
+                            <th className="py-4 px-6 font-bold">Experience</th>
                             <th className="py-4 px-6 font-bold">Status</th>
                             <th className="py-4 px-6 font-bold">Date</th>
                             <th className="py-4 px-6 font-bold">Resume</th>
@@ -2924,6 +2925,11 @@ export default function AdminDashboard() {
                                   )}
 
                                   <div className="text-slate-450 text-[10px] mt-0.5">{app.jobDepartment} • {app.jobLocation}</div>
+                                </td>
+                                <td className="py-4 px-6 font-semibold text-slate-700">
+                                  <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-bold whitespace-nowrap">
+                                    {app.experience || 'Fresher / 0-1 Years'}
+                                  </span>
                                 </td>
                                 <td className="py-4 px-6">
                                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap ${app.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
@@ -3114,7 +3120,11 @@ export default function AdminDashboard() {
                         )}
                         <div>
                           <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Work Experience</label>
-                          <p className="text-xs font-bold text-slate-800 mt-1">{selectedApplication.experience || '3 Years'}</p>
+                          <p className="text-xs font-bold text-slate-800 mt-1">
+                            <span className="px-2.5 py-0.5 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 text-xs font-bold inline-block">
+                              {selectedApplication.experience || 'Fresher / 0-1 Years'}
+                            </span>
+                          </p>
                         </div>
                         {selectedApplication.appliedDate && (
                           <div>

@@ -207,6 +207,7 @@ export default function Careers() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [experience, setExperience] = useState('Fresher / 0-1 Years');
   const [coverLetter, setCoverLetter] = useState('');
   const [resume, setResume] = useState(null);
   const [interviewDate, setInterviewDate] = useState('');
@@ -396,6 +397,7 @@ export default function Careers() {
   useEffect(() => {
     if (!selectedJob) {
       setPhone('');
+      setExperience('Fresher / 0-1 Years');
       setCoverLetter('');
       setResume(null);
       setStatus('idle');
@@ -519,6 +521,7 @@ export default function Careers() {
     formData.append("fullName", fullName);
     formData.append("email", email);
     formData.append("phone", phone);
+    formData.append("experience", experience);
     formData.append("coverLetter", coverLetter);
     formData.append("resume", resume);
     formData.append("interviewDate", shouldSchedule ? interviewDate : "");
@@ -545,6 +548,7 @@ export default function Careers() {
         fullName,
         email,
         phone,
+        experience: experience || activeJob.experience || 'Fresher / 0-1 Years',
         coverLetter,
         resumeUrl: resume ? resume.name : '',
         status: shouldSchedule && interviewDate ? 'Interview Scheduled' : 'Applied',
@@ -2161,6 +2165,21 @@ export default function Careers() {
                       placeholder="e.g. 9876543210"
                       className="w-full bg-white text-slate-800 placeholder-slate-400 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition font-semibold"
                     />
+                  </div>
+
+                  <div className="space-y-1 text-left">
+                    <label className="text-xs font-bold text-slate-500 uppercase">Total Work Experience</label>
+                    <select
+                      value={experience}
+                      onChange={(e) => setExperience(e.target.value)}
+                      className="w-full bg-white text-slate-800 border border-purple-200 rounded-xl py-2.5 px-4 focus:outline-none focus:border-[#EC4899] text-sm transition font-semibold cursor-pointer"
+                    >
+                      <option value="Fresher / 0-1 Years">Fresher / 0-1 Years</option>
+                      <option value="1-2 Years">1-2 Years</option>
+                      <option value="2-3 Years">2-3 Years</option>
+                      <option value="3-5 Years">3-5 Years</option>
+                      <option value="5+ Years">5+ Years</option>
+                    </select>
                   </div>
 
                   <div className="space-y-1 text-left">
