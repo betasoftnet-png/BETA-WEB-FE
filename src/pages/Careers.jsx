@@ -1794,7 +1794,7 @@ export default function Careers() {
                       activeIdx = 0;
                     }
 
-                    const steps = ['Application', 'Assessment', 'Technical interview', 'Task Assessment', 'HR interview', 'Offer in the pipeline'];
+                    const steps = ['Application', 'Assessment', 'Technical interview', 'Task Assessment', 'HR interview', 'Offer'];
 
                     return (
                       <div
@@ -2013,7 +2013,7 @@ export default function Careers() {
                           </div>
                         ) : (
                           <div className="mt-1 p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
-                            <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Offer in the Pipeline</span>
+                            <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Offer</span>
                             <p className="text-slate-500 font-medium">
                               🎉 Congratulations! You have successfully cleared all selection rounds. An onboarding specialist will contact you with the offer proposal and joining details.
                             </p>
