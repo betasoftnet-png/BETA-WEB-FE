@@ -52,21 +52,23 @@ const processSteps = [
   { id: '2', title: 'Assessment', desc: 'Initial evaluation test', icon: Code2, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
   { id: '3', title: 'Technical interview', desc: 'Systems architecture alignment', icon: User, color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
   { id: '4', title: 'Task Assessment', desc: 'GitHub task and code review', icon: CheckSquare, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
-  { id: '5', title: 'HR  Interview', desc: 'Culture fit & team alignment', icon: Users, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
-  { id: '6', title: 'Offer ', desc: 'Final proposal discussions', icon: Award, color: 'text-[#F59E0B]', bg: 'bg-amber-500/10 border-amber-500/20' }
+  { id: '5', title: 'HR interview', desc: 'Culture fit & team alignment', icon: Users, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
+  { id: '6', title: 'Offer in the pipeline', desc: 'Final proposal discussions', icon: Award, color: 'text-[#F59E0B]', bg: 'bg-amber-500/10 border-amber-500/20' }
 ];
 const mapStatusToUI = (status) => {
-  const s = (status || '').toLowerCase().trim();
-  if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Applied';
-  if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 test';
-  if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 1 Technical';
-  if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 2 Brand Awareness';
-  if (s === 'shortlisted') return 'Shortlisted';
-  if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
-  if (s === 'approved' || s === 'selected') return 'Selected';
-  if (s === 'rejected') return 'Rejected';
-  if (s === 'joined') return 'Joined';
-  return 'Applied';
+  if (!status) return 'Applied';
+  const s = status.trim();
+  const lower = s.toLowerCase();
+
+  if (lower === 'pending' || lower === 'applied' || lower === 'under review' || lower === 'candidates' || lower === 'candidate') return 'Applied';
+  if (lower === 'shortlisted') return 'Shortlisted';
+  if (lower === 'assessment sent' || lower === 'round 1 test' || lower === 'round 1 aptitude' || lower === 'aptitude') return 'Assessment Sent';
+  if (lower === 'technical interview' || lower === 'interview scheduled' || lower === 'scheduled' || lower === 'technical') return 'Technical Interview';
+  if (lower === 'task assessment' || lower === 'task assigned' || lower === 'task submitted' || lower === 'task') return 'Task Assessment';
+  if (lower === 'hr interview' || lower === 'hr scheduled' || lower === 'hr round' || lower === 'hr') return 'HR Interview';
+  if (lower === 'accepted' || lower === 'selected' || lower === 'approved' || lower === 'joined' || lower === 'offer sent') return 'Selected';
+  if (lower === 'rejected') return 'Rejected';
+  return s;
 };
 
 const formatDate = (isoString) => {
@@ -1770,26 +1772,29 @@ export default function Careers() {
               <>
                 <div className="space-y-6">
                   {currentMyJobs.map((app) => {
-                    const statusText = app.status;
+                    const rawStatus = app.status || '';
+                    const aptitudeStatus = (app.aptitudeStatus || '').toLowerCase().trim();
+                    const isRejected = rawStatus.toLowerCase().trim() === 'rejected';
 
-                    // Determine step index for progress tracker
+                    // Dynamically calculate active step index (0 to 5)
                     let activeIdx = 0;
-                    const s = (statusText || '').toLowerCase().trim();
-                    if (s === 'candidates' || s === 'applied' || s === 'pending') {
-                      activeIdx = 0;
-                    } else if (s === 'shortlisted' || s.includes('aptitude') || s.includes('test') || s.includes('assessment')) {
-                      activeIdx = 1;
-                    } else if (s === 'interview scheduled' || s === 'scheduled' || s.includes('technical')) {
-                      activeIdx = 2;
-                    } else if (app.taskAssigned || s.includes('task') || s.includes('brand')) {
-                      activeIdx = 3;
-                    } else if (s.includes('hr')) {
-                      activeIdx = 4;
-                    } else if (s.includes('selected') || s.includes('joined') || s.includes('approved')) {
+                    const statusLower = rawStatus.toLowerCase().trim();
+
+                    if (['accepted', 'selected', 'joined', 'approved', 'offer sent', 'offer letter', 'offered'].includes(statusLower)) {
                       activeIdx = 5;
+                    } else if (statusLower.includes('hr') || app.hrInterviewDate || app.hrInterviewTime || app.hrInterviewLocation) {
+                      activeIdx = 4;
+                    } else if (app.taskAssigned || app.githubLink || statusLower.includes('task') || statusLower.includes('brand')) {
+                      activeIdx = 3;
+                    } else if (statusLower.includes('technical') || statusLower === 'interview scheduled' || statusLower === 'scheduled' || app.interviewDate || app.interviewTime || app.interviewLink) {
+                      activeIdx = 2;
+                    } else if (['shortlisted', 'assessment sent', 'round 1 test', 'round 1 aptitude', 'assessment', 'test round'].includes(statusLower) || ['assessment sent', 'scheduled', 'completed'].includes(aptitudeStatus) || (app.aptitudeScore !== null && app.aptitudeScore !== undefined && app.aptitudeScore !== '')) {
+                      activeIdx = 1;
+                    } else {
+                      activeIdx = 0;
                     }
 
-                    const steps = ['Application', 'Assessment', 'Technical interview', 'Task Assessment', 'HR  Interview', 'Offer in the pipeline'];
+                    const steps = ['Application', 'Assessment', 'Technical interview', 'Task Assessment', 'HR interview', 'Offer in the pipeline'];
 
                     return (
                       <div
@@ -1799,7 +1804,7 @@ export default function Careers() {
                         {/* Upper card header */}
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                           <div>
-                            <h4 className="text-lg font-black text-slate-900 group-hover:text-[#EC4899] transition-colors">
+                            <h4 className="text-lg font-black text-slate-900 transition-colors">
                               {app.jobTitle || 'General Opening'}
                             </h4>
                             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs text-slate-500 font-semibold">
@@ -1819,62 +1824,28 @@ export default function Careers() {
                                 <AppliedTime timestamp={app.appliedTime || app.appliedDate || app.createdAt} />
                               </span>
                             </div>
-
-                            {(app.githubLink || activeIdx >= 3) && (
-                              <div className="mt-3.5 space-y-2 max-w-md">
-                                <span className="font-extrabold text-violet-700 text-[10px] uppercase tracking-wider block">
-                                  Task Solution
-                                </span>
-                                {app.githubLink ? (
-                                  <div className="p-2.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl flex items-center justify-between gap-3">
-                                    <div className="text-left overflow-hidden">
-                                      <span className="font-bold text-emerald-700 text-[10px] block">
-                                        ✓ Submitted Solution
-                                      </span>
-                                      <a
-                                        href={app.githubLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-xs font-bold text-violet-650 hover:underline break-all"
-                                      >
-                                        {app.githubLink}
-                                      </a>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <p className="text-[11px] font-bold text-slate-450 italic">
-                                    Pending task submission
-                                  </p>
-                                )}
-                                {gitErrors[app.id] && (
-                                  <p className="text-[10px] font-bold text-rose-600">
-                                    {gitErrors[app.id]}
-                                  </p>
-                                )}
-                              </div>
-                            )}
                           </div>
 
-                          {/* Mapped Status Badge */}
+                          {/* Status Badge */}
                           <div className="flex-shrink-0">
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${['Selected', 'Joined'].includes(statusText)
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                              : statusText === 'Rejected'
-                                ? 'bg-rose-50 text-rose-700 border-rose-200'
+                            <span className={`inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${isRejected
+                              ? 'bg-rose-50 text-rose-700 border-rose-200'
+                              : activeIdx === 5
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                                 : 'bg-purple-50 text-purple-700 border-purple-200'
                               }`}>
-                              {statusText === 'Round 1 Aptitude' || statusText === 'Round 1 test' ? 'Round 1 Test' : statusText}
+                              {isRejected ? 'Rejected' : steps[activeIdx]}
                             </span>
                           </div>
                         </div>
 
                         {/* Interactive Steps Visualizer */}
-                        <div className="border-t border-purple-500/10 pt-4 pb-2">
+                        <div className="border-t border-purple-500/10 pt-5 pb-2">
                           <div className="relative flex items-center justify-between w-full">
                             {/* Connector Line */}
                             <div className="absolute left-3 right-3 top-3 h-[2px] bg-slate-100 z-0">
                               <div
-                                className="h-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] transition-all duration-500"
+                                className={`h-full transition-all duration-500 ${isRejected ? 'bg-rose-500' : 'bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-emerald-500'}`}
                                 style={{ width: `${(activeIdx / (steps.length - 1)) * 100}%` }}
                               />
                             </div>
@@ -1883,23 +1854,23 @@ export default function Careers() {
                             {steps.map((stepName, idx) => {
                               const isCompleted = idx < activeIdx;
                               const isActive = idx === activeIdx;
-                              const isRejectedDecision = idx === (steps.length - 1) && statusText === 'Rejected';
+                              const isRejectedNode = isRejected && isActive;
 
                               let circleClasses = 'bg-white border-slate-200 text-slate-400';
                               if (isCompleted) {
                                 circleClasses = 'bg-[#8B5CF6] border-[#8B5CF6] text-white shadow-sm';
                               } else if (isActive) {
-                                circleClasses = isRejectedDecision
+                                circleClasses = isRejectedNode
                                   ? 'bg-rose-500 border-rose-500 text-white shadow-md shadow-rose-200 animate-pulse'
                                   : 'bg-[#EC4899] border-[#EC4899] text-white shadow-md shadow-pink-200 animate-pulse';
                               }
 
                               return (
-                                <div key={stepName} className="flex flex-col items-center relative z-10 flex-1 text-center">
+                                <div key={stepName} className="flex flex-col items-center relative z-10 flex-1 text-center px-1">
                                   <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 text-[10px] font-black transition-all duration-300 ${circleClasses}`}>
-                                    {idx + 1}
+                                    {isCompleted ? '✓' : idx + 1}
                                   </div>
-                                  <span className={`text-[8.5px] font-bold mt-1.5 uppercase tracking-wide block ${isActive ? 'text-[#EC4899]' : isCompleted ? 'text-slate-600' : 'text-slate-400'}`}>
+                                  <span className={`text-[8.5px] font-bold mt-1.5 uppercase tracking-wide block ${isActive ? (isRejectedNode ? 'text-rose-600 font-black' : 'text-[#EC4899] font-black') : isCompleted ? 'text-slate-700' : 'text-slate-400'}`}>
                                     {stepName}
                                   </span>
                                 </div>
@@ -1909,80 +1880,154 @@ export default function Careers() {
                         </div>
 
                         {/* Actionable status details below tracker */}
-                        {(statusText === 'Round 1 Aptitude' || statusText === 'Round 1 test') && (
+                        {isRejected ? (
+                          <div className="mt-1 p-3.5 bg-rose-500/5 border border-rose-500/20 rounded-xl text-left text-xs">
+                            <span className="font-extrabold text-rose-600 uppercase tracking-wider block mb-0.5">Application Closed</span>
+                            <p className="text-slate-500 font-medium">
+                              We sincerely appreciate the time you spent interviewing with us. While we are not advancing with this specific role at present, we will keep your file for matching future openings.
+                            </p>
+                          </div>
+                        ) : activeIdx === 0 ? (
+                          <div className="mt-1 p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs">
+                            <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Application Received</span>
+                            <p className="text-slate-500 font-medium">
+                              Your profile has been logged and is under initial review by our talent acquisition team.
+                            </p>
+                          </div>
+                        ) : activeIdx === 1 ? (
                           <div className="mt-1">
-                            {app.aptitudeStatus === 'Scheduled' ? (
+                            {app.aptitudeStatus === 'Completed' || app.assessmentSubmitted ? (
+                              <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Assessment Completed</span>
+                                <p className="text-slate-500 font-medium">
+                                  Your Test Round answers have been logged{app.aptitudeScore !== '' && app.aptitudeScore !== undefined ? ` (Score: ${app.aptitudeScore}%)` : ''}. Recruiting managers are reviewing your evaluation.
+                                </p>
+                              </div>
+                            ) : (
                               <div className="p-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
                                 <div className="text-left">
-                                  <span className="font-extrabold text-[#F59E0B] uppercase tracking-wider block mb-0.5">Online Assessment Available</span>
-                                  <p className="text-slate-500 font-medium">Your 10-minute automated coding assessment is ready to begin.</p>
+                                  <span className="font-extrabold text-[#F59E0B] uppercase tracking-wider block mb-0.5">Test Round Assessment Available</span>
+                                  <p className="text-slate-500 font-medium">Your screening test is assigned and ready to begin.</p>
                                 </div>
                                 <button
                                   onClick={() => {
                                     setShowMyJobs(false);
                                     navigate(`/careers/assessment?id=${app.id}`);
                                   }}
-                                  className="w-full sm:w-auto px-4.5 py-2.5 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-[#EC4899]/15 text-center whitespace-nowrap"
+                                  className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-[#EC4899]/15 text-center whitespace-nowrap border-none"
                                 >
                                   Take Assessment
                                 </button>
                               </div>
-                            ) : app.aptitudeStatus === 'Completed' ? (
-                              <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
-                                <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Assessment Completed</span>
+                            )}
+                          </div>
+                        ) : activeIdx === 2 ? (
+                          <div className="mt-1">
+                            {app.interviewDate || app.interviewTime ? (
+                              <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                                <div className="text-left">
+                                  <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Technical Interview Scheduled</span>
+                                  <p className="text-slate-500 font-medium">
+                                    📅 <strong>Date:</strong> {app.interviewDate || 'To be notified'} {app.interviewTime ? `at ${app.interviewTime}` : ''}
+                                  </p>
+                                </div>
+                                {app.interviewLink && (
+                                  <a
+                                    href={app.interviewLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black rounded-xl transition-all cursor-pointer text-center whitespace-nowrap shadow-sm"
+                                  >
+                                    Join Google Meet
+                                  </a>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Technical Interview Stage</span>
                                 <p className="text-slate-500 font-medium">
-                                  Recruiting managers are reviewing your submission.
+                                  Congratulations on clearing the Test Round! Scheduling your Technical Interview is in progress. Check your email for invites.
                                 </p>
+                              </div>
+                            )}
+                          </div>
+                        ) : activeIdx === 3 ? (
+                          <div className="mt-1 space-y-2">
+                            {app.githubLink ? (
+                              <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div>
+                                  <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Task Assessment Submitted</span>
+                                  <p className="text-slate-500 font-medium break-all">
+                                    ✓ <strong>Submitted Solution:</strong> <a href={app.githubLink} target="_blank" rel="noopener noreferrer" className="text-violet-650 underline font-bold">{app.githubLink}</a>
+                                  </p>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="p-3.5 bg-violet-500/5 border border-violet-500/20 rounded-xl text-left text-xs space-y-3">
+                                <div>
+                                  <span className="font-extrabold text-violet-700 uppercase tracking-wider block mb-0.5">Task Assessment Assigned</span>
+                                  <p className="text-slate-500 font-medium">
+                                    Please complete the task instructions sent to your email and submit your GitHub repository link below.
+                                  </p>
+                                </div>
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                  <input
+                                    type="url"
+                                    placeholder="https://github.com/your-username/your-repo"
+                                    value={gitLinks[app.id] || ''}
+                                    onChange={(e) => setGitLinks(prev => ({ ...prev, [app.id]: e.target.value }))}
+                                    className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-500/20 bg-white"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSubmittingGit(app.id)}
+                                    disabled={submittingGit[app.id] || !(gitLinks[app.id] || '').trim()}
+                                    className="px-4 py-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition cursor-pointer whitespace-nowrap shadow-xs border-none"
+                                  >
+                                    {submittingGit[app.id] ? 'Submitting...' : 'Submit Repository'}
+                                  </button>
+                                </div>
+                                {gitErrors[app.id] && (
+                                  <p className="text-[10px] font-bold text-rose-600">{gitErrors[app.id]}</p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        ) : activeIdx === 4 ? (
+                          <div className="mt-1">
+                            {app.hrInterviewDate || app.hrInterviewTime || app.hrInterviewLocation ? (
+                              <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs space-y-1">
+                                <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">HR Interview Scheduled</span>
+                                <p className="text-slate-500 font-medium">
+                                  🏢 <strong>Date:</strong> {app.hrInterviewDate || 'To be notified'} {app.hrInterviewTime ? `at ${app.hrInterviewTime}` : ''}
+                                </p>
+                                {app.hrInterviewLocation && (
+                                  <p className="text-slate-500 font-medium">
+                                    📍 <strong>Venue:</strong> {app.hrInterviewLocation.startsWith('http') ? (
+                                      <a href={app.hrInterviewLocation} target="_blank" rel="noopener noreferrer" className="text-violet-650 underline font-bold">Open Venue Map</a>
+                                    ) : (
+                                      <strong className="text-slate-800">{app.hrInterviewLocation}</strong>
+                                    )}
+                                  </p>
+                                )}
                               </div>
                             ) : (
                               <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs">
-                                <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Awaiting Scheduling</span>
-                                <p className="text-slate-500 font-medium">We are preparing your online coding screening questions. Check back soon.</p>
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        {statusText === 'Interview Scheduled' && (
-                          <div className="mt-1">
-                            {app.interviewDate && app.interviewTime ? (
-                              <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
-                                <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Interview Scheduled</span>
+                                <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">HR Interview Stage</span>
                                 <p className="text-slate-500 font-medium">
-                                  📅 Date: <strong className="text-slate-800">{app.interviewDate}</strong> at <strong className="text-slate-800">{app.interviewTime}</strong>. A calendar invite has been sent to your email.
+                                  You have cleared the Task Assessment and are shortlisted for the final HR Interview stage. Scheduling details will be shared shortly.
                                 </p>
                               </div>
-                            ) : (
-                              <div className="p-3.5 bg-blue-500/5 border border-blue-500/20 rounded-xl text-left text-xs">
-                                <span className="font-extrabold text-blue-600 uppercase tracking-wider block mb-0.5">Scheduling In Progress</span>
-                                <p className="text-slate-500 font-medium">Recruiting coordinators are finalizing interview slots. Check your email for invites shortly.</p>
-                              </div>
                             )}
                           </div>
-                        )}
-
-                        {['Selected', 'Joined'].includes(statusText) && (
-                          <div className="mt-1">
-                            <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
-                              <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Application Selected!</span>
-                              <p className="text-slate-500 font-medium">
-                                Congratulations! You have successfully cleared our rounds. An onboarding specialist will contact you with the offer proposal and equity schedule.
-                              </p>
-                            </div>
+                        ) : (
+                          <div className="mt-1 p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
+                            <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Offer in the Pipeline</span>
+                            <p className="text-slate-500 font-medium">
+                              🎉 Congratulations! You have successfully cleared all selection rounds. An onboarding specialist will contact you with the offer proposal and joining details.
+                            </p>
                           </div>
                         )}
-
-                        {statusText === 'Rejected' && (
-                          <div className="mt-1">
-                            <div className="p-3.5 bg-rose-500/5 border border-rose-500/20 rounded-xl text-left text-xs">
-                              <span className="font-extrabold text-rose-600 uppercase tracking-wider block mb-0.5">Application Closed</span>
-                              <p className="text-slate-500 font-medium">
-                                We sincerely appreciate the time you took to interview with us. While we are not moving forward with this opening, we will retain your file for matching roles.
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
                       </div>
                     );
                   })}
