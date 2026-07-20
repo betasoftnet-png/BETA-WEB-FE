@@ -130,6 +130,8 @@ export default function Assessment() {
           setSubmitted(true);
         } else if (typeof errorMsg === 'string' && (errorMsg.toLowerCase().includes('2 times') || errorMsg.toLowerCase().includes('exceeded'))) {
           setBlockedMessage(errorMsg);
+        } else if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('expired')) {
+          setBlockedMessage("Assessment link has expired");
         } else {
           setError(errorMsg);
         }
@@ -386,7 +388,12 @@ export default function Assessment() {
       }
     } catch (err) {
       console.error('Failed to submit answers:', err);
-      setError('Failed to submit assessment answers to the backend. Please check your network connection and try again.');
+      const errBody = err.response?.data;
+      if (typeof errBody === 'string' && errBody.toLowerCase().includes('expired')) {
+        setBlockedMessage("Assessment link has expired");
+      } else {
+        setError('Failed to submit assessment answers to the backend. Please check your network connection and try again.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -424,7 +431,9 @@ export default function Assessment() {
             <Shield className="h-8 w-8 text-rose-600 animate-pulse" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Assessment Blocked</h2>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              {blockedMessage.toLowerCase().includes('expired') ? 'Assessment Link Expired' : 'Assessment Blocked'}
+            </h2>
             <p className="text-rose-600 text-sm font-semibold mt-2 bg-rose-50 border border-rose-100 rounded-2xl p-4 leading-relaxed">
               {blockedMessage}
             </p>
