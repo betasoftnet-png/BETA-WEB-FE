@@ -459,9 +459,23 @@ export default function AdminDashboard() {
         return;
       }
       try {
-        const response = await axios.get(`${BACKEND_API_BASE}/api/task-assessment/${selectedApplication.id}`);
-        setFetchedTask(response.data?.taskDescription || null);
-        setFetchedTaskStatus(response.data?.status || null);
+        const [taskRes, candidateRes] = await Promise.all([
+          axios.get(`${BACKEND_API_BASE}/api/task-assessment/${selectedApplication.id}`).catch(() => null),
+          axios.get(`${BACKEND_API_BASE}/api/admin/applications/${selectedApplication.id}`).catch(() => null)
+        ]);
+
+        if (taskRes && taskRes.data) {
+          setFetchedTask(taskRes.data.taskDescription || null);
+          setFetchedTaskStatus(taskRes.data.status || null);
+        }
+
+        const freshApp = candidateRes?.data;
+        const freshGithub = freshApp?.githubLink || freshApp?.githublink || taskRes?.data?.candidate?.githubLink || taskRes?.data?.githubLink;
+
+        if (freshGithub && freshGithub !== selectedApplication.githubLink) {
+          setSelectedApplication(prev => prev ? { ...prev, githubLink: freshGithub } : prev);
+          setExternalApplications(prevApps => prevApps.map(a => a.id === selectedApplication.id ? { ...a, githubLink: freshGithub } : a));
+        }
       } catch (err) {
         const localVal = localStorage.getItem(`task_assessment_${selectedApplication.id}`);
         setFetchedTask(localVal || null);
@@ -469,7 +483,7 @@ export default function AdminDashboard() {
       }
     };
     fetchCandidateTask();
-  }, [selectedApplication]);
+  }, [selectedApplication?.id]);
 
   useEffect(() => {
     if (externalApplications.length > 0) {
@@ -3166,56 +3180,64 @@ export default function AdminDashboard() {
                         </div>
                         <div>
                           <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Task Assessment</h3>
-                          <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Assign a practical task to this candidate</p>
+                          <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Assign a practical task to this candidate and review submitted GitHub solution</p>
                         </div>
                       </div>
 
-                      {/* Show existing task if any */}
-                      {fetchedTask && (
-                        <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4 space-y-2 animate-fadeIn">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1.5">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              <span className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">Previously Assigned Task</span>
+                      {/* Display Task Instructions & Submitted GitHub Link */}
+                      {(fetchedTask || selectedApplication.githubLink) && (
+                        <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4 space-y-3 animate-fadeIn">
+                          {fetchedTask && (
+                            <div className="space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1.5">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  <span className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">Assigned Task Instructions</span>
+                                </div>
+                                {(fetchedTaskStatus || selectedApplication.githubLink) && (
+                                  <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${fetchedTaskStatus === 'SUBMITTED' || selectedApplication.githubLink
+                                    ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
+                                    : 'bg-violet-100 text-violet-700 border-violet-300'
+                                    }`}>
+                                    {selectedApplication.githubLink ? 'SUBMITTED' : fetchedTaskStatus}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-violet-900 font-semibold leading-relaxed whitespace-pre-wrap">{fetchedTask}</p>
                             </div>
-                            {fetchedTaskStatus && (
-                              <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${fetchedTaskStatus === 'SUBMITTED'
-                                ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
-                                : 'bg-violet-100 text-violet-700 border-violet-300'
-                                }`}>
-                                {fetchedTaskStatus}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-violet-800 font-semibold leading-relaxed whitespace-pre-wrap">{fetchedTask}</p>
+                          )}
 
+                          {/* Submitted GitHub Link Section */}
                           {selectedApplication.githubLink ? (
-                            <div className="mt-3 pt-3 border-t border-violet-200/50 space-y-1.5 text-left">
-                              <span className="text-[9px] font-bold text-violet-600 uppercase tracking-wider block">Submitted GitHub Link</span>
-                              <div className="flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-xl">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <div className="pt-3 border-t border-violet-200/60 space-y-1.5 text-left">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-extrabold text-emerald-700 uppercase tracking-wider block">✓ Submitted GitHub Repository</span>
+                                <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded border border-emerald-300">Ready for Review</span>
+                              </div>
+                              <div className="flex items-center gap-2 p-2.5 bg-white border border-slate-200 rounded-xl shadow-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-violet-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
                                 <input
                                   type="text"
                                   readOnly
                                   value={selectedApplication.githubLink}
-                                  className="w-full bg-transparent border-none text-[11px] font-semibold text-slate-800 focus:outline-none select-all"
+                                  className="w-full bg-transparent border-none text-xs font-bold text-slate-900 focus:outline-none select-all"
                                 />
                                 <a
                                   href={selectedApplication.githubLink && (selectedApplication.githubLink.startsWith('http://') || selectedApplication.githubLink.startsWith('https://')) ? selectedApplication.githubLink : `https://${selectedApplication.githubLink}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="px-2.5 py-1 bg-violet-100 hover:bg-violet-200 text-violet-700 font-extrabold rounded-lg text-[10px] transition shrink-0 uppercase tracking-wide no-underline cursor-pointer"
+                                  className="px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white font-extrabold rounded-lg text-xs transition shrink-0 uppercase tracking-wide no-underline cursor-pointer flex items-center gap-1 shadow-xs"
                                 >
-                                  Open
+                                  <span>View Project ↗</span>
                                 </a>
                               </div>
                             </div>
                           ) : (
-                            <div className="mt-3 pt-3 border-t border-violet-200/50 space-y-1.5 text-left">
+                            <div className="pt-3 border-t border-violet-200/60 space-y-1.5 text-left">
                               <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Submitted GitHub Link</span>
                               <div className="p-2.5 bg-slate-100/50 border border-slate-200 border-dashed rounded-xl text-center text-[10px] text-slate-400 italic font-semibold">
                                 Solution pending submission from candidate
