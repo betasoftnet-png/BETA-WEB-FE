@@ -1904,20 +1904,11 @@ export default function Careers() {
                                 </p>
                               </div>
                             ) : (
-                              <div className="p-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-                                <div className="text-left">
-                                  <span className="font-extrabold text-[#F59E0B] uppercase tracking-wider block mb-0.5">Test Round Assessment Available</span>
-                                  <p className="text-slate-500 font-medium">Your screening test is assigned and ready to begin.</p>
-                                </div>
-                                <button
-                                  onClick={() => {
-                                    setShowMyJobs(false);
-                                    navigate(`/careers/assessment?id=${app.id}`);
-                                  }}
-                                  className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-xs font-black rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-[#EC4899]/15 text-center whitespace-nowrap border-none"
-                                >
-                                  Take Assessment
-                                </button>
+                              <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs">
+                                <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Assessment Link Sent</span>
+                                <p className="text-slate-500 font-medium">
+                                  Your Test Round assessment link has been sent to your registered email address. Please check your inbox to access the test.
+                                </p>
                               </div>
                             )}
                           </div>
