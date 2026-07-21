@@ -2820,19 +2820,35 @@ export default function AdminDashboard() {
 
                       {/* Status filter */}
                       <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Filter by Status</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          {selectedStatusFilter === 'Accepted' ? 'Filter by Stage' : 'Filter by Status'}
+                        </label>
                         <select
                           value={statusFilter}
                           onChange={(e) => setStatusFilter(e.target.value)}
                           className="w-full bg-white text-slate-800 border border-slate-200 rounded-lg py-1.5 px-3 focus:outline-none focus:border-blue-500 text-xs transition cursor-pointer"
                         >
-                          <option value="All">All Statuses</option>
-                          <option value="Candidates">Candidates</option>
-                          <option value="Shortlisted">Shortlisted</option>
-                          <option value="Interview Scheduled">Interview Scheduled</option>
-                          <option value="Accepted">Accepted</option>
-                          <option value="Joined">Joined</option>
-                          <option value="Rejected">Rejected</option>
+                          {selectedStatusFilter === 'Accepted' ? (
+                            <>
+                              <option value="All">All Stages</option>
+                              <option value="Test Round">Test Round</option>
+                              <option value="Technical Assessment">Technical Assessment</option>
+                              <option value="Task Assessment">Task Assessment</option>
+                              <option value="HR Interview">HR Interview</option>
+                              <option value="Selected">Selected</option>
+                              <option value="Joined">Joined</option>
+                            </>
+                          ) : (
+                            <>
+                              <option value="All">All Statuses</option>
+                              <option value="Candidates">Candidates</option>
+                              <option value="Shortlisted">Shortlisted</option>
+                              <option value="Interview Scheduled">Interview Scheduled</option>
+                              <option value="Accepted">Accepted</option>
+                              <option value="Joined">Joined</option>
+                              <option value="Rejected">Rejected</option>
+                            </>
+                          )}
                         </select>
                       </div>
 
@@ -2914,6 +2930,14 @@ export default function AdminDashboard() {
                             const filtered = externalApplications
                               .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
                               .filter(app => {
+                                if (selectedStatusFilter === 'Accepted') {
+                                  const isAcceptedPipeline = app.status === 'Accepted' || app.status === 'Joined' || app.status === 'Selected' || app.status === 'ACCEPTED' || app.status === 'JOINED' || app.status === 'SELECTED' || (app.status && app.status !== 'Rejected' && app.status !== 'Terminated' && app.status !== 'Applied' && app.status !== 'Candidates');
+                                  if (!isAcceptedPipeline) return false;
+                                  if (statusFilter === 'All') return true;
+                                  const currentStage = getCandidateCurrentStage(app);
+                                  return currentStage.toLowerCase() === statusFilter.toLowerCase();
+                                }
+
                                 if (statusFilter === 'All') return app.status === selectedStatusFilter;
                                 if (statusFilter === 'Pending') return app.status === 'Applied';
                                 return app.status === statusFilter;
