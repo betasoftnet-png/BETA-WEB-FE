@@ -1904,11 +1904,22 @@ export default function Careers() {
                                 </p>
                               </div>
                             ) : (
-                              <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs">
-                                <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Assessment Link Sent</span>
-                                <p className="text-slate-500 font-medium">
-                                  Your Test Round assessment link has been sent to your registered email address. Please check your inbox to access the test.
-                                </p>
+                              <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                                <div className="text-left">
+                                  <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Assessment Test Ready</span>
+                                  <p className="text-slate-500 font-medium">
+                                    Your Test Round assessment link is ready. Click the button to launch and complete your test online.
+                                  </p>
+                                </div>
+                                <a
+                                  href={`/careers/assessment?token=${app.assessmentToken || app.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-full sm:w-auto px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-black rounded-xl transition-all cursor-pointer text-center whitespace-nowrap shadow-md shadow-purple-500/20 flex items-center justify-center gap-1.5"
+                                >
+                                  <Code2 className="h-4 w-4 text-white" />
+                                  <span>Start Assessment Test</span>
+                                </a>
                               </div>
                             )}
                           </div>

@@ -12,8 +12,6 @@ import Partners from './pages/Partners';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Support from './pages/Support';
-import CliksBusinessDashboard from './pages/CliksBusinessDashboard';
-import BnxMailDashboard from './pages/BnxMailDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Assessment from './pages/Assessment';
 import ShareJob from './pages/ShareJob';
@@ -95,7 +93,7 @@ function AppContent() {
   }, [navigate, loginWithSSO]);
 
   // Don't render the site-wide navbar and footer on the admin dashboard, cliks business dashboard, bnx mail dashboard, or during SSO verification
-  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/admincarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || location.pathname.startsWith('/careers/assessment') || location.pathname.startsWith('/careers/task-assessment') || verifyingSSO || !!ssoError;
+  const isDashboardMode = location.pathname.startsWith('/adminofcarrer') || location.pathname.startsWith('/admincarrer') || location.pathname.startsWith('/cliks-business') || location.pathname.startsWith('/bnx-mail') || location.pathname.startsWith('/careers/assessment') || location.pathname.startsWith('/assessment') || location.pathname.startsWith('/careers/task-assessment') || verifyingSSO || !!ssoError;
 
   if (verifyingSSO || ssoError) {
     return (
@@ -174,10 +172,11 @@ function AppContent() {
           <Route path="/support" element={<Support />} />
           <Route path="/adminofcarrer" element={<AdminDashboard />} />
           <Route path="/admincarrer" element={<AdminDashboard />} />
-          <Route path="/cliks-business" element={<CliksBusinessDashboard />} />
-          <Route path="/cliks-business/dashboard" element={<CliksBusinessDashboard />} />
-          <Route path="/bnx-mail/dashboard" element={<BnxMailDashboard />} />
+          <Route path="/cliks-business" element={<Navigate to="/" replace />} />
+          <Route path="/cliks-business/dashboard" element={<Navigate to="/" replace />} />
+          <Route path="/bnx-mail/dashboard" element={<Navigate to="/" replace />} />
           <Route path="/careers/assessment" element={<Assessment />} />
+          <Route path="/assessment" element={<Assessment />} />
           <Route path="/careers/task-assessment" element={<Careers />} />
           <Route path="/careers/saved-jobs" element={<Careers />} />
           <Route path="/share/jobs/:id" element={<ShareJob />} />

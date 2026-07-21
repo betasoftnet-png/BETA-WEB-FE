@@ -5,6 +5,160 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api';
 
+const SEARCH_INDEX = [
+  // Products
+  {
+    title: 'BNXmail',
+    description: 'Real time mail, always in sync. Collaborative email client.',
+    category: 'Products',
+    type: 'Product',
+    url: 'https://www.bnxmail.com/login',
+    isExternal: true,
+    keywords: ['mail', 'email', 'bnxmail', 'smtp', 'imap', 'inbox', 'messages', 'communication']
+  },
+  {
+    title: 'B2Auth Security',
+    description: 'MFA & SSO Security Gateway for enterprise single sign-on.',
+    category: 'Products',
+    type: 'Product',
+    url: 'https://www.b2auth.com/',
+    isExternal: true,
+    keywords: ['b2auth', 'auth', 'mfa', 'sso', 'security', 'gateway', 'login', 'authentication', '2fa']
+  },
+  {
+    title: 'Bit-Tool',
+    description: 'Daily utility assistant for user productivity & daily tools.',
+    category: 'Products',
+    type: 'Product',
+    url: 'https://bit-tool.beta-softnet.com/',
+    isExternal: true,
+    keywords: ['bit-tool', 'bit', 'tool', 'utility', 'assistant', 'productivity', 'calculator', 'daily']
+  },
+  {
+    title: 'Cliks',
+    description: 'Manage your personal finance, expense tracking & money.',
+    category: 'Products',
+    type: 'Product',
+    url: 'https://cliks.beta-softnet.com/',
+    isExternal: true,
+    keywords: ['cliks', 'money', 'finance', 'expenses', 'personal', 'budget', 'tracking']
+  },
+  {
+    title: 'CliksBusiness',
+    description: 'One Stop Financial Solution for businesses & enterprise teams.',
+    category: 'Products',
+    type: 'Product',
+    url: 'https://www.cliksbusiness.com/',
+    isExternal: true,
+    keywords: ['cliksbusiness', 'cliks business', 'business finance', 'enterprise', 'teams', 'billing']
+  },
+
+  // Pages & Navigation
+  {
+    title: 'Home Portal',
+    description: 'Beta Softnet unified software platform main portal.',
+    category: 'Pages',
+    type: 'Page',
+    url: '/',
+    isExternal: false,
+    keywords: ['home', 'main', 'portal', 'landing', 'welcome', 'beta', 'unified']
+  },
+  {
+    title: 'About Us',
+    description: 'Learn about Beta Softnet vision, mission, story & leadership.',
+    category: 'Pages',
+    type: 'Page',
+    url: '/about',
+    isExternal: false,
+    keywords: ['about', 'company', 'vision', 'mission', 'story', 'culture', 'team', 'who we are']
+  },
+  {
+    title: 'Careers & Job Openings',
+    description: 'Explore active job openings, career paths & apply online.',
+    category: 'Pages',
+    type: 'Page',
+    url: '/careers',
+    isExternal: false,
+    keywords: ['careers', 'jobs', 'hiring', 'openings', 'vacancies', 'apply', 'work', 'positions', 'employment']
+  },
+  {
+    title: 'Partners & Sales',
+    description: 'Join futuristic partnership programs & business collaborations.',
+    category: 'Pages',
+    type: 'Page',
+    url: '/partners',
+    isExternal: false,
+    keywords: ['partners', 'partnership', 'collaborate', 'sales', 'contact', 'enquiry', 'reach us', 'partner request']
+  },
+  {
+    title: 'Admin Portal Login',
+    description: 'HR Admin & candidate management portal login.',
+    category: 'Pages',
+    type: 'Page',
+    url: '/login',
+    isExternal: false,
+    keywords: ['login', 'admin', 'portal', 'dashboard', 'signin', 'hr', 'management', 'candidate management']
+  },
+  {
+    title: 'Saved Jobs',
+    description: 'View bookmarked job openings saved for later.',
+    category: 'Pages',
+    type: 'Page',
+    url: '/careers/saved-jobs',
+    isExternal: false,
+    keywords: ['saved', 'bookmarks', 'saved jobs', 'favorite jobs', 'saved positions']
+  },
+
+  // Careers & Job Roles
+  {
+    title: 'Software Engineer Positions',
+    description: 'Engineering openings in Full Stack, Java, React & Cloud.',
+    category: 'Career Openings',
+    type: 'Job Openings',
+    url: '/careers',
+    isExternal: false,
+    keywords: ['software engineer', 'developer', 'full stack', 'java', 'react', 'frontend', 'backend', 'code', 'programmer', 'engineering']
+  },
+  {
+    title: 'UI/UX & Product Design',
+    description: 'Create user interfaces and experience designs for web apps.',
+    category: 'Career Openings',
+    type: 'Job Openings',
+    url: '/careers',
+    isExternal: false,
+    keywords: ['ui', 'ux', 'designer', 'design', 'figma', 'creative', 'user experience']
+  },
+  {
+    title: 'Marketing & Business Roles',
+    description: 'Digital marketing, growth strategies & sales opportunities.',
+    category: 'Career Openings',
+    type: 'Job Openings',
+    url: '/careers',
+    isExternal: false,
+    keywords: ['marketing', 'sales', 'business development', 'growth', 'brand', 'strategy']
+  },
+
+  // Features
+  {
+    title: 'Test Round Assessment',
+    description: 'Online test round candidate assessment portal.',
+    category: 'Features',
+    type: 'Feature',
+    url: '/careers/assessment',
+    isExternal: false,
+    keywords: ['test', 'assessment', 'exam', 'aptitude', 'test round', 'candidate test', 'online test']
+  },
+  {
+    title: 'Task Assessment Review',
+    description: 'GitHub repository task submission for candidate review.',
+    category: 'Features',
+    type: 'Feature',
+    url: '/careers/task-assessment',
+    isExternal: false,
+    keywords: ['task', 'task assessment', 'github', 'project submission', 'code review', 'practical task']
+  }
+];
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -372,32 +526,35 @@ export default function Navbar() {
     }
   }, [isSearchExpanded]);
 
-  const handleSearch = (e) => {
-    if (e.key === 'Enter' && searchQuery.trim()) {
+  const filteredSearchResults = searchQuery.trim()
+    ? SEARCH_INDEX.filter(item => {
       const query = searchQuery.toLowerCase().trim();
-      setSearchQuery('');
-      if (query.includes('mail') || query.includes('smtp') || query.includes('imap')) {
-        navigate('/');
-      } else if (query.includes('auth') || query.includes('security') || query.includes('sso') || query.includes('mfa')) {
-        navigate('/');
-      } else if (query.includes('personal') || query.includes('note') || query.includes('task') || query.includes('clik')) {
-        if (query.includes('business')) {
-          navigate('/cliks-business/dashboard');
-        } else {
-          navigate('/');
-        }
-      } else if (query.includes('business') || query.includes('team') || query.includes('project') || query.includes('chat')) {
-        navigate('/cliks-business/dashboard');
-      } else if (query.includes('about') || query.includes('vision') || query.includes('mission') || query.includes('story')) {
-        navigate('/about');
-      } else if (query.includes('career') || query.includes('job') || query.includes('apply') || query.includes('work')) {
+      const matchTitle = item.title.toLowerCase().includes(query);
+      const matchDesc = item.description.toLowerCase().includes(query);
+      const matchCategory = item.category.toLowerCase().includes(query);
+      const matchKeywords = item.keywords.some(k => k.toLowerCase().includes(query));
+      return matchTitle || matchDesc || matchCategory || matchKeywords;
+    })
+    : [];
+
+  const handleSelectSearchResult = (result) => {
+    setIsSearchExpanded(false);
+    setSearchQuery('');
+    if (result.isExternal) {
+      window.open(result.url, '_blank', 'noopener,noreferrer');
+    } else {
+      navigate(result.url);
+    }
+  };
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter') {
+      if (filteredSearchResults.length > 0) {
+        handleSelectSearchResult(filteredSearchResults[0]);
+      } else if (searchQuery.trim()) {
         navigate('/careers');
-      } else if (query.includes('contact') || query.includes('sales') || query.includes('enquiry') || query.includes('phone') || query.includes('partner') || query.includes('partnership')) {
-        navigate('/partners');
-      } else if (query.includes('login') || query.includes('admin') || query.includes('dashboard') || query.includes('portal')) {
-        navigate('/login');
-      } else {
-        navigate('/');
+        setIsSearchExpanded(false);
+        setSearchQuery('');
       }
     }
   };
@@ -766,16 +923,19 @@ export default function Navbar() {
             <div className="hidden md:flex items-center justify-end space-x-4 flex-1 z-20 pointer-events-none">
 
               {/* Header Search Bar */}
-              <div ref={searchContainerRef} className="mr-2 flex items-center justify-center pointer-events-auto">
+              <div ref={searchContainerRef} className="relative mr-2 flex items-center justify-center pointer-events-auto">
                 {isSearchExpanded ? (
-                  <div className="relative w-28 lg:w-36 xl:w-40 nav-search-container animate-fadeIn">
+                  <div className="relative w-36 sm:w-44 lg:w-48 nav-search-container animate-fadeIn">
                     <button
                       type="button"
-                      onClick={() => setIsSearchExpanded(false)}
+                      onClick={() => {
+                        setIsSearchExpanded(false);
+                        setSearchQuery('');
+                      }}
                       className="absolute left-2.5 top-1/2 -translate-y-1/2 p-0.5 hover:bg-slate-200/30 rounded-full transition cursor-pointer z-10 flex items-center justify-center border-none bg-transparent"
                       title="Close Search"
                     >
-                      <Search className="h-3.5 w-3.5 text-blue-305 nav-search-icon" />
+                      <X className="h-3.5 w-3.5 text-blue-300 hover:text-white transition" />
                     </button>
                     <input
                       ref={searchInputRef}
@@ -784,8 +944,66 @@ export default function Navbar() {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyDown={handleSearch}
                       placeholder="Search..."
-                      className="w-full bg-[#002b5c]/60 border border-blue-800/40 rounded-full py-1 pl-8 pr-3 text-xs text-white focus:outline-none focus:border-white focus:bg-[#002b5c]/90 transition shadow-inner nav-search-input"
+                      className="w-full bg-[#002b5c]/80 border border-blue-800/40 rounded-full py-1 pl-7 pr-3 text-xs text-white focus:outline-none focus:border-white focus:bg-[#002b5c]/95 transition shadow-inner nav-search-input"
                     />
+
+                    {/* Live Search Results Dropdown */}
+                    {searchQuery.trim().length > 0 && (
+                      <div className="absolute right-0 top-full mt-2 w-80 lg:w-96 rounded-2xl bg-white border border-slate-200 shadow-2xl z-50 p-2 text-left animate-fadeIn max-h-96 overflow-y-auto text-slate-800">
+                        <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
+                          <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">
+                            Search Results ({filteredSearchResults.length})
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-semibold">
+                            Click to navigate
+                          </span>
+                        </div>
+
+                        {filteredSearchResults.length > 0 ? (
+                          <div className="py-1 space-y-1">
+                            {filteredSearchResults.map((result, idx) => (
+                              <button
+                                key={idx}
+                                type="button"
+                                onClick={() => handleSelectSearchResult(result)}
+                                className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 transition duration-150 flex items-start space-x-3 cursor-pointer group border border-transparent hover:border-slate-200/80"
+                              >
+                                <div className="h-8 w-8 rounded-lg bg-blue-50 border border-blue-100 text-[#004AAD] flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                                  {result.category === 'Products' ? (
+                                    <Box className="h-4 w-4 text-[#004AAD]" />
+                                  ) : result.category === 'Pages' ? (
+                                    <LayoutDashboard className="h-4 w-4 text-[#004AAD]" />
+                                  ) : result.category === 'Career Openings' ? (
+                                    <Briefcase className="h-4 w-4 text-[#004AAD]" />
+                                  ) : (
+                                    <Sparkles className="h-4 w-4 text-[#004AAD]" />
+                                  )}
+                                </div>
+
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between gap-1">
+                                    <span className="text-xs font-bold text-slate-900 group-hover:text-[#004AAD] transition truncate">
+                                      {result.title}
+                                    </span>
+                                    <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 shrink-0">
+                                      {result.category}
+                                    </span>
+                                  </div>
+                                  <p className="text-[10px] text-slate-500 font-medium truncate mt-0.5">
+                                    {result.description}
+                                  </p>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="py-8 px-4 text-center space-y-1">
+                            <p className="text-xs font-bold text-slate-700">No results found for "{searchQuery}"</p>
+                            <p className="text-[10px] text-slate-400 font-medium">Try searching for Products, Careers, About Us, or Admin Login</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <button

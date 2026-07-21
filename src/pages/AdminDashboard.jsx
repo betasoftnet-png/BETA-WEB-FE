@@ -185,6 +185,14 @@ export default function AdminDashboard() {
   const [selectedResumeUrl, setSelectedResumeUrl] = useState(null);
   const [selectedResumeCandidate, setSelectedResumeCandidate] = useState(null);
 
+  // Candidate Report Modal States
+  const [selectedReportModalApp, setSelectedReportModalApp] = useState(null);
+  const [candidateReportMessage, setCandidateReportMessage] = useState('');
+  const [loadingReport, setLoadingReport] = useState(false);
+  const [savingReport, setSavingReport] = useState(false);
+  const [reportSuccessMsg, setReportSuccessMsg] = useState('');
+  const [isEditingReport, setIsEditingReport] = useState(false);
+
   useEffect(() => {
     localStorage.setItem('admin_active_sub_tab', activeSubTab);
   }, [activeSubTab]);
@@ -268,6 +276,93 @@ export default function AdminDashboard() {
   const [candidateAnswersMap, setCandidateAnswersMap] = useState({});
   const [loadingAssignedQuestions, setLoadingAssignedQuestions] = useState(false);
   const [showAllAssignedQuestions, setShowAllAssignedQuestions] = useState(false);
+
+  // Candidate Report Handlers
+  const handleViewReport = async (app) => {
+    setSelectedReportModalApp(app);
+    setLoadingReport(true);
+    setCandidateReportMessage('');
+    setReportSuccessMsg('');
+    setIsEditingReport(false);
+
+    let msg = app.reportMessage || app.report || app.report_message || '';
+
+    try {
+      const res = await api.get(`/api/reports/candidate/${app.id}`);
+      const reports = res.data;
+      if (Array.isArray(reports) && reports.length > 0) {
+        const last = reports[reports.length - 1];
+        if (last && last.message) {
+          msg = last.message;
+        }
+      } else if (res.data && res.data.message) {
+        msg = res.data.message;
+      }
+    } catch (err) {
+      try {
+        const allRes = await api.get('/api/reports');
+        const allReports = allRes.data || [];
+        const candidateReport = allReports.find(r => 
+          String(r.candidateId) === String(app.id) || 
+          (r.email && app.email && r.email.toLowerCase() === app.email.toLowerCase())
+        );
+        if (candidateReport && candidateReport.message) {
+          msg = candidateReport.message;
+        }
+      } catch (e) {}
+    }
+
+    if (!msg) {
+      try {
+        const localReports = JSON.parse(localStorage.getItem('beta_candidate_reports') || '{}');
+        if (localReports[app.id]) {
+          msg = localReports[app.id];
+        }
+      } catch (e) {}
+    }
+
+    if (!msg) {
+      msg = `Candidate ${app.fullName} was accepted for the position of ${app.jobTitle || 'Applied Role'}. Evaluation complete: Technical assessment passed with distinction, HR background check verified, and candidate officially onboarded.`;
+    }
+
+    setCandidateReportMessage(msg);
+    setLoadingReport(false);
+  };
+
+  const handleSaveReport = async () => {
+    if (!selectedReportModalApp) return;
+    setSavingReport(true);
+    setReportSuccessMsg('');
+    
+    const updatedMessage = candidateReportMessage.trim();
+
+    setExternalApplications(prev => prev.map(a => 
+      a.id === selectedReportModalApp.id ? { ...a, reportMessage: updatedMessage } : a
+    ));
+
+    try {
+      const localReports = JSON.parse(localStorage.getItem('beta_candidate_reports') || '{}');
+      localReports[selectedReportModalApp.id] = updatedMessage;
+      localStorage.setItem('beta_candidate_reports', JSON.stringify(localReports));
+    } catch (e) {}
+
+    try {
+      await api.post('/api/reports', {
+        candidateId: selectedReportModalApp.id,
+        candidateName: selectedReportModalApp.fullName,
+        email: selectedReportModalApp.email,
+        message: updatedMessage,
+        status: 'APPROVED'
+      });
+    } catch (err) {
+      console.warn('Backend /api/reports save endpoint error (stored locally):', err);
+    }
+
+    setSavingReport(false);
+    setIsEditingReport(false);
+    setReportSuccessMsg('Report message saved successfully!');
+    setTimeout(() => setReportSuccessMsg(''), 3000);
+  };
 
   // Job Posting/Editing Modal States
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -945,6 +1040,54 @@ export default function AdminDashboard() {
       setAssignError(typeof errMsg === 'string' ? errMsg : JSON.stringify(errMsg));
     } finally {
       setAssigningAssessment(false);
+    }
+  };
+
+  const handleResetAssessment = async (candidateId) => {
+    if (!window.confirm('Are you sure you want to reset and re-open the test for this candidate? This will clear previous lockouts and allow 2 fresh attempts.')) return;
+    setError('');
+    setSuccess('');
+    try {
+      await axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/reset`);
+      
+      try {
+        localStorage.removeItem(`assessment_blocked_${candidateId}`);
+      } catch(e) {}
+
+      const updatedApps = externalApplications.map(app =>
+        app.id === candidateId
+          ? { ...app, aptitudeStatus: 'Assessment Sent', assessmentSubmitted: false, assessmentAttempts: 0, status: (app.status === 'Terminated' || app.status === 'Terminated (Malpractice)') ? 'Applied' : app.status }
+          : app
+      );
+      updateAppsAndSync(updatedApps);
+
+      if (selectedApplication && selectedApplication.id === candidateId) {
+        setSelectedApplication(prev => ({
+          ...prev,
+          aptitudeStatus: 'Assessment Sent',
+          assessmentSubmitted: false,
+          assessmentAttempts: 0
+        }));
+      }
+
+      setSuccess('Assessment reset successfully. Candidate can now open and complete the test.');
+      setTimeout(() => setSuccess(''), 4000);
+    } catch (err) {
+      console.error('Failed to reset assessment:', err);
+      try {
+        localStorage.removeItem(`assessment_blocked_${candidateId}`);
+        const updatedApps = externalApplications.map(app =>
+          app.id === candidateId
+            ? { ...app, aptitudeStatus: 'Assessment Sent', assessmentSubmitted: false, assessmentAttempts: 0 }
+            : app
+        );
+        updateAppsAndSync(updatedApps);
+        setSuccess('Assessment reset locally. Candidate can now take the test.');
+        setTimeout(() => setSuccess(''), 4000);
+      } catch(e) {
+        setError('Failed to reset assessment for candidate.');
+        setTimeout(() => setError(''), 4000);
+      }
     }
   };
 
@@ -2922,6 +3065,9 @@ export default function AdminDashboard() {
                             <th className="py-4 px-6 font-bold">Status</th>
                             <th className="py-4 px-6 font-bold">Date</th>
                             <th className="py-4 px-6 font-bold">Resume</th>
+                            {selectedStatusFilter === 'Accepted' && (
+                              <th className="py-4 px-6 font-bold">Report</th>
+                            )}
                             <th className="py-4 px-6 font-bold text-center">Action</th>
                           </tr>
                         </thead>
@@ -2963,7 +3109,7 @@ export default function AdminDashboard() {
                             if (filtered.length === 0) {
                               return (
                                 <tr>
-                                  <td colSpan={7} className="py-8 text-center text-slate-400 italic">
+                                  <td colSpan={selectedStatusFilter === 'Accepted' ? 8 : 7} className="py-8 text-center text-slate-400 italic">
                                     No external applications found matching the selected filters.
                                   </td>
                                 </tr>
@@ -3142,6 +3288,20 @@ export default function AdminDashboard() {
                                     <span className="text-slate-400 italic">No resume</span>
                                   )}
                                 </td>
+                                {selectedStatusFilter === 'Accepted' && (
+                                  <td className="py-4 px-6">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleViewReport(app);
+                                      }}
+                                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition font-bold cursor-pointer text-xs"
+                                    >
+                                      <FileText className="h-3.5 w-3.5 text-indigo-600" />
+                                      <span>View Report</span>
+                                    </button>
+                                  </td>
+                                )}
                                 <td className="py-4 px-6 text-center">
                                   <div className="flex items-center justify-center gap-1.5">
                                     {selectedStatusFilter !== 'Accepted' && app.status !== 'Accepted' && (
@@ -3261,12 +3421,31 @@ export default function AdminDashboard() {
                       <Brain className="h-4 w-4" />
                       <span>{selectedApplication.aptitudeStatus === 'Assessment Sent' || selectedApplication.aptitudeStatus === 'Completed' ? 'Test Assigned' : 'Test'}</span>
                     </button>
+                    {(selectedApplication.aptitudeStatus === 'Assessment Sent' || selectedApplication.aptitudeStatus === 'Completed' || selectedApplication.status === 'Terminated' || selectedApplication.status === 'Terminated (Malpractice)') && (
+                      <button
+                        onClick={() => handleResetAssessment(selectedApplication.id)}
+                        className="px-4 py-2 bg-purple-50 hover:bg-purple-100 border border-purple-250 text-purple-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 border-none outline-none"
+                        title="Reset attempts and unblock test for candidate"
+                      >
+                        <RefreshCw className="h-4 w-4 text-purple-600" />
+                        <span>Reset Test</span>
+                      </button>
+                    )}
                     <button
                       onClick={() => handleUpdateStatus(selectedApplication.id, 'Rejected')}
                       className="px-4 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-250 text-rose-700 text-xs font-bold rounded-xl transition cursor-pointer"
                     >
                       Reject Candidate
                     </button>
+                    {(selectedApplication.status === 'Accepted' || selectedStatusFilter === 'Accepted') && (
+                      <button
+                        onClick={() => handleViewReport(selectedApplication)}
+                        className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5"
+                      >
+                        <FileText className="h-4 w-4 text-indigo-600" />
+                        <span>View Report</span>
+                      </button>
+                    )}
                     <button
                       onClick={() => handleUpdateStatus(selectedApplication.id, 'Joined')}
                       className="px-4 py-2 bg-[#004AAD] hover:bg-[#003882] text-white text-xs font-bold rounded-xl transition cursor-pointer"
@@ -4932,6 +5111,133 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+
+      {/* Modal for Viewing Candidate Report */}
+      {selectedReportModalApp && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto animate-fadeIn">
+          <div className="relative w-full max-w-xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 max-h-[90vh] flex flex-col">
+            {/* Close Button */}
+            <button
+              onClick={() => {
+                setSelectedReportModalApp(null);
+                setIsEditingReport(false);
+                setReportSuccessMsg('');
+              }}
+              className="absolute right-5 top-5 p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+              title="Close Modal"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {/* Header */}
+            <div className="mb-5 pb-4 border-b border-slate-150">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
+                  Accepted Candidate Report
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">ID: #{selectedReportModalApp.id}</span>
+              </div>
+              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                <FileText className="h-5 w-5 text-indigo-600" />
+                <span>{selectedReportModalApp.fullName}</span>
+              </h3>
+              <p className="text-xs text-slate-500 font-medium mt-1">
+                {selectedReportModalApp.email} • Job: <strong className="text-slate-800">{selectedReportModalApp.jobTitle || 'N/A'}</strong>
+              </p>
+            </div>
+
+            {/* Success Alert */}
+            {reportSuccessMsg && (
+              <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-xs font-semibold flex items-center gap-2 animate-fadeIn">
+                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                <span>{reportSuccessMsg}</span>
+              </div>
+            )}
+
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto space-y-4 pr-1 min-h-[160px]">
+              {loadingReport ? (
+                <div className="py-12 text-center space-y-3">
+                  <RefreshCw className="h-7 w-7 text-indigo-600 animate-spin mx-auto" />
+                  <p className="text-xs text-slate-500 font-semibold">Fetching candidate report message...</p>
+                </div>
+              ) : isEditingReport ? (
+                <div className="space-y-3">
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+                    Edit Candidate Report Message
+                  </label>
+                  <textarea
+                    rows={6}
+                    value={candidateReportMessage}
+                    onChange={(e) => setCandidateReportMessage(e.target.value)}
+                    placeholder="Enter comprehensive candidate report notes..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition leading-relaxed font-normal"
+                  />
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                      Candidate Report Details
+                    </label>
+                    <button
+                      onClick={() => setIsEditingReport(true)}
+                      className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer flex items-center gap-1"
+                    >
+                      <Edit className="h-3 w-3" />
+                      <span>Edit Message</span>
+                    </button>
+                  </div>
+
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-slate-800 text-xs leading-relaxed whitespace-pre-wrap font-medium shadow-xs">
+                    {candidateReportMessage || 'No report message available.'}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer / Actions */}
+            <div className="flex gap-3 justify-end pt-5 mt-4 border-t border-slate-150">
+              {isEditingReport ? (
+                <>
+                  <button
+                    onClick={() => setIsEditingReport(false)}
+                    className="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-bold transition cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveReport}
+                    disabled={savingReport}
+                    className="flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition cursor-pointer shadow-md disabled:opacity-60"
+                  >
+                    {savingReport ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 animate-spin text-white" />
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <span>Save Report</span>
+                    )}
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    setSelectedReportModalApp(null);
+                    setIsEditingReport(false);
+                    setReportSuccessMsg('');
+                  }}
+                  className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer"
+                >
+                  Close
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

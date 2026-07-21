@@ -14,7 +14,7 @@ export default function Assessment() {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const tokenParam = searchParams.get('token');
-  const idParam = searchParams.get('id');
+  const idParam = searchParams.get('id') || searchParams.get('candidateId') || searchParams.get('applicantId') || searchParams.get('appId') || searchParams.get('candidate_id') || searchParams.get('user_id');
   const assessmentIdentifier = tokenParam || idParam;
 
   const [candidate, setCandidate] = useState(null);

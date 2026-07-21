@@ -354,10 +354,10 @@ export default function Home() {
                 variants={itemVariants}
                 className="w-full text-slate-900 leading-tight tracking-tight"
               >
-                <span className="block text-3xl md:text-4xl lg:text-[44px] font-black text-slate-900 tracking-wide whitespace-nowrap ml-15">
+                <span className="block text-3xl md:text-4xl lg:text-[44px] font-black text-slate-900 tracking-wide whitespace-nowrap ml-35">
                   Unified Software for
                 </span>
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block text-4xl md:text-4xl font-extrabold mt-1 ml-25">
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block text-4xl md:text-4xl font-extrabold mt-1 ml-41">
                   Connected Generation
                 </span>
               </motion.h2>
