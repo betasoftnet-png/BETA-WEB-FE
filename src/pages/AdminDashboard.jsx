@@ -6,7 +6,7 @@ import {
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
   Lock, Mail, Calculator, Brain, BookOpen, BarChart3, Bell,
   Upload, Download, ChevronRight, Calendar, Sliders,
-  Handshake, ArrowLeft, Clock, Award, MapPin
+  Handshake, ArrowLeft, Clock, Award, MapPin, HelpCircle
 } from 'lucide-react';
 import axios from 'axios';
 import api from '../api';
@@ -188,6 +188,8 @@ export default function AdminDashboard() {
   const [savingAppJobTitle, setSavingAppJobTitle] = useState(false);
   const [fetchedTask, setFetchedTask] = useState(null);
   const [fetchedTaskStatus, setFetchedTaskStatus] = useState(null);
+  const [candidateAssignedQuestions, setCandidateAssignedQuestions] = useState([]);
+  const [loadingAssignedQuestions, setLoadingAssignedQuestions] = useState(false);
 
   // Job Posting/Editing Modal States
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -451,13 +453,40 @@ export default function AdminDashboard() {
     }
   }, [selectedApplication, selectedStatusFilter]);
 
+  const fetchAssignedQuestionsForCandidate = async (appId) => {
+    const candidateId = appId || selectedApplication?.id;
+    if (!candidateId) {
+      setCandidateAssignedQuestions([]);
+      return;
+    }
+    setLoadingAssignedQuestions(true);
+    try {
+      const res = await axios.get(`${BACKEND_API_BASE}/api/assessment/admin/${candidateId}`);
+      const questionsList = Array.isArray(res.data) ? res.data : (res.data?.questions || []);
+      setCandidateAssignedQuestions(questionsList);
+    } catch (err) {
+      try {
+        const fallbackRes = await axios.get(`${BACKEND_API_BASE}/api/assessment/${candidateId}?increment=false`);
+        const questionsList = Array.isArray(fallbackRes.data) ? fallbackRes.data : (fallbackRes.data?.questions || []);
+        setCandidateAssignedQuestions(questionsList);
+      } catch (fallbackErr) {
+        console.warn('Failed to fetch candidate assigned questions:', fallbackErr);
+        setCandidateAssignedQuestions([]);
+      }
+    } finally {
+      setLoadingAssignedQuestions(false);
+    }
+  };
+
   useEffect(() => {
     const fetchCandidateTask = async () => {
       if (!selectedApplication) {
         setFetchedTask(null);
         setFetchedTaskStatus(null);
+        setCandidateAssignedQuestions([]);
         return;
       }
+      fetchAssignedQuestionsForCandidate(selectedApplication.id);
       try {
         const [taskRes, candidateRes] = await Promise.all([
           axios.get(`${BACKEND_API_BASE}/api/task-assessment/${selectedApplication.id}`).catch(() => null),
@@ -793,6 +822,7 @@ export default function AdminDashboard() {
 
       if (selectedApplication && selectedApplication.id === selectedCandidateForAssessment.id) {
         setSelectedApplication(prev => ({ ...prev, aptitudeStatus: 'Assessment Sent' }));
+        fetchAssignedQuestionsForCandidate(selectedApplication.id);
       }
 
       setSuccess(`Assessment successfully assigned to ${selectedCandidateForAssessment.fullName}.`);
@@ -911,6 +941,7 @@ export default function AdminDashboard() {
         duration: 30
       });
       setSuccess(`Assessment with ${selectedQuestionsForCandidate.length} questions successfully sent to candidate.`);
+      fetchAssignedQuestionsForCandidate(selectedApplication.id);
       setTimeout(() => setSuccess(''), 4000);
     } catch (err) {
       console.error('Failed to send assessment:', err);
@@ -1850,7 +1881,10 @@ export default function AdminDashboard() {
                                           {(statusVal === 'Assessment Sent' || statusVal === 'Scheduled' || statusVal === 'Pending') && (
                                             <button
                                               onClick={() => {
-                                                const url = `https://www.beta-softnet.com/careers/assessment?id=${app.id}`;
+                                                const token = app.assessmentToken || app.assessmenttoken;
+                                                const url = token
+                                                  ? `https://www.beta-softnet.com/careers/assessment?token=${token}`
+                                                  : `https://www.beta-softnet.com/careers/assessment?id=${app.id}`;
                                                 navigator.clipboard.writeText(url);
                                                 alert(`Test Link copied to clipboard:\n${url}`);
                                               }}
@@ -3166,6 +3200,61 @@ export default function AdminDashboard() {
                           >
                             {selectedApplication.githubLink}
                           </a>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Assigned Questions Section Card */}
+                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div className="flex items-center gap-2.5">
+                          <div className="h-8 w-8 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center flex-shrink-0">
+                            <HelpCircle className="h-4 w-4 text-[#004AAD]" />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Assigned Questions</h3>
+                            <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Test questions assigned to this candidate</p>
+                          </div>
+                        </div>
+                        {candidateAssignedQuestions.length > 0 && (
+                          <span className="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-[#004AAD] text-[11px] font-bold">
+                            {candidateAssignedQuestions.length} {candidateAssignedQuestions.length === 1 ? 'Question' : 'Questions'}
+                          </span>
+                        )}
+                      </div>
+
+                      {loadingAssignedQuestions ? (
+                        <div className="py-8 text-center text-xs text-slate-400 font-semibold flex items-center justify-center gap-2">
+                          <div className="w-4 h-4 border-2 border-[#004AAD] border-t-transparent rounded-full animate-spin"></div>
+                          <span>Loading assigned questions...</span>
+                        </div>
+                      ) : candidateAssignedQuestions.length > 0 ? (
+                        <ol className="space-y-3 pl-0 list-none">
+                          {candidateAssignedQuestions.map((q, idx) => (
+                            <li
+                              key={q.id || idx}
+                              className="p-4 bg-slate-50/80 border border-slate-200/80 rounded-2xl space-y-2 text-left transition hover:border-blue-200"
+                            >
+                              <div className="text-xs font-bold text-slate-900 flex items-start gap-2 leading-relaxed">
+                                <span className="shrink-0 text-[#004AAD] font-extrabold">{idx + 1}.</span>
+                                <span>{q.question}</span>
+                              </div>
+
+                              {/* Options list if present */}
+                              {(q.optionA || q.optionB || q.optionC || q.optionD) && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-5 pt-1 text-[11px] text-slate-600 font-medium">
+                                  {q.optionA && <div><strong className="text-slate-400 font-bold mr-1">A.</strong> {q.optionA}</div>}
+                                  {q.optionB && <div><strong className="text-slate-400 font-bold mr-1">B.</strong> {q.optionB}</div>}
+                                  {q.optionC && <div><strong className="text-slate-400 font-bold mr-1">C.</strong> {q.optionC}</div>}
+                                  {q.optionD && <div><strong className="text-slate-400 font-bold mr-1">D.</strong> {q.optionD}</div>}
+                                </div>
+                              )}
+                            </li>
+                          ))}
+                        </ol>
+                      ) : (
+                        <div className="py-6 px-4 bg-slate-50/60 border border-slate-200 border-dashed rounded-2xl text-center">
+                          <p className="text-xs font-semibold text-slate-400">No test questions assigned to this candidate yet.</p>
                         </div>
                       )}
                     </div>

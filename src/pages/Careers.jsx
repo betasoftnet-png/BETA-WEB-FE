@@ -136,7 +136,8 @@ export default function Careers() {
   const { user, redirectToSSO } = useContext(AuthContext);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const candidateId = queryParams.get('id');
+  const candidateToken = queryParams.get('token');
+  const candidateId = candidateToken || queryParams.get('id');
   const isTaskAssessmentRoute = location.pathname.startsWith('/careers/task-assessment') || ((location.pathname === '/careers' || location.pathname === '/careers/') && candidateId);
   const isSavedJobsRoute = location.pathname.startsWith('/careers/saved-jobs');
 

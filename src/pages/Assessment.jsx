@@ -13,9 +13,12 @@ export default function Assessment() {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
-  const candidateId = searchParams.get('id');
+  const tokenParam = searchParams.get('token');
+  const idParam = searchParams.get('id');
+  const assessmentIdentifier = tokenParam || idParam;
 
   const [candidate, setCandidate] = useState(null);
+  const [realCandidateId, setRealCandidateId] = useState(idParam || null);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(1800); // Default 30 minutes in seconds
@@ -34,11 +37,11 @@ export default function Assessment() {
   const terminateAssessmentDueToScreenshot = () => {
     const msg = "Screenshot activity detected. Your assessment has been terminated.";
     setBlockedMessage(msg);
-    localStorage.setItem(`assessment_blocked_${candidateId}`, "screenshot_terminated");
+    localStorage.setItem(`assessment_blocked_${assessmentIdentifier}`, "screenshot_terminated");
 
-    if (candidateId) {
-      axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/increment-attempt`)
-        .then(() => axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/increment-attempt`))
+    if (assessmentIdentifier) {
+      axios.post(`${BACKEND_API_BASE}/api/assessment/${assessmentIdentifier}/increment-attempt`)
+        .then(() => axios.post(`${BACKEND_API_BASE}/api/assessment/${assessmentIdentifier}/increment-attempt`))
         .catch(err => console.error("Error logging screenshot violation:", err));
     }
   };
@@ -52,14 +55,14 @@ export default function Assessment() {
   }, [securityAlert]);
 
   useEffect(() => {
-    if (!candidateId) {
-      setError('Invalid or missing candidate ID URL parameter.');
+    if (!assessmentIdentifier) {
+      setError('Invalid or missing assessment token URL parameter.');
       setLoading(false);
       return;
     }
 
     // Check if previously blocked due to screenshot
-    const isPreviouslyBlocked = localStorage.getItem(`assessment_blocked_${candidateId}`);
+    const isPreviouslyBlocked = localStorage.getItem(`assessment_blocked_${assessmentIdentifier}`);
     if (isPreviouslyBlocked === "screenshot_terminated") {
       setBlockedMessage("Screenshot activity detected. Your assessment has been terminated.");
       setLoading(false);
@@ -70,24 +73,27 @@ export default function Assessment() {
     const storedApps = localStorage.getItem('beta_applications');
     if (storedApps) {
       const apps = JSON.parse(storedApps);
-      const found = apps.find(app => String(app.id) === String(candidateId));
+      const found = apps.find(app => String(app.id) === String(assessmentIdentifier) || String(app.assessmentToken) === String(assessmentIdentifier));
       if (found) {
         setCandidate(found);
+        setRealCandidateId(found.id);
       }
     }
 
     setLoading(true);
     setError('');
-    axios.get(`${BACKEND_API_BASE}/api/assessment/${candidateId}`)
+    axios.get(`${BACKEND_API_BASE}/api/assessment/${assessmentIdentifier}`)
       .then((response) => {
-        // The API now returns a wrapper object: { candidateId, candidateName, jobTitle, questions, attempts, submitted, score }
+        // The API returns a wrapper object: { candidateId, assessmentToken, candidateName, jobTitle, questions, attempts, submitted, score }
         const payload = response.data || {};
+        const numericId = payload.candidateId || realCandidateId || assessmentIdentifier;
+        setRealCandidateId(numericId);
 
         if (payload.submitted) {
           setCandidate({
             fullName: payload.candidateName,
             jobTitle: payload.jobTitle,
-            id: payload.candidateId || candidateId
+            id: numericId
           });
           setScore(payload.score || 0);
           setSubmitted(true);
@@ -100,7 +106,7 @@ export default function Assessment() {
         setCandidate({
           fullName: payload.candidateName,
           jobTitle: payload.jobTitle,
-          id: payload.candidateId || candidateId
+          id: numericId
         });
 
         const currentAttempts = payload.attempts || 0;
@@ -133,17 +139,17 @@ export default function Assessment() {
         } else if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('expired')) {
           setBlockedMessage("Assessment link has expired");
         } else {
-          setError(errorMsg);
+          setError(typeof errorMsg === 'string' ? errorMsg : 'Failed to fetch assigned questions from backend.');
         }
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [candidateId]);
+  }, [assessmentIdentifier]);
 
   // 1. Tab Switch / Focus Loss Detection
   useEffect(() => {
-    if (!candidateId || loading || submitted || error) return;
+    if (!assessmentIdentifier || loading || submitted || error) return;
 
     let lastViolationTime = 0;
 
@@ -155,7 +161,7 @@ export default function Assessment() {
       if (document.visibilityState === 'hidden' || !document.hasFocus()) {
         lastViolationTime = now;
 
-        axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/increment-attempt`)
+        axios.post(`${BACKEND_API_BASE}/api/assessment/${assessmentIdentifier}/increment-attempt`)
           .then((res) => {
             const updatedAttempts = res.data;
             setAttempts(updatedAttempts);
@@ -186,11 +192,11 @@ export default function Assessment() {
       window.removeEventListener('visibilitychange', handleVisibilityOrBlur);
       window.removeEventListener('blur', handleVisibilityOrBlur);
     };
-  }, [candidateId, loading, submitted, error]);
+  }, [assessmentIdentifier, loading, submitted, error]);
 
   // 1.5. Screenshot and Focus Loss Obscuration
   useEffect(() => {
-    if (!candidateId || loading || submitted || error) return;
+    if (!assessmentIdentifier || loading || submitted || error) return;
 
     const handleBlur = () => {
       if (!questionsReadyRef.current) return; // Wait until questions are stable
@@ -200,7 +206,7 @@ export default function Assessment() {
     const handleFocus = () => {
       if (!questionsReadyRef.current) return; // Wait until questions are stable
       // Re-verify that they aren't blocked before showing content
-      axios.get(`${BACKEND_API_BASE}/api/assessment/${candidateId}?increment=false`)
+      axios.get(`${BACKEND_API_BASE}/api/assessment/${assessmentIdentifier}?increment=false`)
         .then(() => {
           setIsScreenObscured(false);
         })
@@ -341,9 +347,10 @@ export default function Assessment() {
 
     try {
       // Send all answers to the backend
+      const numericId = realCandidateId || assessmentIdentifier;
       const answerPromises = Object.entries(answers).map(([qId, selectedVal]) => {
         return axios.post(`${BACKEND_API_BASE}/api/answers`, {
-          candidateId: parseInt(candidateId),
+          candidateId: parseInt(numericId),
           questionId: parseInt(qId),
           selectedAnswer: selectedVal
         });
@@ -352,24 +359,24 @@ export default function Assessment() {
       await Promise.all(answerPromises);
 
       // Finalize the assessment submission in the backend
-      const submitRes = await axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/submit?timeTaken=${encodeURIComponent(timeTakenStr)}`);
+      const submitRes = await axios.post(`${BACKEND_API_BASE}/api/assessment/${assessmentIdentifier}/submit?timeTaken=${encodeURIComponent(timeTakenStr)}`);
       const finalScore = (submitRes.data && submitRes.data.score !== undefined) ? submitRes.data.score : calculatedScore;
 
       setScore(finalScore);
       setSubmitted(true);
 
       // Save submission state to prevent re-entering
-      localStorage.setItem(`assessment_submitted_${candidateId}`, 'true');
+      localStorage.setItem(`assessment_submitted_${assessmentIdentifier}`, 'true');
 
       // Save full typed answers in localStorage
-      localStorage.setItem(`assessment_answers_${candidateId}`, JSON.stringify(answers));
+      localStorage.setItem(`assessment_answers_${assessmentIdentifier}`, JSON.stringify(answers));
 
       // Save submission results to global localStorage
       const storedApps = localStorage.getItem('beta_applications');
-      if (storedApps && candidateId) {
+      if (storedApps && numericId) {
         const apps = JSON.parse(storedApps);
         const updated = apps.map(app => {
-          if (String(app.id) === String(candidateId)) {
+          if (String(app.id) === String(numericId) || String(app.assessmentToken) === String(assessmentIdentifier)) {
             const isTechnical = app.status === 'Round 1 Technical';
             const isBrand = app.status === 'Round 2 Brand Awareness';
             return {
