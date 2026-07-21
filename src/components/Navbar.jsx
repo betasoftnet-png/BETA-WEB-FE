@@ -114,7 +114,7 @@ export default function Navbar() {
             const parsed = JSON.parse(betaUserStr);
             userEmail = (parsed.email || parsed.username || '').toLowerCase().trim();
           }
-        } catch (_) {}
+        } catch (_) { }
       }
 
       // 1. DYNAMIC JOB OPENINGS & HIRINGS (For all candidates/visitors)
@@ -200,7 +200,7 @@ export default function Navbar() {
                   dynamicList.push({
                     id: notifId,
                     title: `🛠️ Task Assessment Assigned`,
-                    message: app.githubLink 
+                    message: app.githubLink
                       ? `Solution repository submitted for ${app.jobTitle}. Solution is under code review.`
                       : `Admin assigned a practical GitHub code review task for ${app.jobTitle}. Check My Applications to submit your repository.`,
                     read: readIds.includes(notifId),
@@ -420,784 +420,784 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#e2f0e8] shadow-sm text-slate-800">
-      <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-14">
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center ml-4 sm:ml-12 space-x-2 flex-1 justify-start">
-            <Link to="/" className="flex items-center select-none">
-              <img src="/logo.png" alt="Beta Logo" className="h-14 w-auto object-contain" />
-            </Link>
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="relative flex items-center justify-between h-14">
+            {/* Logo */}
+            <div className="flex-shrink-0 flex items-center ml-4 sm:ml-12 space-x-2 flex-1 justify-start">
+              <Link to="/" className="flex items-center select-none">
+                <img src="/logo.png" alt="Beta Logo" className="h-14 w-auto object-contain" />
+              </Link>
 
-            <div className="relative animate-fadeIn ml-6" ref={locationRef}>
-              <button
-                onClick={() => setIsLocationOpen(!isLocationOpen)}
-                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 hover:bg-slate-200/60 transition duration-300 text-xs font-bold text-slate-700 cursor-pointer focus:outline-none"
-              >
-                <MapPin className="h-3.5 w-3.5 text-slate-500" />
-                <span className="text-slate-700">{selectedCity}</span>
-                <ChevronDown className={`h-3 w-3 text-slate-400 transform transition-transform ${isLocationOpen ? 'rotate-180' : ''}`} />
-              </button>
+              <div className="relative animate-fadeIn ml-6" ref={locationRef}>
+                <button
+                  onClick={() => setIsLocationOpen(!isLocationOpen)}
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 hover:bg-slate-200/60 transition duration-300 text-xs font-bold text-slate-700 cursor-pointer focus:outline-none"
+                >
+                  <MapPin className="h-3.5 w-3.5 text-slate-500" />
+                  <span className="text-slate-700">{selectedCity}</span>
+                  <ChevronDown className={`h-3 w-3 text-slate-400 transform transition-transform ${isLocationOpen ? 'rotate-180' : ''}`} />
+                </button>
 
-              {isLocationOpen && (
-                <div className="absolute left-0 mt-2 w-44 rounded-2xl bg-white border border-slate-200 shadow-2xl p-2 z-50 text-left text-slate-800">
-                  <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider px-3 py-1.5 border-b border-slate-100">
-                    Select Location
-                  </div>
-                  <div className="py-1 max-h-60 overflow-y-auto">
-                    {/* Current Location Option */}
-                    <button
-                      onClick={handleCurrentLocation}
-                      disabled={isDetecting}
-                      className="w-full text-left px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 hover:bg-slate-50 text-slate-700 hover:text-emerald-750 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isDetecting ? (
-                        <RefreshCw className="h-3.5 w-3.5 text-emerald-600 animate-spin" />
-                      ) : (
-                        <MapPin className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
+                {isLocationOpen && (
+                  <div className="absolute left-0 mt-2 w-44 rounded-2xl bg-white border border-slate-200 shadow-2xl p-2 z-50 text-left text-slate-800">
+                    <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider px-3 py-1.5 border-b border-slate-100">
+                      Select Location
+                    </div>
+                    <div className="py-1 max-h-60 overflow-y-auto">
+                      {/* Current Location Option */}
+                      <button
+                        onClick={handleCurrentLocation}
+                        disabled={isDetecting}
+                        className="w-full text-left px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 hover:bg-slate-50 text-slate-700 hover:text-emerald-750 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isDetecting ? (
+                          <RefreshCw className="h-3.5 w-3.5 text-emerald-600 animate-spin" />
+                        ) : (
+                          <MapPin className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
+                        )}
+                        <span>{isDetecting ? "Detecting Location..." : "Current Location"}</span>
+                      </button>
+                      {detectionError && (
+                        <div className="px-3 py-1 text-[10px] text-rose-500 font-semibold leading-tight animate-fadeIn">
+                          {detectionError}
+                        </div>
                       )}
-                      <span>{isDetecting ? "Detecting Location..." : "Current Location"}</span>
-                    </button>
-                    {detectionError && (
-                      <div className="px-3 py-1 text-[10px] text-rose-500 font-semibold leading-tight animate-fadeIn">
-                        {detectionError}
-                      </div>
-                    )}
-                    <div className="my-1.5 border-t border-slate-100/80" />
+                      <div className="my-1.5 border-t border-slate-100/80" />
 
-                    {/* Cities List */}
-                    {cities.map((city) => (
-                      <button
-                        key={city}
-                        onClick={() => {
-                          setSelectedCity(city);
-                          setIsLocationOpen(false);
-                        }}
-                        className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-between ${selectedCity === city
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : 'hover:bg-slate-50 text-slate-700 hover:text-[#004AAD]'
-                          }`}
-                      >
-                        <span>{city}</span>
-                        {selectedCity === city && <Check className="h-3.5 w-3.5 text-emerald-600" />}
-                      </button>
-                    ))}
+                      {/* Cities List */}
+                      {cities.map((city) => (
+                        <button
+                          key={city}
+                          onClick={() => {
+                            setSelectedCity(city);
+                            setIsLocationOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-between ${selectedCity === city
+                            ? 'bg-emerald-50 text-emerald-700'
+                            : 'hover:bg-slate-50 text-slate-700 hover:text-[#004AAD]'
+                            }`}
+                        >
+                          <span>{city}</span>
+                          {selectedCity === city && <Check className="h-3.5 w-3.5 text-emerald-600" />}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Desktop Nav Links (Absolutely centered) */}
-          <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 z-30">
-            {/* Desktop Nav Links */}
-            <div className="flex items-center space-x-0.5 bg-slate-100/90 p-1 rounded-full border border-slate-200/80 shadow-inner nav-pill-container">
-              {navLinks.map((link) => {
-                if (link.name === 'Products') {
-                  return (
-                    <div
-                      key={link.name}
-                      ref={productsDropdownRef}
-                      className=""
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsDropdownOpen(!isDropdownOpen);
-                        }}
-                        className={`flex items-center space-x-1 focus:outline-none cursor-pointer ${isActive('/products') || isDropdownOpen ? 'active-pill' : ''}`}
+            {/* Desktop Nav Links (Absolutely centered) */}
+            <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 z-30">
+              {/* Desktop Nav Links */}
+              <div className="flex items-center space-x-0.5 bg-slate-100/90 p-1 rounded-full border border-slate-200/80 shadow-inner nav-pill-container">
+                {navLinks.map((link) => {
+                  if (link.name === 'Products') {
+                    return (
+                      <div
+                        key={link.name}
+                        ref={productsDropdownRef}
+                        className=""
                       >
-                        <span>Products</span>
-                        <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsDropdownOpen(!isDropdownOpen);
+                          }}
+                          className={`flex items-center space-x-1 focus:outline-none cursor-pointer ${isActive('/products') || isDropdownOpen ? 'active-pill' : ''}`}
+                        >
+                          <span>Products</span>
+                          <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
 
-                      {isDropdownOpen && (
-                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl pt-4 px-0 pb-0 overflow-hidden z-50 text-left text-slate-800">
-                          <table className="w-full text-left border-collapse">
-                            <thead>
-                              <tr className="bg-white border-b border-slate-200 text-slate-700 text-xs uppercase tracking-wider font-extrabold select-none">
-                                <th
-                                  className="py-2.5 pl-6 pr-2 rounded-l-lg text-slate-700 w-1/5 select-none"
-                                >
-                                  <div className="flex items-center space-x-1">
-                                    <span>Category</span>
-                                  </div>
-                                </th>
-                                <th
-                                  className="py-2.5 px-6 text-slate-700 w-2/5 select-none"
-                                >
-                                  <div className="flex items-center space-x-1">
-                                    <span>Public</span>
-                                  </div>
-                                </th>
-                                <th
-                                  className="py-2.5 pl-4 pr-6 rounded-r-lg text-slate-700 w-2/5 select-none"
-                                >
-                                  <div className="flex items-center space-x-1">
-                                    <span>Business</span>
-                                  </div>
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody className="text-slate-750 text-xs">
-                              {/* Row 1: Base */}
-                              <tr className="bg-transparent hover:bg-slate-50/40 transition-colors">
-                                <td className="py-3 pl-6 pr-2 align-top pt-3 w-1/5 border-r border-slate-200">
-                                  {isDropdownCategoryOpen && (
-                                    <div className="flex flex-col gap-3 pt-1 pb-1">
-                                      {/* Aligns with BNXmail */}
-                                      <div className="h-[60px] flex items-center animate-fadeIn">
-                                        <button
-                                          type="button"
-                                          onClick={() => setActiveCategory('base')}
-                                          className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
-                                          title="Show Base products list"
-                                        >
-                                          {activeCategory === 'base' ? (
-                                            <span className="inline-block px-2.5 py-1 rounded-full bg-white text-[#004AAD] border border-[#004AAD]/30 text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm hover:bg-[#004AAD]/5 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
-                                              Base
-                                            </span>
-                                          ) : (
-                                            <span className="inline-block px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-700 text-xs font-extrabold uppercase tracking-widest select-none text-left hover:bg-slate-200 hover:border-slate-300 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
-                                              Base
-                                            </span>
-                                          )}
-                                        </button>
-                                      </div>
-
-                                      {/* Divider Line below Base */}
-                                      <hr className="border-t border-slate-200 -ml-6 -mr-2 opacity-80" />
-
-                                      {/* Aligns with B2Auth */}
-                                      <div className="h-[60px] flex items-center animate-fadeIn">
-                                        <button
-                                          type="button"
-                                          onClick={() => setActiveCategory('comingsoon')}
-                                          className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
-                                          title="Show Coming Soon products list"
-                                        >
-                                          {activeCategory === 'comingsoon' ? (
-                                            <span
-                                              className="inline-flex items-center justify-center text-[8px] font-extrabold uppercase tracking-wider px-2.5 py-1.5 rounded-md bg-amber-600 text-white border border-amber-700 shadow-sm hover:bg-amber-700 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
-                                              style={{ lineHeight: 1 }}
-                                            >
-                                              Coming Soon
-                                            </span>
-                                          ) : (
-                                            <span className="coming-soon-badge !ml-0 transition-all duration-200 cursor-pointer hover:scale-105 hover:shadow-md hover:!bg-amber-500/20 hover:!text-amber-800">
-                                              Coming Soon
-                                            </span>
-                                          )}
-                                        </button>
-                                      </div>
-                                      {/* Divider Line below Coming Soon */}
-                                      <hr className="border-t border-slate-200 -ml-6 -mr-2 opacity-80" />
+                        {isDropdownOpen && (
+                          <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-[640px] rounded-2xl bg-white border border-slate-200 shadow-2xl pt-4 px-0 pb-0 overflow-hidden z-50 text-left text-slate-800">
+                            <table className="w-full text-left border-collapse">
+                              <thead>
+                                <tr className="bg-white border-b border-slate-200 text-slate-700 text-xs uppercase tracking-wider font-extrabold select-none">
+                                  <th
+                                    className="py-2.5 pl-6 pr-2 rounded-l-lg text-slate-700 w-1/5 select-none"
+                                  >
+                                    <div className="flex items-center space-x-1">
+                                      <span>Category</span>
                                     </div>
-                                  )}
-                                </td>
-                                <td
-                                  colSpan={activeCategory === 'comingsoon' ? 2 : 1}
-                                  className={`py-3 px-6 align-top ${activeCategory === 'comingsoon' ? 'w-4/5' : 'w-2/5 border-r border-slate-200'}`}
-                                >
-                                  {/* Public Products */}
-                                  {isDropdownPublicOpen && (
-                                    <div className="flex flex-col gap-3 pt-1 pb-1">
-                                      {/* Shown in Base view */}
-                                      {activeCategory === 'base' && (
-                                        <>
-                                          <a
-                                            href="https://www.bnxmail.com/login"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                          >
-                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
-                                            </div>
-                                            <div>
-                                              <p className="font-semibold text-slate-800 text-xs">BNXmail</p>
-                                              <p className="text-[10px] text-slate-450 font-medium">
-                                                Real time mail,always in sync.
-                                              </p>
-                                            </div>
-                                          </a>
-
-                                          <a
-                                            href="https://www.b2auth.com/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                          >
-                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                              <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
-                                            </div>
-                                            <div>
-                                              <p className="font-semibold text-slate-800 text-xs">B2Auth</p>
-                                              <p className="text-[10px] text-slate-450 font-medium">MFA & SSO Gateway</p>
-                                            </div>
-                                          </a>
-
-                                          <a
-                                            href="https://bit-tool.beta-softnet.com/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                          >
-                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                              <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
-                                            </div>
-                                            <div>
-                                              <p className="font-semibold text-slate-800 text-xs text-left">Bit-Tool</p>
-                                              <p className="text-[10px] text-slate-450 font-medium text-left">User's daily utility assistant</p>
-                                            </div>
-                                          </a>
-
-                                          <a
-                                            href="https://cliks.beta-softnet.com/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
-                                          >
-                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                              <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
-                                            </div>
-                                            <div>
-                                              <p className="font-semibold text-slate-800 text-xs">Cliks</p>
-                                              <p className="text-[10px] text-slate-450 font-medium">Make your Money</p>
-                                            </div>
-                                          </a>
-                                        </>
-                                      )}
-
-                                      {/* Coming Soon card (Only shown in Coming Soon view) */}
-                                      {activeCategory === 'comingsoon' && (
-                                        <motion.div
-                                          initial={{ opacity: 0, scale: 0.95 }}
-                                          animate={{ opacity: 1, scale: 1 }}
-                                          exit={{ opacity: 0, scale: 0.95 }}
-                                          className="h-[180px] rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center p-4 text-center overflow-hidden relative select-none"
-                                        >
-                                          {/* Glowing background */}
-                                          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-violet-500/5 to-emerald-500/5 animate-pulse pointer-events-none" />
-                                          
-                                          {/* Text container */}
-                                          <motion.div
-                                            animate={{ 
-                                              scale: [1, 1.05, 1],
-                                            }}
-                                            transition={{ 
-                                              repeat: Infinity, 
-                                              duration: 2, 
-                                              ease: "easeInOut" 
-                                            }}
-                                            className="relative z-10 space-y-2 flex flex-col items-center justify-center"
-                                          >
-                                            <Sparkles className="h-6 w-6 text-amber-500 animate-pulse mb-1" />
-                                            <h2 className="text-xl font-extrabold tracking-widest bg-gradient-to-r from-amber-500 via-violet-600 to-emerald-500 bg-clip-text text-transparent uppercase animate-pulse">
-                                              Coming Soon
-                                            </h2>
-                                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
-                                              Beta Labs Release
-                                            </p>
-                                          </motion.div>
-                                          
-                                          {/* Bottom Shimmer line */}
-                                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 via-indigo-500 to-emerald-400 opacity-60" />
-                                        </motion.div>
-                                      )}
+                                  </th>
+                                  <th
+                                    className="py-2.5 px-6 text-slate-700 w-2/5 select-none"
+                                  >
+                                    <div className="flex items-center space-x-1">
+                                      <span>Public</span>
                                     </div>
-                                  )}
-                                </td>
-                                {activeCategory === 'base' && (
-                                  <td className="py-3 pl-4 pr-6 align-top w-2/5">
-                                    {/* Business Products */}
-                                    {isDropdownBusinessOpen && (
-                                      <div className="flex flex-col gap-3 pt-1 pb-1 animate-fadeIn">
-                                        <a
-                                          href="https://www.cliksbusiness.com/"
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block"
-                                        >
-                                          <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
-                                            <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
-                                          </div>
-                                          <div>
-                                            <p className="font-semibold text-slate-800 text-xs">CliksBusiness</p>
-                                            <p className="text-[10px] text-slate-450 font-medium">Work together, faster</p>
-                                          </div>
-                                        </a>
+                                  </th>
+                                  <th
+                                    className="py-2.5 pl-4 pr-6 rounded-r-lg text-slate-700 w-2/5 select-none"
+                                  >
+                                    <div className="flex items-center space-x-1">
+                                      <span>Business</span>
+                                    </div>
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className="text-slate-750 text-xs">
+                                {/* Row 1: Base */}
+                                <tr className="bg-transparent hover:bg-slate-50/40 transition-colors">
+                                  <td className="py-3 pl-6 pr-2 align-top pt-3 w-1/5 border-r border-slate-200">
+                                    {isDropdownCategoryOpen && (
+                                      <div className="flex flex-col gap-3 pt-1 pb-1">
+                                        {/* Aligns with BNXmail */}
+                                        <div className="h-[60px] flex items-center animate-fadeIn">
+                                          <button
+                                            type="button"
+                                            onClick={() => setActiveCategory('base')}
+                                            className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
+                                            title="Show Base products list"
+                                          >
+                                            {activeCategory === 'base' ? (
+                                              <span className="inline-block px-2.5 py-1 rounded-full bg-white text-[#004AAD] border border-[#004AAD]/30 text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm hover:bg-[#004AAD]/5 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
+                                                Base
+                                              </span>
+                                            ) : (
+                                              <span className="inline-block px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-700 text-xs font-extrabold uppercase tracking-widest select-none text-left hover:bg-slate-200 hover:border-slate-300 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
+                                                Base
+                                              </span>
+                                            )}
+                                          </button>
+                                        </div>
+
+                                        {/* Divider Line below Base */}
+                                        <hr className="border-t border-slate-200 -ml-6 -mr-2 opacity-80" />
+
+                                        {/* Aligns with B2Auth */}
+                                        <div className="h-[60px] flex items-center animate-fadeIn">
+                                          <button
+                                            type="button"
+                                            onClick={() => setActiveCategory('comingsoon')}
+                                            className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
+                                            title="Show Coming Soon products list"
+                                          >
+                                            {activeCategory === 'comingsoon' ? (
+                                              <span
+                                                className="inline-flex items-center justify-center text-[8px] font-extrabold uppercase tracking-wider px-2.5 py-1.5 rounded-md bg-amber-600 text-white border border-amber-700 shadow-sm hover:bg-amber-700 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+                                                style={{ lineHeight: 1 }}
+                                              >
+                                                Coming Soon
+                                              </span>
+                                            ) : (
+                                              <span className="coming-soon-badge !ml-0 transition-all duration-200 cursor-pointer hover:scale-105 hover:shadow-md hover:!bg-amber-500/20 hover:!text-amber-800">
+                                                Coming Soon
+                                              </span>
+                                            )}
+                                          </button>
+                                        </div>
+                                        {/* Divider Line below Coming Soon */}
+                                        <hr className="border-t border-slate-200 -ml-6 -mr-2 opacity-80" />
                                       </div>
                                     )}
                                   </td>
+                                  <td
+                                    colSpan={activeCategory === 'comingsoon' ? 2 : 1}
+                                    className={`py-3 px-6 align-top ${activeCategory === 'comingsoon' ? 'w-4/5' : 'w-2/5 border-r border-slate-200'}`}
+                                  >
+                                    {/* Public Products */}
+                                    {isDropdownPublicOpen && (
+                                      <div className="flex flex-col gap-3 pt-1 pb-1">
+                                        {/* Shown in Base view */}
+                                        {activeCategory === 'base' && (
+                                          <>
+                                            <a
+                                              href="https://www.bnxmail.com/login"
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                            >
+                                              <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                                <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-full w-full object-contain" />
+                                              </div>
+                                              <div>
+                                                <p className="font-semibold text-slate-800 text-xs">BNXmail</p>
+                                                <p className="text-[10px] text-slate-450 font-medium">
+                                                  Real time mail, always in sync.
+                                                </p>
+                                              </div>
+                                            </a>
+
+                                            <a
+                                              href="https://www.b2auth.com/"
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                            >
+                                              <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                                <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-full w-full object-contain" />
+                                              </div>
+                                              <div>
+                                                <p className="font-semibold text-slate-800 text-xs">B2Auth</p>
+                                                <p className="text-[10px] text-slate-450 font-medium">MFA & SSO Gateway</p>
+                                              </div>
+                                            </a>
+
+                                            <a
+                                              href="https://bit-tool.beta-softnet.com/"
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                            >
+                                              <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                                <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-full w-full object-contain" />
+                                              </div>
+                                              <div>
+                                                <p className="font-semibold text-slate-800 text-xs text-left">Bit-Tool</p>
+                                                <p className="text-[10px] text-slate-450 font-medium text-left">Daily Utility Assistant</p>
+                                              </div>
+                                            </a>
+
+                                            <a
+                                              href="https://cliks.beta-softnet.com/"
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
+                                            >
+                                              <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                                <img src="/cliks_logo.png" alt="Cliks" className="h-full w-full object-contain" />
+                                              </div>
+                                              <div>
+                                                <p className="font-semibold text-slate-800 text-xs">Cliks</p>
+                                                <p className="text-[10px] text-slate-450 font-medium">Manage your Money</p>
+                                              </div>
+                                            </a>
+                                          </>
+                                        )}
+
+                                        {/* Coming Soon card (Only shown in Coming Soon view) */}
+                                        {activeCategory === 'comingsoon' && (
+                                          <motion.div
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            className="h-[180px] rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center p-4 text-center overflow-hidden relative select-none"
+                                          >
+                                            {/* Glowing background */}
+                                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-violet-500/5 to-emerald-500/5 animate-pulse pointer-events-none" />
+
+                                            {/* Text container */}
+                                            <motion.div
+                                              animate={{
+                                                scale: [1, 1.05, 1],
+                                              }}
+                                              transition={{
+                                                repeat: Infinity,
+                                                duration: 2,
+                                                ease: "easeInOut"
+                                              }}
+                                              className="relative z-10 space-y-2 flex flex-col items-center justify-center"
+                                            >
+                                              <Sparkles className="h-6 w-6 text-amber-500 animate-pulse mb-1" />
+                                              <h2 className="text-xl font-extrabold tracking-widest bg-gradient-to-r from-amber-500 via-violet-600 to-emerald-500 bg-clip-text text-transparent uppercase animate-pulse">
+                                                Coming Soon
+                                              </h2>
+                                              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
+                                                Beta Labs Release
+                                              </p>
+                                            </motion.div>
+
+                                            {/* Bottom Shimmer line */}
+                                            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 via-indigo-500 to-emerald-400 opacity-60" />
+                                          </motion.div>
+                                        )}
+                                      </div>
+                                    )}
+                                  </td>
+                                  {activeCategory === 'base' && (
+                                    <td className="py-3 pl-4 pr-6 align-top w-2/5">
+                                      {/* Business Products */}
+                                      {isDropdownBusinessOpen && (
+                                        <div className="flex flex-col gap-3 pt-1 pb-1 animate-fadeIn">
+                                          <a
+                                            href="https://www.cliksbusiness.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block"
+                                          >
+                                            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center">
+                                              <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-full w-full object-contain" />
+                                            </div>
+                                            <div>
+                                              <p className="font-semibold text-slate-800 text-xs">CliksBusiness</p>
+                                              <p className="text-[10px] text-slate-450 font-medium">One Stop Financial Solution</p>
+                                            </div>
+                                          </a>
+                                        </div>
+                                      )}
+                                    </td>
+                                  )}
+                                </tr>
+                                {/* Row 2: Beta Ecosystem footer bar */}
+                                <tr className="border-t-0 border-none">
+                                  <td className="bg-slate-50 border-r border-slate-200 border-t-0 rounded-bl-xl pl-6 pr-2"></td>
+                                  <td colSpan={2} className="pt-4.5 pb-2.5 pr-0 text-center select-none bg-slate-50 border-t-0 rounded-br-xl">
+                                    <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest">
+                                      Beta Ecosystem
+                                    </span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+
+                  return (
+                    <Link
+                      key={link.name}
+                      to={link.path}
+                      className={isActive(link.path) ? 'active-pill' : ''}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Desktop Search, Profile & Auth CTA */}
+            <div className="hidden md:flex items-center justify-end space-x-4 flex-1 z-20 pointer-events-none">
+
+              {/* Header Search Bar */}
+              <div ref={searchContainerRef} className="mr-2 flex items-center justify-center pointer-events-auto">
+                {isSearchExpanded ? (
+                  <div className="relative w-28 lg:w-36 xl:w-40 nav-search-container animate-fadeIn">
+                    <button
+                      type="button"
+                      onClick={() => setIsSearchExpanded(false)}
+                      className="absolute left-2.5 top-1/2 -translate-y-1/2 p-0.5 hover:bg-slate-200/30 rounded-full transition cursor-pointer z-10 flex items-center justify-center border-none bg-transparent"
+                      title="Close Search"
+                    >
+                      <Search className="h-3.5 w-3.5 text-blue-305 nav-search-icon" />
+                    </button>
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={handleSearch}
+                      placeholder="Search..."
+                      className="w-full bg-[#002b5c]/60 border border-blue-800/40 rounded-full py-1 pl-8 pr-3 text-xs text-white focus:outline-none focus:border-white focus:bg-[#002b5c]/90 transition shadow-inner nav-search-input"
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchExpanded(true)}
+                    className="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center"
+                    title="Search"
+                  >
+                    <Search className="h-5 w-5 text-slate-650 hover:text-[#004AAD]" />
+                  </button>
+                )}
+              </div>
+
+              {/* Header Notification Icon Bell Dropdown */}
+              <div className="relative pointer-events-auto" ref={notificationsRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                  className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent"
+                  title="Notifications"
+                >
+                  <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
+                  {/* Notification Count Badge */}
+                  {notifications.filter(n => !n.read).length > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
+                      {notifications.filter(n => !n.read).length}
+                    </span>
+                  )}
+                </button>
+
+                {/* Notifications Dropdown Panel */}
+                <AnimatePresence>
+                  {isNotificationsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden text-left"
+                    >
+                      <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                        <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Notifications</span>
+                        {notifications.filter(n => !n.read).length > 0 && (
+                          <button
+                            onClick={handleMarkAllAsRead}
+                            className="text-[10px] text-[#004AAD] font-extrabold hover:underline border-none bg-transparent cursor-pointer p-0"
+                          >
+                            Mark all read
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+                        {notifications.length > 0 ? (
+                          notifications.map(notif => (
+                            <div
+                              key={notif.id}
+                              onClick={() => {
+                                if (!notif.read) {
+                                  handleMarkAsRead(notif.id);
+                                }
+                                setIsNotificationsOpen(false);
+                                navigate('/careers');
+                              }}
+                              className={`p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/30' : ''}`}
+                            >
+                              <div className="mt-0.5 shrink-0">
+                                {notif.category === 'job_opening' ? (
+                                  <Briefcase className="h-4 w-4 text-purple-600" />
+                                ) : notif.category === 'offer' ? (
+                                  <Sparkles className="h-4 w-4 text-amber-500" />
+                                ) : notif.category === 'tech_interview' || notif.category === 'hr_interview' ? (
+                                  <Clock className="h-4 w-4 text-emerald-600" />
+                                ) : notif.category === 'task_assessment' ? (
+                                  <CheckCircle2 className="h-4 w-4 text-indigo-600" />
+                                ) : notif.category === 'assessment' ? (
+                                  <AlertCircle className="h-4 w-4 text-pink-600" />
+                                ) : (
+                                  <Bell className="h-4 w-4 text-[#004AAD]" />
                                 )}
-                              </tr>
-                              {/* Row 2: Beta Ecosystem footer bar */}
-                              <tr className="border-t-0 border-none">
-                                <td className="bg-slate-50 border-r border-slate-200 border-t-0 rounded-bl-xl pl-6 pr-2"></td>
-                                <td colSpan={2} className="pt-4.5 pb-2.5 pr-0 text-center select-none bg-slate-50 border-t-0 rounded-br-xl">
-                                  <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest">
-                                    Beta Ecosystem
-                                  </span>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                              </div>
+                              <div className="space-y-0.5 flex-grow min-w-0 text-left">
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className={`text-xs font-bold truncate ${!notif.read ? 'text-slate-900 font-extrabold' : 'text-slate-700'}`}>{notif.title}</p>
+                                  <span className="text-[9px] text-slate-400 font-bold flex-shrink-0">{notif.time}</span>
+                                </div>
+                                <p className="text-[11px] text-slate-600 leading-snug font-medium line-clamp-2">{notif.message}</p>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="py-8 text-center text-slate-400 italic text-xs">
+                            No new notifications.
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {user ? (
+                <div className="relative pointer-events-auto" ref={profileRef}>
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100/95 border border-slate-200/80 hover:bg-slate-200/60 transition duration-300 cursor-pointer text-slate-700 focus:outline-none"
+                  >
+                    <div className="h-6 w-6 rounded-full bg-[#004AAD] flex items-center justify-center text-white font-semibold text-xs select-none">
+                      <User className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="text-sm font-semibold tracking-wide pr-1 text-slate-700">
+                      {(() => {
+                        const name = user.fullName || user.firstName || (user.username ? user.username.split('@')[0] : 'User');
+                        return name.length > 5 ? name.substring(0, 5) + '...' : name;
+                      })()}
+                    </span>
+                    <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-2xl p-5 z-50 text-left text-slate-800">
+                      <div className="space-y-1">
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Logged In As</p>
+                        <p className="text-sm font-extrabold text-slate-900 truncate">{user.fullName || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.username)}</p>
+                        <p className="text-xs text-slate-500 font-medium truncate">{user.email || user.username}</p>
+                      </div>
+
+                      <div className="border-b border-slate-100 my-4" />
+
+                      <div className="space-y-4">
+                        <Link
+                          to="/adminofcarrer"
+                          onClick={() => setIsProfileOpen(false)}
+                          className="block text-sm font-semibold text-slate-700 hover:text-[#004AAD] transition"
+                        >
+                          Account Profile
+                        </Link>
+
+                        <div className="flex justify-between items-center text-sm font-semibold">
+                          <span className="text-slate-700">Language</span>
+                          <span className="text-slate-400 font-medium">English</span>
+                        </div>
+
+                        <div className="flex justify-between items-center text-sm font-semibold">
+                          <span className="text-slate-700">Currency</span>
+                          <span className="text-slate-400 font-medium">INR (₹)</span>
+                        </div>
+
+                        <div className="flex justify-between items-center text-sm font-semibold">
+                          <span className="text-slate-700">Country</span>
+                          <span className="text-slate-400 font-medium">India</span>
+                        </div>
+                      </div>
+
+                      <div className="border-b border-slate-100 my-4" />
+
+                      <button
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                          handleLogout();
+                        }}
+                        className="w-full text-left text-sm font-bold text-red-500 hover:text-red-600 transition border-none bg-transparent cursor-pointer p-0"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2 flex-shrink-0 pointer-events-auto">
+                  <button
+                    onClick={() => redirectToSSO(location.pathname)}
+                    className="flex items-center space-x-1.5 px-4 py-1.5 rounded-full bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 text-xs font-bold cursor-pointer header-signin-btn whitespace-nowrap flex-shrink-0 shadow-md shadow-blue-950/20"
+                  >
+                    <LogIn className="h-3.5 w-3.5 text-white flex-shrink-0" />
+                    <span className="text-white whitespace-nowrap">Sign In</span>
+                  </button>
+                </div>
+              )}
+
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="-mr-2 flex md:hidden">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-[#004AAD] hover:bg-slate-100 focus:outline-none"
+              >
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Drawer */}
+        {isOpen && (
+          <div className="md:hidden bg-white border-b border-[#e2f0e8] shadow-lg">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              {/* Mobile Location Selector */}
+              <div className="px-3 py-1.5 border-b border-slate-100 mb-2">
+                <div className="relative">
+                  <button
+                    onClick={() => setIsMobileLocationOpen(!isMobileLocationOpen)}
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-md bg-slate-50 border border-slate-150 text-sm font-medium text-slate-700 focus:outline-none cursor-pointer"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <MapPin className="h-4 w-4 text-slate-500" />
+                      <span className="font-bold">{selectedCity}</span>
+                    </div>
+                    <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isMobileLocationOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isMobileLocationOpen && (
+                    <div className="mt-1 w-full bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 p-1 text-left">
+                      {/* Current Location Option */}
+                      <button
+                        onClick={handleCurrentLocation}
+                        disabled={isDetecting}
+                        className="w-full text-left px-3 py-2 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition hover:bg-slate-50 text-slate-700 hover:text-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isDetecting ? (
+                          <RefreshCw className="h-3.5 w-3.5 text-emerald-600 animate-spin" />
+                        ) : (
+                          <MapPin className="h-3.5 w-3.5 text-emerald-600" />
+                        )}
+                        <span>{isDetecting ? "Detecting..." : "Current Location"}</span>
+                      </button>
+                      {detectionError && (
+                        <div className="px-3 py-1 text-[10px] text-rose-500 font-semibold leading-tight">
+                          {detectionError}
+                        </div>
+                      )}
+                      <div className="my-1 border-t border-slate-100" />
+
+                      {/* Cities List */}
+                      {cities.map((city) => (
+                        <button
+                          key={city}
+                          onClick={() => {
+                            setSelectedCity(city);
+                            setIsMobileLocationOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between transition cursor-pointer ${selectedCity === city
+                            ? 'bg-emerald-50 text-emerald-700'
+                            : 'hover:bg-slate-50 text-slate-700'
+                            }`}
+                        >
+                          <span>{city}</span>
+                          {selectedCity === city && <Check className="h-3.5 w-3.5 text-emerald-600" />}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {navLinks.map((link) => {
+                if (link.name === 'Products') {
+                  return (
+                    <div key={link.name} className="space-y-1">
+                      <button
+                        onClick={() => {
+                          setIsMobileProductsOpen(!isMobileProductsOpen);
+                        }}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-[#004AAD] focus:outline-none cursor-pointer"
+                      >
+                        <span>Products</span>
+                        <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isMobileProductsOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                      {isMobileProductsOpen && (
+                        <div className="pl-4 pr-3 py-2 space-y-2 bg-slate-50 border border-slate-150/80 rounded-lg text-left">                        {/* Mobile Category */}
+                          <div className="space-y-2 px-3 py-1 text-left">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Category</p>
+                            <div className="py-1 pl-1">
+                              <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-extrabold uppercase tracking-widest select-none">
+                                Base
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Mobile Public */}
+                          <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Public</p>
+                            <div className="space-y-2.5 pl-1">
+                              <a
+                                href="https://www.bnxmail.com/login"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                              >
+                                <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-4 w-4 object-contain" />
+                                <span className="font-semibold">BNX Mail</span>
+                              </a>
+                              <a
+                                href="https://www.b2auth.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                              >
+                                <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
+                                <span className="font-semibold flex items-center">
+                                  B2Auth Security
+                                  <span className="coming-soon-badge">Coming Soon</span>
+                                </span>
+                              </a>
+
+                              <a
+                                href="https://cliks.beta-softnet.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                              >
+                                <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
+                                <span className="font-semibold flex items-center">
+                                  Cliks
+                                  <span className="coming-soon-badge">Coming Soon</span>
+                                </span>
+                              </a>
+                            </div>
+                            <div className="border-t border-slate-100 pt-2 flex justify-center">
+                              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider select-none">
+                                Beta ecosystem
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Mobile Business */}
+                          <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Business</p>
+                            <div className="space-y-2.5 pl-1">
+                              <a
+                                href="https://www.cliksbusiness.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                              >
+                                <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-4 w-4 object-contain" />
+                                <span className="font-semibold">Cliks Business</span>
+                              </a>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
                   );
                 }
 
-
                 return (
                   <Link
                     key={link.name}
                     to={link.path}
-                    className={isActive(link.path) ? 'active-pill' : ''}
+                    onClick={() => setIsOpen(false)}
+                    className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(link.path)
+                      ? 'bg-blue-50 text-[#004AAD] font-semibold'
+                      : 'text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]'
+                      }`}
                   >
                     {link.name}
                   </Link>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Desktop Search, Profile & Auth CTA */}
-          <div className="hidden md:flex items-center justify-end space-x-4 flex-1 z-20 pointer-events-none">
-
-            {/* Header Search Bar */}
-            <div ref={searchContainerRef} className="mr-2 flex items-center justify-center pointer-events-auto">
-              {isSearchExpanded ? (
-                <div className="relative w-28 lg:w-36 xl:w-40 nav-search-container animate-fadeIn">
-                  <button
-                    type="button"
-                    onClick={() => setIsSearchExpanded(false)}
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 p-0.5 hover:bg-slate-200/30 rounded-full transition cursor-pointer z-10 flex items-center justify-center border-none bg-transparent"
-                    title="Close Search"
-                  >
-                    <Search className="h-3.5 w-3.5 text-blue-305 nav-search-icon" />
-                  </button>
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={handleSearch}
-                    placeholder="Search..."
-                    className="w-full bg-[#002b5c]/60 border border-blue-800/40 rounded-full py-1 pl-8 pr-3 text-xs text-white focus:outline-none focus:border-white focus:bg-[#002b5c]/90 transition shadow-inner nav-search-input"
-                  />
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsSearchExpanded(true)}
-                  className="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center"
-                  title="Search"
-                >
-                  <Search className="h-5 w-5 text-slate-650 hover:text-[#004AAD]" />
-                </button>
-              )}
-            </div>
-
-            {/* Header Notification Icon Bell Dropdown */}
-            <div className="relative pointer-events-auto" ref={notificationsRef}>
-              <button
-                type="button"
-                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent"
-                title="Notifications"
-              >
-                <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
-                {/* Notification Count Badge */}
-                {notifications.filter(n => !n.read).length > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
-                    {notifications.filter(n => !n.read).length}
-                  </span>
-                )}
-              </button>
-
-              {/* Notifications Dropdown Panel */}
-              <AnimatePresence>
-                {isNotificationsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden text-left"
-                  >
-                    <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                      <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Notifications</span>
-                      {notifications.filter(n => !n.read).length > 0 && (
-                        <button
-                          onClick={handleMarkAllAsRead}
-                          className="text-[10px] text-[#004AAD] font-extrabold hover:underline border-none bg-transparent cursor-pointer p-0"
-                        >
-                          Mark all read
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
-                      {notifications.length > 0 ? (
-                        notifications.map(notif => (
-                          <div
-                            key={notif.id}
-                            onClick={() => {
-                              if (!notif.read) {
-                                handleMarkAsRead(notif.id);
-                              }
-                              setIsNotificationsOpen(false);
-                              navigate('/careers');
-                            }}
-                            className={`p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/30' : ''}`}
-                          >
-                            <div className="mt-0.5 shrink-0">
-                              {notif.category === 'job_opening' ? (
-                                <Briefcase className="h-4 w-4 text-purple-600" />
-                              ) : notif.category === 'offer' ? (
-                                <Sparkles className="h-4 w-4 text-amber-500" />
-                              ) : notif.category === 'tech_interview' || notif.category === 'hr_interview' ? (
-                                <Clock className="h-4 w-4 text-emerald-600" />
-                              ) : notif.category === 'task_assessment' ? (
-                                <CheckCircle2 className="h-4 w-4 text-indigo-600" />
-                              ) : notif.category === 'assessment' ? (
-                                <AlertCircle className="h-4 w-4 text-pink-600" />
-                              ) : (
-                                <Bell className="h-4 w-4 text-[#004AAD]" />
-                              )}
-                            </div>
-                            <div className="space-y-0.5 flex-grow min-w-0 text-left">
-                              <div className="flex items-center justify-between gap-2">
-                                <p className={`text-xs font-bold truncate ${!notif.read ? 'text-slate-900 font-extrabold' : 'text-slate-700'}`}>{notif.title}</p>
-                                <span className="text-[9px] text-slate-400 font-bold flex-shrink-0">{notif.time}</span>
-                              </div>
-                              <p className="text-[11px] text-slate-600 leading-snug font-medium line-clamp-2">{notif.message}</p>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="py-8 text-center text-slate-400 italic text-xs">
-                          No new notifications.
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {user ? (
-              <div className="relative pointer-events-auto" ref={profileRef}>
-                <button
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100/95 border border-slate-200/80 hover:bg-slate-200/60 transition duration-300 cursor-pointer text-slate-700 focus:outline-none"
-                >
-                  <div className="h-6 w-6 rounded-full bg-[#004AAD] flex items-center justify-center text-white font-semibold text-xs select-none">
-                    <User className="h-3.5 w-3.5" />
-                  </div>
-                  <span className="text-sm font-semibold tracking-wide pr-1 text-slate-700">
-                    {(() => {
-                      const name = user.fullName || user.firstName || (user.username ? user.username.split('@')[0] : 'User');
-                      return name.length > 5 ? name.substring(0, 5) + '...' : name;
-                    })()}
-                  </span>
-                  <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
-                </button>
-
-                {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-2xl p-5 z-50 text-left text-slate-800">
-                    <div className="space-y-1">
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Logged In As</p>
-                      <p className="text-sm font-extrabold text-slate-900 truncate">{user.fullName || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.username)}</p>
-                      <p className="text-xs text-slate-500 font-medium truncate">{user.email || user.username}</p>
-                    </div>
-
-                    <div className="border-b border-slate-100 my-4" />
-
-                    <div className="space-y-4">
-                      <Link
-                        to="/adminofcarrer"
-                        onClick={() => setIsProfileOpen(false)}
-                        className="block text-sm font-semibold text-slate-700 hover:text-[#004AAD] transition"
-                      >
-                        Account Profile
-                      </Link>
-
-                      <div className="flex justify-between items-center text-sm font-semibold">
-                        <span className="text-slate-700">Language</span>
-                        <span className="text-slate-400 font-medium">English</span>
+              <div className="border-t border-slate-100 my-2 pt-2">
+                {user ? (
+                  <div className="space-y-2 px-3">
+                    <div className="flex items-center space-x-3 py-2 border-b border-slate-100 mb-2">
+                      <div className="h-8 w-8 rounded-full bg-[#004AAD] flex items-center justify-center text-white font-semibold select-none">
+                        <User className="h-4 w-4" />
                       </div>
-
-                      <div className="flex justify-between items-center text-sm font-semibold">
-                        <span className="text-slate-700">Currency</span>
-                        <span className="text-slate-400 font-medium">INR (₹)</span>
-                      </div>
-
-                      <div className="flex justify-between items-center text-sm font-semibold">
-                        <span className="text-slate-700">Country</span>
-                        <span className="text-slate-400 font-medium">India</span>
+                      <div>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Account</p>
+                        <p className="text-sm font-bold text-slate-800 truncate">{user.fullName || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.username)}</p>
+                        {user.email && <p className="text-xs text-slate-500 truncate">{user.email}</p>}
                       </div>
                     </div>
-
-                    <div className="border-b border-slate-100 my-4" />
-
+                    <Link
+                      to="/adminofcarrer"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]"
+                    >
+                      <LayoutDashboard className="h-5 w-5 text-slate-400" />
+                      <span>Admin Dashboard</span>
+                    </Link>
                     <button
                       onClick={() => {
-                        setIsProfileOpen(false);
+                        setIsOpen(false);
                         handleLogout();
                       }}
-                      className="w-full text-left text-sm font-bold text-red-500 hover:text-red-600 transition border-none bg-transparent cursor-pointer p-0"
+                      className="w-full flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 text-left border-none bg-transparent cursor-pointer"
                     >
-                      Sign out
+                      <LogOut className="h-5 w-5 text-red-500" />
+                      <span>Logout</span>
                     </button>
                   </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2 flex-shrink-0 pointer-events-auto">
-                <button
-                  onClick={() => redirectToSSO(location.pathname)}
-                  className="flex items-center space-x-1.5 px-4 py-1.5 rounded-full bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 text-xs font-bold cursor-pointer header-signin-btn whitespace-nowrap flex-shrink-0 shadow-md shadow-blue-950/20"
-                >
-                  <LogIn className="h-3.5 w-3.5 text-white flex-shrink-0" />
-                  <span className="text-white whitespace-nowrap">Sign In</span>
-                </button>
-              </div>
-            )}
-
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="-mr-2 flex md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-[#004AAD] hover:bg-slate-100 focus:outline-none"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Drawer */}
-      {isOpen && (
-        <div className="md:hidden bg-white border-b border-[#e2f0e8] shadow-lg">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {/* Mobile Location Selector */}
-            <div className="px-3 py-1.5 border-b border-slate-100 mb-2">
-              <div className="relative">
-                <button
-                  onClick={() => setIsMobileLocationOpen(!isMobileLocationOpen)}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-md bg-slate-50 border border-slate-150 text-sm font-medium text-slate-700 focus:outline-none cursor-pointer"
-                >
-                  <div className="flex items-center space-x-2">
-                    <MapPin className="h-4 w-4 text-slate-500" />
-                    <span className="font-bold">{selectedCity}</span>
-                  </div>
-                  <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isMobileLocationOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {isMobileLocationOpen && (
-                  <div className="mt-1 w-full bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 p-1 text-left">
-                    {/* Current Location Option */}
-                    <button
-                      onClick={handleCurrentLocation}
-                      disabled={isDetecting}
-                      className="w-full text-left px-3 py-2 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition hover:bg-slate-50 text-slate-700 hover:text-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isDetecting ? (
-                        <RefreshCw className="h-3.5 w-3.5 text-emerald-600 animate-spin" />
-                      ) : (
-                        <MapPin className="h-3.5 w-3.5 text-emerald-600" />
-                      )}
-                      <span>{isDetecting ? "Detecting..." : "Current Location"}</span>
-                    </button>
-                    {detectionError && (
-                      <div className="px-3 py-1 text-[10px] text-rose-500 font-semibold leading-tight">
-                        {detectionError}
-                      </div>
-                    )}
-                    <div className="my-1 border-t border-slate-100" />
-
-                    {/* Cities List */}
-                    {cities.map((city) => (
-                      <button
-                        key={city}
-                        onClick={() => {
-                          setSelectedCity(city);
-                          setIsMobileLocationOpen(false);
-                        }}
-                        className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between transition cursor-pointer ${selectedCity === city
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : 'hover:bg-slate-50 text-slate-700'
-                          }`}
-                      >
-                        <span>{city}</span>
-                        {selectedCity === city && <Check className="h-3.5 w-3.5 text-emerald-600" />}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-            {navLinks.map((link) => {
-              if (link.name === 'Products') {
-                return (
-                  <div key={link.name} className="space-y-1">
+                ) : (
+                  <div className="space-y-2 px-3">
                     <button
                       onClick={() => {
-                        setIsMobileProductsOpen(!isMobileProductsOpen);
+                        setIsOpen(false);
+                        redirectToSSO(location.pathname);
                       }}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-[#004AAD] focus:outline-none cursor-pointer"
+                      className="flex items-center justify-center space-x-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 cursor-pointer mobile-signin-btn shadow-md shadow-blue-950/20"
                     >
-                      <span>Products</span>
-                      <ChevronDown className={`h-4 w-4 text-slate-400 transform transition-transform ${isMobileProductsOpen ? 'rotate-180' : ''}`} />
+                      <LogIn className="h-4 w-4 text-white" />
+                      <span className="text-white">Sign In</span>
                     </button>
-                    {isMobileProductsOpen && (
-                      <div className="pl-4 pr-3 py-2 space-y-2 bg-slate-50 border border-slate-150/80 rounded-lg text-left">                        {/* Mobile Category */}
-                        <div className="space-y-2 px-3 py-1 text-left">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Category</p>
-                          <div className="py-1 pl-1">
-                            <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-extrabold uppercase tracking-widest select-none">
-                              Base
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Mobile Public */}
-                        <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Public</p>
-                          <div className="space-y-2.5 pl-1">
-                            <a
-                              href="https://www.bnxmail.com/login"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                            >
-                              <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-4 w-4 object-contain" />
-                              <span className="font-semibold">BNX Mail</span>
-                            </a>
-                            <a
-                              href="https://www.b2auth.com/"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                            >
-                              <img src="/b2auth_logo.png" alt="B2Auth Security" className="h-4 w-4 object-contain" />
-                              <span className="font-semibold flex items-center">
-                                B2Auth Security
-                                <span className="coming-soon-badge">Coming Soon</span>
-                              </span>
-                            </a>
-
-                            <a
-                              href="https://cliks.beta-softnet.com/"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                            >
-                              <img src="/cliks_logo.png" alt="Cliks" className="h-4 w-4 object-contain" />
-                              <span className="font-semibold flex items-center">
-                                Cliks
-                                <span className="coming-soon-badge">Coming Soon</span>
-                              </span>
-                            </a>
-                          </div>
-                          <div className="border-t border-slate-100 pt-2 flex justify-center">
-                            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider select-none">
-                              Beta ecosystem
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Mobile Business */}
-                        <div className="space-y-2.5 border-t border-slate-100 pt-3 px-3">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left">Business</p>
-                          <div className="space-y-2.5 pl-1">
-                            <a
-                              href="https://www.cliksbusiness.com/"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
-                            >
-                              <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-4 w-4 object-contain" />
-                              <span className="font-semibold">Cliks Business</span>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
-                );
-              }
-
-              return (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(link.path)
-                    ? 'bg-blue-50 text-[#004AAD] font-semibold'
-                    : 'text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]'
-                    }`}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
-            <div className="border-t border-slate-100 my-2 pt-2">
-              {user ? (
-                <div className="space-y-2 px-3">
-                  <div className="flex items-center space-x-3 py-2 border-b border-slate-100 mb-2">
-                    <div className="h-8 w-8 rounded-full bg-[#004AAD] flex items-center justify-center text-white font-semibold select-none">
-                      <User className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Account</p>
-                      <p className="text-sm font-bold text-slate-800 truncate">{user.fullName || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.username)}</p>
-                      {user.email && <p className="text-xs text-slate-500 truncate">{user.email}</p>}
-                    </div>
-                  </div>
-                  <Link
-                    to="/adminofcarrer"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]"
-                  >
-                    <LayoutDashboard className="h-5 w-5 text-slate-400" />
-                    <span>Admin Dashboard</span>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setIsOpen(false);
-                      handleLogout();
-                    }}
-                    className="w-full flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 text-left border-none bg-transparent cursor-pointer"
-                  >
-                    <LogOut className="h-5 w-5 text-red-500" />
-                    <span>Logout</span>
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-2 px-3">
-                  <button
-                    onClick={() => {
-                      setIsOpen(false);
-                      redirectToSSO(location.pathname);
-                    }}
-                    className="flex items-center justify-center space-x-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#004AAD] border border-[#004AAD] text-white hover:bg-[#003882] hover:border-[#003882] transition duration-300 cursor-pointer mobile-signin-btn shadow-md shadow-blue-950/20"
-                  >
-                    <LogIn className="h-4 w-4 text-white" />
-                    <span className="text-white">Sign In</span>
-                  </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </nav>
+        )}
+      </nav>
 
-    {window.location.search.includes('debug_notif=true') && (
+      {window.location.search.includes('debug_notif=true') && (
         <div style={{
           position: 'fixed',
           bottom: '20px',
