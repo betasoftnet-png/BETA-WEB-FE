@@ -176,7 +176,9 @@ function AppContent() {
           <Route path="/cliks-business/dashboard" element={<Navigate to="/" replace />} />
           <Route path="/bnx-mail/dashboard" element={<Navigate to="/" replace />} />
           <Route path="/careers/assessment" element={<Assessment />} />
+          <Route path="/careers/assessment/:id" element={<Assessment />} />
           <Route path="/assessment" element={<Assessment />} />
+          <Route path="/assessment/:id" element={<Assessment />} />
           <Route path="/careers/task-assessment" element={<Careers />} />
           <Route path="/careers/saved-jobs" element={<Careers />} />
           <Route path="/share/jobs/:id" element={<ShareJob />} />

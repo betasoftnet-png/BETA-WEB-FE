@@ -2133,9 +2133,10 @@ export default function AdminDashboard() {
                                             <button
                                               onClick={() => {
                                                 const token = app.assessmentToken || app.assessmenttoken;
+                                                const baseUrl = window.location.origin;
                                                 const url = token
-                                                  ? `https://www.beta-softnet.com/careers/assessment?token=${token}`
-                                                  : `https://www.beta-softnet.com/careers/assessment?id=${app.id}`;
+                                                  ? `${baseUrl}/careers/assessment?token=${token}`
+                                                  : `${baseUrl}/careers/assessment?id=${app.id}`;
                                                 navigator.clipboard.writeText(url);
                                                 alert(`Test Link copied to clipboard:\n${url}`);
                                               }}
