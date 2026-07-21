@@ -674,7 +674,7 @@ export default function Navbar() {
                                             initial={{ opacity: 0, scale: 0.95 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
-                                            className="h-[180px] rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center p-4 text-center overflow-hidden relative select-none"
+                                            className="h-[284px] min-h-[284px] rounded-xl bg-slate-50/80 border border-dashed border-slate-200/90 flex flex-col items-center justify-center p-6 text-center overflow-hidden relative select-none w-full"
                                           >
                                             {/* Glowing background */}
                                             <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-violet-500/5 to-emerald-500/5 animate-pulse pointer-events-none" />
@@ -689,13 +689,13 @@ export default function Navbar() {
                                                 duration: 2,
                                                 ease: "easeInOut"
                                               }}
-                                              className="relative z-10 space-y-2 flex flex-col items-center justify-center"
+                                              className="relative z-10 space-y-2 flex flex-col items-center justify-center my-auto"
                                             >
-                                              <Sparkles className="h-6 w-6 text-amber-500 animate-pulse mb-1" />
-                                              <h2 className="text-xl font-extrabold tracking-widest bg-gradient-to-r from-amber-500 via-violet-600 to-emerald-500 bg-clip-text text-transparent uppercase animate-pulse">
+                                              <Sparkles className="h-7 w-7 text-amber-500 animate-pulse mb-1" />
+                                              <h2 className="text-2xl font-extrabold tracking-widest bg-gradient-to-r from-amber-500 via-violet-600 to-emerald-500 bg-clip-text text-transparent uppercase animate-pulse">
                                                 Coming Soon
                                               </h2>
-                                              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
+                                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
                                                 Beta Labs Release
                                               </p>
                                             </motion.div>
