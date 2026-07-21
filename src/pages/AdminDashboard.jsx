@@ -26,6 +26,74 @@ const mapStatusToUI = (status) => {
   return 'Applied';
 };
 
+const getCandidateCurrentStage = (app) => {
+  if (!app) return 'Accepted';
+
+  // 1. Joined stage
+  if (app.status === 'Joined' || app.status === 'JOINED') {
+    return 'Joined';
+  }
+
+  // 2. HR Interview stage
+  if (app.hrInterviewDate || app.hrInterviewTime || app.status === 'HR Interview' || app.status === 'HR_INTERVIEW') {
+    return 'HR Interview';
+  }
+
+  // 3. Task Assessment stage
+  const localTask = typeof window !== 'undefined' && app.id ? localStorage.getItem(`task_assessment_${app.id}`) : null;
+  if (app.githubLink || app.taskAssigned || localTask || app.status === 'Task Assessment' || app.status === 'TASK_ASSESSMENT') {
+    return 'Task Assessment';
+  }
+
+  // 4. Technical Assessment stage
+  if (app.interviewDate || app.interviewTime || app.interviewLink || app.status === 'Interview Scheduled' || app.status === 'Round 2 Technical' || app.status === 'SCHEDULED' || app.status === 'Technical Assessment') {
+    return 'Technical Assessment';
+  }
+
+  // 5. Test Round stage
+  const aptStatus = app.aptitudeStatus || app.aptitudestatus || '';
+  const hasAptScore = app.aptitudeScore !== undefined && app.aptitudeScore !== null && app.aptitudeScore !== '';
+  if (aptStatus === 'Assessment Sent' || aptStatus === 'Completed' || hasAptScore || app.status === 'Round 1 Aptitude' || app.status === 'Test Round') {
+    return 'Test Round';
+  }
+
+  // 6. Selected stage
+  if (app.status === 'Selected' || app.status === 'SELECTED') {
+    return 'Selected';
+  }
+
+  if (app.status && app.status !== 'Accepted' && app.status !== 'ACCEPTED') {
+    return app.status;
+  }
+
+  return 'Accepted';
+};
+
+const getStageBadgeStyle = (stage) => {
+  switch (stage) {
+    case 'Joined':
+      return 'bg-teal-50 text-teal-700 border-teal-200';
+    case 'HR Interview':
+      return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+    case 'Task Assessment':
+      return 'bg-purple-50 text-purple-700 border-purple-200';
+    case 'Technical Assessment':
+    case 'Technical Interview':
+      return 'bg-sky-50 text-sky-700 border-sky-200';
+    case 'Test Round':
+      return 'bg-amber-50 text-amber-700 border-amber-200';
+    case 'Selected':
+    case 'Accepted':
+      return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    case 'Rejected':
+      return 'bg-rose-50 text-rose-700 border-rose-200';
+    case 'Terminated':
+      return 'bg-red-50 text-red-700 border-red-200';
+    default:
+      return 'bg-slate-50 text-slate-700 border-slate-200';
+  }
+};
+
 const BACKEND_API_BASE =
   window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
@@ -2983,21 +3051,15 @@ export default function AdminDashboard() {
                                   </span>
                                 </td>
                                 <td className="py-4 px-6">
-                                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap ${app.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
-                                    app.status === 'Round 1 Aptitude' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                                      app.status === 'Round 2 Technical' ? 'bg-sky-50 text-sky-700 border border-sky-200' :
-                                        app.status === 'Round 3 Brand Awareness' ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200' :
-                                          app.status === 'Shortlisted' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
-                                            app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                              app.status === 'Interview Completed' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' :
-                                                app.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                                                  app.status === 'Rejected' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
-                                                    app.status === 'Terminated' ? 'bg-red-50 text-red-700 border border-red-200' :
-                                                      app.status === 'Joined' ? 'bg-teal-50 text-teal-700 border border-teal-200' :
-                                                        'bg-slate-50 text-slate-700 border border-slate-200'
-                                    }`}>
-                                    {app.status}
-                                  </span>
+                                   {(() => {
+                                     const stage = getCandidateCurrentStage(app);
+                                     const badgeStyle = getStageBadgeStyle(stage);
+                                     return (
+                                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap border ${badgeStyle}`}>
+                                         {stage}
+                                       </span>
+                                     );
+                                   })()}
                                 </td>
                                 <td className="py-4 px-6 text-slate-450">
                                   {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
@@ -3076,12 +3138,15 @@ export default function AdminDashboard() {
                         <h2 className="text-2xl font-black text-slate-900 leading-tight">
                           {selectedApplication.fullName}
                         </h2>
-                        <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize ${selectedApplication.status === 'Accepted' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                          selectedApplication.status === 'Terminated' ? 'bg-red-50 text-red-700 border border-red-200' :
-                            'bg-slate-50 text-slate-700 border border-slate-200'
-                          }`}>
-                          {selectedApplication.status}
-                        </span>
+                        {(() => {
+                          const currentStage = getCandidateCurrentStage(selectedApplication);
+                          const badgeStyle = getStageBadgeStyle(currentStage);
+                          return (
+                            <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize border ${badgeStyle}`}>
+                              {currentStage}
+                            </span>
+                          );
+                        })()}
                       </div>
                       <p className="text-xs text-slate-500 font-medium mt-1">
                         Applied for <strong className="text-slate-800">{selectedApplication.jobTitle}</strong> • {selectedApplication.jobDepartment} • {selectedApplication.jobLocation}
@@ -3383,6 +3448,8 @@ export default function AdminDashboard() {
                                 localStorage.setItem(`task_assessment_${selectedApplication.id}`, taskDescription.trim());
                                 setFetchedTask(taskDescription.trim());
                                 setFetchedTaskStatus('ASSIGNED');
+                                setSelectedApplication(prev => prev ? { ...prev, taskAssigned: true } : prev);
+                                setExternalApplications(prev => prev.map(a => a.id === selectedApplication.id ? { ...a, taskAssigned: true } : a));
                                 setTaskSendStatus('success');
                                 setTaskSendMessage(`Task assigned to ${selectedApplication.fullName} successfully.`);
                                 setTaskDescription('');
