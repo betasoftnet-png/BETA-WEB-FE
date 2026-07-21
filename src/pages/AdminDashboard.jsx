@@ -94,6 +94,14 @@ const getStageBadgeStyle = (stage) => {
   }
 };
 
+const isOptionSelected = (optionText, optionLetter, selectedVal) => {
+  if (!selectedVal) return false;
+  const s = String(selectedVal).trim().toLowerCase();
+  const txt = optionText ? String(optionText).trim().toLowerCase() : '';
+  const letter = optionLetter ? String(optionLetter).trim().toLowerCase() : '';
+  return s === txt || s === letter || s === `option ${letter}` || s === `option ${txt}`;
+};
+
 const BACKEND_API_BASE =
   window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
@@ -257,6 +265,7 @@ export default function AdminDashboard() {
   const [fetchedTask, setFetchedTask] = useState(null);
   const [fetchedTaskStatus, setFetchedTaskStatus] = useState(null);
   const [candidateAssignedQuestions, setCandidateAssignedQuestions] = useState([]);
+  const [candidateAnswersMap, setCandidateAnswersMap] = useState({});
   const [loadingAssignedQuestions, setLoadingAssignedQuestions] = useState(false);
   const [showAllAssignedQuestions, setShowAllAssignedQuestions] = useState(false);
 
@@ -526,11 +535,39 @@ export default function AdminDashboard() {
     const candidateId = appId || selectedApplication?.id;
     if (!candidateId) {
       setCandidateAssignedQuestions([]);
+      setCandidateAnswersMap({});
       setShowAllAssignedQuestions(false);
       return;
     }
     setShowAllAssignedQuestions(false);
     setLoadingAssignedQuestions(true);
+
+    let ansMap = {};
+    try {
+      const ansRes = await axios.get(`${BACKEND_API_BASE}/api/answers/candidate/${candidateId}`);
+      if (Array.isArray(ansRes.data)) {
+        ansRes.data.forEach(a => {
+          if (a.questionId) {
+            ansMap[a.questionId] = a.selectedAnswer;
+            ansMap[String(a.questionId)] = a.selectedAnswer;
+          }
+        });
+      }
+    } catch (ansErr) {
+      console.warn('Could not fetch candidate answers from API:', ansErr);
+    }
+
+    try {
+      const token = selectedApplication?.assessmentToken;
+      const localAnsStr = localStorage.getItem(`assessment_answers_${candidateId}`) || (token ? localStorage.getItem(`assessment_answers_${token}`) : null);
+      if (localAnsStr) {
+        const parsedLocal = JSON.parse(localAnsStr);
+        Object.assign(ansMap, parsedLocal);
+      }
+    } catch (_) {}
+
+    setCandidateAnswersMap(ansMap);
+
     try {
       const res = await axios.get(`${BACKEND_API_BASE}/api/assessment/admin/${candidateId}`);
       const questionsList = Array.isArray(res.data) ? res.data : (res.data?.questions || []);
@@ -3299,27 +3336,65 @@ export default function AdminDashboard() {
                       ) : candidateAssignedQuestions.length > 0 ? (
                         <>
                           <ol className="space-y-3 pl-0 list-none">
-                            {(showAllAssignedQuestions ? candidateAssignedQuestions : candidateAssignedQuestions.slice(0, 3)).map((q, idx) => (
-                              <li
-                                key={q.id || idx}
-                                className="p-4 bg-slate-50/80 border border-slate-200/80 rounded-2xl space-y-2 text-left transition hover:border-blue-200"
-                              >
-                                <div className="text-xs font-bold text-slate-900 flex items-start gap-2 leading-relaxed">
-                                  <span className="shrink-0 text-[#004AAD] font-extrabold">{idx + 1}.</span>
-                                  <span>{q.question}</span>
-                                </div>
-
-                                {/* Options list if present */}
-                                {(q.optionA || q.optionB || q.optionC || q.optionD) && (
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-5 pt-1 text-[11px] text-slate-600 font-medium">
-                                    {q.optionA && <div><strong className="text-slate-400 font-bold mr-1">A.</strong> {q.optionA}</div>}
-                                    {q.optionB && <div><strong className="text-slate-400 font-bold mr-1">B.</strong> {q.optionB}</div>}
-                                    {q.optionC && <div><strong className="text-slate-400 font-bold mr-1">C.</strong> {q.optionC}</div>}
-                                    {q.optionD && <div><strong className="text-slate-400 font-bold mr-1">D.</strong> {q.optionD}</div>}
+                            {(showAllAssignedQuestions ? candidateAssignedQuestions : candidateAssignedQuestions.slice(0, 3)).map((q, idx) => {
+                              const selectedVal = candidateAnswersMap[q.id] || candidateAnswersMap[String(q.id)];
+                              return (
+                                <li
+                                  key={q.id || idx}
+                                  className="p-4 bg-slate-50/80 border border-slate-200/80 rounded-2xl space-y-3 text-left transition hover:border-blue-200"
+                                >
+                                  <div className="text-xs font-bold text-slate-900 flex items-start gap-2 leading-relaxed">
+                                    <span className="shrink-0 text-[#004AAD] font-extrabold">{idx + 1}.</span>
+                                    <span>{q.question}</span>
                                   </div>
-                                )}
-                              </li>
-                            ))}
+
+                                  {/* Options list if present */}
+                                  {(q.optionA || q.optionB || q.optionC || q.optionD) && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-5 text-[11px] text-slate-600 font-medium">
+                                      {q.optionA && (
+                                        <div className={`p-2 rounded-xl border transition ${isOptionSelected(q.optionA, 'A', selectedVal) ? 'bg-blue-50/90 border-blue-300 text-[#004AAD] font-bold shadow-xs' : 'bg-white/60 border-slate-200/60'}`}>
+                                          <strong className="text-slate-400 font-bold mr-1">A.</strong> {q.optionA}
+                                          {isOptionSelected(q.optionA, 'A', selectedVal) && <span className="ml-1 text-[10px] font-extrabold text-[#004AAD]">(Selected)</span>}
+                                        </div>
+                                      )}
+                                      {q.optionB && (
+                                        <div className={`p-2 rounded-xl border transition ${isOptionSelected(q.optionB, 'B', selectedVal) ? 'bg-blue-50/90 border-blue-300 text-[#004AAD] font-bold shadow-xs' : 'bg-white/60 border-slate-200/60'}`}>
+                                          <strong className="text-slate-400 font-bold mr-1">B.</strong> {q.optionB}
+                                          {isOptionSelected(q.optionB, 'B', selectedVal) && <span className="ml-1 text-[10px] font-extrabold text-[#004AAD]">(Selected)</span>}
+                                        </div>
+                                      )}
+                                      {q.optionC && (
+                                        <div className={`p-2 rounded-xl border transition ${isOptionSelected(q.optionC, 'C', selectedVal) ? 'bg-blue-50/90 border-blue-300 text-[#004AAD] font-bold shadow-xs' : 'bg-white/60 border-slate-200/60'}`}>
+                                          <strong className="text-slate-400 font-bold mr-1">C.</strong> {q.optionC}
+                                          {isOptionSelected(q.optionC, 'C', selectedVal) && <span className="ml-1 text-[10px] font-extrabold text-[#004AAD]">(Selected)</span>}
+                                        </div>
+                                      )}
+                                      {q.optionD && (
+                                        <div className={`p-2 rounded-xl border transition ${isOptionSelected(q.optionD, 'D', selectedVal) ? 'bg-blue-50/90 border-blue-300 text-[#004AAD] font-bold shadow-xs' : 'bg-white/60 border-slate-200/60'}`}>
+                                          <strong className="text-slate-400 font-bold mr-1">D.</strong> {q.optionD}
+                                          {isOptionSelected(q.optionD, 'D', selectedVal) && <span className="ml-1 text-[10px] font-extrabold text-[#004AAD]">(Selected)</span>}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+
+                                  {/* Candidate Selected Option summary banner */}
+                                  <div className="pl-5 pt-1 flex items-center gap-2">
+                                    <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Candidate Selected Option:</span>
+                                    {selectedVal ? (
+                                      <span className="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-[#004AAD] text-xs font-black inline-flex items-center gap-1.5 shadow-xs">
+                                        <CheckCircle className="h-3.5 w-3.5 text-[#004AAD]" />
+                                        <span>{selectedVal}</span>
+                                      </span>
+                                    ) : (
+                                      <span className="text-[11px] text-slate-400 font-semibold italic bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                                        Not Answered Yet
+                                      </span>
+                                    )}
+                                  </div>
+                                </li>
+                              );
+                            })}
                           </ol>
 
                           {candidateAssignedQuestions.length > 3 && (
