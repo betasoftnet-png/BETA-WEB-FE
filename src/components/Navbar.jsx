@@ -6,6 +6,12 @@ import { AuthContext } from '../context/AuthContext';
 import api from '../api';
 import axios from 'axios';
 
+const JOB_BOARD_API_BASE =
+  window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8081'
+    : 'https://apply.beta-softnet.com';
+
 const SEARCH_INDEX = [
   // Products
   {
@@ -274,7 +280,7 @@ export default function Navbar() {
 
       // 1. DYNAMIC JOB OPENINGS & HIRINGS (For all candidates/visitors)
       try {
-        const jobsRes = await api.get('/api/jobs').catch(() => null);
+        const jobsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs`).catch(() => null);
         const jobsList = jobsRes?.data?.data || jobsRes?.data || [];
         if (Array.isArray(jobsList)) {
           // Sort newest jobs first
@@ -301,7 +307,7 @@ export default function Navbar() {
       // 2. DYNAMIC CANDIDATE APPLICATION PIPELINE NOTIFICATIONS
       if (userEmail && (!user || user.role !== 'ROLE_ADMIN')) {
         try {
-          const appsRes = await api.get(`/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
+          const appsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
           let candApps = appsRes?.data?.data || appsRes?.data || [];
 
           if (Array.isArray(candApps) && candApps.length > 0) {
@@ -406,7 +412,7 @@ export default function Navbar() {
 
               // Also fetch backend notifications table for candidate
               if (app.id && !String(app.id).startsWith('local-')) {
-                api.get(`/api/notifications/${app.id}`).then(backendNotifRes => {
+                axios.get(`${JOB_BOARD_API_BASE}/api/notifications/${app.id}`).then(backendNotifRes => {
                   const dbNotifs = backendNotifRes?.data || [];
                   if (Array.isArray(dbNotifs)) {
                     dbNotifs.forEach(dbN => {

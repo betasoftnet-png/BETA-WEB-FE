@@ -108,6 +108,13 @@ const BACKEND_API_BASE =
     ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
 
+const backendApi = axios.create({
+  baseURL: BACKEND_API_BASE,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 const fallbackApps = [];
 const fallbackPartnerships = [];
 const fallbackSupports = [];
@@ -288,7 +295,7 @@ export default function AdminDashboard() {
     let msg = app.reportMessage || app.report || app.report_message || '';
 
     try {
-      const res = await api.get(`/api/reports/candidate/${app.id}`);
+      const res = await backendApi.get(`/api/reports/candidate/${app.id}`);
       const reports = res.data;
       if (Array.isArray(reports) && reports.length > 0) {
         const last = reports[reports.length - 1];
@@ -300,7 +307,7 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       try {
-        const allRes = await api.get('/api/reports');
+        const allRes = await backendApi.get('/api/reports');
         const allReports = allRes.data || [];
         const candidateReport = allReports.find(r => 
           String(r.candidateId) === String(app.id) || 
@@ -347,7 +354,7 @@ export default function AdminDashboard() {
     } catch (e) {}
 
     try {
-      await api.post('/api/reports', {
+      await backendApi.post('/api/reports', {
         candidateId: selectedReportModalApp.id,
         candidateName: selectedReportModalApp.fullName,
         email: selectedReportModalApp.email,
@@ -410,80 +417,42 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     setError('');
+    let jobsList = [];
+    let deletedList = [];
+    let apps = [];
+
+    // 1. Fetch active jobs
     try {
-      const [jobsRes, appsRes, deletedRes] = await Promise.all([
-        api.get('/api/jobs'),
-        api.get('/api/admin/applications'),
-        api.get('/api/jobs?status=DELETED')
-      ]);
-      const jobsList = jobsRes.data.data || jobsRes.data || [];
+      const jobsRes = await backendApi.get('/api/jobs');
+      jobsList = jobsRes.data.data || jobsRes.data || [];
       setExternalJobs(jobsList);
-      const deletedList = deletedRes.data.data || deletedRes.data || [];
-      setDeletedJobs(deletedList);
-
-      // const applicationsList = appsRes.data.data || appsRes.data || [];
-
-      // const activeApplications = applicationsList.filter(
-      //   (application) => application.status !== "REJECTED"
-      // );
-
-      // console.log("Applications:", activeApplications);
-      // setApplications(activeApplications);
-      const apps = appsRes.data.data || appsRes.data || [];
-      if (apps.length === 0) {
-        const stored = localStorage.getItem('beta_applications');
-        if (stored) {
-          const parsed = JSON.parse(stored) || [];
-          setExternalApplications(parsed);
-        } else {
-          setExternalApplications(fallbackApps);
-          localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
-        }
-      } else {
-        const normalizedApps = apps
-          .map(app => {
-            // The backend already resolves jobTitle: persisted DB value first,
-            // then falls back to the live/soft-deleted job when the stored value is null.
-            // On the frontend we still match the job for dept/location (if missing from DB)
-            // but we NEVER override the jobTitle the backend has already resolved.
-            const matchedJob = jobsList.find(j => String(j.id) === String(app.jobId));
-
-            return {
-              id: app.id,
-              fullName: app.fullName || app.fullname || '',
-              email: app.email || '',
-              phone: app.phone || '',
-              resumeUrl: app.resume
-                ? `${BACKEND_API_BASE}/uploads/${app.resume}`
-                : (app.resumeUrl || app.resumeurl || ''),
-              coverLetter: app.coverLetter || app.coverletter || '',
-              status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING')
-                ? 'Interview Scheduled'
-                : mapStatusToUI(app.status),
-              createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
-              appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
-              // Trust the backend-resolved title (persisted column > live job lookup)
-              jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
-              jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
-              jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
-              interviewDate: app.interviewDate || app.interviewdate || '',
-              interviewTime: app.interviewTime || app.interviewtime || '',
-              hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
-              hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
-              hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
-              aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
-              aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
-              assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
-              experience: app.experience || app.experience || 'Fresher / 0-1 Years',
-              githubLink: app.githubLink || app.githublink || ''
-            };
-          });
-
-        setExternalApplications(normalizedApps);
-        localStorage.setItem('beta_applications', JSON.stringify(normalizedApps));
+    } catch (jobsErr) {
+      console.warn('Failed to fetch active jobs from live API.', jobsErr);
+      const storedJobs = localStorage.getItem('beta_jobs');
+      if (storedJobs) {
+        jobsList = JSON.parse(storedJobs) || [];
+        setExternalJobs(jobsList);
       }
-    } catch (fetchErr) {
-      console.warn('Failed to fetch from live API. Loading fallback local data.', fetchErr);
+    }
+
+    // 2. Fetch deleted jobs
+    try {
+      const deletedRes = await backendApi.get('/api/jobs?status=DELETED');
+      deletedList = deletedRes.data.data || deletedRes.data || [];
+      setDeletedJobs(deletedList);
+    } catch (deletedErr) {
+      console.warn('Failed to fetch deleted jobs from live API.', deletedErr);
+    }
+
+    // 3. Fetch candidate applications
+    try {
+      const appsRes = await backendApi.get('/api/admin/applications');
+      apps = appsRes.data.data || appsRes.data || [];
+    } catch (appsErr) {
+      console.warn('Failed to fetch applications from live API. Loading fallback local data.', appsErr);
+    }
+
+    if (apps.length === 0) {
       const stored = localStorage.getItem('beta_applications');
       if (stored) {
         const parsed = JSON.parse(stored) || [];
@@ -492,10 +461,47 @@ export default function AdminDashboard() {
         setExternalApplications(fallbackApps);
         localStorage.setItem('beta_applications', JSON.stringify(fallbackApps));
       }
+    } else {
+      const normalizedApps = apps
+        .map(app => {
+          const matchedJob = jobsList.find(j => String(j.id) === String(app.jobId));
+
+          return {
+            id: app.id,
+            fullName: app.fullName || app.fullname || '',
+            email: app.email || '',
+            phone: app.phone || '',
+            resumeUrl: app.resume
+              ? `${BACKEND_API_BASE}/uploads/${app.resume}`
+              : (app.resumeUrl || app.resumeurl || ''),
+            coverLetter: app.coverLetter || app.coverletter || '',
+            status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING')
+              ? 'Interview Scheduled'
+              : mapStatusToUI(app.status),
+            createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+            appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+            jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
+            jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
+            jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
+            interviewDate: app.interviewDate || app.interviewdate || '',
+            interviewTime: app.interviewTime || app.interviewtime || '',
+            hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
+            hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
+            hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
+            aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
+            aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
+            assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
+            experience: app.experience || app.experience || 'Fresher / 0-1 Years',
+            githubLink: app.githubLink || app.githublink || ''
+          };
+        });
+
+      setExternalApplications(normalizedApps);
+      localStorage.setItem('beta_applications', JSON.stringify(normalizedApps));
     }
 
     try {
-      const contactRes = await api.get('/api/contact');
+      const contactRes = await backendApi.get('/api/contact');
       const list = contactRes.data.data || contactRes.data || [];
 
       const parsedPartners = list
@@ -509,7 +515,7 @@ export default function AdminDashboard() {
       setSupports(parsedSupports.length > 0 ? parsedSupports : fallbackSupports);
     } catch (err) {
       try {
-        const contactRes = await api.get('/api/contacts');
+        const contactRes = await backendApi.get('/api/contacts');
         const list = contactRes.data.data || contactRes.data || [];
 
         const parsedPartners = list
@@ -543,12 +549,19 @@ export default function AdminDashboard() {
     if (!user || user.role !== 'ROLE_ADMIN') return;
 
     const silentRefetch = async () => {
+      let jobsList = [];
       try {
-        const [jobsRes, appsRes] = await Promise.all([
-          api.get('/api/jobs'),
-          api.get('/api/admin/applications')
-        ]);
-        const jobsList = jobsRes.data.data || jobsRes.data || [];
+        const jobsRes = await backendApi.get('/api/jobs');
+        jobsList = jobsRes.data.data || jobsRes.data || [];
+        if (jobsList.length > 0) {
+          setExternalJobs(jobsList);
+        }
+      } catch (e) {
+        console.warn('Silent jobs refetch failed:', e);
+      }
+
+      try {
+        const appsRes = await backendApi.get('/api/admin/applications');
         const apps = appsRes.data.data || appsRes.data || [];
         if (apps.length > 0) {
           const normalizedApps = apps.map(app => {
@@ -567,7 +580,6 @@ export default function AdminDashboard() {
                 : mapStatusToUI(app.status),
               createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
               appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
-              // Trust the backend-resolved title (persisted column > live job lookup)
               jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
               jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
               jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
@@ -583,7 +595,6 @@ export default function AdminDashboard() {
               githubLink: app.githubLink || app.githublink || ''
             };
           });
-
 
           setExternalApplications(normalizedApps);
           localStorage.setItem('beta_applications', JSON.stringify(normalizedApps));
@@ -639,7 +650,7 @@ export default function AdminDashboard() {
 
     let ansMap = {};
     try {
-      const ansRes = await api.get(`/api/answers/candidate/${candidateId}`);
+      const ansRes = await backendApi.get(`/api/answers/candidate/${candidateId}`);
       if (Array.isArray(ansRes.data)) {
         ansRes.data.forEach(a => {
           if (a.questionId) {
@@ -664,12 +675,12 @@ export default function AdminDashboard() {
     setCandidateAnswersMap(ansMap);
 
     try {
-      const res = await api.get(`/api/assessment/admin/${candidateId}`);
+      const res = await backendApi.get(`/api/assessment/admin/${candidateId}`);
       const questionsList = Array.isArray(res.data) ? res.data : (res.data?.questions || []);
       setCandidateAssignedQuestions(questionsList);
     } catch (err) {
       try {
-        const fallbackRes = await api.get(`/api/assessment/${candidateId}?increment=false`);
+        const fallbackRes = await backendApi.get(`/api/assessment/${candidateId}?increment=false`);
         const questionsList = Array.isArray(fallbackRes.data) ? fallbackRes.data : (fallbackRes.data?.questions || []);
         setCandidateAssignedQuestions(questionsList);
       } catch (fallbackErr) {
@@ -692,8 +703,8 @@ export default function AdminDashboard() {
       fetchAssignedQuestionsForCandidate(selectedApplication.id);
       try {
         const [taskRes, candidateRes] = await Promise.all([
-          api.get(`/api/task-assessment/${selectedApplication.id}`).catch(() => null),
-          api.get(`/api/admin/applications/${selectedApplication.id}`).catch(() => null)
+          backendApi.get(`/api/task-assessment/${selectedApplication.id}`).catch(() => null),
+          backendApi.get(`/api/admin/applications/${selectedApplication.id}`).catch(() => null)
         ]);
 
         if (taskRes && taskRes.data) {
@@ -854,10 +865,10 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       if (editingJob) {
-        await api.put(`/api/jobs/${editingJob.id}`, payload);
+        await backendApi.put(`/api/jobs/${editingJob.id}`, payload);
         setSuccess('Job opening updated successfully.');
       } else {
-        await api.post('/api/jobs', payload);
+        await backendApi.post('/api/jobs', payload);
         setSuccess('Job opening posted successfully.');
       }
       setIsJobModalOpen(false);
@@ -876,7 +887,7 @@ export default function AdminDashboard() {
     setSuccess('');
     try {
       setLoading(true);
-      await api.delete(`/api/jobs/${id}`);
+      await backendApi.delete(`/api/jobs/${id}`);
       setSuccess('Job opening deleted successfully.');
       fetchData();
     } catch (err) {
@@ -894,9 +905,9 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       try {
-        await api.delete(`/api/contact/${id}`);
+        await backendApi.delete(`/api/contact/${id}`);
       } catch {
-        await api.delete(`/api/contacts/${id}`);
+        await backendApi.delete(`/api/contacts/${id}`);
       }
       setSuccess('Partnership request dismissed successfully.');
     } catch (err) {
@@ -916,9 +927,9 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       try {
-        await api.delete(`/api/contact/${id}`);
+        await backendApi.delete(`/api/contact/${id}`);
       } catch {
-        await api.delete(`/api/contacts/${id}`);
+        await backendApi.delete(`/api/contacts/${id}`);
       }
       setSuccess('Support ticket resolved successfully.');
     } catch (err) {
@@ -961,7 +972,7 @@ export default function AdminDashboard() {
     setLoadingQuestions(true);
     setQuestionsError('');
     try {
-      const response = await api.get('/api/questions');
+      const response = await backendApi.get('/api/questions');
       setAllQuestions(response.data || []);
     } catch (err) {
       console.error('Error fetching questions:', err);
@@ -1013,7 +1024,7 @@ export default function AdminDashboard() {
       };
 
       // 1. Submit assignment to backend
-      await api.post('/api/assessment/send', payload);
+      await backendApi.post('/api/assessment/send', payload);
 
       // 3. Update local state (preserving existing status)
       const updatedApps = externalApplications.map(app =>
@@ -1048,7 +1059,7 @@ export default function AdminDashboard() {
     setError('');
     setSuccess('');
     try {
-      await api.post(`/api/assessment/${candidateId}/reset`);
+      await backendApi.post(`/api/assessment/${candidateId}/reset`);
       
       try {
         localStorage.removeItem(`assessment_blocked_${candidateId}`);
@@ -1115,7 +1126,7 @@ export default function AdminDashboard() {
 
     try {
       setLoading(true);
-      await api.put(`/api/admin/applications/${appId}/status`, { status: backendStatus });
+      await backendApi.put(`/api/admin/applications/${appId}/status`, { status: backendStatus });
       if (newStatus === 'Rejected') {
         setSuccess(`Candidate status updated to ${newStatus}. Notification email sent.`);
       } else {
@@ -1144,12 +1155,12 @@ export default function AdminDashboard() {
     setFetchingQuestions(true);
     setError('');
     try {
-      const allQuestionsRes = await api.get('/api/questions');
+      const allQuestionsRes = await backendApi.get('/api/questions');
       const allQuestions = allQuestionsRes.data || [];
 
       let assignedIds = [];
       try {
-        const assignedRes = await api.get(`/api/assessment/${selectedApplication.id}`);
+        const assignedRes = await backendApi.get(`/api/assessment/${selectedApplication.id}`);
         const assignedQuestions = assignedRes.data || [];
         assignedIds = assignedQuestions.map(q => q.id);
       } catch (errAssigned) {
@@ -1186,7 +1197,7 @@ export default function AdminDashboard() {
     setError('');
     setSuccess('');
     try {
-      await api.post('/api/assessment/send', {
+      await backendApi.post('/api/assessment/send', {
         candidateId: selectedApplication.id,
         questionIds: selectedQuestionsForCandidate,
         duration: 30
@@ -1219,7 +1230,7 @@ export default function AdminDashboard() {
     try {
       // Calls backend which saves the schedule AND sends the Technical Interview
       // invitation email to the candidate via the backend EmailService automatically.
-      await api.put(`/api/admin/applications/${selectedApplication.id}/schedule`, payload);
+      await backendApi.put(`/api/admin/applications/${selectedApplication.id}/schedule`, payload);
 
       // Update local state
       const updatedApps = externalApplications.map(app =>
@@ -1267,7 +1278,7 @@ export default function AdminDashboard() {
     };
 
     try {
-      const response = await api.put(`/api/admin/applications/${selectedApplication.id}/hr-interview`, payload);
+      const response = await backendApi.put(`/api/admin/applications/${selectedApplication.id}/hr-interview`, payload);
 
       const updatedApps = externalApplications.map(app =>
         app.id === selectedApplication.id
@@ -1969,7 +1980,7 @@ export default function AdminDashboard() {
                             try {
                               setLoading(true);
                               const restoredJob = { ...job, status: 'ACTIVE' };
-                              await api.put(`/api/jobs/${job.id}`, restoredJob);
+                              await backendApi.put(`/api/jobs/${job.id}`, restoredJob);
                               setSuccess('Job opening restored successfully.');
                               fetchData();
                             } catch {
@@ -3169,7 +3180,7 @@ export default function AdminDashboard() {
                                         if (!editAppJobTitleValue.trim()) return;
                                         setSavingAppJobTitle(true);
                                         try {
-                                          await api.patch(`/api/admin/applications/${app.id}/job-title`, { jobTitle: editAppJobTitleValue.trim() });
+                                          await backendApi.patch(`/api/admin/applications/${app.id}/job-title`, { jobTitle: editAppJobTitleValue.trim() });
                                           // Update local state so UI reflects instantly
                                           setExternalApplications(prev => prev.map(a =>
                                             a.id === app.id ? { ...a, jobTitle: editAppJobTitleValue.trim() } : a
@@ -3195,7 +3206,7 @@ export default function AdminDashboard() {
                                           if (!editAppJobTitleValue.trim()) { setEditingAppJobTitleId(null); return; }
                                           setSavingAppJobTitle(true);
                                           try {
-                                            await api.patch(`/api/admin/applications/${app.id}/job-title`, { jobTitle: editAppJobTitleValue.trim() });
+                                            await backendApi.patch(`/api/admin/applications/${app.id}/job-title`, { jobTitle: editAppJobTitleValue.trim() });
                                             setExternalApplications(prev => prev.map(a =>
                                               a.id === app.id ? { ...a, jobTitle: editAppJobTitleValue.trim() } : a
                                             ));
@@ -3721,7 +3732,7 @@ export default function AdminDashboard() {
                               setTaskSendStatus('');
                               setTaskSendMessage('');
                               try {
-                                await api.post(`/api/task-assessment/${selectedApplication.id}`, {
+                                await backendApi.post(`/api/task-assessment/${selectedApplication.id}`, {
                                   taskDescription: taskDescription.trim()
                                 });
                                 localStorage.setItem(`task_assessment_${selectedApplication.id}`, taskDescription.trim());
