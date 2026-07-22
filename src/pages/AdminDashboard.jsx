@@ -1012,7 +1012,35 @@ export default function AdminDashboard() {
     }
 
     // Filter duplicate IDs (redundant safeguard)
-    const uniqueQuestionIds = Array.from(new Set(selectedQuestionIds));
+    let uniqueQuestionIds = Array.from(new Set(selectedQuestionIds));
+
+    // Filter by selected technology category (Node, JavaScript, C++) if one is selected
+    if (questionCategoryQuery !== 'All') {
+      const selectedCatLower = questionCategoryQuery.toLowerCase();
+      // Only filter if it is one of Node, JavaScript, or C++
+      if (['node', 'c++', 'javascript'].includes(selectedCatLower)) {
+        uniqueQuestionIds = uniqueQuestionIds.filter(qId => {
+          const q = allQuestions.find(quest => quest.id === qId);
+          if (!q) return false;
+          const cat = (q.category || '').toLowerCase();
+          const title = (q.question || '').toLowerCase();
+          
+          if (selectedCatLower === 'node') {
+            return cat.includes('node') || title.includes('node');
+          } else if (selectedCatLower === 'c++') {
+            return cat.includes('c++') || cat.includes('cpp') || title.includes('c++') || title.includes('cpp');
+          } else if (selectedCatLower === 'javascript') {
+            return cat.includes('javascript') || cat.includes('js') || title.includes('javascript') || title.includes('js');
+          }
+          return false;
+        });
+      }
+    }
+
+    if (uniqueQuestionIds.length === 0) {
+      setAssignError('None of the selected questions match the selected category.');
+      return;
+    }
 
     setAssigningAssessment(true);
     setAssignError('');
@@ -4973,6 +5001,12 @@ export default function AdminDashboard() {
                         } else if (filterVal === 'react') {
                           if (!cat.includes('react') && !title.includes('react') &&
                             !title.includes('hook') && !title.includes('component') && !title.includes('state')) return false;
+                        } else if (filterVal === 'node') {
+                          if (!cat.includes('node') && !title.includes('node')) return false;
+                        } else if (filterVal === 'c++') {
+                          if (!cat.includes('c++') && !cat.includes('cpp') && !title.includes('c++') && !title.includes('cpp')) return false;
+                        } else if (filterVal === 'javascript') {
+                          if (!cat.includes('javascript') && !cat.includes('js') && !title.includes('javascript') && !title.includes('js')) return false;
                         } else if (cat !== filterVal) {
                           return false;
                         }
