@@ -20,7 +20,9 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('beta_token');
-    if (token) {
+    const isMock = token === 'mock_jwt_token_for_admin' || 
+                   token === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiZXhwIjoxODA2MzAwMDAwfQ.bW9ja19zaWduYXR1cmVfdmFsdWU';
+    if (token && !isMock) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
