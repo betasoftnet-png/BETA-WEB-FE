@@ -658,7 +658,8 @@ export default function Careers() {
           githubLink: app.githubLink || app.githublink || '',
           taskAssigned: app.taskAssigned !== undefined ? app.taskAssigned : (app.taskassigned || false),
           jobId: app.jobId || app.jobid || '',
-          appliedTime: app.appliedTime || app.appliedtime || ''
+          appliedTime: app.appliedTime || app.appliedtime || '',
+          pipelineStage: app.pipelineStage !== undefined && app.pipelineStage !== null ? app.pipelineStage : null
         };
 
         const jobKey = `${(normalized.email || '').toLowerCase()}-${(normalized.jobTitle || '').toLowerCase()}-${normalized.jobId || ''}`;
@@ -683,6 +684,9 @@ export default function Careers() {
           }
           if (localMatch.status && localMatch.status !== normalized.status && localMatch.status !== 'Applied') {
             normalized.status = localMatch.status;
+          }
+          if (localMatch.pipelineStage !== undefined && localMatch.pipelineStage !== null && normalized.pipelineStage === null) {
+            normalized.pipelineStage = localMatch.pipelineStage;
           }
         }
 
@@ -713,7 +717,8 @@ export default function Careers() {
             interviewTime: localApp.interviewTime || '',
             aptitudeStatus: localApp.aptitudeStatus || '',
             aptitudeScore: localApp.aptitudeScore !== undefined && localApp.aptitudeScore !== null ? localApp.aptitudeScore : '',
-            experience: localApp.experience || '3 Years'
+            experience: localApp.experience || '3 Years',
+            pipelineStage: localApp.pipelineStage !== undefined && localApp.pipelineStage !== null ? localApp.pipelineStage : 0
           });
           seenJobKeys.add(jobKey);
         }
@@ -1776,23 +1781,8 @@ export default function Careers() {
                     const aptitudeStatus = (app.aptitudeStatus || '').toLowerCase().trim();
                     const isRejected = rawStatus.toLowerCase().trim() === 'rejected';
 
-                    // Dynamically calculate active step index (0 to 5)
-                    let activeIdx = 0;
-                    const statusLower = rawStatus.toLowerCase().trim();
-
-                    if (['accepted', 'selected', 'joined', 'approved', 'offer sent', 'offer letter', 'offered'].includes(statusLower)) {
-                      activeIdx = 5;
-                    } else if (statusLower.includes('hr') || app.hrInterviewDate || app.hrInterviewTime || app.hrInterviewLocation) {
-                      activeIdx = 4;
-                    } else if (app.taskAssigned || app.githubLink || statusLower.includes('task') || statusLower.includes('brand')) {
-                      activeIdx = 3;
-                    } else if (statusLower.includes('technical') || statusLower === 'interview scheduled' || statusLower === 'scheduled' || app.interviewDate || app.interviewTime || app.interviewLink) {
-                      activeIdx = 2;
-                    } else if (['shortlisted', 'assessment sent', 'round 1 test', 'round 1 aptitude', 'assessment', 'test round'].includes(statusLower) || ['assessment sent', 'scheduled', 'completed'].includes(aptitudeStatus) || (app.aptitudeScore !== null && app.aptitudeScore !== undefined && app.aptitudeScore !== '')) {
-                      activeIdx = 1;
-                    } else {
-                      activeIdx = 0;
-                    }
+                    // Fetch pipeline stage status dynamically from backend
+                    let activeIdx = app.pipelineStage !== undefined && app.pipelineStage !== null ? app.pipelineStage : 0;
 
                     const steps = ['Application', 'Assessment', 'Technical interview', 'Task Assessment', 'HR interview', 'Offer'];
 
