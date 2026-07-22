@@ -4,6 +4,7 @@ import { Menu, X, Box, LogOut, LayoutDashboard, LogIn, ChevronDown, ChevronRight
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api';
+import axios from 'axios';
 
 const SEARCH_INDEX = [
   // Products
@@ -273,7 +274,7 @@ export default function Navbar() {
 
       // 1. DYNAMIC JOB OPENINGS & HIRINGS (For all candidates/visitors)
       try {
-        const jobsRes = await api.get('/api/jobs').catch(() => null);
+        const jobsRes = await axios.get(`${api.defaults.baseURL || ''}/api/jobs`).catch(() => null);
         const jobsList = jobsRes?.data?.data || jobsRes?.data || [];
         if (Array.isArray(jobsList)) {
           // Sort newest jobs first
