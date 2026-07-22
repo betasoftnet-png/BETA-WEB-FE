@@ -4415,75 +4415,7 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              {/* Responsibilities list */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <label className="text-xs font-bold uppercase">Responsibilities</label>
-                  <button
-                    type="button"
-                    onClick={() => addArrayField(jobResponsibilities, setJobResponsibilities)}
-                    className="text-[10px] text-[#004AAD] hover:underline font-bold"
-                  >
-                    + Add item
-                  </button>
-                </div>
-                <div className="space-y-2">
-                  {jobResponsibilities.map((resp, idx) => (
-                    <div key={idx} className="flex items-center space-x-2">
-                      <input
-                        type="text"
 
-                        value={resp}
-                        onChange={(e) => handleArrayChange(idx, e.target.value, jobResponsibilities, setJobResponsibilities)}
-                        placeholder={`Responsibility #${idx + 1}`}
-                        className="flex-grow admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-sm transition"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeArrayField(idx, jobResponsibilities, setJobResponsibilities)}
-                        className="p-1.5 bg-red-50 text-red-500 border border-red-200 rounded-lg hover:bg-red-100 transition"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Requirements list */}
-              <div className="space-y-2 mt-4">
-                <div className="flex justify-between items-center">
-                  <label className="text-xs font-bold uppercase">Requirements</label>
-                  <button
-                    type="button"
-                    onClick={() => addArrayField(jobRequirements, setJobRequirements)}
-                    className="text-[10px] text-[#004AAD] hover:underline font-bold"
-                  >
-                    + Add item
-                  </button>
-                </div>
-                <div className="space-y-2">
-                  {jobRequirements.map((req, idx) => (
-                    <div key={idx} className="flex items-center space-x-2">
-                      <input
-                        type="text"
-
-                        value={req}
-                        onChange={(e) => handleArrayChange(idx, e.target.value, jobRequirements, setJobRequirements)}
-                        placeholder={`Requirement #${idx + 1}`}
-                        className="flex-grow admin-custom-input border border-slate-300 rounded-lg py-1.5 px-3 focus:outline-none text-sm transition"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeArrayField(idx, jobRequirements, setJobRequirements)}
-                        className="p-1.5 bg-red-50 text-red-500 border border-red-200 rounded-lg hover:bg-red-100 transition"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
               {/* Skills list */}
               <div className="space-y-2 mt-4">
