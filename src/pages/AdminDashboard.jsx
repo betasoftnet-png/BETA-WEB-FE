@@ -4870,7 +4870,7 @@ export default function AdminDashboard() {
       {/* Modal for Resume Viewer */}
       {selectedResumeUrl && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-4xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 admin-scrollbar overflow-y-auto max-h-[90vh]">
+          <div className="relative w-full max-w-6xl bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-2xl text-left my-8 admin-scrollbar overflow-y-auto max-h-[95vh]">
             {/* Top Header Row with Download and Close buttons */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
               <div>
@@ -4906,9 +4906,9 @@ export default function AdminDashboard() {
             </div>
 
             {/* Resume sheet preview */}
-            <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-inner overflow-hidden h-[65vh]">
+            <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-inner overflow-hidden h-[75vh]">
               <iframe
-                src={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `${BACKEND_API_BASE}${selectedResumeUrl.startsWith('/') ? '' : '/'}${selectedResumeUrl}`}
+                src={`${selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `${BACKEND_API_BASE}${selectedResumeUrl.startsWith('/') ? '' : '/'}${selectedResumeUrl}`}#zoom=140`}
                 className="w-full h-full border-none"
                 title={`${selectedResumeCandidate}'s Resume`}
               />
