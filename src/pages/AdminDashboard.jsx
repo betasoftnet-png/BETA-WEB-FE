@@ -412,9 +412,9 @@ export default function AdminDashboard() {
     setError('');
     try {
       const [jobsRes, appsRes, deletedRes] = await Promise.all([
-        axios.get(`${BACKEND_API_BASE}/api/jobs`),
-        axios.get(`${BACKEND_API_BASE}/api/admin/applications`),
-        axios.get(`${BACKEND_API_BASE}/api/jobs?status=DELETED`)
+        api.get('/api/jobs'),
+        api.get('/api/admin/applications'),
+        api.get('/api/jobs?status=DELETED')
       ]);
       const jobsList = jobsRes.data.data || jobsRes.data || [];
       setExternalJobs(jobsList);
@@ -545,8 +545,8 @@ export default function AdminDashboard() {
     const silentRefetch = async () => {
       try {
         const [jobsRes, appsRes] = await Promise.all([
-          axios.get(`${BACKEND_API_BASE}/api/jobs`),
-          axios.get(`${BACKEND_API_BASE}/api/admin/applications`)
+          api.get('/api/jobs'),
+          api.get('/api/admin/applications')
         ]);
         const jobsList = jobsRes.data.data || jobsRes.data || [];
         const apps = appsRes.data.data || appsRes.data || [];
@@ -639,7 +639,7 @@ export default function AdminDashboard() {
 
     let ansMap = {};
     try {
-      const ansRes = await axios.get(`${BACKEND_API_BASE}/api/answers/candidate/${candidateId}`);
+      const ansRes = await api.get(`/api/answers/candidate/${candidateId}`);
       if (Array.isArray(ansRes.data)) {
         ansRes.data.forEach(a => {
           if (a.questionId) {
@@ -664,12 +664,12 @@ export default function AdminDashboard() {
     setCandidateAnswersMap(ansMap);
 
     try {
-      const res = await axios.get(`${BACKEND_API_BASE}/api/assessment/admin/${candidateId}`);
+      const res = await api.get(`/api/assessment/admin/${candidateId}`);
       const questionsList = Array.isArray(res.data) ? res.data : (res.data?.questions || []);
       setCandidateAssignedQuestions(questionsList);
     } catch (err) {
       try {
-        const fallbackRes = await axios.get(`${BACKEND_API_BASE}/api/assessment/${candidateId}?increment=false`);
+        const fallbackRes = await api.get(`/api/assessment/${candidateId}?increment=false`);
         const questionsList = Array.isArray(fallbackRes.data) ? fallbackRes.data : (fallbackRes.data?.questions || []);
         setCandidateAssignedQuestions(questionsList);
       } catch (fallbackErr) {
@@ -692,8 +692,8 @@ export default function AdminDashboard() {
       fetchAssignedQuestionsForCandidate(selectedApplication.id);
       try {
         const [taskRes, candidateRes] = await Promise.all([
-          axios.get(`${BACKEND_API_BASE}/api/task-assessment/${selectedApplication.id}`).catch(() => null),
-          axios.get(`${BACKEND_API_BASE}/api/admin/applications/${selectedApplication.id}`).catch(() => null)
+          api.get(`/api/task-assessment/${selectedApplication.id}`).catch(() => null),
+          api.get(`/api/admin/applications/${selectedApplication.id}`).catch(() => null)
         ]);
 
         if (taskRes && taskRes.data) {
@@ -854,10 +854,10 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       if (editingJob) {
-        await axios.put(`${BACKEND_API_BASE}/api/jobs/${editingJob.id}`, payload);
+        await api.put(`/api/jobs/${editingJob.id}`, payload);
         setSuccess('Job opening updated successfully.');
       } else {
-        await axios.post(`${BACKEND_API_BASE}/api/jobs`, payload);
+        await api.post('/api/jobs', payload);
         setSuccess('Job opening posted successfully.');
       }
       setIsJobModalOpen(false);
@@ -876,7 +876,7 @@ export default function AdminDashboard() {
     setSuccess('');
     try {
       setLoading(true);
-      await axios.delete(`${BACKEND_API_BASE}/api/jobs/${id}`);
+      await api.delete(`/api/jobs/${id}`);
       setSuccess('Job opening deleted successfully.');
       fetchData();
     } catch (err) {
@@ -961,7 +961,7 @@ export default function AdminDashboard() {
     setLoadingQuestions(true);
     setQuestionsError('');
     try {
-      const response = await axios.get(`${BACKEND_API_BASE}/api/questions`);
+      const response = await api.get('/api/questions');
       setAllQuestions(response.data || []);
     } catch (err) {
       console.error('Error fetching questions:', err);
@@ -1013,7 +1013,7 @@ export default function AdminDashboard() {
       };
 
       // 1. Submit assignment to backend
-      await axios.post(`${BACKEND_API_BASE}/api/assessment/send`, payload);
+      await api.post('/api/assessment/send', payload);
 
       // 3. Update local state (preserving existing status)
       const updatedApps = externalApplications.map(app =>
@@ -1048,7 +1048,7 @@ export default function AdminDashboard() {
     setError('');
     setSuccess('');
     try {
-      await axios.post(`${BACKEND_API_BASE}/api/assessment/${candidateId}/reset`);
+      await api.post(`/api/assessment/${candidateId}/reset`);
       
       try {
         localStorage.removeItem(`assessment_blocked_${candidateId}`);
@@ -1115,7 +1115,7 @@ export default function AdminDashboard() {
 
     try {
       setLoading(true);
-      await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${appId}/status`, { status: backendStatus });
+      await api.put(`/api/admin/applications/${appId}/status`, { status: backendStatus });
       if (newStatus === 'Rejected') {
         setSuccess(`Candidate status updated to ${newStatus}. Notification email sent.`);
       } else {
@@ -1144,12 +1144,12 @@ export default function AdminDashboard() {
     setFetchingQuestions(true);
     setError('');
     try {
-      const allQuestionsRes = await axios.get(`${BACKEND_API_BASE}/api/questions`);
+      const allQuestionsRes = await api.get('/api/questions');
       const allQuestions = allQuestionsRes.data || [];
 
       let assignedIds = [];
       try {
-        const assignedRes = await axios.get(`${BACKEND_API_BASE}/api/assessment/${selectedApplication.id}`);
+        const assignedRes = await api.get(`/api/assessment/${selectedApplication.id}`);
         const assignedQuestions = assignedRes.data || [];
         assignedIds = assignedQuestions.map(q => q.id);
       } catch (errAssigned) {
@@ -1186,7 +1186,7 @@ export default function AdminDashboard() {
     setError('');
     setSuccess('');
     try {
-      await axios.post(`${BACKEND_API_BASE}/api/assessment/send`, {
+      await api.post('/api/assessment/send', {
         candidateId: selectedApplication.id,
         questionIds: selectedQuestionsForCandidate,
         duration: 30
@@ -1219,7 +1219,7 @@ export default function AdminDashboard() {
     try {
       // Calls backend which saves the schedule AND sends the Technical Interview
       // invitation email to the candidate via the backend EmailService automatically.
-      await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${selectedApplication.id}/schedule`, payload);
+      await api.put(`/api/admin/applications/${selectedApplication.id}/schedule`, payload);
 
       // Update local state
       const updatedApps = externalApplications.map(app =>
@@ -1267,7 +1267,7 @@ export default function AdminDashboard() {
     };
 
     try {
-      const response = await axios.put(`${BACKEND_API_BASE}/api/admin/applications/${selectedApplication.id}/hr-interview`, payload);
+      const response = await api.put(`/api/admin/applications/${selectedApplication.id}/hr-interview`, payload);
 
       const updatedApps = externalApplications.map(app =>
         app.id === selectedApplication.id
@@ -1969,7 +1969,7 @@ export default function AdminDashboard() {
                             try {
                               setLoading(true);
                               const restoredJob = { ...job, status: 'ACTIVE' };
-                              await axios.put(`${BACKEND_API_BASE}/api/jobs/${job.id}`, restoredJob);
+                              await api.put(`/api/jobs/${job.id}`, restoredJob);
                               setSuccess('Job opening restored successfully.');
                               fetchData();
                             } catch {
@@ -3721,7 +3721,7 @@ export default function AdminDashboard() {
                               setTaskSendStatus('');
                               setTaskSendMessage('');
                               try {
-                                await axios.post(`${BACKEND_API_BASE}/api/task-assessment/${selectedApplication.id}`, {
+                                await api.post(`/api/task-assessment/${selectedApplication.id}`, {
                                   taskDescription: taskDescription.trim()
                                 });
                                 localStorage.setItem(`task_assessment_${selectedApplication.id}`, taskDescription.trim());

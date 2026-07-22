@@ -298,17 +298,10 @@ export default function Navbar() {
       }
 
       // 2. DYNAMIC CANDIDATE APPLICATION PIPELINE NOTIFICATIONS
-      if (userEmail) {
+      if (userEmail && (!user || user.role !== 'ROLE_ADMIN')) {
         try {
           const appsRes = await api.get(`/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
           let candApps = appsRes?.data?.data || appsRes?.data || [];
-
-          if (!Array.isArray(candApps) || candApps.length === 0) {
-            // Fallback: search in /api/admin/applications
-            const adminAppsRes = await api.get('/api/admin/applications').catch(() => null);
-            const allApps = adminAppsRes?.data || [];
-            candApps = allApps.filter(app => (app.email || '').toLowerCase() === userEmail);
-          }
 
           if (Array.isArray(candApps) && candApps.length > 0) {
             candApps.forEach((app) => {
