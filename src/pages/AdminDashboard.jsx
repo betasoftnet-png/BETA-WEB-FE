@@ -4996,6 +4996,9 @@ export default function AdminDashboard() {
                   <option value="SQL">SQL</option>
                   <option value="HTML/CSS">HTML/CSS</option>
                   <option value="React">React</option>
+                  <option value="Node">Node</option>
+                  <option value="C++">C++</option>
+                  <option value="JavaScript">JavaScript</option>
                 </select>
               </div>
             </div>
