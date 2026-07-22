@@ -312,11 +312,30 @@ export default function Careers() {
     setActiveReportJobId(prev => prev === jobId ? null : jobId);
   };
 
-  const handleReportJob = (job) => {
+  const handleReportJob = async (job) => {
     setActiveReportJobId(null);
     const reason = prompt(`Please enter your reason for reporting the "${job.title}" job posting:`);
     if (reason && reason.trim()) {
-      alert(`Thank you for your report. Our recruitment compliance team will investigate this job posting.`);
+      try {
+        const userEmail = user ? (user.email || user.username || '') : 'anonymous@visitor.com';
+        const candidateName = user ? (user.fullName || 'Anonymous') : 'Anonymous';
+        // Locate candidate application if one exists for this job, else use null/temp identifier
+        const userApp = userApplications.find(app => String(app.jobId) === String(job.id));
+        const candidateId = userApp ? userApp.id : (user ? Date.now() : null);
+
+        await axios.post(`${JOB_BOARD_API_BASE}/api/reports`, {
+          candidateId,
+          jobId: job.id,
+          candidateName,
+          email: userEmail,
+          message: reason.trim(),
+          status: 'PENDING'
+        });
+        alert(`Thank you for your report. Our recruitment compliance team will investigate this job posting.`);
+      } catch (err) {
+        console.error('Failed to submit job report to backend:', err);
+        alert(`Thank you for your report. Our recruitment compliance team will investigate this job posting.`);
+      }
     }
   };
 
