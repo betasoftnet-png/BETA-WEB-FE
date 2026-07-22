@@ -696,34 +696,34 @@ export default function Navbar() {
                                     {isDropdownCategoryOpen && (
                                       <div className="flex flex-col gap-3 pt-1 pb-1">
                                         {/* Aligns with BNXmail */}
-                                        <div className="h-[60px] flex items-center animate-fadeIn">
+                                        <div className="h-[60px] flex items-center justify-center animate-fadeIn">
                                           <button
                                             type="button"
                                             onClick={() => setActiveCategory('base')}
-                                            className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
+                                            className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center justify-center w-full"
                                             title="Show Base products list"
                                           >
                                             {activeCategory === 'base' ? (
-                                              <span className="inline-block px-2.5 py-1 rounded-full bg-white text-[#004AAD] border border-[#004AAD]/30 text-xs font-extrabold uppercase tracking-widest select-none text-left shadow-sm hover:bg-[#004AAD]/5 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
+                                              <span className="inline-block px-2.5 py-1 rounded-full bg-white text-[#004AAD] border border-[#004AAD]/30 text-xs font-extrabold uppercase tracking-widest select-none text-center shadow-sm hover:bg-[#004AAD]/5 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
                                                 Base
                                               </span>
                                             ) : (
-                                              <span className="inline-block px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-700 text-xs font-extrabold uppercase tracking-widest select-none text-left hover:bg-slate-200 hover:border-slate-300 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
+                                              <span className="inline-block px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-700 text-xs font-extrabold uppercase tracking-widest select-none text-center hover:bg-slate-200 hover:border-slate-300 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
                                                 Base
                                               </span>
                                             )}
                                           </button>
                                         </div>
-
+ 
                                         {/* Divider Line below Base */}
                                         <hr className="border-t border-slate-200 -ml-6 -mr-2 opacity-80 -mt-2.5" />
-
+ 
                                         {/* Aligns with B2Auth */}
-                                        <div className="h-[60px] flex items-center animate-fadeIn">
+                                        <div className="h-[60px] flex items-center justify-center animate-fadeIn">
                                           <button
                                             type="button"
                                             onClick={() => setActiveCategory('comingsoon')}
-                                            className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center w-full text-left"
+                                            className="focus:outline-none cursor-pointer border-none bg-transparent p-0 flex items-center justify-center w-full"
                                             title="Show Coming Soon products list"
                                           >
                                             {activeCategory === 'comingsoon' ? (
