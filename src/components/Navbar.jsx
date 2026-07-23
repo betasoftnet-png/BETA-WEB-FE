@@ -565,7 +565,7 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Nav Links (Absolutely centered) */}
-            <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 z-30">
+            <div className="hidden md:flex items-center justify-center absolute left-[53%] -translate-x-1/2 z-30">
               {/* Desktop Nav Links */}
               <div className="flex items-center space-x-0.5 bg-slate-100/90 p-1 rounded-full border border-slate-200/80 shadow-inner nav-pill-container">
                 {navLinks.map((link) => {

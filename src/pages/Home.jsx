@@ -342,7 +342,7 @@ export default function Home() {
                 flex flex-col lg:flex-row items-center gap-12">
 
           {/* Left Column: Heading and description */}
-          <div className="w-full lg:w-[48%] flex flex-col items-start text-left space-y-6">
+          <div className="w-full lg:w-[50%] flex flex-col items-start text-left space-y-6">
 
             <motion.div
               variants={containerVariants}
@@ -352,13 +352,13 @@ export default function Home() {
             >
               <motion.h2
                 variants={itemVariants}
-                className="w-full text-slate-900 leading-tight tracking-tight"
+                className="w-full text-slate-900 leading-tight tracking-tight flex flex-col items-center lg:items-start text-center lg:text-left"
               >
-                <span className="block text-3xl sm:text-4xl lg:text-[54px] font-black text-slate-900 tracking-wide lg:whitespace-nowrap lg:ml-20 ml-0">
+                <span className="block text-3xl sm:text-4xl lg:text-[54px] font-black text-slate-900 tracking-wide">
                   Unified Software for
                 </span>
 
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline-block w-max max-w-full text-3xl sm:text-4xl lg:text-[48px] font-extrabold mt-1 lg:ml-24 ml-0 lg:whitespace-nowrap whitespace-normal pr-4">
+                <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent text-3xl sm:text-4xl lg:text-[48px] font-extrabold mt-1 lg:whitespace-nowrap whitespace-normal">
                   Connected Generation
                 </span>
               </motion.h2>
@@ -377,7 +377,7 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full lg:w-[52%] max-w-xl h-full flex flex-col justify-center text-left lg:pl-6">
+          <div className="w-full lg:w-[50%] max-w-2xl h-full flex flex-col justify-center text-left lg:pl-6">
 
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-4 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
@@ -413,7 +413,7 @@ export default function Home() {
                   <div className="relative z-10 transition-transform duration-300 hover:scale-105">
                     <div className="bg-white border border-blue-500/45 w-24 h-24 rounded-2xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
                       <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/25 via-cyan-500/10 to-transparent pointer-events-none" />
-                      <img src="/logo.png" alt="Beta Logo" className="h-20 w-20 object-contain relative z-10 animate-pulse" />
+                      <img src="/logo.png" alt="Beta Logo" className="object-contain relative z-10 animate-pulse" style={{ width: '90px', height: '90px' }} />
                     </div>
                   </div>
                 </div>
