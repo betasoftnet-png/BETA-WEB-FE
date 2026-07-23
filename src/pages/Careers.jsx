@@ -1882,6 +1882,16 @@ export default function Careers() {
                                   <span className={`text-[8.5px] font-bold mt-1.5 uppercase tracking-wide block ${isActive ? (isRejectedNode ? 'text-rose-600 font-black' : 'text-[#EC4899] font-black') : isCompleted ? 'text-slate-700' : 'text-slate-400'}`}>
                                     {stepName}
                                   </span>
+                                  {stepName === 'Assessment' && activeIdx >= 1 && (
+                                    <a
+                                      href="https://www.bnxmail.com/login"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-[8px] sm:text-[9px] font-extrabold text-[#8B5CF6] hover:text-[#EC4899] underline mt-1 block transition-colors duration-200"
+                                    >
+                                      BNX Mail
+                                    </a>
+                                  )}
                                 </div>
                               );
                             })}
@@ -1908,16 +1918,32 @@ export default function Careers() {
                             {app.aptitudeStatus === 'Completed' || app.assessmentSubmitted ? (
                               <div className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-left text-xs">
                                 <span className="font-extrabold text-emerald-600 uppercase tracking-wider block mb-0.5">Assessment Completed</span>
-                                <p className="text-slate-500 font-medium">
+                                <p className="text-slate-500 font-medium mb-2.5">
                                   Your Test Round answers have been logged{app.aptitudeScore !== '' && app.aptitudeScore !== undefined ? ` (Score: ${app.aptitudeScore}%)` : ''}. Recruiting managers are reviewing your evaluation.
                                 </p>
+                                <a
+                                  href="https://www.bnxmail.com/login"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center text-[#8B5CF6] hover:text-[#EC4899] font-extrabold underline transition duration-200"
+                                >
+                                  Open BNX Mail to check communications &rarr;
+                                </a>
                               </div>
                             ) : (
                               <div className="p-3.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left text-xs">
                                 <span className="font-extrabold text-purple-600 uppercase tracking-wider block mb-0.5">Assessment Phase</span>
-                                <p className="text-slate-500 font-medium">
+                                <p className="text-slate-500 font-medium mb-2.5">
                                   Your profile is undergoing assessment. The test will be conducted and provided by the admin.
                                 </p>
+                                <a
+                                  href="https://www.bnxmail.com/login"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center text-[#8B5CF6] hover:text-[#EC4899] font-extrabold underline transition duration-200"
+                                >
+                                  Open BNX Mail to check for assessment link &rarr;
+                                </a>
                               </div>
                             )}
                           </div>
