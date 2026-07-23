@@ -339,10 +339,10 @@ export default function Home() {
           </motion.div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8
-                flex flex-col md:flex-row items-center gap-12">
+                flex flex-col lg:flex-row items-center gap-12">
 
           {/* Left Column: Heading and description */}
-          <div className="w-full md:w-[52%] flex flex-col items-start text-left space-y-6">
+          <div className="w-full lg:w-[48%] flex flex-col items-start text-left space-y-6">
 
             <motion.div
               variants={containerVariants}
@@ -354,20 +354,21 @@ export default function Home() {
                 variants={itemVariants}
                 className="w-full text-slate-900 leading-tight tracking-tight"
               >
-                <span className="block text-3xl sm:text-4xl md:text-[50px] lg:text-[54px] font-black text-slate-900 tracking-wide md:whitespace-nowrap md:ml-29 ml-0">
+                <span className="block text-3xl sm:text-4xl lg:text-[54px] font-black text-slate-900 tracking-wide lg:whitespace-nowrap lg:ml-20 ml-0">
                   Unified Software for
                 </span>
 
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline-block w-max max-w-full text-3xl sm:text-4xl md:text-[48px] lg:text-[48px] font-extrabold mt-1 md:ml-32 ml-0 md:whitespace-nowrap whitespace-normal pr-4">
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline-block w-max max-w-full text-3xl sm:text-4xl lg:text-[48px] font-extrabold mt-1 lg:ml-24 ml-0 lg:whitespace-nowrap whitespace-normal pr-4">
                   Connected Generation
                 </span>
               </motion.h2>
 
               <motion.p
                 variants={itemVariants}
-                className="mt-1 text-slate-600 text-base md:text-lg leading-relaxed text-left w-full max-w-xl tracking-wide md:ml-18 ml-0"
+                className="mt-2 text-slate-600 text-lg leading-9 text-left w-full max-w-4xl tracking-wide"
               >
-                Beta builds secure, real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
+                Beta builds secure, real-time corporate applications. SMTP mail threads,
+                live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
 
             </motion.div>
@@ -376,7 +377,7 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full md:w-[55%] max-w-xl h-full flex flex-col justify-center text-left md:translate-x-8">
+          <div className="w-full lg:w-[52%] max-w-xl h-full flex flex-col justify-center text-left lg:pl-6">
 
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-4 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
