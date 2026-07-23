@@ -566,7 +566,6 @@ export default function Assessment() {
             </p>
           </div>
           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs font-semibold text-slate-500">
-            {candidate?.id && <div>Candidate ID: <strong className="text-slate-800 font-mono">#{candidate.id}</strong></div>}
             <div>Candidate: <strong className="text-slate-800">{candidateName}</strong></div>
             <div>Role: <strong className="text-slate-800">{jobTitle}</strong></div>
           </div>
