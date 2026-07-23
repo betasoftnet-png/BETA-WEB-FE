@@ -354,20 +354,18 @@ export default function Home() {
                 variants={itemVariants}
                 className="w-full text-slate-900 leading-tight tracking-tight"
               >
-                <span className="block text-5xl md:text-[50px] lg:text-[54px] font-black text-slate-900 tracking-wide whitespace-nowrap ml-43">
+                <span className="block text-3xl sm:text-4xl md:text-[50px] lg:text-[54px] font-black text-slate-900 tracking-wide md:whitespace-nowrap md:ml-29 ml-0">
                   Unified Software for
                 </span>
 
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline-block w-max text-5xl md:text-[48px] lg:text-[48px] font-extrabold mt-1 ml-45 whitespace-nowrap pr-4">
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline-block w-max max-w-full text-3xl sm:text-4xl md:text-[48px] lg:text-[48px] font-extrabold mt-1 md:ml-32 ml-0 md:whitespace-nowrap whitespace-normal pr-4">
                   Connected Generation
                 </span>
               </motion.h2>
 
               <motion.p
                 variants={itemVariants}
-                className="mt-1 text-slate-600 text-base md:text-lg leading-relaxed
-             text-left w-full max-w-xl
-             tracking-wide ml-18"
+                className="mt-1 text-slate-600 text-base md:text-lg leading-relaxed text-left w-full max-w-xl tracking-wide md:ml-18 ml-0"
               >
                 Beta builds secure, real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
