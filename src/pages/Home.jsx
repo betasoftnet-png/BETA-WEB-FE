@@ -278,7 +278,7 @@ export default function Home() {
               <span>Vision</span>
             </span> */}
             <motion.h1
-              className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter cursor-pointer select-none flex items-center justify-center gap-0 my-1"
+              className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter cursor-pointer select-none flex items-center justify-center gap-0 mt-5 mb-1"
               style={{ fontFamily: '"Saira Stencil One", sans-serif' }}
               variants={{
                 hidden: { opacity: 0 },
@@ -354,11 +354,11 @@ export default function Home() {
                 variants={itemVariants}
                 className="w-full text-slate-900 leading-tight tracking-tight"
               >
-                <span className="block text-3xl md:text-[40px] lg:text-[42px] font-black text-slate-900 tracking-wide whitespace-nowrap ml-43">
+                <span className="block text-5xl md:text-[50px] lg:text-[54px] font-black text-slate-900 tracking-wide whitespace-nowrap ml-43">
                   Unified Software for
                 </span>
 
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block text-3xl md:text-[40px] lg:text-[40px] font-extrabold mt-1 ml-41">
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline-block w-max text-5xl md:text-[48px] lg:text-[48px] font-extrabold mt-1 ml-45 whitespace-nowrap pr-4">
                   Connected Generation
                 </span>
               </motion.h2>
@@ -367,7 +367,7 @@ export default function Home() {
                 variants={itemVariants}
                 className="mt-1 text-slate-600 text-base md:text-lg leading-relaxed
              text-left w-full max-w-xl
-             tracking-wide ml-6"
+             tracking-wide ml-18"
               >
                 Beta builds secure, real-time corporate applications. SMTP mail threads, live authentication protocols, and agile sprints under one dashboard.
               </motion.p>
