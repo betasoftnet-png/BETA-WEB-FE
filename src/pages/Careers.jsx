@@ -444,7 +444,7 @@ export default function Careers() {
     setMyJobsPage(1);
   }, [userApplications.length, showMyJobs]);
 
-  // Auto-select job from URL query parameter (e.g. ?job=5)
+  // Auto-select job from URL query parameter (e.g. ?job=5) or switch to My Jobs view
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const jobId = params.get('job');
@@ -453,6 +453,10 @@ export default function Careers() {
       if (match) {
         setSelectedJob(match);
       }
+    }
+    if (params.get('view') === 'my-jobs' || params.get('tab') === 'my-jobs') {
+      setShowMyJobs(true);
+      setSelectedJob(null); // Clear selected job details view if open
     }
   }, [jobsList, location.search]);
 
@@ -563,6 +567,7 @@ export default function Careers() {
       console.log("Success:", response.data);
       setStatus("success");
       setMessage(response.data?.message || "Your application was submitted successfully!");
+      localStorage.setItem('candidateEmail', email.trim().toLowerCase());
 
       // Save locally to track in Candidate Workspace / My Jobs
       const newApp = {

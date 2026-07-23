@@ -267,7 +267,7 @@ export default function Navbar() {
       const seenIds = new Set();
 
       // Determine user / candidate email
-      let userEmail = (user?.email || user?.username || localStorage.getItem('candidateEmail') || '').toLowerCase().trim();
+      let userEmail = (user?.email || user?.username || localStorage.getItem('beta_email') || localStorage.getItem('candidateEmail') || '').toLowerCase().trim();
       if (!userEmail) {
         try {
           const betaUserStr = localStorage.getItem('beta_user');
@@ -277,165 +277,85 @@ export default function Navbar() {
           }
         } catch (_) { }
       }
-
-      // 1. DYNAMIC JOB OPENINGS & HIRINGS (For all candidates/visitors)
-      try {
-        const jobsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs`).catch(() => null);
-        const jobsList = jobsRes?.data?.data || jobsRes?.data || [];
-        if (Array.isArray(jobsList)) {
-          // Sort newest jobs first
-          const sortedJobs = [...jobsList].sort((a, b) => (b.id || 0) - (a.id || 0));
-          sortedJobs.slice(0, 5).forEach((job) => {
-            const notifId = `job-opening-${job.id}`;
-            if (!seenIds.has(notifId)) {
-              seenIds.add(notifId);
-              dynamicList.push({
-                id: notifId,
-                title: `🚀 New Opening: ${job.title || 'Role'}`,
-                message: `Beta is hiring for ${job.title || 'Positions'} in ${job.location || 'Tiruvallur / Remote'} (${job.type || 'Full Time'}). Tap to explore opportunities.`,
-                read: readIds.includes(notifId),
-                time: 'Active Hiring',
-                category: 'job_opening'
-              });
+      if (!userEmail) {
+        try {
+          const localAppsStr = localStorage.getItem('beta_applications');
+          if (localAppsStr) {
+            const localApps = JSON.parse(localAppsStr);
+            if (Array.isArray(localApps) && localApps.length > 0) {
+              const lastApp = localApps[localApps.length - 1];
+              userEmail = (lastApp.email || '').toLowerCase().trim();
             }
-          });
-        }
-      } catch (e) {
-        console.warn("Failed to fetch dynamic job openings:", e);
+          }
+        } catch (_) { }
       }
 
-      // 2. DYNAMIC CANDIDATE APPLICATION PIPELINE NOTIFICATIONS
       if (userEmail && (!user || user.role !== 'ROLE_ADMIN')) {
+        // 1. DYNAMIC CANDIDATE APPLICATION PIPELINE NOTIFICATIONS
         try {
           const appsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
+          if (appsRes === null) {
+            return; // Network error, do not overwrite/clear current notifications
+          }
           let candApps = appsRes?.data?.data || appsRes?.data || [];
 
           if (Array.isArray(candApps) && candApps.length > 0) {
             candApps.forEach((app) => {
-              const statusLower = (app.status || '').toLowerCase();
-
-              // Stage 6: Offer Proposal
-              if (['accepted', 'selected', 'approved', 'joined'].includes(statusLower)) {
-                const notifId = `offer-${app.id}`;
-                if (!seenIds.has(notifId)) {
-                  seenIds.add(notifId);
-                  dynamicList.push({
-                    id: notifId,
-                    title: `🎉 Offer Issued for ${app.jobTitle || 'Role'}`,
-                    message: `Congratulations! You cleared all selection rounds for ${app.jobTitle}. An onboarding specialist will contact you.`,
-                    read: readIds.includes(notifId),
-                    time: 'Selection Clear',
-                    category: 'offer'
-                  });
-                }
-              }
-
-              // Stage 5: HR Interview Scheduled
-              if (app.hrInterviewDate || statusLower.includes('hr')) {
-                const notifId = `hr-interview-${app.id}`;
-                if (!seenIds.has(notifId)) {
-                  seenIds.add(notifId);
-                  dynamicList.push({
-                    id: notifId,
-                    title: `🤝 HR Interview Scheduled`,
-                    message: `HR Interview for ${app.jobTitle} is scheduled on ${app.hrInterviewDate || 'soon'} at ${app.hrInterviewTime || '11:00 AM'}.${app.hrInterviewLocation ? ` Venue: ${app.hrInterviewLocation}` : ''}`,
-                    read: readIds.includes(notifId),
-                    time: 'Interview Update',
-                    category: 'hr_interview'
-                  });
-                }
-              }
-
-              // Stage 4: Task Assessment Assigned
-              if (app.taskAssigned || app.githubLink || statusLower.includes('task')) {
-                const notifId = `task-assessment-${app.id}`;
-                if (!seenIds.has(notifId)) {
-                  seenIds.add(notifId);
-                  dynamicList.push({
-                    id: notifId,
-                    title: `🛠️ Task Assessment Assigned`,
-                    message: app.githubLink
-                      ? `Solution repository submitted for ${app.jobTitle}. Solution is under code review.`
-                      : `Admin assigned a practical GitHub code review task for ${app.jobTitle}. Check My Applications to submit your repository.`,
-                    read: readIds.includes(notifId),
-                    time: 'Task Assessment',
-                    category: 'task_assessment'
-                  });
-                }
-              }
-
-              // Stage 3: Technical Interview Scheduled
-              if (app.interviewDate || statusLower.includes('interview')) {
-                const notifId = `tech-interview-${app.id}`;
-                if (!seenIds.has(notifId)) {
-                  seenIds.add(notifId);
-                  dynamicList.push({
-                    id: notifId,
-                    title: `💻 Technical Interview Scheduled`,
-                    message: `Technical interview for ${app.jobTitle} scheduled on ${app.interviewDate || 'soon'} at ${app.interviewTime || '10:00 AM'}.${app.interviewLink ? ` Link: ${app.interviewLink}` : ''}`,
-                    read: readIds.includes(notifId),
-                    time: 'Interview Update',
-                    category: 'tech_interview'
-                  });
-                }
-              }
-
-              // Stage 2: Assessment Sent
-              if (app.aptitudeStatus === 'Assessment Sent' || statusLower.includes('assessment') || statusLower === 'shortlisted') {
-                const notifId = `assessment-${app.id}`;
-                if (!seenIds.has(notifId)) {
-                  seenIds.add(notifId);
-                  dynamicList.push({
-                    id: notifId,
-                    title: `📝 Screening Assessment Link Sent`,
-                    message: `Screening assessment link for ${app.jobTitle} is generated. Link expires 24 hours after sending.`,
-                    read: readIds.includes(notifId),
-                    time: 'Assessment Update',
-                    category: 'assessment'
-                  });
-                }
-              }
-
-              // Stage 1: Application Received
+              const appliedDateStr = app.createdAt || app.appliedDate || app.appliedTime;
+              const formattedDate = appliedDateStr ? new Date(appliedDateStr).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              }) : 'N/A';
+              
               const notifId = `app-received-${app.id}`;
+              const appliedTimestamp = new Date(appliedDateStr || 0).getTime();
+
+              dynamicList.push({
+                id: notifId,
+                title: `📋 ${app.jobTitle || 'Role'}`,
+                message: `Status: ${app.status || 'PENDING'} | Applied Date: ${formattedDate}`,
+                read: readIds.includes(notifId),
+                time: formatNotificationTime(appliedDateStr),
+                category: 'application_update',
+                appliedAt: appliedTimestamp
+              });
+            });
+
+            // Sort newest applications first so they appear at the top of the notification list
+            dynamicList.sort((a, b) => b.appliedAt - a.appliedAt);
+          }
+        } catch (e) {
+          console.warn("Failed to fetch dynamic candidate application notifications:", e);
+        }
+      } else {
+        // 2. DYNAMIC JOB OPENINGS & HIRINGS (For anonymous visitors / logged out users)
+        try {
+          const jobsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs`).catch(() => null);
+          if (jobsRes === null) {
+            return; // Network error, do not overwrite/clear current notifications
+          }
+          const jobsList = jobsRes?.data?.data || jobsRes?.data || [];
+          if (Array.isArray(jobsList)) {
+            const sortedJobs = [...jobsList].sort((a, b) => (b.id || 0) - (a.id || 0));
+            sortedJobs.slice(0, 5).forEach((job) => {
+              const notifId = `job-opening-${job.id}`;
               if (!seenIds.has(notifId)) {
                 seenIds.add(notifId);
                 dynamicList.push({
                   id: notifId,
-                  title: `📋 Application Submitted: ${app.jobTitle || 'Role'}`,
-                  message: `Your application for ${app.jobTitle} was received. Status: ${app.status || 'Under Review'}.`,
+                  title: `🚀 New Opening: ${job.title || 'Role'}`,
+                  message: `Beta is hiring for ${job.title || 'Positions'} in ${job.location || 'Tiruvallur / Remote'} (${job.type || 'Full Time'}).`,
                   read: readIds.includes(notifId),
-                  time: formatNotificationTime(app.createdAt || app.appliedDate),
-                  category: 'application'
+                  time: 'Active Hiring',
+                  category: 'job_opening',
+                  appliedAt: job.id
                 });
-              }
-
-              // Also fetch backend notifications table for candidate
-              if (app.id && !String(app.id).startsWith('local-')) {
-                axios.get(`${JOB_BOARD_API_BASE}/api/notifications/${app.id}`).then(backendNotifRes => {
-                  const dbNotifs = backendNotifRes?.data || [];
-                  if (Array.isArray(dbNotifs)) {
-                    dbNotifs.forEach(dbN => {
-                      const dbNotifId = `db-${dbN.id}`;
-                      if (!seenIds.has(dbNotifId)) {
-                        seenIds.add(dbNotifId);
-                        dynamicList.push({
-                          id: dbNotifId,
-                          title: dbN.title,
-                          message: dbN.message,
-                          read: dbN.isRead || dbN.read || readIds.includes(dbNotifId),
-                          time: formatNotificationTime(dbN.createdAt),
-                          category: 'db_notification'
-                        });
-                      }
-                    });
-                  }
-                }).catch(() => null);
               }
             });
           }
         } catch (e) {
-          console.warn("Failed to fetch dynamic candidate application notifications:", e);
+          console.warn("Failed to fetch dynamic job openings:", e);
         }
       }
 
@@ -1066,13 +986,19 @@ export default function Navbar() {
                                   handleMarkAsRead(notif.id);
                                 }
                                 setIsNotificationsOpen(false);
-                                navigate('/careers');
+                                if (notif.category === 'application_update' || notif.id.startsWith('app-received-')) {
+                                  navigate('/careers?view=my-jobs');
+                                } else {
+                                  navigate('/careers');
+                                }
                               }}
                               className={`p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/30' : ''}`}
                             >
                               <div className="mt-0.5 shrink-0">
                                 {notif.category === 'job_opening' ? (
                                   <Briefcase className="h-4 w-4 text-purple-600" />
+                                ) : notif.category === 'application_update' ? (
+                                  <Briefcase className="h-4 w-4 text-[#8B5CF6]" />
                                 ) : notif.category === 'offer' ? (
                                   <Sparkles className="h-4 w-4 text-amber-500" />
                                 ) : notif.category === 'tech_interview' || notif.category === 'hr_interview' ? (
