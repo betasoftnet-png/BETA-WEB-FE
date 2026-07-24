@@ -53,6 +53,9 @@ const getCandidateCurrentStage = (app) => {
 
   // 5. Test Round stage
   const aptStatus = app.aptitudeStatus || app.aptitudestatus || '';
+  if (aptStatus === 'Started' || aptStatus === 'STARTED') {
+    return 'Started';
+  }
   const hasAptScore = app.aptitudeScore !== undefined && app.aptitudeScore !== null && app.aptitudeScore !== '';
   if (aptStatus === 'Assessment Sent' || aptStatus === 'Completed' || hasAptScore || app.status === 'Round 1 Aptitude' || app.status === 'Test Round') {
     return 'Test Round';
@@ -86,6 +89,8 @@ const getStageBadgeStyle = (stage) => {
     case 'Selected':
     case 'Accepted':
       return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    case 'Started':
+      return 'bg-emerald-50 text-emerald-700 border-emerald-200';
     case 'Rejected':
       return 'bg-rose-50 text-rose-700 border-rose-200';
     case 'Terminated':
@@ -100,21 +105,32 @@ const getStageBadgeStyle = (stage) => {
 const formatTimeOnly = (dateTimeStr) => {
   if (!dateTimeStr) return '';
   try {
-    const parts = dateTimeStr.split('T');
-    if (parts.length > 1) {
-      const timePart = parts[1].split('.')[0];
-      const timeSubParts = timePart.split(':');
-      if (timeSubParts.length >= 2) {
-        let hour = parseInt(timeSubParts[0]);
-        const minute = timeSubParts[1];
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        hour = hour % 12;
-        hour = hour ? hour : 12;
-        const paddedHour = String(hour).padStart(2, '0');
-        return `${paddedHour}:${minute} ${ampm}`;
+    let targetStr = dateTimeStr.trim();
+    let date;
+    const hasTimezone = targetStr.endsWith('Z') || (targetStr.includes('T') && (targetStr.split('T')[1].includes('+') || targetStr.split('T')[1].includes('-')));
+    
+    if (hasTimezone) {
+      date = new Date(targetStr);
+    } else {
+      const cleaned = targetStr.replace('T', ' ').split('.')[0];
+      const parts = cleaned.split(' ');
+      if (parts.length > 1) {
+        const dateParts = parts[0].split('-');
+        const timeParts = parts[1].split(':');
+        const year = parseInt(dateParts[0]);
+        const month = parseInt(dateParts[1]) - 1;
+        const day = parseInt(dateParts[2]);
+        const hour = parseInt(timeParts[0]);
+        const minute = parseInt(timeParts[1]);
+        const second = timeParts[2] ? parseInt(timeParts[2]) : 0;
+        date = new Date(year, month, day, hour, minute, second);
+      } else {
+        date = new Date(targetStr);
       }
-      return timePart;
     }
+
+    if (isNaN(date.getTime())) return '';
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
   } catch (e) {
     console.error(e);
   }
@@ -508,6 +524,7 @@ export default function AdminDashboard() {
             createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
             appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
             appliedTime: app.appliedTime || app.appliedtime || '',
+            formattedAppliedTime: app.formattedAppliedTime || app.formattedappliedtime || '',
             jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
             jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
             jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
@@ -609,6 +626,7 @@ export default function AdminDashboard() {
               createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
               appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
               appliedTime: app.appliedTime || app.appliedtime || '',
+              formattedAppliedTime: app.formattedAppliedTime || app.formattedappliedtime || '',
               jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
               jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
               jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
@@ -648,6 +666,7 @@ export default function AdminDashboard() {
           current.aptitudeScore !== selectedApplication.aptitudeScore ||
           current.appliedTime !== selectedApplication.appliedTime ||
           current.appliedDate !== selectedApplication.appliedDate ||
+          current.formattedAppliedTime !== selectedApplication.formattedAppliedTime ||
           current.githubLink !== selectedApplication.githubLink
         ) {
           setSelectedApplication(current);
@@ -3164,7 +3183,7 @@ export default function AdminDashboard() {
                               .filter(app => selectedJobFilter === 'All' || app.jobTitle === selectedJobFilter)
                               .filter(app => {
                                 if (selectedStatusFilter === 'Accepted') {
-                                  const isAcceptedPipeline = app.status === 'Accepted' || app.status === 'Joined' || app.status === 'Selected' || app.status === 'ACCEPTED' || app.status === 'JOINED' || app.status === 'SELECTED' || (app.status && app.status !== 'Rejected' && app.status !== 'Terminated' && app.status !== 'Applied' && app.status !== 'Candidates');
+                                  const isAcceptedPipeline = app.status === 'Accepted' || app.status === 'Joined' || app.status === 'Selected' || app.status === 'ACCEPTED' || app.status === 'JOINED' || app.status === 'SELECTED' || (app.status && app.status !== 'Rejected' && app.status !== 'Blocked' && app.status !== 'BLOCKED' && app.status !== 'Terminated' && app.status !== 'Applied' && app.status !== 'Candidates');
                                   if (!isAcceptedPipeline) return false;
                                   if (statusFilter === 'All') return true;
                                   const currentStage = getCandidateCurrentStage(app);
@@ -3359,9 +3378,9 @@ export default function AdminDashboard() {
                                   {app.createdAt ? (
                                     <div>
                                       <div className="font-semibold text-slate-700">{new Date(app.createdAt).toLocaleDateString()}</div>
-                                      {app.appliedTime && (
+                                      {app.formattedAppliedTime && (
                                         <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
-                                          {formatTimeOnly(app.appliedTime)}
+                                          {app.formattedAppliedTime}
                                         </div>
                                       )}
                                     </div>
@@ -3585,7 +3604,7 @@ export default function AdminDashboard() {
                             <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Applied Date</label>
                             <p className="text-xs font-bold text-slate-800 mt-1">
                               {selectedApplication.appliedDate}
-                              {selectedApplication.appliedTime && ` - ${formatTimeOnly(selectedApplication.appliedTime)}`}
+                              {selectedApplication.formattedAppliedTime && ` - ${selectedApplication.formattedAppliedTime}`}
                             </p>
                           </div>
                         )}
