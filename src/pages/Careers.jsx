@@ -942,7 +942,7 @@ export default function Careers() {
         }
         .careers-purple-pink-theme .cta-block h2,
         .careers-purple-pink-theme .cta-block p {
-          color: #5B3A00 !important;
+          color: #000000 !important;
         }
 
         /* Animated gradient blobs */
@@ -1704,22 +1704,22 @@ export default function Careers() {
 
 
             {/* SECTION 8: CALL TO ACTION SECTION */}
-            <div className="cta-block relative overflow-hidden rounded-3xl p-10 md:p-16 border border-amber-200/80 bg-gradient-to-r from-amber-50/90 via-yellow-50/80 to-amber-50/90 text-center shadow-xl shadow-amber-500/5">
-              {/* Subtle yellow background glow circles inside CTA */}
-              <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-yellow-200/40 rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-amber-200/40 rounded-full blur-2xl pointer-events-none" />
+            <div className="cta-block relative overflow-hidden rounded-3xl p-10 md:p-16 border border-blue-100 bg-gradient-to-r from-blue-50/90 via-sky-50/80 to-blue-50/90 text-center shadow-xl shadow-blue-500/5">
+              {/* Subtle blue background glow circles inside CTA */}
+              <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-blue-200/30 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-sky-200/30 rounded-full blur-2xl pointer-events-none" />
 
               <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
-                <h2 className="text-3xl md:text-5xl font-black text-[#5B3A00] leading-tight tracking-tight">
+                <h2 className="text-3xl md:text-5xl font-black text-black leading-tight tracking-tight">
                   Ready to Build Something Amazing?
                 </h2>
-                <p className="text-[#5B3A00]/90 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-semibold">
+                <p className="text-black max-w-xl mx-auto text-sm md:text-base leading-relaxed font-semibold">
                   Join a team of creators, system architects, and designers scaling software to thousands of businesses globally.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                   <a
                     href="#search-roles"
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 transition-all duration-300 hover:scale-[1.02] shadow-md shadow-amber-500/20 no-underline"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-[#004AAD] to-blue-600 hover:from-[#003A8C] hover:to-blue-700 text-white transition-all duration-300 hover:scale-[1.02] shadow-md shadow-blue-500/20 no-underline"
                   >
                     Apply Now
                   </a>
