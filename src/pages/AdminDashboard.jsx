@@ -22,6 +22,7 @@ const mapStatusToUI = (status) => {
   if (s === 'approved' || s === 'selected' || s === 'accepted') return 'Accepted';
   if (s === 'rejected') return 'Rejected';
   if (s === 'terminated (malpractice)' || s === 'terminated') return 'Terminated';
+  if (s === 'blocked') return 'Blocked';
   if (s === 'joined') return 'Joined';
   return 'Applied';
 };
@@ -88,10 +89,36 @@ const getStageBadgeStyle = (stage) => {
     case 'Rejected':
       return 'bg-rose-50 text-rose-700 border-rose-200';
     case 'Terminated':
+    case 'Blocked':
+    case 'BLOCKED':
       return 'bg-red-50 text-red-700 border-red-200';
     default:
       return 'bg-slate-50 text-slate-700 border-slate-200';
   }
+};
+
+const formatTimeOnly = (dateTimeStr) => {
+  if (!dateTimeStr) return '';
+  try {
+    const parts = dateTimeStr.split('T');
+    if (parts.length > 1) {
+      const timePart = parts[1].split('.')[0];
+      const timeSubParts = timePart.split(':');
+      if (timeSubParts.length >= 2) {
+        let hour = parseInt(timeSubParts[0]);
+        const minute = timeSubParts[1];
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12;
+        hour = hour ? hour : 12;
+        const paddedHour = String(hour).padStart(2, '0');
+        return `${paddedHour}:${minute} ${ampm}`;
+      }
+      return timePart;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  return '';
 };
 
 const isOptionSelected = (optionText, optionLetter, selectedVal) => {
@@ -480,6 +507,7 @@ export default function AdminDashboard() {
               : mapStatusToUI(app.status),
             createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
             appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+            appliedTime: app.appliedTime || app.appliedtime || '',
             jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
             jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
             jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
@@ -580,6 +608,7 @@ export default function AdminDashboard() {
                 : mapStatusToUI(app.status),
               createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
               appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+              appliedTime: app.appliedTime || app.appliedtime || '',
               jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
               jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
               jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
@@ -608,6 +637,24 @@ export default function AdminDashboard() {
     return () => clearInterval(pollInterval);
   }, [user]);
 
+  // Keep selectedApplication synced with background updates from externalApplications
+  useEffect(() => {
+    if (selectedApplication && externalApplications) {
+      const current = externalApplications.find(app => app.id === selectedApplication.id);
+      if (current) {
+        if (
+          current.status !== selectedApplication.status ||
+          current.aptitudeStatus !== selectedApplication.aptitudeStatus ||
+          current.aptitudeScore !== selectedApplication.aptitudeScore ||
+          current.appliedTime !== selectedApplication.appliedTime ||
+          current.appliedDate !== selectedApplication.appliedDate ||
+          current.githubLink !== selectedApplication.githubLink
+        ) {
+          setSelectedApplication(current);
+        }
+      }
+    }
+  }, [externalApplications, selectedApplication?.id]);
 
   useEffect(() => {
     if (selectedApplication) {
@@ -3309,7 +3356,18 @@ export default function AdminDashboard() {
                                    })()}
                                 </td>
                                 <td className="py-4 px-6 text-slate-450">
-                                  {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
+                                  {app.createdAt ? (
+                                    <div>
+                                      <div className="font-semibold text-slate-700">{new Date(app.createdAt).toLocaleDateString()}</div>
+                                      {app.appliedTime && (
+                                        <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                                          {formatTimeOnly(app.appliedTime)}
+                                        </div>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    'N/A'
+                                  )}
                                 </td>
                                 <td className="py-4 px-6">
                                   {app.resumeUrl ? (
@@ -3525,7 +3583,10 @@ export default function AdminDashboard() {
                         {selectedApplication.appliedDate && (
                           <div>
                             <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Applied Date</label>
-                            <p className="text-xs font-bold text-slate-800 mt-1">{selectedApplication.appliedDate}</p>
+                            <p className="text-xs font-bold text-slate-800 mt-1">
+                              {selectedApplication.appliedDate}
+                              {selectedApplication.appliedTime && ` - ${formatTimeOnly(selectedApplication.appliedTime)}`}
+                            </p>
                           </div>
                         )}
                       </div>
