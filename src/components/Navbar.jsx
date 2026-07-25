@@ -332,16 +332,14 @@ export default function Navbar() {
                     // Map category based on title or description
                     let category = 'bell';
                     const titleLower = (dbNotif.title || '').toLowerCase();
-                    if (titleLower.includes('assessment') && titleLower.includes('assigned')) {
-                      category = 'assessment'; // Assessment Test Assigned
-                    } else if (titleLower.includes('task') || titleLower.includes('github')) {
-                      category = 'task_assessment'; // Task Assessment Assigned/Submitted
-                    } else if (titleLower.includes('interview') && titleLower.includes('scheduled')) {
-                      if (titleLower.includes('hr')) {
-                        category = 'hr_interview'; // HR Interview Scheduled
-                      } else {
-                        category = 'tech_interview'; // Online (Technical) Interview Scheduled
-                      }
+                    if (titleLower.includes('hr')) {
+                      category = 'hr_interview'; // HR Interview
+                    } else if (titleLower.includes('task')) {
+                      category = 'task_assessment'; // Task Assessment
+                    } else if (titleLower.includes('technical') || titleLower.includes('interview') || titleLower.includes('online')) {
+                      category = 'tech_interview'; // Technical / Online Interview
+                    } else if (titleLower.includes('assessment') || titleLower.includes('test') || titleLower.includes('aptitude') || titleLower.includes('blocked') || titleLower.includes('terminated')) {
+                      category = 'assessment'; // Online Test / Assessment
                     } else if (titleLower.includes('onboarding') || titleLower.includes('congratulations') || titleLower.includes('accepted') || titleLower.includes('offer')) {
                       category = 'offer';
                     }

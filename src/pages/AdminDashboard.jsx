@@ -2071,7 +2071,13 @@ export default function AdminDashboard() {
 
                       {/* Metrics cards grid */}
                       {(() => {
-                        const round1Apps = externalApplications.filter(app => app.status === 'Round 1 Aptitude');
+                        const round1Apps = externalApplications.filter(app => 
+                          app.status === 'Round 1 Aptitude' || 
+                          app.status === 'BLOCKED' || 
+                          app.status === 'Blocked' || 
+                          app.status === 'Terminated' || 
+                          app.status === 'Terminated (Malpractice)'
+                        );
                         const selectedCount = round1Apps.length;
                         const scheduledCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Assessment Sent' || (app.aptitudeStatus || 'Pending') === 'Scheduled').length;
                         const completedCount = round1Apps.filter(app => (app.aptitudeStatus || 'Pending') === 'Completed').length;
@@ -2147,15 +2153,39 @@ export default function AdminDashboard() {
                             </thead>
                             <tbody className="divide-y divide-slate-100 text-slate-700">
                               {externalApplications
-                                .filter(app => app.status === 'Round 1 Aptitude')
+                                .filter(app => 
+                                  app.status === 'Round 1 Aptitude' || 
+                                  app.status === 'BLOCKED' || 
+                                  app.status === 'Blocked' || 
+                                  app.status === 'Terminated' || 
+                                  app.status === 'Terminated (Malpractice)'
+                                )
                                 .map((app) => {
                                   const dateVal = app.interviewDate || 'Not Selected';
                                   const timeVal = app.interviewTime || '--';
                                   const statusVal = app.aptitudeStatus || 'Pending';
+                                  
+                                  const appStatus = (app.status || '').toLowerCase().trim();
+                                  const aptStatus = (app.aptitudeStatus || '').toLowerCase().trim();
+                                  const isBlocked = appStatus === 'blocked' || appStatus === 'terminated' || appStatus === 'terminated (malpractice)' || aptStatus === 'blocked';
+                                  const isMalpractice = appStatus === 'terminated (malpractice)';
 
                                   return (
                                     <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
-                                      <td className="py-3.5 px-4 font-bold text-slate-900">{app.fullName}</td>
+                                      <td className="py-3.5 px-4 font-bold text-slate-900">
+                                        <button
+                                          onClick={() => {
+                                            const normalizedStatus = mapStatusToUI(app.status);
+                                            const updatedApp = { ...app, status: normalizedStatus };
+                                            setSelectedApplication(updatedApp);
+                                            setCandidateStatus(normalizedStatus);
+                                            setActiveSubTab('candidateDetails');
+                                          }}
+                                          className="text-left font-bold text-slate-900 hover:text-[#004AAD] transition border-none bg-transparent p-0 cursor-pointer outline-none"
+                                        >
+                                          {app.fullName}
+                                        </button>
+                                      </td>
                                       <td className="py-3.5 px-4">{app.jobTitle}</td>
                                       <td className="py-3.5 px-4">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${dateVal === 'Not Selected' ? 'bg-slate-50 text-slate-500 border border-slate-200' : 'bg-blue-50 text-blue-700 border border-blue-200'
@@ -2165,35 +2195,54 @@ export default function AdminDashboard() {
                                       </td>
                                       <td className="py-3.5 px-4 font-semibold text-slate-900">{timeVal}</td>
                                       <td className="py-3.5 px-4">
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold ${statusVal === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                                          statusVal === 'Assessment Sent' || statusVal === 'Scheduled' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                                            'bg-slate-50 text-slate-500 border border-slate-200'
-                                          }`}>
-                                          {statusVal === 'Scheduled' ? 'Assessment Sent' : statusVal}
-                                        </span>
+                                        {isBlocked ? (
+                                          <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-black bg-rose-50 text-rose-700 border border-rose-250 uppercase tracking-wider animate-fadeIn">
+                                            {isMalpractice ? 'Malpractice' : 'Blocked'}
+                                          </span>
+                                        ) : (
+                                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold ${statusVal === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                                            statusVal === 'Assessment Sent' || statusVal === 'Scheduled' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                                              'bg-slate-50 text-slate-500 border border-slate-200'
+                                            }`}>
+                                            {statusVal === 'Scheduled' ? 'Assessment Sent' : statusVal}
+                                          </span>
+                                        )}
                                       </td>
                                       <td className="py-3.5 px-4">
                                         <div className="flex items-center space-x-2">
-                                          {(statusVal === 'Assessment Sent' || statusVal === 'Scheduled' || statusVal === 'Pending') && (
+                                          {isBlocked ? (
                                             <button
-                                              onClick={() => {
-                                                const token = app.assessmentToken || app.assessmenttoken;
-                                                const baseUrl = window.location.origin;
-                                                const url = token
-                                                  ? `${baseUrl}/careers/assessment?token=${token}`
-                                                  : `${baseUrl}/careers/assessment?id=${app.id}`;
-                                                navigator.clipboard.writeText(url);
-                                                alert(`Test Link copied to clipboard:\n${url}`);
-                                              }}
-                                              className="px-2.5 py-1 rounded bg-blue-50 hover:bg-blue-100 text-[#004AAD] border border-blue-200 text-[10px] font-bold transition cursor-pointer"
+                                              onClick={() => handleResetAssessment(app.id)}
+                                              className="px-2.5 py-1 rounded bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-250 text-[10px] font-bold transition cursor-pointer flex items-center gap-1 border-none outline-none"
+                                              title="Reset attempts and unblock test for candidate"
                                             >
-                                              Copy Test Link
+                                              <RefreshCw className="h-3.5 w-3.5 text-purple-650" />
+                                              <span>Reset Test</span>
                                             </button>
-                                          )}
-                                          {statusVal === 'Completed' && (
-                                            <span className="text-[10px] font-bold text-emerald-600">
-                                              Score: {app.aptitudeScore !== undefined && app.aptitudeScore !== null && app.aptitudeScore !== '' ? app.aptitudeScore : '0'}%
-                                            </span>
+                                          ) : (
+                                            <>
+                                              {(statusVal === 'Assessment Sent' || statusVal === 'Scheduled' || statusVal === 'Pending') && (
+                                                <button
+                                                  onClick={() => {
+                                                    const token = app.assessmentToken || app.assessmenttoken;
+                                                    const baseUrl = window.location.origin;
+                                                    const url = token
+                                                      ? `${baseUrl}/careers/assessment?token=${token}`
+                                                      : `${baseUrl}/careers/assessment?id=${app.id}`;
+                                                    navigator.clipboard.writeText(url);
+                                                    alert(`Test Link copied to clipboard:\n${url}`);
+                                                  }}
+                                                  className="px-2.5 py-1 rounded bg-blue-50 hover:bg-blue-100 text-[#004AAD] border border-blue-200 text-[10px] font-bold transition cursor-pointer"
+                                                >
+                                                  Copy Test Link
+                                                </button>
+                                              )}
+                                              {statusVal === 'Completed' && (
+                                                <span className="text-[10px] font-bold text-emerald-600">
+                                                  Score: {app.aptitudeScore !== undefined && app.aptitudeScore !== null && app.aptitudeScore !== '' ? app.aptitudeScore : '0'}%
+                                                </span>
+                                              )}
+                                            </>
                                           )}
                                         </div>
                                       </td>
@@ -2201,7 +2250,13 @@ export default function AdminDashboard() {
                                   );
                                 })
                               }
-                              {externalApplications.filter(app => app.status === 'Round 1 Aptitude').length === 0 && (
+                              {externalApplications.filter(app => 
+                                app.status === 'Round 1 Aptitude' || 
+                                app.status === 'BLOCKED' || 
+                                app.status === 'Blocked' || 
+                                app.status === 'Terminated' || 
+                                app.status === 'Terminated (Malpractice)'
+                              ).length === 0 && (
                                 <tr>
                                   <td colSpan={6} className="py-8 text-center text-slate-400 italic">
                                     No candidates currently in Stage 1 Aptitude.
@@ -3473,6 +3528,19 @@ export default function AdminDashboard() {
                     {(() => {
                       const scoreVal = selectedApplication.aptitudeScore;
                       const hasScore = scoreVal !== undefined && scoreVal !== null && scoreVal !== '';
+                      const appStatus = (selectedApplication.status || '').toLowerCase().trim();
+                      const aptStatus = (selectedApplication.aptitudeStatus || '').toLowerCase().trim();
+                      const isBlocked = appStatus === 'blocked' || appStatus === 'terminated' || appStatus === 'terminated (malpractice)' || aptStatus === 'blocked';
+                      const isMalpractice = appStatus === 'terminated (malpractice)';
+
+                      if (isBlocked) {
+                        return (
+                          <div className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-rose-250 bg-rose-50 text-rose-700 text-xs font-black shadow-xs select-none cursor-default animate-fadeIn">
+                            <Lock className="h-4 w-4 text-rose-600" />
+                            <span>{isMalpractice ? 'Malpractice Detected (Blocked)' : 'Assessment Blocked'}</span>
+                          </div>
+                        );
+                      }
 
                       if (hasScore) {
                         const scoreNum = parseInt(scoreVal);
