@@ -1101,7 +1101,7 @@ export default function AdminDashboard() {
 
       const updatedApps = externalApplications.map(app =>
         app.id === candidateId
-          ? { ...app, aptitudeStatus: 'Assessment Sent', assessmentSubmitted: false, assessmentAttempts: 0, status: (app.status === 'Terminated' || app.status === 'Terminated (Malpractice)') ? 'Applied' : app.status }
+          ? { ...app, aptitudeStatus: 'Assessment Sent', assessmentSubmitted: false, assessmentAttempts: 0, status: 'Round 1 Aptitude' }
           : app
       );
       updateAppsAndSync(updatedApps);
@@ -1111,7 +1111,8 @@ export default function AdminDashboard() {
           ...prev,
           aptitudeStatus: 'Assessment Sent',
           assessmentSubmitted: false,
-          assessmentAttempts: 0
+          assessmentAttempts: 0,
+          status: 'Round 1 Aptitude'
         }));
       }
 
@@ -1123,7 +1124,7 @@ export default function AdminDashboard() {
         localStorage.removeItem(`assessment_blocked_${candidateId}`);
         const updatedApps = externalApplications.map(app =>
           app.id === candidateId
-            ? { ...app, aptitudeStatus: 'Assessment Sent', assessmentSubmitted: false, assessmentAttempts: 0 }
+            ? { ...app, aptitudeStatus: 'Assessment Sent', assessmentSubmitted: false, assessmentAttempts: 0, status: 'Round 1 Aptitude' }
             : app
         );
         updateAppsAndSync(updatedApps);
