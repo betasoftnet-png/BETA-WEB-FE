@@ -195,6 +195,7 @@ export default function Navbar() {
   const [detectionError, setDetectionError] = useState(null);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const notificationsRef = useRef(null);
+  const mobileNotificationsRef = useRef(null);
   const [notifications, setNotifications] = useState([]);
   const [debugInfo, setDebugInfo] = useState({
     userEmail: '',
@@ -300,7 +301,7 @@ export default function Navbar() {
           let candApps = appsRes?.data?.data || appsRes?.data || [];
 
           if (Array.isArray(candApps) && candApps.length > 0) {
-            candApps.forEach((app) => {
+            await Promise.all(candApps.map(async (app) => {
               const appliedDateStr = app.createdAt || app.appliedDate || app.appliedTime;
               const formattedDate = appliedDateStr ? new Date(appliedDateStr).toLocaleDateString(undefined, {
                 year: 'numeric',
@@ -320,7 +321,46 @@ export default function Navbar() {
                 category: 'application_update',
                 appliedAt: appliedTimestamp
               });
-            });
+
+              try {
+                const notifsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/notifications/${app.id}`).catch(() => null);
+                if (notifsRes && notifsRes.data) {
+                  const backendNotifs = Array.isArray(notifsRes.data) ? notifsRes.data : [];
+                  backendNotifs.forEach((dbNotif) => {
+                    const createdAtTimestamp = new Date(dbNotif.createdAt || 0).getTime();
+                    
+                    // Map category based on title or description
+                    let category = 'bell';
+                    const titleLower = (dbNotif.title || '').toLowerCase();
+                    if (titleLower.includes('assessment') && titleLower.includes('assigned')) {
+                      category = 'assessment'; // Assessment Test Assigned
+                    } else if (titleLower.includes('task') || titleLower.includes('github')) {
+                      category = 'task_assessment'; // Task Assessment Assigned/Submitted
+                    } else if (titleLower.includes('interview') && titleLower.includes('scheduled')) {
+                      if (titleLower.includes('hr')) {
+                        category = 'hr_interview'; // HR Interview Scheduled
+                      } else {
+                        category = 'tech_interview'; // Online (Technical) Interview Scheduled
+                      }
+                    } else if (titleLower.includes('onboarding') || titleLower.includes('congratulations') || titleLower.includes('accepted') || titleLower.includes('offer')) {
+                      category = 'offer';
+                    }
+
+                    dynamicList.push({
+                      id: dbNotif.id,
+                      title: dbNotif.title,
+                      message: dbNotif.message,
+                      read: dbNotif.read || dbNotif.isRead || false,
+                      time: formatNotificationTime(dbNotif.createdAt),
+                      category: category,
+                      appliedAt: createdAtTimestamp
+                    });
+                  });
+                }
+              } catch (err) {
+                console.warn(`Failed to fetch database notifications for application ${app.id}:`, err);
+              }
+            }));
 
             // Sort newest applications first so they appear at the top of the notification list
             dynamicList.sort((a, b) => b.appliedAt - a.appliedAt);
@@ -430,7 +470,9 @@ export default function Navbar() {
       if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
         setIsSearchExpanded(false);
       }
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+      const clickedOutsideDesktop = !notificationsRef.current || !notificationsRef.current.contains(event.target);
+      const clickedOutsideMobile = !mobileNotificationsRef.current || !mobileNotificationsRef.current.contains(event.target);
+      if (clickedOutsideDesktop && clickedOutsideMobile) {
         setIsNotificationsOpen(false);
       }
     }
@@ -493,6 +535,85 @@ export default function Navbar() {
   };
 
   const isActive = (path) => location.pathname === path;
+
+  const renderNotificationsDropdown = (positionClass = "right-0") => {
+    return (
+      <AnimatePresence>
+        {isNotificationsOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className={`absolute ${positionClass} mt-2 w-80 rounded-2xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden text-left`}
+          >
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Notifications</span>
+              {notifications.filter(n => !n.read).length > 0 && (
+                <button
+                  onClick={handleMarkAllAsRead}
+                  className="text-[10px] text-[#004AAD] font-extrabold hover:underline border-none bg-transparent cursor-pointer p-0"
+                >
+                  Mark all read
+                </button>
+              )}
+            </div>
+
+            <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+              {notifications.length > 0 ? (
+                notifications.map(notif => (
+                  <div
+                    key={notif.id}
+                    onClick={() => {
+                      if (!notif.read) {
+                        handleMarkAsRead(notif.id);
+                      }
+                      setIsNotificationsOpen(false);
+                      if (notif.category === 'application_update' || notif.id.startsWith('app-received-')) {
+                        navigate('/careers?view=my-jobs');
+                      } else {
+                        navigate('/careers');
+                      }
+                    }}
+                    className={`p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/30' : ''}`}
+                  >
+                    <div className="mt-0.5 shrink-0">
+                      {notif.category === 'job_opening' ? (
+                        <Briefcase className="h-4 w-4 text-purple-600" />
+                      ) : notif.category === 'application_update' ? (
+                        <Briefcase className="h-4 w-4 text-[#8B5CF6]" />
+                      ) : notif.category === 'offer' ? (
+                        <Sparkles className="h-4 w-4 text-amber-500" />
+                      ) : notif.category === 'tech_interview' || notif.category === 'hr_interview' ? (
+                        <Clock className="h-4 w-4 text-emerald-600" />
+                      ) : notif.category === 'task_assessment' ? (
+                        <CheckCircle2 className="h-4 w-4 text-indigo-600" />
+                      ) : notif.category === 'assessment' ? (
+                        <AlertCircle className="h-4 w-4 text-pink-600" />
+                      ) : (
+                        <Bell className="h-4 w-4 text-[#004AAD]" />
+                      )}
+                    </div>
+                    <div className="space-y-0.5 flex-grow min-w-0 text-left">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className={`text-xs font-bold truncate ${!notif.read ? 'text-slate-900 font-extrabold' : 'text-slate-700'}`}>{notif.title}</p>
+                        <span className="text-[9px] text-slate-400 font-bold flex-shrink-0">{notif.time}</span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-snug font-medium line-clamp-2">{notif.message}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-8 text-center text-slate-400 italic text-xs">
+                  No new notifications.
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  };
 
   return (
     <>
@@ -953,82 +1074,7 @@ export default function Navbar() {
                     </span>
                   )}
                 </button>
-
-                {/* Notifications Dropdown Panel */}
-                <AnimatePresence>
-                  {isNotificationsOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden text-left"
-                    >
-                      <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                        <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Notifications</span>
-                        {notifications.filter(n => !n.read).length > 0 && (
-                          <button
-                            onClick={handleMarkAllAsRead}
-                            className="text-[10px] text-[#004AAD] font-extrabold hover:underline border-none bg-transparent cursor-pointer p-0"
-                          >
-                            Mark all read
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
-                        {notifications.length > 0 ? (
-                          notifications.map(notif => (
-                            <div
-                              key={notif.id}
-                              onClick={() => {
-                                if (!notif.read) {
-                                  handleMarkAsRead(notif.id);
-                                }
-                                setIsNotificationsOpen(false);
-                                if (notif.category === 'application_update' || notif.id.startsWith('app-received-')) {
-                                  navigate('/careers?view=my-jobs');
-                                } else {
-                                  navigate('/careers');
-                                }
-                              }}
-                              className={`p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 ${!notif.read ? 'bg-blue-50/30' : ''}`}
-                            >
-                              <div className="mt-0.5 shrink-0">
-                                {notif.category === 'job_opening' ? (
-                                  <Briefcase className="h-4 w-4 text-purple-600" />
-                                ) : notif.category === 'application_update' ? (
-                                  <Briefcase className="h-4 w-4 text-[#8B5CF6]" />
-                                ) : notif.category === 'offer' ? (
-                                  <Sparkles className="h-4 w-4 text-amber-500" />
-                                ) : notif.category === 'tech_interview' || notif.category === 'hr_interview' ? (
-                                  <Clock className="h-4 w-4 text-emerald-600" />
-                                ) : notif.category === 'task_assessment' ? (
-                                  <CheckCircle2 className="h-4 w-4 text-indigo-600" />
-                                ) : notif.category === 'assessment' ? (
-                                  <AlertCircle className="h-4 w-4 text-pink-600" />
-                                ) : (
-                                  <Bell className="h-4 w-4 text-[#004AAD]" />
-                                )}
-                              </div>
-                              <div className="space-y-0.5 flex-grow min-w-0 text-left">
-                                <div className="flex items-center justify-between gap-2">
-                                  <p className={`text-xs font-bold truncate ${!notif.read ? 'text-slate-900 font-extrabold' : 'text-slate-700'}`}>{notif.title}</p>
-                                  <span className="text-[9px] text-slate-400 font-bold flex-shrink-0">{notif.time}</span>
-                                </div>
-                                <p className="text-[11px] text-slate-600 leading-snug font-medium line-clamp-2">{notif.message}</p>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="py-8 text-center text-slate-400 italic text-xs">
-                            No new notifications.
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {renderNotificationsDropdown("right-0")}
               </div>
 
               {user ? (
@@ -1112,8 +1158,28 @@ export default function Navbar() {
 
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="-mr-2 flex md:hidden">
+            {/* Mobile Notification Bell & Menu Button */}
+            <div className="-mr-2 flex md:hidden items-center space-x-1 sm:space-x-2">
+              {/* Header Notification Icon Bell Dropdown (Mobile) */}
+              <div className="relative pointer-events-auto" ref={mobileNotificationsRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                  className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent"
+                  title="Notifications"
+                >
+                  <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
+                  {/* Notification Count Badge */}
+                  {notifications.filter(n => !n.read).length > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
+                      {notifications.filter(n => !n.read).length}
+                    </span>
+                  )}
+                </button>
+                {renderNotificationsDropdown("right-[-48px] max-w-[calc(100vw-32px)]")}
+              </div>
+
+              {/* Mobile Menu Button */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-[#004AAD] hover:bg-slate-100 focus:outline-none"

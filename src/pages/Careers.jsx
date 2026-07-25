@@ -247,8 +247,10 @@ export default function Careers() {
         } catch (err) {
           console.error('Failed to fetch saved jobs from backend:', err);
         }
+        fetchUserApplications();
       } else {
         setSavedJobs([]);
+        setUserApplications([]);
       }
     };
     fetchSavedJobs();
@@ -624,7 +626,7 @@ export default function Careers() {
     }
   };
 
-  const fetchUserApplications = async () => {
+  async function fetchUserApplications() {
     if (!user) return;
     setMyJobsLoading(true);
     setMyJobsError('');
