@@ -5314,11 +5314,40 @@ export default function AdminDashboard() {
 
             {/* Resume sheet preview */}
             <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-inner overflow-hidden h-[75vh]">
-              <iframe
-                src={`${selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `${BACKEND_API_BASE}${selectedResumeUrl.startsWith('/') ? '' : '/'}${selectedResumeUrl}`}#zoom=140`}
-                className="w-full h-full border-none"
-                title={`${selectedResumeCandidate}'s Resume`}
-              />
+              {!isServerReachable ? (
+                <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-white">
+                  <div className="p-4 bg-amber-50 rounded-full mb-4">
+                    <FileText className="h-12 w-12 text-amber-500 animate-pulse" />
+                  </div>
+                  <h4 className="text-xl font-bold text-slate-800 mb-2">Resume Preview Offline</h4>
+                  <p className="text-sm text-slate-500 max-w-md mb-6">
+                    The file server is currently offline. Document previews from <strong>{selectedResumeCandidate}</strong>'s application cannot be loaded right now.
+                  </p>
+                  <div className="flex items-center space-x-3">
+                    <a
+                      href={selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `${BACKEND_API_BASE}${selectedResumeUrl.startsWith('/') ? '' : '/'}${selectedResumeUrl}`}
+                      download={`${selectedResumeCandidate.replace(/\s+/g, '_')}_Resume.pdf`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-2.5 bg-blue-50 text-[#004AAD] hover:bg-blue-100 font-bold rounded-xl transition text-xs border border-blue-200 text-decoration-none"
+                    >
+                      Try Open in New Tab
+                    </a>
+                    <button
+                      onClick={() => fetchData()}
+                      className="px-5 py-2.5 bg-[#004AAD] hover:bg-blue-700 text-white font-bold rounded-xl transition text-xs border-none cursor-pointer"
+                    >
+                      Reconnect Server
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <iframe
+                  src={`${selectedResumeUrl.startsWith('http') ? selectedResumeUrl : `${BACKEND_API_BASE}${selectedResumeUrl.startsWith('/') ? '' : '/'}${selectedResumeUrl}`}#zoom=140`}
+                  className="w-full h-full border-none"
+                  title={`${selectedResumeCandidate}'s Resume`}
+                />
+              )}
             </div>
           </div>
         </div>
