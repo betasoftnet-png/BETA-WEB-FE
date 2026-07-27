@@ -6,7 +6,7 @@ import axios from 'axios';
 
 // Resolve the API base URL at module load time — works on both localhost and production
 const API_BASE =
-  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  import.meta.env.DEV || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
 

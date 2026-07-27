@@ -35,6 +35,7 @@ import api from '../api';
 
 
 const JOB_BOARD_API_BASE =
+  import.meta.env.DEV ||
   window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8081'
