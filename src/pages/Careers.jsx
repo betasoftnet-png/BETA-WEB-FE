@@ -669,7 +669,7 @@ export default function Careers() {
           email: app.email || '',
           phone: app.phone || '',
           resume: app.resume || app.resumeUrl || app.resumeurl || '',
-          resumeUrl: app.resumeUrl || app.resumeurl || (app.resume ? (app.resume.startsWith('http') || app.resume.startsWith('/') ? app.resume : `${JOB_BOARD_API_BASE}/uploads/${app.resume}`) : ''),
+          resumeUrl: app.resumeUrl || app.resumeurl || (app.resume ? (app.resume.startsWith('http') || app.resume.startsWith('/') ? app.resume : `${JOB_BOARD_API_BASE}/uploads/${encodeURIComponent(app.resume)}`) : ''),
           coverLetter: app.coverLetter || app.coverletter || '',
           status: mapStatusToUI(app.status),
           createdAt: app.createdAt || app.createdat || '',

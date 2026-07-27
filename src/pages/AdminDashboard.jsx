@@ -535,7 +535,7 @@ export default function AdminDashboard() {
             email: app.email || '',
             phone: app.phone || '',
             resumeUrl: app.resume
-              ? `${BACKEND_API_BASE}/uploads/${app.resume}`
+              ? `${BACKEND_API_BASE}/uploads/${encodeURIComponent(app.resume)}`
               : (app.resumeUrl || app.resumeurl || ''),
             coverLetter: app.coverLetter || app.coverletter || '',
             status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING')
@@ -653,7 +653,7 @@ export default function AdminDashboard() {
               email: app.email || '',
               phone: app.phone || '',
               resumeUrl: app.resume
-                ? `${BACKEND_API_BASE}/uploads/${app.resume}`
+                ? `${BACKEND_API_BASE}/uploads/${encodeURIComponent(app.resume)}`
                 : (app.resumeUrl || app.resumeurl || ''),
               coverLetter: app.coverLetter || app.coverletter || '',
               status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING')
