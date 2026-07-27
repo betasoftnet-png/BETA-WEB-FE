@@ -209,7 +209,7 @@ export default function Assessment() {
         } else if (typeof errorMsg === 'string' && (errorMsg.toLowerCase().includes('2 times') || errorMsg.toLowerCase().includes('exceeded'))) {
           setBlockedMessage("Assessment Blocked: You have exceeded the maximum allowed attempts.");
         } else if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes('expired')) {
-          setBlockedMessage("This assessment link has expired. Please contact the administrator.");
+          setBlockedMessage("Assessment link has expired");
         } else {
           // Fallback to active questions so test ALWAYS opens
           setQuestions(defaultFallbackQuestions);
