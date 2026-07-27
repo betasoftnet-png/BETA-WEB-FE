@@ -6,7 +6,7 @@ import {
   RefreshCw, CheckCircle, AlertCircle, X, Shield, Users,
   Lock, Mail, Calculator, Brain, BookOpen, BarChart3, Bell,
   Upload, Download, ChevronRight, Calendar, Sliders, ChevronDown,
-  Handshake, ArrowLeft, Clock, Award, MapPin, HelpCircle
+  Handshake, ArrowLeft, Clock, Award, MapPin, HelpCircle, Send
 } from 'lucide-react';
 import axios from 'axios';
 import api from '../api';
@@ -261,6 +261,7 @@ export default function AdminDashboard() {
   // Notifications State
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [dbNotifications, setDbNotifications] = useState([]);
   const [readAdminNotifIds, setReadAdminNotifIds] = useState(() => {
     try {
       const stored = localStorage.getItem('admin_read_notif_ids');
@@ -310,6 +311,12 @@ export default function AdminDashboard() {
   const [taskSendStatus, setTaskSendStatus] = useState(''); // 'success' | 'error' | ''
   const [taskSendMessage, setTaskSendMessage] = useState('');
   const [sendingTask, setSendingTask] = useState(false);
+
+  // Report Mail States
+  const [reportMailIssue, setReportMailIssue] = useState('');
+  const [reportMailSendStatus, setReportMailSendStatus] = useState(''); // 'success' | 'error' | ''
+  const [reportMailSendMessage, setReportMailSendMessage] = useState('');
+  const [sendingReportMail, setSendingReportMail] = useState(false);
 
   // Inline job-title editing for accepted candidates with orphaned/deleted jobs
   const [editingAppJobTitleId, setEditingAppJobTitleId] = useState(null);
@@ -734,6 +741,42 @@ export default function AdminDashboard() {
     fetchCandidateTask();
   }, [selectedApplication?.id]);
 
+  const formatTimeAgo = (dateStr) => {
+    if (!dateStr) return '';
+    try {
+      const now = new Date();
+      const date = new Date(dateStr);
+      const diffMs = now - date;
+      if (isNaN(diffMs) || diffMs < 0) return 'Just now';
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    } catch (e) {
+      return 'Just now';
+    }
+  };
+
+  useEffect(() => {
+    const fetchDbNotifications = async () => {
+      try {
+        const res = await backendApi.get('/api/notifications/0');
+        if (res && res.data) {
+          setDbNotifications(res.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch admin notifications:', err);
+      }
+    };
+
+    fetchDbNotifications();
+    const interval = setInterval(fetchDbNotifications, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     if (externalApplications.length > 0) {
       // Sort applications by ID descending so the newest candidate applications appear first in alerts
@@ -778,9 +821,22 @@ export default function AdminDashboard() {
         });
       });
 
+      // Merge DB notifications
+      dbNotifications.forEach(n => {
+        list.push({
+          id: n.id,
+          type: 'system',
+          title: n.title,
+          message: n.message,
+          time: formatTimeAgo(n.createdAt),
+          unread: !n.read,
+          isDb: true
+        });
+      });
+
       setNotifications(list);
     }
-  }, [externalApplications, readAdminNotifIds]);
+  }, [externalApplications, readAdminNotifIds, dbNotifications]);
 
   const handleArrayChange = (index, value, array, setArray) => {
     const newArray = [...array];
@@ -1111,6 +1167,33 @@ export default function AdminDashboard() {
         setError('Failed to reset assessment for candidate.');
         setTimeout(() => setError(''), 4000);
       }
+    }
+  };
+
+  const handleSendReportMail = async () => {
+    if (!selectedApplication || !reportMailIssue.trim()) return;
+    setSendingReportMail(true);
+    setReportMailSendStatus('');
+    setReportMailSendMessage('');
+    try {
+      await backendApi.post('/api/mail/send', {
+        to: selectedApplication.email,
+        subject: `BETA Softnet - Update regarding your application`,
+        body: reportMailIssue.trim(),
+        isHtml: false
+      });
+      setReportMailSendStatus('success');
+      setReportMailSendMessage(`Report email sent to ${selectedApplication.fullName} successfully.`);
+      setReportMailIssue('');
+      setTimeout(() => { setReportMailSendStatus(''); setReportMailSendMessage(''); }, 5000);
+    } catch (err) {
+      console.error('Error sending report mail:', err);
+      setReportMailSendStatus('error');
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to send report email. Please try again.';
+      setReportMailSendMessage(typeof errorMsg === 'string' ? errorMsg : 'Failed to send report email. Please try again.');
+      setTimeout(() => { setReportMailSendStatus(''); setReportMailSendMessage(''); }, 5000);
+    } finally {
+      setSendingReportMail(false);
     }
   };
 
@@ -1747,10 +1830,22 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                       <span className="text-xs font-bold text-slate-900">System Notifications</span>
                       <button
-                        onClick={() => {
-                          const allIds = notifications.map(n => n.id);
-                          setReadAdminNotifIds(allIds);
-                          localStorage.setItem('admin_read_notif_ids', JSON.stringify(allIds));
+                        onClick={async () => {
+                          const mockUnread = notifications.filter(n => !n.isDb && n.unread).map(n => n.id);
+                          if (mockUnread.length > 0) {
+                            const newReadIds = [...readAdminNotifIds, ...mockUnread];
+                            setReadAdminNotifIds(newReadIds);
+                            localStorage.setItem('admin_read_notif_ids', JSON.stringify(newReadIds));
+                          }
+                          const dbUnread = notifications.filter(n => n.isDb && n.unread);
+                          if (dbUnread.length > 0) {
+                            try {
+                              await Promise.all(dbUnread.map(n => backendApi.put(`/api/notifications/${n.id}/read`)));
+                              setDbNotifications(prev => prev.map(item => ({ ...item, read: true })));
+                            } catch (e) {
+                              console.error("Failed to mark database notifications as read:", e);
+                            }
+                          }
                           setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
                           setShowNotifications(false);
                         }}
@@ -1766,11 +1861,20 @@ export default function AdminDashboard() {
                         notifications.map(n => (
                           <div
                             key={n.id}
-                            onClick={() => {
+                            onClick={async () => {
                               if (n.unread) {
-                                const newReadIds = [...readAdminNotifIds, n.id];
-                                setReadAdminNotifIds(newReadIds);
-                                localStorage.setItem('admin_read_notif_ids', JSON.stringify(newReadIds));
+                                if (n.isDb) {
+                                  try {
+                                    await backendApi.put(`/api/notifications/${n.id}/read`);
+                                    setDbNotifications(prev => prev.map(item => item.id === n.id ? { ...item, read: true } : item));
+                                  } catch (e) {
+                                    console.error("Failed to mark database notification as read:", e);
+                                  }
+                                } else {
+                                  const newReadIds = [...readAdminNotifIds, n.id];
+                                  setReadAdminNotifIds(newReadIds);
+                                  localStorage.setItem('admin_read_notif_ids', JSON.stringify(newReadIds));
+                                }
                                 setNotifications(prev => prev.map(item => item.id === n.id ? { ...item, unread: false } : item));
                               }
                             }}
@@ -3910,6 +4014,8 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
+
+
                   </div>
 
                   {/* Right Column: Remarks & Assessment Responses (5 cols) */}
@@ -4089,6 +4195,78 @@ export default function AdminDashboard() {
                         </button>
                       </div>
                     </div>
+
+                    {/* Report Mail Card */}
+                    {selectedStatusFilter === 'Accepted' && (
+                      <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                        <div className="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+                          <div className="h-8 w-8 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center flex-shrink-0">
+                            <Mail className="h-4 w-4 text-rose-600" />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Report Mail</h3>
+                            <p className="text-[10px] text-slate-400 font-semibold mt-0.5 font-medium">Email report details or issue logs directly to the candidate</p>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+                          <div>
+                            <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Candidate Name</label>
+                            <input
+                              type="text"
+                              readOnly
+                              value={selectedApplication.fullName}
+                              className="w-full mt-1.5 bg-slate-50/50 border border-slate-200 rounded-xl py-2 px-3 focus:outline-none text-xs font-bold text-slate-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Job Title</label>
+                            <input
+                              type="text"
+                              readOnly
+                              value={selectedApplication.jobTitle}
+                              className="w-full mt-1.5 bg-slate-50/50 border border-slate-200 rounded-xl py-2 px-3 focus:outline-none text-xs font-bold text-slate-500 cursor-not-allowed"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <textarea
+                            rows={4}
+                            value={reportMailIssue}
+                            onChange={(e) => setReportMailIssue(e.target.value)}
+                            placeholder="Describe the report or issue logs details that you want to send to the candidate..."
+                            className="w-full admin-custom-input border border-slate-300 rounded-2xl py-3 px-4 focus:outline-none text-xs transition resize-none leading-relaxed"
+                          />
+
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              disabled={sendingReportMail || !reportMailIssue.trim()}
+                              onClick={handleSendReportMail}
+                              className="flex items-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:bg-rose-300 disabled:cursor-not-allowed text-white text-xs font-bold rounded-xl transition duration-200 shadow-sm border-none outline-none cursor-pointer"
+                            >
+                              <Send className="h-3.5 w-3.5 text-white" />
+                              <span>{sendingReportMail ? 'Sending...' : 'Send Report Mail'}</span>
+                            </button>
+                          </div>
+
+                          {/* Feedback messages */}
+                          {reportMailSendStatus === 'success' && (
+                            <div className="flex items-center gap-2 py-2.5 px-4 rounded-xl bg-emerald-50 border border-emerald-200 animate-fadeIn">
+                              <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                              <span className="text-[11px] font-bold text-emerald-700">{reportMailSendMessage}</span>
+                            </div>
+                          )}
+                          {reportMailSendStatus === 'error' && (
+                            <div className="flex items-center gap-2 py-2.5 px-4 rounded-xl bg-rose-50 border border-rose-200 animate-fadeIn">
+                              <AlertCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                              <span className="text-[11px] font-bold text-rose-700">{reportMailSendMessage}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Assessment Responses Card */}
                     {(() => {
