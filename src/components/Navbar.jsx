@@ -197,6 +197,7 @@ export default function Navbar() {
   const notificationsRef = useRef(null);
   const mobileNotificationsRef = useRef(null);
   const [notifications, setNotifications] = useState([]);
+  const [isServerDown, setIsServerDown] = useState(false);
   const [debugInfo, setDebugInfo] = useState({
     userEmail: '',
     localApps: '',
@@ -262,6 +263,13 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    setIsServerDown(false);
+  }, [user]);
+
+  useEffect(() => {
+    if (user && user.role === 'ROLE_ADMIN') return;
+    if (isServerDown) return;
+
     const fetchDynamicNotifications = async () => {
       const readIds = getReadNotifIds();
       const dynamicList = [];
@@ -296,6 +304,7 @@ export default function Navbar() {
         try {
           const appsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
           if (appsRes === null) {
+            setIsServerDown(true);
             return; // Network error, do not overwrite/clear current notifications
           }
           let candApps = appsRes?.data?.data || appsRes?.data || [];
@@ -364,6 +373,7 @@ export default function Navbar() {
             dynamicList.sort((a, b) => b.appliedAt - a.appliedAt);
           }
         } catch (e) {
+          setIsServerDown(true);
           console.warn("Failed to fetch dynamic candidate application notifications:", e);
         }
       } else {
@@ -371,6 +381,7 @@ export default function Navbar() {
         try {
           const jobsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs`).catch(() => null);
           if (jobsRes === null) {
+            setIsServerDown(true);
             return; // Network error, do not overwrite/clear current notifications
           }
           const jobsList = jobsRes?.data?.data || jobsRes?.data || [];
@@ -393,6 +404,7 @@ export default function Navbar() {
             });
           }
         } catch (e) {
+          setIsServerDown(true);
           console.warn("Failed to fetch dynamic job openings:", e);
         }
       }
@@ -403,7 +415,7 @@ export default function Navbar() {
     fetchDynamicNotifications();
     const interval = setInterval(fetchDynamicNotifications, 5000);
     return () => clearInterval(interval);
-  }, [user]);
+  }, [user, isServerDown]);
 
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {

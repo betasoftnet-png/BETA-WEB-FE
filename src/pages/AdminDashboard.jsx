@@ -162,6 +162,64 @@ const fallbackApps = [];
 const fallbackPartnerships = [];
 const fallbackSupports = [];
 
+const fallbackJobs = [
+  {
+    id: 1,
+    title: 'Full Stack Java Developer',
+    department: 'Engineering',
+    location: 'Chennai',
+    type: 'Full Time',
+    salary: '20 LPA',
+    description: 'Develop and maintain web applications using Java, Spring Boot, and React.',
+    experience: '0+ years',
+    status: 'ACTIVE',
+    skills: ['Java', 'Spring Boot', 'React', 'MySQL'],
+    postedDate: '2026-07-01'
+  },
+  {
+    id: 2,
+    title: 'Frontend Engineer (React)',
+    department: 'Engineering',
+    location: 'Tiruvallur',
+    type: 'Full Time',
+    salary: '12 LPA',
+    description: 'Build modern user interfaces with React, Tailwind CSS, and Framer Motion.',
+    experience: '1-3 years',
+    status: 'ACTIVE',
+    skills: ['React', 'CSS', 'Tailwind', 'JavaScript'],
+    postedDate: '2026-07-15'
+  },
+  {
+    id: 3,
+    title: 'UI/UX Designer',
+    department: 'Design',
+    location: 'Remote',
+    type: 'Contract',
+    salary: '8 LPA',
+    description: 'Create user-centered designs and wireframes for mobile and web apps.',
+    experience: '2+ years',
+    status: 'ACTIVE',
+    skills: ['Figma', 'Adobe XD', 'Prototyping'],
+    postedDate: '2026-07-20'
+  }
+];
+
+const fallbackDeletedJobs = [
+  {
+    id: 4,
+    title: 'QA Automation Engineer',
+    department: 'Engineering',
+    location: 'Chennai',
+    type: 'Full Time',
+    salary: '10 LPA',
+    description: 'Write automated end-to-end tests for our SaaS platform.',
+    experience: '2-4 years',
+    status: 'DELETED',
+    skills: ['Selenium', 'Cypress', 'Java', 'JUnit'],
+    postedDate: '2026-06-15'
+  }
+];
+
 
 const parsePartnerMessage = (msg, name, email, company, id, date) => {
   if (!msg) return null;
@@ -382,19 +440,46 @@ export default function AdminDashboard() {
     let apps = [];
     let serverOk = true;
 
+    const loadFallbackLocalData = () => {
+      const storedJobs = localStorage.getItem('beta_jobs');
+      if (storedJobs) {
+        const parsedJobs = JSON.parse(storedJobs);
+        setExternalJobs(parsedJobs && parsedJobs.length > 0 ? parsedJobs : fallbackJobs);
+      } else {
+        setExternalJobs(fallbackJobs);
+        localStorage.setItem('beta_jobs', JSON.stringify(fallbackJobs));
+      }
+
+      const storedDeletedJobs = localStorage.getItem('beta_deleted_jobs');
+      if (storedDeletedJobs) {
+        const parsedDeleted = JSON.parse(storedDeletedJobs);
+        setDeletedJobs(parsedDeleted && parsedDeleted.length > 0 ? parsedDeleted : fallbackDeletedJobs);
+      } else {
+        setDeletedJobs(fallbackDeletedJobs);
+        localStorage.setItem('beta_deleted_jobs', JSON.stringify(fallbackDeletedJobs));
+      }
+
+      const storedApps = localStorage.getItem('beta_applications');
+      if (storedApps) {
+        setExternalApplications(JSON.parse(storedApps) || []);
+      } else {
+        setExternalApplications(fallbackApps);
+      }
+      setPartnerships(fallbackPartnerships);
+      setSupports(fallbackSupports);
+    };
+
     // 1. Fetch active jobs
     try {
       const jobsRes = await backendApi.get('/api/jobs');
       jobsList = jobsRes.data.data || jobsRes.data || [];
       setExternalJobs(jobsList);
     } catch (jobsErr) {
-      serverOk = false;
       console.warn('Failed to fetch active jobs from live API.', jobsErr);
-      const storedJobs = localStorage.getItem('beta_jobs');
-      if (storedJobs) {
-        jobsList = JSON.parse(storedJobs) || [];
-        setExternalJobs(jobsList);
-      }
+      loadFallbackLocalData();
+      setIsServerReachable(false);
+      setLoading(false);
+      return;
     }
 
     // 2. Fetch deleted jobs
@@ -769,7 +854,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (!isServerReachable) return;
+    if (!isServerReachable || loading) return;
 
     const fetchDbNotifications = async () => {
       try {
@@ -785,7 +870,7 @@ export default function AdminDashboard() {
     fetchDbNotifications();
     const interval = setInterval(fetchDbNotifications, 5000);
     return () => clearInterval(interval);
-  }, [isServerReachable]);
+  }, [isServerReachable, loading]);
 
   useEffect(() => {
     if (externalApplications.length > 0) {
@@ -934,6 +1019,57 @@ export default function AdminDashboard() {
       experience: jobExperience
     };
 
+    const performLocalSubmit = () => {
+      let updatedJobs = [...externalJobs];
+      if (editingJob) {
+        updatedJobs = updatedJobs.map(j => {
+          if (j.id === editingJob.id) {
+            return {
+              ...j,
+              title: jobTitle,
+              department: jobDept,
+              location: jobLocation,
+              type: jobType,
+              salary: jobSalary,
+              description: jobDesc,
+              responsibilities,
+              requirements,
+              skills,
+              experience: jobExperience
+            };
+          }
+          return j;
+        });
+        setSuccess('Job opening updated successfully (Offline Mode).');
+      } else {
+        const newJob = {
+          id: Date.now(),
+          title: jobTitle,
+          department: jobDept,
+          location: jobLocation,
+          type: jobType,
+          salary: jobSalary,
+          description: jobDesc,
+          responsibilities,
+          requirements,
+          skills,
+          experience: jobExperience,
+          status: 'ACTIVE',
+          postedDate: new Date().toISOString().split('T')[0]
+        };
+        updatedJobs.push(newJob);
+        setSuccess('Job opening posted successfully (Offline Mode).');
+      }
+      setExternalJobs(updatedJobs);
+      localStorage.setItem('beta_jobs', JSON.stringify(updatedJobs));
+      setIsJobModalOpen(false);
+    };
+
+    if (!isServerReachable) {
+      performLocalSubmit();
+      return;
+    }
+
     try {
       setLoading(true);
       if (editingJob) {
@@ -946,8 +1082,8 @@ export default function AdminDashboard() {
       setIsJobModalOpen(false);
       fetchData();
     } catch (err) {
-      setError(editingJob ? 'Failed to update job posting.' : 'Failed to post job opening.');
-      console.error(err);
+      console.warn('API call failed. Performing job submit locally.', err);
+      performLocalSubmit();
     } finally {
       setLoading(false);
     }
@@ -957,14 +1093,35 @@ export default function AdminDashboard() {
     if (!window.confirm('Are you sure you want to delete this job posting? It will be moved to the Deleted Jobs tab.')) return;
     setError('');
     setSuccess('');
+
+    const performLocalDelete = () => {
+      const jobToDelete = externalJobs.find(j => j.id === id);
+      if (jobToDelete) {
+        const updatedJobs = externalJobs.filter(j => j.id !== id);
+        const deletedJobCopy = { ...jobToDelete, status: 'DELETED' };
+        const updatedDeletedJobs = [...deletedJobs, deletedJobCopy];
+        
+        setExternalJobs(updatedJobs);
+        setDeletedJobs(updatedDeletedJobs);
+        localStorage.setItem('beta_jobs', JSON.stringify(updatedJobs));
+        localStorage.setItem('beta_deleted_jobs', JSON.stringify(updatedDeletedJobs));
+        setSuccess('Job opening deleted successfully (Offline Mode).');
+      }
+    };
+
+    if (!isServerReachable) {
+      performLocalDelete();
+      return;
+    }
+
     try {
       setLoading(true);
       await backendApi.delete(`/api/jobs/${id}`);
       setSuccess('Job opening deleted successfully.');
       fetchData();
     } catch (err) {
-      setError('Failed to delete job opening.');
-      console.error(err);
+      console.warn('API call failed. Performing job deletion locally.', err);
+      performLocalDelete();
     } finally {
       setLoading(false);
     }
