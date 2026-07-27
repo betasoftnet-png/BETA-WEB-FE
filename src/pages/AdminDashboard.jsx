@@ -262,6 +262,7 @@ export default function AdminDashboard() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [dbNotifications, setDbNotifications] = useState([]);
+  const [isServerReachable, setIsServerReachable] = useState(true);
   const [readAdminNotifIds, setReadAdminNotifIds] = useState(() => {
     try {
       const stored = localStorage.getItem('admin_read_notif_ids');
@@ -379,6 +380,7 @@ export default function AdminDashboard() {
     let jobsList = [];
     let deletedList = [];
     let apps = [];
+    let serverOk = true;
 
     // 1. Fetch active jobs
     try {
@@ -386,6 +388,7 @@ export default function AdminDashboard() {
       jobsList = jobsRes.data.data || jobsRes.data || [];
       setExternalJobs(jobsList);
     } catch (jobsErr) {
+      serverOk = false;
       console.warn('Failed to fetch active jobs from live API.', jobsErr);
       const storedJobs = localStorage.getItem('beta_jobs');
       if (storedJobs) {
@@ -400,6 +403,7 @@ export default function AdminDashboard() {
       deletedList = deletedRes.data.data || deletedRes.data || [];
       setDeletedJobs(deletedList);
     } catch (deletedErr) {
+      serverOk = false;
       console.warn('Failed to fetch deleted jobs from live API.', deletedErr);
     }
 
@@ -408,6 +412,7 @@ export default function AdminDashboard() {
       const appsRes = await backendApi.get('/api/admin/applications');
       apps = appsRes.data.data || appsRes.data || [];
     } catch (appsErr) {
+      serverOk = false;
       console.warn('Failed to fetch applications from live API. Loading fallback local data.', appsErr);
     }
 
@@ -416,6 +421,7 @@ export default function AdminDashboard() {
       const reportsRes = await backendApi.get('/api/reports');
       reportsList = reportsRes.data || [];
     } catch (reportsErr) {
+      serverOk = false;
       console.warn('Failed to fetch reports from live API.', reportsErr);
     }
 
@@ -503,12 +509,14 @@ export default function AdminDashboard() {
           .filter(Boolean);
         setSupports(parsedSupports.length > 0 ? parsedSupports : fallbackSupports);
       } catch (err2) {
+        serverOk = false;
         // Fall back to offline mock datasets silently
         setPartnerships(fallbackPartnerships);
         setSupports(fallbackSupports);
       }
     }
 
+    setIsServerReachable(serverOk);
     setLoading(false);
   };
 
@@ -521,7 +529,7 @@ export default function AdminDashboard() {
 
   // Silent background polling — re-fetches applications every 20s so scores/statuses update automatically
   useEffect(() => {
-    if (!user || user.role !== 'ROLE_ADMIN') return;
+    if (!user || user.role !== 'ROLE_ADMIN' || !isServerReachable) return;
 
     const silentRefetch = async () => {
       let jobsList = [];
@@ -597,7 +605,7 @@ export default function AdminDashboard() {
 
     const pollInterval = setInterval(silentRefetch, 5000);
     return () => clearInterval(pollInterval);
-  }, [user]);
+  }, [user, isServerReachable]);
 
   // Keep selectedApplication synced with background updates from externalApplications
   useEffect(() => {
@@ -761,6 +769,8 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
+    if (!isServerReachable) return;
+
     const fetchDbNotifications = async () => {
       try {
         const res = await backendApi.get('/api/notifications/0');
@@ -768,14 +778,14 @@ export default function AdminDashboard() {
           setDbNotifications(res.data);
         }
       } catch (err) {
-        console.error('Failed to fetch admin notifications:', err);
+        setIsServerReachable(false);
       }
     };
 
     fetchDbNotifications();
     const interval = setInterval(fetchDbNotifications, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isServerReachable]);
 
   useEffect(() => {
     if (externalApplications.length > 0) {
