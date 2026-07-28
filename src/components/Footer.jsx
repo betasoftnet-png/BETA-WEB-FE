@@ -82,6 +82,33 @@ export default function Footer() {
             <p className="text-sm footer-brand-description font-semibold">
               One platform for communication, security, and teamwork.
             </p>
+            {/* Social Icons */}
+            <div className="flex space-x-4 pt-2 justify-center">
+              <a
+                href="https://www.instagram.com/beta_softnet/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-transparent p-0 border-none outline-none hover:opacity-85 transition-opacity inline-flex items-center justify-center"
+              >
+                <img src="/instagram.png" alt="Instagram" className="h-7 w-7 object-contain bg-transparent border-none" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/balajir4619/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-transparent p-0 border-none outline-none hover:opacity-85 transition-opacity inline-flex items-center justify-center"
+              >
+                <img src="/linkedin.png" alt="LinkedIn" className="h-7 w-7 object-contain bg-transparent border-none" />
+              </a>
+              <a
+                href="https://x.com/BETA_SOFTNET"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-transparent p-0 border-none outline-none hover:opacity-85 transition-opacity inline-flex items-center justify-center"
+              >
+                <img src="/twitter.png" alt="X" className="h-7 w-7 object-contain bg-transparent border-none" style={{ mixBlendMode: 'multiply' }} />
+              </a>
+            </div>
           </div>
 
           {/* Quick Links */}
