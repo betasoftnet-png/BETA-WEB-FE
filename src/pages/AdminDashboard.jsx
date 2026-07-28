@@ -1344,11 +1344,68 @@ export default function AdminDashboard() {
     setReportMailSendStatus('');
     setReportMailSendMessage('');
     try {
+      const emailYear = new Date().getFullYear();
+      const formattedHtmlBody = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+  <table class="email-wrapper" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc;">
+    <tr>
+      <td align="center" class="email-wrapper-cell" style="padding: 40px 16px;">
+        <table class="email-container" role="presentation" border="0" cellpadding="0" cellspacing="0" width="580" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.045); width: 100%; max-width: 580px;">
+          <tr>
+            <td class="email-content-cell" style="padding: 40px 44px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <!-- Centered Logo -->
+                <tr>
+                  <td align="center" style="padding-bottom: 8px;">
+                    <img src="https://beta-softnet.com/logo.png" alt="BETA Logo" style="height: 56px; width: auto; display: block; margin: 0 auto;" />
+                    <span style="font-size: 13px; color: #64748b; font-weight: 500; display: block; margin-top: 8px; font-family: inherit;">${selectedApplication.email}</span>
+                  </td>
+                </tr>
+                <!-- Divider -->
+                <tr>
+                  <td style="padding: 16px 0 24px 0;">
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 0;" />
+                  </td>
+                </tr>
+                <!-- Content Body -->
+                <tr>
+                  <td style="color: #334155; font-family: inherit; font-size: 15px; line-height: 1.6; text-align: left; white-space: pre-line;">
+                    ${reportMailIssue.trim()}
+                  </td>
+                </tr>
+                <!-- Footer Divider -->
+                <tr>
+                  <td style="padding: 32px 0 20px 0;">
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 0;" />
+                  </td>
+                </tr>
+                <!-- Footer -->
+                <tr>
+                  <td align="center" style="color: #64748b; font-family: inherit; font-size: 12px; line-height: 1.6; text-align: center;">
+                    This is an automated notification. Please do not reply directly to this email.<br>
+                    &copy; ${emailYear} Beta Softnet. All rights reserved.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
       await backendApi.post('/api/mail/send', {
         to: selectedApplication.email,
         subject: `BETA Softnet - Update regarding your application`,
-        body: reportMailIssue.trim(),
-        isHtml: false
+        body: formattedHtmlBody,
+        isHtml: true
       });
       setReportMailSendStatus('success');
       setReportMailSendMessage(`Report email sent to ${selectedApplication.fullName} successfully.`);
