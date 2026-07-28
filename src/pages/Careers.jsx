@@ -379,7 +379,7 @@ export default function Careers() {
 
   // Extract unique filter options dynamically from jobsList
   const teams = Array.from(new Set(jobsList.map(job => job.team).filter(Boolean)));
-  const locations = Array.from(new Set(jobsList.map(job => job.location).filter(Boolean)));
+  const locations = Array.from(new Set([...jobsList.map(job => job.location).filter(Boolean), 'Tiruvallur', 'Vellore']));
   const types = Array.from(new Set(jobsList.map(job => job.type).filter(Boolean)));
 
   // Fetch active job openings from API
