@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Search, ChevronDown, Check, Copy, Clock, Send, Shield, Activity, Download, MessageSquare, ExternalLink, HelpCircle, Code, Briefcase, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Search, ChevronDown, Check, Copy, Clock, Send, Shield, Activity, Download, MessageSquare, ExternalLink, HelpCircle, Code, Briefcase, FileText, CheckCircle2, AlertCircle, BookOpen, Settings, Key, Wrench, Sparkles, Award } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../api';
 
@@ -16,6 +16,11 @@ export default function Support() {
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState('idle'); // idle, loading, success, error
   const [feedbackMsg, setFeedbackMsg] = useState('');
+
+  // Newsletter states
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState('idle'); // idle, loading, success, error
+  const [newsletterFeedbackMsg, setNewsletterFeedbackMsg] = useState('');
 
   const supportContactInfo = {
     phone: '+91 9444369625',
@@ -78,6 +83,23 @@ export default function Support() {
     }
   };
 
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+
+    setNewsletterStatus('loading');
+    try {
+      await api.post('/api/newsletter/subscribe', { email: newsletterEmail });
+      setNewsletterStatus('success');
+      setNewsletterFeedbackMsg('Successfully subscribed to updates!');
+      setNewsletterEmail('');
+    } catch (err) {
+      console.error(err);
+      setNewsletterStatus('error');
+      setNewsletterFeedbackMsg(err.response?.data?.message || 'Subscription failed. Please try again.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-transparent pb-16 relative z-10">
       {/* Hero Section */}
@@ -105,7 +127,7 @@ export default function Support() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search guides, setup configs, integration logs..."
+              placeholder="Search articles, FAQs, guides..."
               className="w-full bg-white text-slate-800 placeholder-slate-400 border-none rounded-full py-3.5 pl-12 pr-6 text-sm shadow-xl focus:outline-none focus:ring-4 focus:ring-emerald-300/40 transition duration-300"
             />
           </div>
@@ -175,6 +197,173 @@ export default function Support() {
             </div>
           </div>
         </div>
+
+        {/* Support Highlights */}
+        <div className="space-y-6 bg-slate-50/60 border border-slate-200/60 p-8 rounded-3xl text-left">
+          <div className="space-y-1">
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Support Highlights</h2>
+            <p className="text-xs text-slate-500 font-semibold">Discover what makes our customer support reliable, responsive, and customer-focused.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
+            {/* Fast Response */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition duration-300">
+              <div className="space-y-3">
+                <div className="h-9 w-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#004AAD]">
+                  <Clock className="h-4.5 w-4.5" />
+                </div>
+                <h4 className="text-xs font-bold text-slate-800">Fast Response</h4>
+                <p className="text-[10px] text-slate-555 leading-relaxed font-semibold">
+                  Quick assistance for your product and technical queries.
+                </p>
+              </div>
+            </div>
+
+            {/* Expert Assistance */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition duration-300">
+              <div className="space-y-3">
+                <div className="h-9 w-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
+                  <Award className="h-4.5 w-4.5" />
+                </div>
+                <h4 className="text-xs font-bold text-slate-800">Expert Assistance</h4>
+                <p className="text-[10px] text-slate-555 leading-relaxed font-semibold">
+                  Get help from our experienced support team.
+                </p>
+              </div>
+            </div>
+
+            {/* Personalized Support */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition duration-300">
+              <div className="space-y-3">
+                <div className="h-9 w-9 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-650">
+                  <Sparkles className="h-4.5 w-4.5" />
+                </div>
+                <h4 className="text-xs font-bold text-slate-800">Personalized Support</h4>
+                <p className="text-[10px] text-slate-555 leading-relaxed font-semibold">
+                  Solutions tailored to your specific requirements.
+                </p>
+              </div>
+            </div>
+
+            {/* Reliable Service */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition duration-300">
+              <div className="space-y-3">
+                <div className="h-9 w-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                  <Shield className="h-4.5 w-4.5" />
+                </div>
+                <h4 className="text-xs font-bold text-slate-800">Reliable Service</h4>
+                <p className="text-[10px] text-slate-555 leading-relaxed font-semibold">
+                  Consistent and dependable support you can trust.
+                </p>
+              </div>
+            </div>
+
+            {/* Customer First */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition duration-300">
+              <div className="space-y-3">
+                <div className="h-9 w-9 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600">
+                  <MessageSquare className="h-4.5 w-4.5" />
+                </div>
+                <h4 className="text-xs font-bold text-slate-800">Customer First</h4>
+                <p className="text-[10px] text-slate-555 leading-relaxed font-semibold">
+                  We prioritize your satisfaction and success.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Customer Care Center */}
+        <div className="space-y-6">
+          <div className="text-left space-y-1.5">
+            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Customer Care Center</h2>
+            <p className="text-sm text-slate-500">Your central hub for guidance, assistance, and resources to help you get the best experience with every Beta Softnet product.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+            {/* Product Assistance */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition duration-300 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="h-10 w-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#004AAD]">
+                  <BookOpen className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-slate-800 text-sm">Product Assistance</h3>
+                <p className="text-xs text-slate-550 leading-relaxed font-medium">
+                  Get help with product features, setup, and usage.
+                </p>
+              </div>
+            </div>
+
+            {/* Account Help */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition duration-300 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="h-10 w-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-650">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-slate-800 text-sm">Account Help</h3>
+                <p className="text-xs text-slate-550 leading-relaxed font-medium">
+                  Manage your account, profile, and security settings with ease.
+                </p>
+              </div>
+            </div>
+
+            {/* Security Center */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition duration-300 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="h-10 w-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
+                  <Settings className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-slate-800 text-sm">Security Center</h3>
+                <p className="text-xs text-slate-550 leading-relaxed font-medium">
+                  Learn best practices to keep your account and data protected.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature Discovery */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition duration-300 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="h-10 w-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                  <Shield className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-slate-800 text-sm">Feature Discovery</h3>
+                <p className="text-xs text-slate-555 leading-relaxed font-semibold">
+                  Explore product capabilities and make the most of every feature.
+                </p>
+              </div>
+            </div>
+
+            {/* Product Updates */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition duration-300 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="h-10 w-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600">
+                  <HelpCircle className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-slate-800 text-sm">Product Updates</h3>
+                <p className="text-xs text-slate-555 leading-relaxed font-semibold">
+                  Stay informed about the latest improvements and new releases.
+                </p>
+              </div>
+            </div>
+
+            {/* Technical Guidance */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition duration-300 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="h-10 w-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-650">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-slate-800 text-sm">Technical Guidance</h3>
+                <p className="text-xs text-slate-550 leading-relaxed font-medium">
+                  Access expert guidance for troubleshooting and technical questions.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
 
         {/* Product Support Section */}
         <div className="space-y-6 bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-100 border border-blue-200/40 p-8 rounded-3xl shadow-sm">
@@ -338,15 +527,75 @@ export default function Support() {
               <div className="bg-slate-105 p-4 border border-slate-200 rounded-2xl flex items-center space-x-3 select-none">
                 <Clock className="h-5 w-5 text-slate-500 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Operational Hours</p>
+                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Support Business Hours</p>
                   <p className="text-[11px] font-bold text-slate-755 truncate">{supportContactInfo.hours}</p>
+                </div>
+              </div>
+
+              {/* Feature Request Card */}
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative group hover:border-[#004AAD]/20 transition duration-300 space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="h-4.5 w-4.5 text-amber-500" />
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Feature Request</span>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-sm font-extrabold text-slate-800">Have a Feature Idea?</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed font-semibold">
+                    We'd love to hear your suggestions! Help us shape the future of our communication, security, and team tools by submitting your product concept ideas.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProduct('General Enquiry');
+                    setMessage('Feature Request Details:\n\n- Proposed Idea:\n- Use Case / Business value:');
+                    const element = document.getElementById('support-form-card');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="w-full flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-xl text-xs transition duration-200 cursor-pointer border-none"
+                >
+                  <Send className="h-3.5 w-3.5 text-slate-750" />
+                  <span className="text-slate-750">Submit Idea</span>
+                </button>
+              </div>
+
+              {/* Follow Us Card */}
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-[#004AAD]/10 transition duration-300 space-y-3">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Follow Us</span>
+                <div className="flex space-x-4 pt-1 justify-start">
+                  <a
+                    href="https://www.instagram.com/beta_softnet/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-transparent p-0 border-none outline-none hover:opacity-85 transition-opacity inline-flex items-center justify-center"
+                  >
+                    <img src="/instagram.png" alt="Instagram" className="h-6 w-6 object-contain bg-transparent border-none" />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/balajir4619/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-transparent p-0 border-none outline-none hover:opacity-85 transition-opacity inline-flex items-center justify-center"
+                  >
+                    <img src="/linkedin.png" alt="LinkedIn" className="h-6 w-6 object-contain bg-transparent border-none" />
+                  </a>
+                  <a
+                    href="https://x.com/BETA_SOFTNET"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-transparent p-0 border-none outline-none hover:opacity-85 transition-opacity inline-flex items-center justify-center"
+                  >
+                    <img src="/twitter.png" alt="X" className="h-6 w-6 object-contain bg-transparent border-none" style={{ mixBlendMode: 'multiply' }} />
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Right Side: Request Submission Form */}
-          <div className="lg:col-span-7 text-left">
+          <div className="lg:col-span-7 text-left" id="support-form-card">
             <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-8 relative">
               <div className="mb-6 space-y-1">
                 <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Submit a Support Request</h3>

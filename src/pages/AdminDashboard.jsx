@@ -409,6 +409,16 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  // Automatically clear success popup messages after 5 seconds
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess('');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
+
   // Admin credentials login states
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
@@ -3658,7 +3668,7 @@ export default function AdminDashboard() {
                                     </div>
                                   )}
 
-                                  <div className="text-slate-450 text-[10px] mt-0.5">{app.jobDepartment} • {app.jobLocation}</div>
+                                  <div className="text-slate-450 text-[10px] mt-0.5">{app.jobDepartment}</div>
                                 </td>
                                 <td className="py-4 px-6 font-semibold text-slate-700">
                                   <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-bold whitespace-nowrap">
@@ -3825,7 +3835,7 @@ export default function AdminDashboard() {
                         })()}
                       </div>
                       <p className="text-xs text-slate-500 font-medium mt-1">
-                        Applied for <strong className="text-slate-800">{selectedApplication.jobTitle}</strong> • {selectedApplication.jobDepartment} • {selectedApplication.jobLocation}
+                        Applied for <strong className="text-slate-800">{selectedApplication.jobTitle}</strong> • {selectedApplication.jobDepartment}
                       </p>
                     </div>
                   </div>
@@ -5095,8 +5105,8 @@ export default function AdminDashboard() {
                   <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Applied Position</label>
                   <p className="text-sm font-bold text-slate-900 mt-0.5">{selectedApplication.jobTitle}</p>
 
-                  <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-3">Dept & Location</label>
-                  <p className="text-xs font-semibold text-slate-700 mt-0.5">{selectedApplication.jobDepartment} • {selectedApplication.jobLocation}</p>
+                  <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mt-3">Department</label>
+                  <p className="text-xs font-semibold text-slate-700 mt-0.5">{selectedApplication.jobDepartment}</p>
 
                   <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Current Status</label>
                   <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-bold capitalize mt-1 ${selectedApplication.status === 'Candidates' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :

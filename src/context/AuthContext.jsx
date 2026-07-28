@@ -92,6 +92,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('beta_fullName');
     localStorage.removeItem('beta_firstName');
     localStorage.removeItem('beta_lastName');
+    localStorage.removeItem('candidateEmail');
+    localStorage.removeItem('candidateId');
+    localStorage.removeItem('beta_applications');
+    localStorage.removeItem('beta_user');
+    localStorage.removeItem('beta_seen_notifications');
+    localStorage.removeItem('beta_read_notifications');
     setUser(null);
   }, []);
 

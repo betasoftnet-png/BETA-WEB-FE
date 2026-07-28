@@ -337,7 +337,7 @@ export default function Navbar() {
         } catch (_) { }
       }
 
-      if (userEmail && (!user || user.role !== 'ROLE_ADMIN')) {
+      if (user && userEmail && user.role !== 'ROLE_ADMIN') {
         // 1. DYNAMIC CANDIDATE APPLICATION PIPELINE NOTIFICATIONS
         try {
           const appsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
