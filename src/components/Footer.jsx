@@ -118,25 +118,25 @@ export default function Footer() {
               <li>
                 <a href="https://www.bnxmail.com/login" target="_blank" rel="noopener noreferrer" className="footer-product-link block">
                   <span className="font-bold block">BNX Mail</span>
-                  <span className="footer-product-desc">WhatsApp-style collaborative email platform.</span>
+                  <span className="footer-product-desc">Secure, reliable email for everyone.</span>
                 </a>
               </li>
               <li>
                 <a href="https://www.b2auth.com/" target="_blank" rel="noopener noreferrer" className="footer-product-link block">
                   <span className="font-bold block">B2 Auth Security</span>
-                  <span className="footer-product-desc">Unified authentication, SSO, and MFA gateway.</span>
+                  <span className="footer-product-desc">One platform for secure user access.</span>
                 </a>
               </li>
               <li>
                 <a href="https://cliks.beta-softnet.com/" target="_blank" rel="noopener noreferrer" className="footer-product-link block">
                   <span className="font-bold block">Cliks</span>
-                  <span className="footer-product-desc">Personal productivity suite with notes & calendars.</span>
+                  <span className="footer-product-desc">Secure and simple money management.</span>
                 </a>
               </li>
               <li>
                 <a href="https://www.cliksbusiness.com/" target="_blank" rel="noopener noreferrer" className="footer-product-link block">
                   <span className="font-bold block">Cliks Business</span>
-                  <span className="footer-product-desc">Agile team sprint workflow and collaboration.</span>
+                  <span className="footer-product-desc">Streamline your business workflow.</span>
                 </a>
               </li>
             </ul>
@@ -162,6 +162,8 @@ export default function Footer() {
               <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">AI&ML</Link></li>
               <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Data Science</Link></li>
               <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Data Analytics</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Devops</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Testing</Link></li>
             </ul>
           </div>
 
