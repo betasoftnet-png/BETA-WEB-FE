@@ -198,6 +198,7 @@ export default function Navbar() {
   const notificationsRef = useRef(null);
   const mobileNotificationsRef = useRef(null);
   const [notifications, setNotifications] = useState([]);
+  const [seenNotificationIds, setSeenNotificationIds] = useState([]);
   const [isServerDown, setIsServerDown] = useState(false);
   const [debugInfo, setDebugInfo] = useState({
     userEmail: '',
@@ -207,6 +208,41 @@ export default function Navbar() {
     fetchedNotifs: '',
     error: ''
   });
+
+  // Load seen notifications from local storage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('beta_seen_notifications');
+      if (stored) {
+        setSeenNotificationIds(JSON.parse(stored));
+      }
+    } catch (_) {}
+  }, []);
+
+  // Sync seen notifications when dropdown opens or new notifications are received while dropdown is open
+  useEffect(() => {
+    if (isNotificationsOpen && notifications.length > 0) {
+      try {
+        const stored = localStorage.getItem('beta_seen_notifications');
+        const currentSeen = stored ? JSON.parse(stored) : [];
+        const newSeen = [...currentSeen];
+        let changed = false;
+        notifications.forEach(n => {
+          const idStr = String(n.id);
+          if (!newSeen.includes(idStr)) {
+            newSeen.push(idStr);
+            changed = true;
+          }
+        });
+        if (changed) {
+          localStorage.setItem('beta_seen_notifications', JSON.stringify(newSeen));
+          setSeenNotificationIds(newSeen);
+        }
+      } catch (err) {
+        console.error("Failed to mark notifications as seen:", err);
+      }
+    }
+  }, [isNotificationsOpen, notifications]);
 
   const formatNotificationTime = (createdAtString) => {
     if (!createdAtString) return 'just now';
@@ -253,7 +289,8 @@ export default function Navbar() {
 
   const handleMarkAllAsRead = async () => {
     try {
-      const allIds = notifications.map(n => String(n.id));
+      const readIds = getReadNotifIds();
+      const allIds = Array.from(new Set([...readIds, ...notifications.map(n => String(n.id))]));
       localStorage.setItem('beta_read_notifications', JSON.stringify(allIds));
       const numericUnread = notifications.filter(n => !n.read && (typeof n.id === 'number' || !isNaN(n.id)));
       await Promise.all(numericUnread.map(n => api.put(`/api/notifications/${n.id}/read`).catch(() => null)));
@@ -358,7 +395,7 @@ export default function Navbar() {
                       id: dbNotif.id,
                       title: dbNotif.title,
                       message: dbNotif.message,
-                      read: dbNotif.read || dbNotif.isRead || false,
+                      read: dbNotif.read || dbNotif.isRead || readIds.includes(String(dbNotif.id)) || false,
                       time: formatNotificationTime(dbNotif.createdAt),
                       category: category,
                       appliedAt: createdAtTimestamp
@@ -625,6 +662,8 @@ export default function Navbar() {
       </AnimatePresence>
     );
   };
+
+  const newUnreadCount = notifications.filter(n => !n.read && !seenNotificationIds.includes(String(n.id))).length;
 
   return (
     <>
@@ -1079,9 +1118,9 @@ export default function Navbar() {
                 >
                   <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
                   {/* Notification Count Badge */}
-                  {notifications.filter(n => !n.read).length > 0 && (
+                  {newUnreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
-                      {notifications.filter(n => !n.read).length}
+                      {newUnreadCount}
                     </span>
                   )}
                 </button>
@@ -1181,9 +1220,9 @@ export default function Navbar() {
                 >
                   <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
                   {/* Notification Count Badge */}
-                  {notifications.filter(n => !n.read).length > 0 && (
+                  {newUnreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
-                      {notifications.filter(n => !n.read).length}
+                      {newUnreadCount}
                     </span>
                   )}
                 </button>
