@@ -2389,25 +2389,48 @@ export default function AdminDashboard() {
                           Posted on {job.postedDate ? new Date(job.postedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Today'}
                         </span>
 
-                        <button
-                          onClick={async () => {
-                            try {
-                              setLoading(true);
-                              const restoredJob = { ...job, status: 'ACTIVE' };
-                              await backendApi.put(`/api/jobs/${job.id}`, restoredJob);
-                              setSuccess('Job opening restored successfully.');
-                              fetchData();
-                            } catch {
-                              setError('Failed to restore job opening.');
-                            } finally {
-                              setLoading(false);
-                            }
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-250 text-[10px] font-bold transition flex items-center space-x-1 cursor-pointer"
-                          title="Restore this job to active board"
-                        >
-                          <span>Restore Job</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={async () => {
+                              try {
+                                setLoading(true);
+                                const restoredJob = { ...job, status: 'ACTIVE' };
+                                await backendApi.put(`/api/jobs/${job.id}`, restoredJob);
+                                setSuccess('Job opening restored successfully.');
+                                fetchData();
+                              } catch {
+                                setError('Failed to restore job opening.');
+                              } finally {
+                                setLoading(false);
+                              }
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-250 text-[10px] font-bold transition flex items-center space-x-1 cursor-pointer"
+                            title="Restore this job to active board"
+                          >
+                            <span>Restore Job</span>
+                          </button>
+
+                          <button
+                            onClick={async () => {
+                              if (window.confirm(`Are you sure you want to permanently delete "${job.title}"? This action cannot be undone.`)) {
+                                try {
+                                  setLoading(true);
+                                  await backendApi.delete(`/api/jobs/${job.id}/permanent`);
+                                  setSuccess('Job permanently deleted successfully.');
+                                  fetchData();
+                                } catch (err) {
+                                  setError(err.response?.data?.message || err.response?.data || 'Failed to permanently delete job opening.');
+                                } finally {
+                                  setLoading(false);
+                                }
+                              }
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-250 text-[10px] font-bold transition flex items-center space-x-1 cursor-pointer"
+                            title="Delete this job permanently"
+                          >
+                            <span>Delete Permanent</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))
