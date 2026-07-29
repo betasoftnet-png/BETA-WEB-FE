@@ -928,83 +928,83 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (!isServerReachable || loading) return;
+    if (loading) return;
 
     const fetchDbNotifications = async () => {
       try {
         const res = await backendApi.get('/api/notifications/0');
         if (res && res.data) {
           setDbNotifications(res.data);
+          setIsServerReachable(true);
         }
       } catch (err) {
-        setIsServerReachable(false);
+        console.warn('Failed to fetch admin DB notifications:', err);
       }
     };
 
     fetchDbNotifications();
     const interval = setInterval(fetchDbNotifications, 5000);
     return () => clearInterval(interval);
-  }, [isServerReachable, loading]);
+  }, [loading]);
 
   useEffect(() => {
-    if (externalApplications.length > 0) {
-      // Sort applications by ID descending so the newest candidate applications appear first in alerts
-      const sortedApplications = [...externalApplications].sort((a, b) => b.id - a.id);
+    const sortedApplications = (externalApplications && externalApplications.length > 0)
+      ? [...externalApplications].sort((a, b) => b.id - a.id)
+      : [];
 
-      const newApps = sortedApplications.filter(app => app.status === 'Candidates').slice(0, 3);
-      const scheduled = sortedApplications.filter(app => app.status === 'Interview Scheduled' || app.aptitudeStatus === 'Assessment Sent').slice(0, 2);
+    const newApps = sortedApplications.filter(app => app.status === 'Candidates').slice(0, 3);
+    const scheduled = sortedApplications.filter(app => app.status === 'Interview Scheduled' || app.aptitudeStatus === 'Assessment Sent').slice(0, 2);
 
-      const sysId = 'sys-1';
-      const list = [
-        {
-          id: sysId,
-          type: 'system',
-          title: 'Database connection online',
-          message: 'Local mock storage sync complete.',
-          time: 'Just now',
-          unread: !readAdminNotifIds.includes(sysId)
-        }
-      ];
+    const sysId = 'sys-1';
+    const list = [
+      {
+        id: sysId,
+        type: 'system',
+        title: 'Database connection online',
+        message: 'Local mock storage sync complete.',
+        time: 'Just now',
+        unread: !readAdminNotifIds.includes(sysId)
+      }
+    ];
 
-      newApps.forEach((app, idx) => {
-        const notifId = `newapp-${app.id}-${idx}`;
-        list.push({
-          id: notifId,
-          type: 'application',
-          title: 'New Candidate Application',
-          message: `${app.fullName} applied for ${app.jobTitle}`,
-          time: formatTimeAgo(app.appliedTime || app.appliedDate),
-          unread: !readAdminNotifIds.includes(notifId)
-        });
+    newApps.forEach((app, idx) => {
+      const notifId = `newapp-${app.id}-${idx}`;
+      list.push({
+        id: notifId,
+        type: 'application',
+        title: 'New Candidate Application',
+        message: `${app.fullName} applied for ${app.jobTitle}`,
+        time: formatTimeAgo(app.appliedTime || app.appliedDate),
+        unread: !readAdminNotifIds.includes(notifId)
       });
+    });
 
-      scheduled.forEach((app, idx) => {
-        const notifId = `sch-${app.id}-${idx}`;
-        list.push({
-          id: notifId,
-          type: 'reminder',
-          title: 'Upcoming Assessment / Interview',
-          message: `Interview reminder for ${app.fullName} (${app.jobTitle})`,
-          time: app.interviewDate ? `${app.interviewDate} at ${app.interviewTime || '10:00'}` : 'Scheduled soon',
-          unread: !readAdminNotifIds.includes(notifId)
-        });
+    scheduled.forEach((app, idx) => {
+      const notifId = `sch-${app.id}-${idx}`;
+      list.push({
+        id: notifId,
+        type: 'reminder',
+        title: 'Upcoming Assessment / Interview',
+        message: `Interview reminder for ${app.fullName} (${app.jobTitle})`,
+        time: app.interviewDate ? `${app.interviewDate} at ${app.interviewTime || '10:00'}` : 'Scheduled soon',
+        unread: !readAdminNotifIds.includes(notifId)
       });
+    });
 
-      // Merge DB notifications
-      dbNotifications.forEach(n => {
-        list.push({
-          id: n.id,
-          type: 'system',
-          title: n.title,
-          message: n.message,
-          time: formatTimeAgo(n.createdAt),
-          unread: !n.read,
-          isDb: true
-        });
+    // Merge DB notifications
+    dbNotifications.forEach(n => {
+      list.push({
+        id: n.id,
+        type: 'system',
+        title: n.title,
+        message: n.message,
+        time: formatTimeAgo(n.createdAt),
+        unread: !n.read,
+        isDb: true
       });
+    });
 
-      setNotifications(list);
-    }
+    setNotifications(list);
   }, [externalApplications, readAdminNotifIds, dbNotifications]);
 
   const handleArrayChange = (index, value, array, setArray) => {
