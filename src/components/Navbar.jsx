@@ -244,11 +244,42 @@ export default function Navbar() {
     }
   }, [isNotificationsOpen, notifications]);
 
+  const parseLocalDateTime = (dateStr) => {
+    if (!dateStr) return null;
+    try {
+      if (typeof dateStr !== 'string') {
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? null : d;
+      }
+      if (dateStr.includes('Z') || /[+-]\d{2}:?\d{2}$/.test(dateStr)) {
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? null : d;
+      }
+      const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?$/);
+      if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1;
+        const day = parseInt(match[3], 10);
+        const hour = parseInt(match[4], 10);
+        const minute = parseInt(match[5], 10);
+        const second = parseInt(match[6], 10);
+        const msStr = match[7] ? match[7].substring(0, 3).padEnd(3, '0') : '0';
+        const ms = parseInt(msStr, 10);
+        return new Date(year, month, day, hour, minute, second, ms);
+      }
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? null : d;
+    } catch (e) {
+      return null;
+    }
+  };
+
   const formatNotificationTime = (createdAtString) => {
     if (!createdAtString) return 'just now';
     try {
-      const date = new Date(createdAtString);
       const now = new Date();
+      const date = parseLocalDateTime(createdAtString);
+      if (!date) return 'just now';
       const diffMs = now - date;
       const diffMins = Math.floor(diffMs / 60000);
       if (diffMins < 1) return 'just now';

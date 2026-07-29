@@ -845,11 +845,42 @@ export default function AdminDashboard() {
     fetchCandidateTask();
   }, [selectedApplication?.id]);
 
+  const parseLocalDateTime = (dateStr) => {
+    if (!dateStr) return null;
+    try {
+      if (typeof dateStr !== 'string') {
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? null : d;
+      }
+      if (dateStr.includes('Z') || /[+-]\d{2}:?\d{2}$/.test(dateStr)) {
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? null : d;
+      }
+      const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?$/);
+      if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1;
+        const day = parseInt(match[3], 10);
+        const hour = parseInt(match[4], 10);
+        const minute = parseInt(match[5], 10);
+        const second = parseInt(match[6], 10);
+        const msStr = match[7] ? match[7].substring(0, 3).padEnd(3, '0') : '0';
+        const ms = parseInt(msStr, 10);
+        return new Date(year, month, day, hour, minute, second, ms);
+      }
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? null : d;
+    } catch (e) {
+      return null;
+    }
+  };
+
   const formatTimeAgo = (dateStr) => {
     if (!dateStr) return '';
     try {
       const now = new Date();
-      const date = new Date(dateStr);
+      const date = parseLocalDateTime(dateStr);
+      if (!date) return 'Just now';
       const diffMs = now - date;
       if (isNaN(diffMs) || diffMs < 0) return 'Just now';
       const diffMins = Math.floor(diffMs / 60000);
@@ -910,7 +941,7 @@ export default function AdminDashboard() {
           type: 'application',
           title: 'New Candidate Application',
           message: `${app.fullName} applied for ${app.jobTitle}`,
-          time: '1 hour ago',
+          time: formatTimeAgo(app.appliedTime || app.appliedDate),
           unread: !readAdminNotifIds.includes(notifId)
         });
       });
