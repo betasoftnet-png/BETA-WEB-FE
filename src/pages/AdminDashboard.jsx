@@ -5567,6 +5567,7 @@ export default function AdminDashboard() {
                   <option value="SQL">SQL</option>
                   <option value="Java Springboot">Java Springboot</option>
                   <option value="Python Django">Python Django</option>
+                  <option value="Flutter">Flutter</option>
                   <option value="DevOps">DevOps</option>
                   <option value="C/C++">C/C++</option>
                   <option value="HTML/CSS">HTML/CSS</option>

@@ -22,6 +22,7 @@ const getSkillColorClass = (skill) => {
     case 'sql': return 'bg-blue-50 text-blue-700 border-blue-200';
     case 'java springboot': return 'bg-red-50 text-red-700 border-red-200';
     case 'python django': return 'bg-teal-50 text-teal-700 border-teal-200';
+    case 'flutter': return 'bg-cyan-50 text-cyan-700 border-cyan-200';
     case 'devops': return 'bg-purple-50 text-purple-700 border-purple-200';
     case 'c/c++': return 'bg-indigo-50 text-indigo-700 border-indigo-200';
     case 'html/css': return 'bg-orange-50 text-orange-700 border-orange-200';
