@@ -335,14 +335,37 @@ export default function Navbar() {
     setIsServerDown(false);
   }, [user]);
 
+  // Load candidate notifications from cache on mount/refresh
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem('beta_token');
+      const role = localStorage.getItem('beta_role');
+      const isCandidate = token && role && role !== 'ROLE_ADMIN';
+      if (isCandidate) {
+        const cached = localStorage.getItem('beta_candidate_notifications');
+        if (cached) {
+          setNotifications(JSON.parse(cached));
+        }
+      } else {
+        setNotifications([]);
+      }
+    } catch (_) {}
+  }, [user]);
+
   useEffect(() => {
     if (user && user.role === 'ROLE_ADMIN') return;
     if (isServerDown) return;
 
     const fetchDynamicNotifications = async () => {
-      const readIds = getReadNotifIds();
-      const dynamicList = [];
-      const seenIds = new Set();
+      const token = localStorage.getItem('beta_token');
+      const role = localStorage.getItem('beta_role');
+      const isCandidate = token && role && role !== 'ROLE_ADMIN';
+
+      if (!isCandidate) {
+        setNotifications([]);
+        localStorage.removeItem('beta_candidate_notifications');
+        return;
+      }
 
       // Determine user / candidate email
       let userEmail = (user?.email || user?.username || localStorage.getItem('beta_email') || localStorage.getItem('candidateEmail') || '').toLowerCase().trim();
@@ -368,117 +391,92 @@ export default function Navbar() {
         } catch (_) { }
       }
 
-      if (user && userEmail && user.role !== 'ROLE_ADMIN') {
+      if (!userEmail) return;
+
+      const readIds = getReadNotifIds();
+      const dynamicList = [];
+
+      try {
         // 1. DYNAMIC CANDIDATE APPLICATION PIPELINE NOTIFICATIONS
-        try {
-          const appsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
-          if (appsRes === null) {
-            setIsServerDown(true);
-            return; // Network error, do not overwrite/clear current notifications
-          }
-          let candApps = appsRes?.data?.data || appsRes?.data || [];
-
-          if (Array.isArray(candApps) && candApps.length > 0) {
-            await Promise.all(candApps.map(async (app) => {
-              const appliedDateStr = app.createdAt || app.appliedDate || app.appliedTime;
-              const formattedDate = appliedDateStr ? new Date(appliedDateStr).toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-              }) : 'N/A';
-              
-              const notifId = `app-received-${app.id}`;
-              const appliedTimestamp = new Date(appliedDateStr || 0).getTime();
-
-              dynamicList.push({
-                id: notifId,
-                title: `📋 ${app.jobTitle || 'Role'}`,
-                message: `Status: ${app.status || 'PENDING'} | Applied Date: ${formattedDate}`,
-                read: readIds.includes(notifId),
-                time: formatNotificationTime(appliedDateStr),
-                category: 'application_update',
-                appliedAt: appliedTimestamp
-              });
-
-              try {
-                const notifsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/notifications/${app.id}`).catch(() => null);
-                if (notifsRes && notifsRes.data) {
-                  const backendNotifs = Array.isArray(notifsRes.data) ? notifsRes.data : [];
-                  backendNotifs.forEach((dbNotif) => {
-                    const createdAtTimestamp = new Date(dbNotif.createdAt || 0).getTime();
-                    
-                    // Map category based on title or description
-                    let category = 'bell';
-                    const titleLower = (dbNotif.title || '').toLowerCase();
-                    if (titleLower.includes('hr')) {
-                      category = 'hr_interview'; // HR Interview
-                    } else if (titleLower.includes('task')) {
-                      category = 'task_assessment'; // Task Assessment
-                    } else if (titleLower.includes('technical') || titleLower.includes('interview') || titleLower.includes('online')) {
-                      category = 'tech_interview'; // Technical / Online Interview
-                    } else if (titleLower.includes('assessment') || titleLower.includes('test') || titleLower.includes('aptitude') || titleLower.includes('blocked') || titleLower.includes('terminated')) {
-                      category = 'assessment'; // Online Test / Assessment
-                    } else if (titleLower.includes('onboarding') || titleLower.includes('congratulations') || titleLower.includes('accepted') || titleLower.includes('offer')) {
-                      category = 'offer';
-                    }
-
-                    dynamicList.push({
-                      id: dbNotif.id,
-                      title: dbNotif.title,
-                      message: dbNotif.message,
-                      read: dbNotif.read || dbNotif.isRead || readIds.includes(String(dbNotif.id)) || false,
-                      time: formatNotificationTime(dbNotif.createdAt),
-                      category: category,
-                      appliedAt: createdAtTimestamp
-                    });
-                  });
-                }
-              } catch (err) {
-                console.warn(`Failed to fetch database notifications for application ${app.id}:`, err);
-              }
-            }));
-
-            // Sort newest applications first so they appear at the top of the notification list
-            dynamicList.sort((a, b) => b.appliedAt - a.appliedAt);
-          }
-        } catch (e) {
-          setIsServerDown(true);
-          console.warn("Failed to fetch dynamic candidate application notifications:", e);
+        const appsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`).catch(() => null);
+        if (appsRes === null) {
+          // If server is unreachable, do not clear notifications
+          return;
         }
-      } else {
-        // 2. DYNAMIC JOB OPENINGS & HIRINGS (For anonymous visitors / logged out users)
-        try {
-          const jobsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs`).catch(() => null);
-          if (jobsRes === null) {
-            setIsServerDown(true);
-            return; // Network error, do not overwrite/clear current notifications
-          }
-          const jobsList = jobsRes?.data?.data || jobsRes?.data || [];
-          if (Array.isArray(jobsList)) {
-            const sortedJobs = [...jobsList].sort((a, b) => (b.id || 0) - (a.id || 0));
-            sortedJobs.slice(0, 5).forEach((job) => {
-              const notifId = `job-opening-${job.id}`;
-              if (!seenIds.has(notifId)) {
-                seenIds.add(notifId);
-                dynamicList.push({
-                  id: notifId,
-                  title: `🚀 New Opening: ${job.title || 'Role'}`,
-                  message: `Beta is hiring for ${job.title || 'Positions'} in ${job.location || 'Tiruvallur / Remote'} (${job.type || 'Full Time'}).`,
-                  read: readIds.includes(notifId),
-                  time: 'Active Hiring',
-                  category: 'job_opening',
-                  appliedAt: job.id
+        let candApps = appsRes?.data?.data || appsRes?.data || [];
+
+        if (Array.isArray(candApps) && candApps.length > 0) {
+          await Promise.all(candApps.map(async (app) => {
+            const appliedDateStr = app.createdAt || app.appliedDate || app.appliedTime;
+            const formattedDate = appliedDateStr ? new Date(appliedDateStr).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            }) : 'N/A';
+            
+            const notifId = `app-received-${app.id}`;
+            const appliedTimestamp = new Date(appliedDateStr || 0).getTime();
+
+            dynamicList.push({
+              id: notifId,
+              title: `📋 ${app.jobTitle || 'Role'}`,
+              message: `Status: ${app.status || 'PENDING'} | Applied Date: ${formattedDate}`,
+              read: readIds.includes(notifId),
+              time: formatNotificationTime(appliedDateStr),
+              category: 'application_update',
+              appliedAt: appliedTimestamp
+            });
+
+            try {
+              const notifsRes = await axios.get(`${JOB_BOARD_API_BASE}/api/notifications/${app.id}`).catch(() => null);
+              if (notifsRes && notifsRes.data) {
+                const backendNotifs = Array.isArray(notifsRes.data) ? notifsRes.data : [];
+                backendNotifs.forEach((dbNotif) => {
+                  const createdAtTimestamp = new Date(dbNotif.createdAt || 0).getTime();
+                  
+                  // Map category based on title or description
+                  let category = 'bell';
+                  const titleLower = (dbNotif.title || '').toLowerCase();
+                  if (titleLower.includes('hr')) {
+                    category = 'hr_interview'; // HR Interview
+                  } else if (titleLower.includes('task')) {
+                    category = 'task_assessment'; // Task Assessment
+                  } else if (titleLower.includes('technical') || titleLower.includes('interview') || titleLower.includes('online')) {
+                    category = 'tech_interview'; // Technical / Online Interview
+                  } else if (titleLower.includes('assessment') || titleLower.includes('test') || titleLower.includes('aptitude') || titleLower.includes('blocked') || titleLower.includes('terminated')) {
+                    category = 'assessment'; // Online Test / Assessment
+                  } else if (titleLower.includes('onboarding') || titleLower.includes('congratulations') || titleLower.includes('accepted') || titleLower.includes('offer')) {
+                    category = 'offer';
+                  }
+
+                  dynamicList.push({
+                    id: dbNotif.id,
+                    title: dbNotif.title,
+                    message: dbNotif.message,
+                    read: dbNotif.read || dbNotif.isRead || readIds.includes(String(dbNotif.id)) || false,
+                    time: formatNotificationTime(dbNotif.createdAt),
+                    category: category,
+                    appliedAt: createdAtTimestamp
+                  });
                 });
               }
-            });
-          }
-        } catch (e) {
-          setIsServerDown(true);
-          console.warn("Failed to fetch dynamic job openings:", e);
-        }
-      }
+            } catch (err) {
+              console.warn(`Failed to fetch database notifications for application ${app.id}:`, err);
+            }
+          }));
 
-      setNotifications(dynamicList);
+          // Sort newest applications first so they appear at the top of the notification list
+          dynamicList.sort((a, b) => b.appliedAt - a.appliedAt);
+        }
+
+        // Cache candidate notifications
+        localStorage.setItem('beta_candidate_notifications', JSON.stringify(dynamicList));
+        setNotifications(dynamicList);
+        setIsServerDown(false);
+      } catch (e) {
+        setIsServerDown(true);
+        console.warn("Failed to fetch dynamic candidate application notifications:", e);
+      }
     };
 
     fetchDynamicNotifications();
