@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Shield, Brain, Clock, CheckCircle, AlertTriangle, ArrowRight, RefreshCw } from 'lucide-react';
@@ -30,6 +31,8 @@ const getSkillColorClass = (skill) => {
 };
 
 export default function Assessment() {
+  const { user } = useContext(AuthContext);
+  const isAdmin = user && user.role === 'ROLE_ADMIN';
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
@@ -663,7 +666,7 @@ export default function Assessment() {
                     <span className="text-[10px] font-bold font-mono text-[#004AAD] uppercase tracking-wider block">Question {idx + 1} of {questions.length}</span>
                     <h3 className="text-base font-extrabold text-slate-900 leading-snug mt-1">{q.question}</h3>
                   </div>
-                  {q.skill && (
+                  {q.skill && isAdmin && (
                     <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${skillColor} shrink-0 uppercase tracking-wider`}>
                       {q.skill}
                     </span>
