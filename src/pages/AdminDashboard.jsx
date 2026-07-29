@@ -3963,7 +3963,7 @@ export default function AdminDashboard() {
                       <Brain className="h-4 w-4" />
                       <span>{selectedApplication.aptitudeStatus === 'Assessment Sent' || selectedApplication.aptitudeStatus === 'Completed' ? 'Test Assigned' : 'Test'}</span>
                     </button>
-                    {(selectedApplication.aptitudeStatus === 'Assessment Sent' || selectedApplication.aptitudeStatus === 'Completed' || selectedApplication.status === 'Terminated' || selectedApplication.status === 'Terminated (Malpractice)') && (
+                    {(selectedApplication.aptitudeStatus === 'Assessment Sent' || selectedApplication.aptitudeStatus === 'Completed' || selectedApplication.aptitudeStatus === 'Blocked' || selectedApplication.status === 'Terminated' || selectedApplication.status === 'Terminated (Malpractice)') && (
                       <button
                         onClick={() => handleResetAssessment(selectedApplication.id)}
                         className="px-4 py-2 bg-purple-50 hover:bg-purple-100 border border-purple-250 text-purple-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 border-none outline-none"
