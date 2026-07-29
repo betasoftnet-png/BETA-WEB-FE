@@ -5495,14 +5495,18 @@ export default function AdminDashboard() {
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 focus:outline-none text-xs text-slate-700 cursor-pointer"
                 >
                   <option value="All">All Categories</option>
-                  <option value="Java">Java</option>
-                  <option value="Python">Python</option>
+                  <option value="React.js">React.js</option>
+                  <option value="Javascript">Javascript</option>
+                  <option value="Node.js">Node.js</option>
+                  <option value="Express.js">Express.js</option>
+                  <option value="MongoDB">MongoDB</option>
                   <option value="SQL">SQL</option>
+                  <option value="Java Springboot">Java Springboot</option>
+                  <option value="Python Django">Python Django</option>
+                  <option value="DevOps">DevOps</option>
+                  <option value="C/C++">C/C++</option>
                   <option value="HTML/CSS">HTML/CSS</option>
-                  <option value="React">React</option>
-                  <option value="Node">Node</option>
-                  <option value="C++">C++</option>
-                  <option value="JavaScript">JavaScript</option>
+                  <option value="Digital Marketing">Digital Marketing</option>
                 </select>
               </div>
             </div>
@@ -5523,42 +5527,16 @@ export default function AdminDashboard() {
                   const filtered = allQuestions
                     .filter(q => {
                       if (questionCategoryQuery !== 'All') {
-                        const cat = (q.category || '').toLowerCase();
-                        const title = (q.question || '').toLowerCase();
+                        const cat = (q.skill || q.category || '').toLowerCase();
                         const filterVal = questionCategoryQuery.toLowerCase();
-
-                        if (filterVal === 'java') {
-                          const hasJava = cat.includes('java') || title.includes('java');
-                          const hasJavaScript = cat.includes('javascript') || title.includes('javascript') || cat.includes('js');
-                          if (hasJava && hasJavaScript) {
-                            return /\bjava\b/i.test(cat) || /\bjava\b/i.test(title);
-                          }
-                          if (!hasJava) return false;
-                        } else if (filterVal === 'python') {
-                          if (!cat.includes('python') && !title.includes('python')) return false;
-                        } else if (filterVal === 'sql') {
-                          if (!cat.includes('sql') && !cat.includes('database') && !cat.includes('db') &&
-                            !title.includes('sql') && !title.includes('database') && !title.includes('query')) return false;
-                        } else if (filterVal === 'html/css') {
-                          if (!cat.includes('html') && !cat.includes('css') &&
-                            !title.includes('html') && !title.includes('css') && !title.includes('style') && !title.includes('class')) return false;
-                        } else if (filterVal === 'react') {
-                          if (!cat.includes('react') && !title.includes('react') &&
-                            !title.includes('hook') && !title.includes('component') && !title.includes('state')) return false;
-                        } else if (filterVal === 'node') {
-                          if (!cat.includes('node') && !title.includes('node')) return false;
-                        } else if (filterVal === 'c++') {
-                          if (!cat.includes('c++') && !cat.includes('cpp') && !title.includes('c++') && !title.includes('cpp')) return false;
-                        } else if (filterVal === 'javascript') {
-                          if (!cat.includes('javascript') && !cat.includes('js') && !title.includes('javascript') && !title.includes('js')) return false;
-                        } else if (cat !== filterVal) {
+                        if (cat !== filterVal) {
                           return false;
                         }
                       }
                       if (questionSearchQuery) {
                         const query = questionSearchQuery.toLowerCase();
                         return (q.question || '').toLowerCase().includes(query) ||
-                          (q.category || '').toLowerCase().includes(query);
+                          (q.skill || q.category || '').toLowerCase().includes(query);
                       }
                       return true;
                     });
@@ -5586,8 +5564,8 @@ export default function AdminDashboard() {
                         <div className="space-y-1 w-full">
                           <div className="flex items-center justify-between">
                             <span className="text-[10px] font-mono text-[#004AAD] uppercase font-bold">Question {q.id}</span>
-                            {q.category && (
-                              <span className="text-[9px] px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-500 uppercase font-extrabold tracking-wider">{q.category}</span>
+                            {(q.skill || q.category) && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-slate-500 uppercase font-extrabold tracking-wider">{q.skill || q.category}</span>
                             )}
                           </div>
                           <p className="font-extrabold text-slate-900 leading-snug">{q.question}</p>
