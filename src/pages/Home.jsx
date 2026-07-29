@@ -338,17 +338,16 @@ export default function Home() {
 
           </motion.div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8
-                flex flex-col lg:flex-row items-center gap-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-6 w-full">
 
           {/* Left Column: Heading and description */}
-          <div className="w-full lg:w-[50%] flex flex-col items-start text-left space-y-6">
+          <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
 
             <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="space-y-6 w-full flex flex-col items-start text-left"
+              className="space-y-6 w-full flex flex-col items-center lg:items-start text-center lg:text-left"
             >
               <motion.h2
                 variants={itemVariants}
@@ -365,7 +364,7 @@ export default function Home() {
 
               <motion.p
                 variants={itemVariants}
-                className="mt-2 text-slate-600 text-lg leading-9 text-left w-full max-w-4xl tracking-wide"
+                className="mt-2 text-slate-600 text-lg leading-9 text-center lg:text-left w-full max-w-4xl tracking-wide"
               >
                 Beta builds secure, real-time corporate applications. SMTP mail threads,
                 live authentication protocols, and agile sprints under one dashboard.
@@ -377,7 +376,7 @@ export default function Home() {
           {/* Right Column: Enterprise suite */}
 
 
-          <div className="w-full lg:w-[50%] max-w-2xl h-full flex flex-col justify-center text-left lg:pl-6">
+          <div className="w-full lg:w-1/2 h-full flex flex-col justify-center text-left">
 
             <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-4 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
               <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
