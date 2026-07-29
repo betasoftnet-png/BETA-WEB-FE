@@ -339,9 +339,7 @@ export default function Navbar() {
   useEffect(() => {
     try {
       const token = localStorage.getItem('beta_token');
-      const role = localStorage.getItem('beta_role');
-      const isCandidate = token && role && role !== 'ROLE_ADMIN';
-      if (isCandidate) {
+      if (token) {
         const cached = localStorage.getItem('beta_candidate_notifications');
         if (cached) {
           setNotifications(JSON.parse(cached));
@@ -353,15 +351,12 @@ export default function Navbar() {
   }, [user]);
 
   useEffect(() => {
-    if (user && user.role === 'ROLE_ADMIN') return;
     if (isServerDown) return;
 
     const fetchDynamicNotifications = async () => {
       const token = localStorage.getItem('beta_token');
-      const role = localStorage.getItem('beta_role');
-      const isCandidate = token && role && role !== 'ROLE_ADMIN';
 
-      if (!isCandidate) {
+      if (!token) {
         setNotifications([]);
         localStorage.removeItem('beta_candidate_notifications');
         return;
@@ -1138,23 +1133,25 @@ export default function Navbar() {
               </div>
 
               {/* Header Notification Icon Bell Dropdown */}
-              <div className="relative pointer-events-auto" ref={notificationsRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                  className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent"
-                  title="Notifications"
-                >
-                  <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
-                  {/* Notification Count Badge */}
-                  {newUnreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
-                      {newUnreadCount}
-                    </span>
-                  )}
-                </button>
-                {renderNotificationsDropdown("right-0")}
-              </div>
+              {notifications.length > 0 && (
+                <div className="relative pointer-events-auto" ref={notificationsRef}>
+                  <button
+                    type="button"
+                    onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                    className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent"
+                    title="Notifications"
+                  >
+                    <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
+                    {/* Notification Count Badge */}
+                    {newUnreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
+                        {newUnreadCount}
+                      </span>
+                    )}
+                  </button>
+                  {renderNotificationsDropdown("right-0")}
+                </div>
+              )}
 
               {user ? (
                 <div className="relative pointer-events-auto" ref={profileRef}>
@@ -1240,23 +1237,25 @@ export default function Navbar() {
             {/* Mobile Notification Bell & Menu Button */}
             <div className="-mr-2 flex md:hidden items-center space-x-1 sm:space-x-2">
               {/* Header Notification Icon Bell Dropdown (Mobile) */}
-              <div className="relative pointer-events-auto" ref={mobileNotificationsRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                  className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent"
-                  title="Notifications"
-                >
-                  <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
-                  {/* Notification Count Badge */}
-                  {newUnreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
-                      {newUnreadCount}
-                    </span>
-                  )}
-                </button>
-                {renderNotificationsDropdown("right-[-48px] max-w-[calc(100vw-32px)]")}
-              </div>
+              {notifications.length > 0 && (
+                <div className="relative pointer-events-auto" ref={mobileNotificationsRef}>
+                  <button
+                    type="button"
+                    onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                    className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition duration-300 focus:outline-none cursor-pointer flex items-center justify-center border-none bg-transparent"
+                    title="Notifications"
+                  >
+                    <Bell className="h-5 w-5 text-slate-650 hover:text-[#004AAD] transition-colors" />
+                    {/* Notification Count Badge */}
+                    {newUnreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-extrabold text-white">
+                        {newUnreadCount}
+                      </span>
+                    )}
+                  </button>
+                  {renderNotificationsDropdown("right-[-48px] max-w-[calc(100vw-32px)]")}
+                </div>
+              )}
 
               {/* Mobile Menu Button */}
               <button
