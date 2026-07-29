@@ -3473,20 +3473,20 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="admin-glass-card rounded-2xl overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-sm">
+                    <div className="w-full overflow-x-hidden">
+                      <table className="w-full text-left text-sm table-fixed">
                         <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider font-bold">
                           <tr>
-                            <th className="py-4 px-6 font-bold">Candidate</th>
-                            <th className="py-4 px-6 font-bold">Job Applied</th>
-                            <th className="py-4 px-6 font-bold">Experience</th>
-                            <th className="py-4 px-6 font-bold">Status</th>
-                            <th className="py-4 px-6 font-bold">Date</th>
-                            <th className="py-4 px-6 font-bold">Resume</th>
+                            <th className={`py-4 px-3 font-bold ${selectedStatusFilter === 'Accepted' ? 'w-[16%]' : 'w-[20%]'}`}>Candidate</th>
+                            <th className={`py-4 px-3 font-bold ${selectedStatusFilter === 'Accepted' ? 'w-[16%]' : 'w-[20%]'}`}>Job Applied</th>
+                            <th className={`py-4 px-3 font-bold ${selectedStatusFilter === 'Accepted' ? 'w-[10%]' : 'w-[12%]'}`}>Experience</th>
+                            <th className={`py-4 px-3 font-bold ${selectedStatusFilter === 'Accepted' ? 'w-[12%]' : 'w-[12%]'}`}>Status</th>
+                            <th className={`py-4 px-3 font-bold ${selectedStatusFilter === 'Accepted' ? 'w-[10%]' : 'w-[12%]'}`}>Date</th>
+                            <th className={`py-4 px-3 font-bold ${selectedStatusFilter === 'Accepted' ? 'w-[12%]' : 'w-[12%]'}`}>Resume</th>
                             {selectedStatusFilter === 'Accepted' && (
-                              <th className="py-4 px-6 font-bold">Report</th>
+                              <th className="py-4 px-3 font-bold w-[14%]">Report</th>
                             )}
-                            <th className="py-4 px-6 font-bold text-center">Action</th>
+                            <th className={`py-4 px-3 font-bold text-center ${selectedStatusFilter === 'Accepted' ? 'w-[10%]' : 'w-[12%]'}`}>Action</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-slate-700 text-xs">
@@ -3549,7 +3549,7 @@ export default function AdminDashboard() {
                                 }}
                                 className={`transition-colors ${selectedStatusFilter === 'Accepted' ? 'hover:bg-slate-50 cursor-pointer' : 'hover:bg-slate-50/50'}`}
                               >
-                                <td className="py-4 px-6">
+                                <td className="py-4 px-3">
                                   <div className="flex items-center gap-1.5 flex-wrap">
                                     <button
                                       onClick={(e) => {
@@ -3565,7 +3565,7 @@ export default function AdminDashboard() {
                                         console.log('Transitioning to candidateDetails subpage');
                                         setActiveSubTab('candidateDetails');
                                       }}
-                                      className="font-bold text-[#004AAD] hover:underline cursor-pointer text-left block bg-transparent border-none p-0"
+                                      className="font-bold text-[#004AAD] hover:underline cursor-pointer text-left block bg-transparent border-none p-0 whitespace-normal break-words w-full"
                                     >
                                       {app.fullName}
                                     </button>
@@ -3575,9 +3575,9 @@ export default function AdminDashboard() {
                                       </span>
                                     )}
                                   </div>
-                                  <div className="text-slate-450 text-[10px] mt-0.5">{app.email}</div>
+                                  <div className="text-slate-450 text-[10px] mt-0.5 break-all whitespace-normal">{app.email}</div>
                                 </td>
-                                <td className="py-4 px-6">
+                                <td className="py-4 px-3">
                                   {editingAppJobTitleId === app.id ? (
                                     /* ── Inline edit mode ── */
                                     <form
@@ -3619,7 +3619,7 @@ export default function AdminDashboard() {
                                           } catch (err) { console.error('Failed to update job title:', err); }
                                           finally { setSavingAppJobTitle(false); setEditingAppJobTitleId(null); }
                                         }}
-                                        className="border border-blue-300 rounded px-2 py-0.5 text-sm font-semibold text-slate-900 w-44 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        className="border border-blue-300 rounded px-2 py-0.5 text-sm font-semibold text-slate-900 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         placeholder="Enter job title…"
                                         disabled={savingAppJobTitle}
                                       />
@@ -3629,8 +3629,8 @@ export default function AdminDashboard() {
                                     </form>
                                   ) : (
                                     /* ── Display mode ── */
-                                    <div className="flex items-center gap-1.5 group">
-                                      <div className="font-semibold text-slate-900">
+                                    <div className="flex items-center gap-1.5 group flex-wrap">
+                                      <div className="font-semibold text-slate-900 whitespace-normal break-words">
                                         {app.jobTitle
                                           ? app.jobTitle
                                           : (
@@ -3668,30 +3668,30 @@ export default function AdminDashboard() {
                                     </div>
                                   )}
 
-                                  <div className="text-slate-450 text-[10px] mt-0.5">{app.jobDepartment}</div>
+                                  <div className="text-slate-450 text-[10px] mt-0.5 whitespace-normal break-words">{app.jobDepartment}</div>
                                 </td>
-                                <td className="py-4 px-6 font-semibold text-slate-700">
-                                  <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-bold whitespace-nowrap">
+                                <td className="py-4 px-3 font-semibold text-slate-700">
+                                  <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-bold whitespace-normal break-words inline-block">
                                     {app.experience || 'Fresher / 0-1 Years'}
                                   </span>
                                 </td>
-                                <td className="py-4 px-6">
+                                <td className="py-4 px-3">
                                   {(() => {
                                     const stage = getCandidateCurrentStage(app);
                                     const badgeStyle = getStageBadgeStyle(stage);
                                     return (
-                                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-nowrap border ${badgeStyle}`}>
+                                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-normal break-words inline-block border ${badgeStyle}`}>
                                         {stage}
                                       </span>
                                     );
                                   })()}
                                 </td>
-                                <td className="py-4 px-6 text-slate-450">
+                                <td className="py-4 px-3 text-slate-450">
                                   {app.createdAt ? (
                                     <div>
-                                      <div className="font-semibold text-slate-700">{new Date(app.createdAt).toLocaleDateString()}</div>
+                                      <div className="font-semibold text-slate-700 whitespace-normal break-words">{new Date(app.createdAt).toLocaleDateString()}</div>
                                       {app.formattedAppliedTime && (
-                                        <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                                        <div className="text-[10px] text-slate-400 font-semibold mt-0.5 whitespace-normal break-words">
                                           {app.formattedAppliedTime}
                                         </div>
                                       )}
@@ -3700,7 +3700,7 @@ export default function AdminDashboard() {
                                     'N/A'
                                   )}
                                 </td>
-                                <td className="py-4 px-6">
+                                <td className="py-4 px-3">
                                   {app.resumeUrl ? (
                                     <button
                                       onClick={(e) => {
@@ -3708,24 +3708,24 @@ export default function AdminDashboard() {
                                         setSelectedResumeUrl(app.resumeUrl);
                                         setSelectedResumeCandidate(app.fullName);
                                       }}
-                                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold cursor-pointer"
+                                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-blue-50 text-[#004AAD] border border-blue-100 hover:bg-blue-100 transition font-bold cursor-pointer max-w-full"
                                     >
-                                      <FileText className="h-3.5 w-3.5 text-[#004AAD]" />
-                                      <span>View Resume</span>
+                                      <FileText className="h-3.5 w-3.5 text-[#004AAD] shrink-0" />
+                                      <span className="truncate">View Resume</span>
                                     </button>
                                   ) : (
                                     <span className="text-slate-400 italic">No resume</span>
                                   )}
                                  </td>
                                  {selectedStatusFilter === 'Accepted' && (
-                                   <td className="py-4 px-6">
+                                   <td className="py-4 px-3">
                                      {app.reportMessage ? (
-                                       <div className="bg-rose-50/50 border border-rose-100 rounded-xl p-3 max-w-[220px] shadow-xs flex flex-col gap-1.5 hover:bg-rose-50/80 transition duration-300">
+                                       <div className="bg-rose-50/50 border border-rose-100 rounded-xl p-3 w-full max-w-[220px] shadow-xs flex flex-col gap-1.5 hover:bg-rose-50/80 transition duration-300">
                                          <div className="flex items-center space-x-1.5 text-rose-700 font-bold text-[10px]">
-                                           <AlertCircle className="h-3.5 w-3.5 text-rose-500" />
+                                           <AlertCircle className="h-3.5 w-3.5 text-rose-500 shrink-0" />
                                            <span className="uppercase tracking-wider">Candidate Report</span>
                                          </div>
-                                         <div className="text-slate-600 text-xs font-medium leading-relaxed">
+                                         <div className="text-slate-600 text-xs font-medium leading-relaxed break-words whitespace-normal">
                                            {app.reportMessage.length > 50 ? (
                                              expandedReportIds.includes(app.id) ? (
                                                <>
@@ -3760,15 +3760,15 @@ export default function AdminDashboard() {
                                          </div>
                                        </div>
                                      ) : (
-                                       <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-2.5 max-w-[200px] flex items-center space-x-1.5 text-slate-450 select-none">
-                                         <CheckCircle className="h-3.5 w-3.5 text-slate-400" />
+                                       <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-2.5 w-full max-w-[200px] flex items-center space-x-1.5 text-slate-450 select-none">
+                                         <CheckCircle className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                                          <span className="text-[10px] font-bold tracking-wide uppercase">No Issues</span>
                                        </div>
                                      )}
                                    </td>
                                  )}
-                                <td className="py-4 px-6 text-center">
-                                  <div className="flex items-center justify-center gap-1.5">
+                                <td className="py-4 px-3 text-center">
+                                  <div className="flex items-center justify-center gap-1.5 flex-wrap">
                                     {selectedStatusFilter !== 'Accepted' && app.status !== 'Accepted' && (
                                       <button
                                         onClick={(e) => {
