@@ -198,6 +198,14 @@ export default function Navbar() {
   const notificationsRef = useRef(null);
   const mobileNotificationsRef = useRef(null);
   const [notifications, setNotifications] = useState([]);
+  const [timeTick, setTimeTick] = useState(0);
+
+  useEffect(() => {
+    const tickInterval = setInterval(() => {
+      setTimeTick(prev => prev + 1);
+    }, 30000);
+    return () => clearInterval(tickInterval);
+  }, []);
   const [seenNotificationIds, setSeenNotificationIds] = useState([]);
   const [isServerDown, setIsServerDown] = useState(false);
   const [debugInfo, setDebugInfo] = useState({
@@ -255,30 +263,27 @@ export default function Navbar() {
         const d = new Date(dateStr);
         return isNaN(d.getTime()) ? null : d;
       }
-      const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?$/);
-      if (match) {
-        const year = parseInt(match[1], 10);
-        const month = parseInt(match[2], 10) - 1;
-        const day = parseInt(match[3], 10);
-        const hour = parseInt(match[4], 10);
-        const minute = parseInt(match[5], 10);
-        const second = parseInt(match[6], 10);
-        const msStr = match[7] ? match[7].substring(0, 3).padEnd(3, '0') : '0';
-        const ms = parseInt(msStr, 10);
-        return new Date(year, month, day, hour, minute, second, ms);
+      let isoStr = dateStr.trim();
+      if (isoStr.includes('T') || isoStr.includes(' ')) {
+        isoStr = isoStr.replace(' ', 'T');
+        if (!isoStr.endsWith('Z')) {
+          isoStr = isoStr + 'Z';
+        }
+      } else {
+        isoStr = isoStr + 'T00:00:00Z';
       }
-      const d = new Date(dateStr);
+      const d = new Date(isoStr);
       return isNaN(d.getTime()) ? null : d;
     } catch (e) {
       return null;
     }
   };
 
-  const formatNotificationTime = (createdAtString) => {
-    if (!createdAtString) return 'just now';
+  const formatNotificationTime = (createdAtVal) => {
+    if (!createdAtVal) return 'just now';
     try {
       const now = new Date();
-      const date = parseLocalDateTime(createdAtString);
+      const date = createdAtVal instanceof Date ? createdAtVal : parseLocalDateTime(createdAtVal);
       if (!date) return 'just now';
       const diffMs = now - date;
       const diffMins = Math.floor(diffMs / 60000);
@@ -419,7 +424,8 @@ export default function Navbar() {
               read: readIds.includes(notifId),
               time: formatNotificationTime(appliedDateStr),
               category: 'application_update',
-              appliedAt: appliedTimestamp
+              appliedAt: appliedTimestamp,
+              createdAt: appliedDateStr
             });
 
             try {
@@ -451,7 +457,8 @@ export default function Navbar() {
                     read: dbNotif.read || dbNotif.isRead || readIds.includes(String(dbNotif.id)) || false,
                     time: formatNotificationTime(dbNotif.createdAt),
                     category: category,
-                    appliedAt: createdAtTimestamp
+                    appliedAt: createdAtTimestamp,
+                    createdAt: dbNotif.createdAt
                   });
                 });
               }
@@ -669,7 +676,7 @@ export default function Navbar() {
                     <div className="space-y-0.5 flex-grow min-w-0 text-left">
                       <div className="flex items-center justify-between gap-2">
                         <p className={`text-xs font-bold truncate ${!notif.read ? 'text-slate-900 font-extrabold' : 'text-slate-700'}`}>{notif.title}</p>
-                        <span className="text-[9px] text-slate-400 font-bold flex-shrink-0">{notif.time}</span>
+                        <span className="text-[9px] text-slate-400 font-bold flex-shrink-0">{formatNotificationTime(notif.createdAt || notif.appliedAt)}</span>
                       </div>
                       <p className="text-[11px] text-slate-600 leading-snug font-medium line-clamp-2">{notif.message}</p>
                     </div>
