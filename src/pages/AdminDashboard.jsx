@@ -265,6 +265,64 @@ const parseSupportMessage = (msg, name, email, company, id, date) => {
   };
 };
 
+const parseLocalDateTime = (dateStr) => {
+  if (!dateStr) return null;
+  try {
+    if (typeof dateStr !== 'string') {
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    if (dateStr.includes('Z') || /[+-]\d{2}:?\d{2}$/.test(dateStr)) {
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    let isoStr = dateStr.trim();
+    if (isoStr.includes('T') || isoStr.includes(' ')) {
+      isoStr = isoStr.replace(' ', 'T');
+      if (!isoStr.endsWith('Z')) {
+        isoStr = isoStr + 'Z';
+      }
+    } else {
+      isoStr = isoStr + 'T00:00:00Z';
+    }
+    const d = new Date(isoStr);
+    return isNaN(d.getTime()) ? null : d;
+  } catch (e) {
+    return null;
+  }
+};
+
+const getLocalAppliedDateTime = (app) => {
+  const timeStr = app.appliedTime || app.appliedtime || '';
+  const dateStr = app.appliedDate || app.applieddate || app.createdAt || app.createdat || '';
+  
+  if (!timeStr && !dateStr) {
+    return { appliedDate: '', formattedAppliedTime: '' };
+  }
+  
+  if (timeStr && (timeStr.includes('T') || timeStr.includes(':') || timeStr.includes(' '))) {
+    const dateObj = parseLocalDateTime(timeStr);
+    if (dateObj) {
+      return {
+        appliedDate: dateObj.toLocaleDateString(),
+        formattedAppliedTime: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
+      };
+    }
+  }
+  
+  if (dateStr) {
+    const dateObj = parseLocalDateTime(dateStr);
+    if (dateObj) {
+      return {
+        appliedDate: dateObj.toLocaleDateString(),
+        formattedAppliedTime: ''
+      };
+    }
+  }
+  
+  return { appliedDate: dateStr, formattedAppliedTime: '' };
+};
+
 
 
 export default function AdminDashboard() {
@@ -538,6 +596,7 @@ export default function AdminDashboard() {
             String(r.candidateId) === String(app.id) ||
             (r.email && app.email && r.email.toLowerCase() === app.email.toLowerCase() && String(r.jobId) === String(app.jobId || app.jobid))
           );
+          const localTimes = getLocalAppliedDateTime(app);
 
           return {
             id: app.id,
@@ -551,10 +610,10 @@ export default function AdminDashboard() {
             status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING')
               ? 'Interview Scheduled'
               : mapStatusToUI(app.status),
-            createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
-            appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+            createdAt: app.appliedTime || app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+            appliedDate: localTimes.appliedDate,
             appliedTime: app.appliedTime || app.appliedtime || '',
-            formattedAppliedTime: app.formattedAppliedTime || app.formattedappliedtime || '',
+            formattedAppliedTime: localTimes.formattedAppliedTime,
             jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
             jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
             jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
@@ -657,6 +716,7 @@ export default function AdminDashboard() {
               String(r.candidateId) === String(app.id) ||
               (r.email && app.email && r.email.toLowerCase() === app.email.toLowerCase() && String(r.jobId) === String(app.jobId || app.jobid))
             );
+            const localTimes = getLocalAppliedDateTime(app);
             return {
               id: app.id,
               fullName: app.fullName || app.fullname || '',
@@ -669,10 +729,10 @@ export default function AdminDashboard() {
               status: (app.interviewDate && app.interviewDate !== 'null' && app.interviewDate !== 'undefined' && (app.status || '').toUpperCase() === 'PENDING')
                 ? 'Interview Scheduled'
                 : mapStatusToUI(app.status),
-              createdAt: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
-              appliedDate: app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+              createdAt: app.appliedTime || app.appliedDate || app.applieddate || app.createdAt || app.createdat || '',
+              appliedDate: localTimes.appliedDate,
               appliedTime: app.appliedTime || app.appliedtime || '',
-              formattedAppliedTime: app.formattedAppliedTime || app.formattedappliedtime || '',
+              formattedAppliedTime: localTimes.formattedAppliedTime,
               jobTitle: app.jobTitle || app.jobtitle || (matchedJob ? matchedJob.title : '') || '',
               jobDepartment: app.jobDepartment || app.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
               jobLocation: app.jobLocation || app.joblocation || (matchedJob ? matchedJob.location : '') || '',
@@ -845,35 +905,7 @@ export default function AdminDashboard() {
     fetchCandidateTask();
   }, [selectedApplication?.id]);
 
-  const parseLocalDateTime = (dateStr) => {
-    if (!dateStr) return null;
-    try {
-      if (typeof dateStr !== 'string') {
-        const d = new Date(dateStr);
-        return isNaN(d.getTime()) ? null : d;
-      }
-      if (dateStr.includes('Z') || /[+-]\d{2}:?\d{2}$/.test(dateStr)) {
-        const d = new Date(dateStr);
-        return isNaN(d.getTime()) ? null : d;
-      }
-      const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?$/);
-      if (match) {
-        const year = parseInt(match[1], 10);
-        const month = parseInt(match[2], 10) - 1;
-        const day = parseInt(match[3], 10);
-        const hour = parseInt(match[4], 10);
-        const minute = parseInt(match[5], 10);
-        const second = parseInt(match[6], 10);
-        const msStr = match[7] ? match[7].substring(0, 3).padEnd(3, '0') : '0';
-        const ms = parseInt(msStr, 10);
-        return new Date(year, month, day, hour, minute, second, ms);
-      }
-      const d = new Date(dateStr);
-      return isNaN(d.getTime()) ? null : d;
-    } catch (e) {
-      return null;
-    }
-  };
+
 
   const formatTimeAgo = (dateStr) => {
     if (!dateStr) return '';
@@ -3544,7 +3576,8 @@ export default function AdminDashboard() {
                               })
                               .filter(app => {
                                 if (!startDate && !endDate) return true;
-                                const appDate = new Date(app.createdAt);
+                                const appDate = parseLocalDateTime(app.createdAt);
+                                if (!appDate) return true;
                                 if (startDate && appDate < new Date(startDate)) return false;
                                 if (endDate) {
                                   const adjustedEnd = new Date(endDate);
@@ -3718,9 +3751,9 @@ export default function AdminDashboard() {
                                   })()}
                                 </td>
                                 <td className="py-4 px-3 text-slate-450">
-                                  {app.createdAt ? (
+                                  {app.appliedDate ? (
                                     <div>
-                                      <div className="font-semibold text-slate-700 whitespace-normal break-words">{new Date(app.createdAt).toLocaleDateString()}</div>
+                                      <div className="font-semibold text-slate-700 whitespace-normal break-words">{app.appliedDate}</div>
                                       {app.formattedAppliedTime && (
                                         <div className="text-[10px] text-slate-400 font-semibold mt-0.5 whitespace-normal break-words">
                                           {app.formattedAppliedTime}
