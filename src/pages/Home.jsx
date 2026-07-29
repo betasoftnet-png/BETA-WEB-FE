@@ -21,7 +21,13 @@ import {
   Code2,
   Workflow,
   Network,
-  Award
+  Award,
+  Lightbulb,
+  Handshake,
+  Rocket,
+  Quote,
+  TrendingUp,
+  Puzzle
 } from 'lucide-react';
 
 export default function Home() {
@@ -156,6 +162,36 @@ export default function Home() {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
+        }
+        @keyframes auroraShift {
+          0% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+          50% { background-position: 100% 50%; filter: hue-rotate(180deg); }
+          100% { background-position: 0% 50%; filter: hue-rotate(360deg); }
+        }
+        .aurora-bg-animate {
+          background: linear-gradient(135deg, #3b82f6, #06b6d4, #8b5cf6, #3b82f6);
+          background-size: 300% 300%;
+          animation: auroraShift 12s ease infinite;
+        }
+        .group:hover .aurora-bg-animate {
+          animation-duration: 4s !important;
+        }
+        .animated-gradient-text {
+          background: linear-gradient(90deg, #60a5fa, #2dd4bf, #c084fc, #60a5fa);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: borderGradientShift 3s linear infinite;
+        }
+        @keyframes borderGradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes floatQuote {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+          100% { transform: translateY(0); }
         }
         @keyframes gradientSwirl {
           0% { background-position: 0% 0%; }
@@ -846,6 +882,96 @@ export default function Home() {
               </div>
             </motion.div>
           ))}
+        </div>
+      </div>
+
+      {/* SECTION 5.5: THE PRINCIPLES BEHIND EVERY PRODUCT */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
+        <div className="max-w-3xl mx-auto text-center mb-12 space-y-4 animate-fadeIn">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+            The Principles Behind Every Product
+          </h2>
+          <p className="text-slate-500 text-sm md:text-base leading-relaxed font-semibold">
+            Discover the core foundations of performance, security, scaling, and simplicity that dictate our engineering standards.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {/* Card 1: Performance First */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 bg-white"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+              <Zap className="h-6 w-6" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors">⚡ Performance First</h3>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed font-medium">
+                Every millisecond matters. We optimize for speed and responsiveness.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Card 2: Security by Default */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 bg-white"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+              <Lock className="h-6 w-6" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors">🔒 Security by Default</h3>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed font-medium">
+                Security is integrated into every stage of development.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Card 3: Designed to Scale */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 bg-white"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+              <TrendingUp className="h-6 w-6" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors">📈 Designed to Scale</h3>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed font-medium">
+                Applications grow alongside your business.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Card 4: Built for Simplicity */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 bg-white"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+              <Puzzle className="h-6 w-6" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors">🧩 Built for Simplicity</h3>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed font-medium">
+                Complex technology should feel effortless to use.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </div>
 

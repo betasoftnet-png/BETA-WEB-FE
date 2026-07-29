@@ -25,7 +25,13 @@ import {
   Bookmark,
   Share2,
   MoreHorizontal,
-  AlertTriangle
+  AlertTriangle,
+  Lightbulb,
+  BookOpen,
+  MessageSquare,
+  Handshake,
+  Target,
+  TrendingUp
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -1661,46 +1667,132 @@ export default function Careers() {
               </div>
             </div>
 
-            {/* SECTION 5: BENEFITS SECTION */}
-            <div className="space-y-16">
+            {/* SECTION 5: WHAT WE LOOK FOR */}
+            <div className="space-y-16 py-12">
               <div className="text-center max-w-2xl mx-auto space-y-3">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
                   <Award className="h-3.5 w-3.5" />
-                  <span>Compensation & Benefits</span>
+                  <span>Our Culture</span>
                 </div>
-                <h2 className="text-3xl md:text-5xl font-extrabold">Perks & Benefits</h2>
-                <p className="text-slate-500 text-sm">We provide everything you need to deliver high-quality work, grow your skillset, and stay healthy.</p>
+                <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">What We Look For</h2>
+                <p className="text-slate-500 text-sm font-semibold">The qualities that make a great BNX team member.</p>
               </div>
 
-              {/* Floating Circular Cards Layout */}
-              <div className="flex flex-wrap items-center justify-center gap-10 max-w-5xl mx-auto">
-                {benefits.map((ben, idx) => {
-                  const isEven = idx % 2 === 0;
-                  return (
-                    <motion.div
-                      key={ben.title}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: idx * 0.1 }}
-                      className={`h-48 w-48 rounded-full border border-purple-200 bg-white/80 shadow-lg shadow-purple-500/5 flex flex-col items-center justify-center p-6 text-center space-y-2 relative group overflow-hidden ${isEven ? 'float-circle-even' : 'float-circle-odd'
-                        }`}
-                    >
-                      {/* Backdrop glow */}
-                      <div className="absolute inset-0 bg-gradient-to-tr from-[#8B5CF6]/10 to-[#EC4899]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              {/* Grid of 6 Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
+                {/* Card 1: Problem Solver */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
+                >
+                  <div className="h-12 w-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                    <Lightbulb className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">💡 Problem Solver</h4>
+                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
+                      Think critically and find smart solutions.
+                    </p>
+                  </div>
+                </motion.div>
 
-                      <span className="text-3xl select-none" role="img" aria-label={ben.title}>
-                        {ben.emoji}
-                      </span>
-                      <h4 className="text-sm font-extrabold group-hover:text-[#EC4899] transition-colors">
-                        {ben.title}
-                      </h4>
-                      <p className="text-[10px] text-slate-500 leading-relaxed line-clamp-3 select-none">
-                        {ben.desc}
-                      </p>
-                    </motion.div>
-                  );
-                })}
+                {/* Card 2: Continuous Learner */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
+                >
+                  <div className="h-12 w-12 rounded-2xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                    <BookOpen className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">📚 Continuous Learner</h4>
+                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
+                      Curious to explore new technologies and improve daily.
+                    </p>
+                  </div>
+                </motion.div>
+
+                {/* Card 3: Great Communicator */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
+                >
+                  <div className="h-12 w-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                    <MessageSquare className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">💬 Great Communicator</h4>
+                    <p className="text-slate-550 text-xs md:text-sm leading-relaxed font-semibold">
+                      Share ideas and communicate clearly.
+                    </p>
+                  </div>
+                </motion.div>
+
+                {/* Card 4: Team Player */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
+                >
+                  <div className="h-12 w-12 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                    <Handshake className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">🤝 Team Player</h4>
+                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
+                      Collaborate with others to build better products.
+                    </p>
+                  </div>
+                </motion.div>
+
+                {/* Card 5: Ownership */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
+                >
+                  <div className="h-12 w-12 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                    <Target className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">🎯 Ownership</h4>
+                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
+                      Take responsibility and deliver with confidence.
+                    </p>
+                  </div>
+                </motion.div>
+
+                {/* Card 6: Growth Mindset */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
+                >
+                  <div className="h-12 w-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                    <TrendingUp className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">📈 Growth Mindset</h4>
+                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
+                      Always improving skills and knowledge.
+                    </p>
+                  </div>
+                </motion.div>
               </div>
             </div>
 
