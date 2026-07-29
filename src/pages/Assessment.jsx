@@ -10,6 +10,25 @@ const BACKEND_API_BASE =
     ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
 
+const getSkillColorClass = (skill) => {
+  if (!skill) return 'bg-slate-100 text-slate-700 border-slate-200';
+  switch (skill.trim().toLowerCase()) {
+    case 'react.js': return 'bg-sky-50 text-sky-700 border-sky-200';
+    case 'javascript': return 'bg-amber-50 text-amber-700 border-amber-200';
+    case 'node.js': return 'bg-green-50 text-green-700 border-green-200';
+    case 'express.js': return 'bg-slate-100 text-slate-700 border-slate-300';
+    case 'mongodb': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    case 'sql': return 'bg-blue-50 text-blue-700 border-blue-200';
+    case 'java springboot': return 'bg-red-50 text-red-700 border-red-200';
+    case 'python django': return 'bg-teal-50 text-teal-700 border-teal-200';
+    case 'devops': return 'bg-purple-50 text-purple-700 border-purple-200';
+    case 'c/c++': return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+    case 'html/css': return 'bg-orange-50 text-orange-700 border-orange-200';
+    case 'digital marketing': return 'bg-pink-50 text-pink-700 border-pink-200';
+    default: return 'bg-slate-50 text-slate-700 border-slate-200';
+  }
+};
+
 export default function Assessment() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -636,6 +655,7 @@ export default function Assessment() {
         {/* Questions list */}
         <div className="space-y-6">
           {questions.map((q, idx) => {
+            const skillColor = getSkillColorClass(q.skill);
             return (
               <div key={q.id} className="bg-white border border-slate-250 shadow-sm rounded-2xl p-6 space-y-4">
                 <div className="flex items-start justify-between border-b border-slate-100 pb-3">
@@ -643,6 +663,11 @@ export default function Assessment() {
                     <span className="text-[10px] font-bold font-mono text-[#004AAD] uppercase tracking-wider block">Question {idx + 1} of {questions.length}</span>
                     <h3 className="text-base font-extrabold text-slate-900 leading-snug mt-1">{q.question}</h3>
                   </div>
+                  {q.skill && (
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${skillColor} shrink-0 uppercase tracking-wider`}>
+                      {q.skill}
+                    </span>
+                  )}
                 </div>
 
                 {/* Multiple choice option cards with radio selection */}
