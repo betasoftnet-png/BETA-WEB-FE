@@ -137,6 +137,41 @@ const formatTimeOnly = (dateTimeStr) => {
   return '';
 };
 
+const formatDateTime = (dateTimeStr) => {
+  if (!dateTimeStr) return '';
+  try {
+    let targetStr = dateTimeStr.trim();
+    let date;
+    const hasTimezone = targetStr.endsWith('Z') || (targetStr.includes('T') && (targetStr.split('T')[1].includes('+') || targetStr.split('T')[1].includes('-')));
+
+    if (hasTimezone) {
+      date = new Date(targetStr);
+    } else {
+      const cleaned = targetStr.replace('T', ' ').split('.')[0];
+      const parts = cleaned.split(' ');
+      if (parts.length > 1) {
+        const dateParts = parts[0].split('-');
+        const timeParts = parts[1].split(':');
+        const year = parseInt(dateParts[0]);
+        const month = parseInt(dateParts[1]) - 1;
+        const day = parseInt(dateParts[2]);
+        const hour = parseInt(timeParts[0]);
+        const minute = parseInt(timeParts[1]);
+        const second = timeParts[2] ? parseInt(timeParts[2]) : 0;
+        date = new Date(year, month, day, hour, minute, second);
+      } else {
+        date = new Date(targetStr);
+      }
+    }
+
+    if (isNaN(date.getTime())) return '';
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+  } catch (e) {
+    console.error(e);
+  }
+  return '';
+};
+
 const isOptionSelected = (optionText, optionLetter, selectedVal) => {
   if (!selectedVal) return false;
   const s = String(selectedVal).trim().toLowerCase();
@@ -1335,15 +1370,16 @@ export default function AdminDashboard() {
       await backendApi.post('/api/assessment/send', payload);
 
       // 3. Update local state (preserving existing status)
+      const nowIso = new Date().toISOString();
       const updatedApps = externalApplications.map(app =>
         app.id === selectedCandidateForAssessment.id
-          ? { ...app, aptitudeStatus: 'Assessment Sent' }
+          ? { ...app, aptitudeStatus: 'Assessment Sent', assessmentSentTime: nowIso }
           : app
       );
       updateAppsAndSync(updatedApps);
 
       if (selectedApplication && selectedApplication.id === selectedCandidateForAssessment.id) {
-        setSelectedApplication(prev => ({ ...prev, aptitudeStatus: 'Assessment Sent' }));
+        setSelectedApplication(prev => ({ ...prev, aptitudeStatus: 'Assessment Sent', assessmentSentTime: nowIso }));
         fetchAssignedQuestionsForCandidate(selectedApplication.id);
       }
 
@@ -3763,15 +3799,32 @@ export default function AdminDashboard() {
                                   </span>
                                 </td>
                                 <td className="py-4 px-3">
-                                  {(() => {
-                                    const stage = getCandidateCurrentStage(app);
-                                    const badgeStyle = getStageBadgeStyle(stage);
-                                    return (
-                                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-normal break-words inline-block border ${badgeStyle}`}>
-                                        {stage}
-                                      </span>
-                                    );
-                                  })()}
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 flex-wrap">
+                                    {(() => {
+                                      const stage = getCandidateCurrentStage(app);
+                                      const badgeStyle = getStageBadgeStyle(stage);
+                                      
+                                      let sentTimeText = '';
+                                      if (stage === 'Test Round' && app.assessmentSentTime) {
+                                        sentTimeText = formatDateTime(app.assessmentSentTime);
+                                      } else if (stage === 'Task Assessment' && app.taskAssessmentSentTime) {
+                                        sentTimeText = formatDateTime(app.taskAssessmentSentTime);
+                                      }
+
+                                      return (
+                                        <>
+                                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold capitalize whitespace-normal break-words inline-block border ${badgeStyle}`}>
+                                            {stage}
+                                          </span>
+                                          {sentTimeText && (
+                                            <span className="text-[10px] text-slate-450 font-bold block sm:inline whitespace-nowrap bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded">
+                                              Sent: {sentTimeText}
+                                            </span>
+                                          )}
+                                        </>
+                                      );
+                                    })()}
+                                  </div>
                                 </td>
                                 <td className="py-4 px-3 text-slate-450">
                                   {app.appliedDate ? (
@@ -3914,10 +3967,25 @@ export default function AdminDashboard() {
                         {(() => {
                           const currentStage = getCandidateCurrentStage(selectedApplication);
                           const badgeStyle = getStageBadgeStyle(currentStage);
+                          
+                          let sentTimeText = '';
+                          if (currentStage === 'Test Round' && selectedApplication.assessmentSentTime) {
+                            sentTimeText = formatDateTime(selectedApplication.assessmentSentTime);
+                          } else if (currentStage === 'Task Assessment' && selectedApplication.taskAssessmentSentTime) {
+                            sentTimeText = formatDateTime(selectedApplication.taskAssessmentSentTime);
+                          }
+
                           return (
-                            <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize border ${badgeStyle}`}>
-                              {currentStage}
-                            </span>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize border ${badgeStyle}`}>
+                                {currentStage}
+                              </span>
+                              {sentTimeText && (
+                                <span className="text-[10px] text-slate-450 font-bold bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded">
+                                  Sent: {sentTimeText}
+                                </span>
+                              )}
+                            </div>
                           );
                         })()}
                       </div>
@@ -4301,11 +4369,12 @@ export default function AdminDashboard() {
                                 await backendApi.post(`/api/task-assessment/${selectedApplication.id}`, {
                                   taskDescription: taskDescription.trim()
                                 });
+                                const nowIso = new Date().toISOString();
                                 localStorage.setItem(`task_assessment_${selectedApplication.id}`, taskDescription.trim());
                                 setFetchedTask(taskDescription.trim());
                                 setFetchedTaskStatus('ASSIGNED');
-                                setSelectedApplication(prev => prev ? { ...prev, taskAssigned: true } : prev);
-                                setExternalApplications(prev => prev.map(a => a.id === selectedApplication.id ? { ...a, taskAssigned: true } : a));
+                                setSelectedApplication(prev => prev ? { ...prev, taskAssigned: true, taskAssessmentSentTime: nowIso } : prev);
+                                setExternalApplications(prev => prev.map(a => a.id === selectedApplication.id ? { ...a, taskAssigned: true, taskAssessmentSentTime: nowIso } : a));
                                 setTaskSendStatus('success');
                                 setTaskSendMessage(`Task assigned to ${selectedApplication.fullName} successfully.`);
                                 setTaskDescription('');
