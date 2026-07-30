@@ -147,7 +147,7 @@ const isOptionSelected = (optionText, optionLetter, selectedVal) => {
 
 const BACKEND_API_BASE =
   import.meta.env.DEV ||
-  window.location.hostname === 'localhost' ||
+    window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
@@ -295,11 +295,11 @@ const parseLocalDateTime = (dateStr) => {
 const getLocalAppliedDateTime = (app) => {
   const timeStr = app.appliedTime || app.appliedtime || '';
   const dateStr = app.appliedDate || app.applieddate || app.createdAt || app.createdat || '';
-  
+
   if (!timeStr && !dateStr) {
     return { appliedDate: '', formattedAppliedTime: '' };
   }
-  
+
   if (timeStr && (timeStr.includes('T') || timeStr.includes(':') || timeStr.includes(' '))) {
     const dateObj = parseLocalDateTime(timeStr);
     if (dateObj) {
@@ -309,7 +309,7 @@ const getLocalAppliedDateTime = (app) => {
       };
     }
   }
-  
+
   if (dateStr) {
     const dateObj = parseLocalDateTime(dateStr);
     if (dateObj) {
@@ -319,7 +319,7 @@ const getLocalAppliedDateTime = (app) => {
       };
     }
   }
-  
+
   return { appliedDate: dateStr, formattedAppliedTime: '' };
 };
 
@@ -1174,7 +1174,7 @@ export default function AdminDashboard() {
         const updatedJobs = externalJobs.filter(j => j.id !== id);
         const deletedJobCopy = { ...jobToDelete, status: 'DELETED' };
         const updatedDeletedJobs = [...deletedJobs, deletedJobCopy];
-        
+
         setExternalJobs(updatedJobs);
         setDeletedJobs(updatedDeletedJobs);
         localStorage.setItem('beta_jobs', JSON.stringify(updatedJobs));
@@ -2474,11 +2474,11 @@ export default function AdminDashboard() {
 
                       {/* Metrics cards grid */}
                       {(() => {
-                        const round1Apps = externalApplications.filter(app => 
-                          app.status === 'Round 1 Aptitude' || 
-                          app.status === 'BLOCKED' || 
-                          app.status === 'Blocked' || 
-                          app.status === 'Terminated' || 
+                        const round1Apps = externalApplications.filter(app =>
+                          app.status === 'Round 1 Aptitude' ||
+                          app.status === 'BLOCKED' ||
+                          app.status === 'Blocked' ||
+                          app.status === 'Terminated' ||
                           app.status === 'Terminated (Malpractice)'
                         );
                         const selectedCount = round1Apps.length;
@@ -2556,18 +2556,18 @@ export default function AdminDashboard() {
                             </thead>
                             <tbody className="divide-y divide-slate-100 text-slate-700">
                               {externalApplications
-                                .filter(app => 
-                                  app.status === 'Round 1 Aptitude' || 
-                                  app.status === 'BLOCKED' || 
-                                  app.status === 'Blocked' || 
-                                  app.status === 'Terminated' || 
+                                .filter(app =>
+                                  app.status === 'Round 1 Aptitude' ||
+                                  app.status === 'BLOCKED' ||
+                                  app.status === 'Blocked' ||
+                                  app.status === 'Terminated' ||
                                   app.status === 'Terminated (Malpractice)'
                                 )
                                 .map((app) => {
                                   const dateVal = app.interviewDate || 'Not Selected';
                                   const timeVal = app.interviewTime || '--';
                                   const statusVal = app.aptitudeStatus || 'Pending';
-                                  
+
                                   const appStatus = (app.status || '').toLowerCase().trim();
                                   const aptStatus = (app.aptitudeStatus || '').toLowerCase().trim();
                                   const isBlocked = appStatus === 'blocked' || appStatus === 'terminated' || appStatus === 'terminated (malpractice)' || aptStatus === 'blocked';
@@ -2653,19 +2653,19 @@ export default function AdminDashboard() {
                                   );
                                 })
                               }
-                              {externalApplications.filter(app => 
-                                app.status === 'Round 1 Aptitude' || 
-                                app.status === 'BLOCKED' || 
-                                app.status === 'Blocked' || 
-                                app.status === 'Terminated' || 
+                              {externalApplications.filter(app =>
+                                app.status === 'Round 1 Aptitude' ||
+                                app.status === 'BLOCKED' ||
+                                app.status === 'Blocked' ||
+                                app.status === 'Terminated' ||
                                 app.status === 'Terminated (Malpractice)'
                               ).length === 0 && (
-                                <tr>
-                                  <td colSpan={6} className="py-8 text-center text-slate-400 italic">
-                                    No candidates currently in Stage 1 Aptitude.
-                                  </td>
-                                </tr>
-                              )}
+                                  <tr>
+                                    <td colSpan={6} className="py-8 text-center text-slate-400 italic">
+                                      No candidates currently in Stage 1 Aptitude.
+                                    </td>
+                                  </tr>
+                                )}
                             </tbody>
                           </table>
                         </div>
@@ -3803,57 +3803,57 @@ export default function AdminDashboard() {
                                   ) : (
                                     <span className="text-slate-400 italic">No resume</span>
                                   )}
-                                 </td>
-                                 {selectedStatusFilter === 'Accepted' && (
-                                   <td className="py-4 px-3">
-                                     {app.reportMessage ? (
-                                       <div className="bg-rose-50/50 border border-rose-100 rounded-xl p-3 w-full max-w-[220px] shadow-xs flex flex-col gap-1.5 hover:bg-rose-50/80 transition duration-300">
-                                         <div className="flex items-center space-x-1.5 text-rose-700 font-bold text-[10px]">
-                                           <AlertCircle className="h-3.5 w-3.5 text-rose-500 shrink-0" />
-                                           <span className="uppercase tracking-wider">Candidate Report</span>
-                                         </div>
-                                         <div className="text-slate-600 text-xs font-medium leading-relaxed break-words whitespace-normal">
-                                           {app.reportMessage.length > 50 ? (
-                                             expandedReportIds.includes(app.id) ? (
-                                               <>
-                                                 {app.reportMessage}
-                                                 <button
-                                                   onClick={(e) => {
-                                                     e.stopPropagation();
-                                                     setExpandedReportIds(prev => prev.filter(id => id !== app.id));
-                                                   }}
-                                                   className="text-indigo-650 hover:text-indigo-850 hover:underline ml-1 font-bold inline cursor-pointer border-none bg-transparent p-0 text-[11px]"
-                                                 >
-                                                   View Less
-                                                 </button>
-                                               </>
-                                             ) : (
-                                               <>
-                                                 {app.reportMessage.substring(0, 50)}...
-                                                 <button
-                                                   onClick={(e) => {
-                                                     e.stopPropagation();
-                                                     setExpandedReportIds(prev => [...prev, app.id]);
-                                                   }}
-                                                   className="text-indigo-600 hover:text-indigo-800 hover:underline ml-1 font-bold inline cursor-pointer border-none bg-transparent p-0 text-[11px]"
-                                                 >
-                                                   View More
-                                                 </button>
-                                               </>
-                                             )
-                                           ) : (
-                                             app.reportMessage
-                                           )}
-                                         </div>
-                                       </div>
-                                     ) : (
-                                       <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-2.5 w-full max-w-[200px] flex items-center space-x-1.5 text-slate-450 select-none">
-                                         <CheckCircle className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                                         <span className="text-[10px] font-bold tracking-wide uppercase">No Issues</span>
-                                       </div>
-                                     )}
-                                   </td>
-                                 )}
+                                </td>
+                                {selectedStatusFilter === 'Accepted' && (
+                                  <td className="py-4 px-3">
+                                    {app.reportMessage ? (
+                                      <div className="bg-rose-50/50 border border-rose-100 rounded-xl p-3 w-full max-w-[220px] shadow-xs flex flex-col gap-1.5 hover:bg-rose-50/80 transition duration-300">
+                                        <div className="flex items-center space-x-1.5 text-rose-700 font-bold text-[10px]">
+                                          <AlertCircle className="h-3.5 w-3.5 text-rose-500 shrink-0" />
+                                          <span className="uppercase tracking-wider">Candidate Report</span>
+                                        </div>
+                                        <div className="text-slate-600 text-xs font-medium leading-relaxed break-words whitespace-normal">
+                                          {app.reportMessage.length > 50 ? (
+                                            expandedReportIds.includes(app.id) ? (
+                                              <>
+                                                {app.reportMessage}
+                                                <button
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setExpandedReportIds(prev => prev.filter(id => id !== app.id));
+                                                  }}
+                                                  className="text-indigo-650 hover:text-indigo-850 hover:underline ml-1 font-bold inline cursor-pointer border-none bg-transparent p-0 text-[11px]"
+                                                >
+                                                  View Less
+                                                </button>
+                                              </>
+                                            ) : (
+                                              <>
+                                                {app.reportMessage.substring(0, 50)}...
+                                                <button
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setExpandedReportIds(prev => [...prev, app.id]);
+                                                  }}
+                                                  className="text-indigo-600 hover:text-indigo-800 hover:underline ml-1 font-bold inline cursor-pointer border-none bg-transparent p-0 text-[11px]"
+                                                >
+                                                  View More
+                                                </button>
+                                              </>
+                                            )
+                                          ) : (
+                                            app.reportMessage
+                                          )}
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-2.5 w-full max-w-[200px] flex items-center space-x-1.5 text-slate-450 select-none">
+                                        <CheckCircle className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                                        <span className="text-[10px] font-bold tracking-wide uppercase">No Issues</span>
+                                      </div>
+                                    )}
+                                  </td>
+                                )}
                                 <td className="py-4 px-3 text-center">
                                   <div className="flex items-center justify-center gap-1.5 flex-wrap">
                                     {selectedStatusFilter !== 'Accepted' && app.status !== 'Accepted' && (

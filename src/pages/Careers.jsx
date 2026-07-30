@@ -42,7 +42,7 @@ import api from '../api';
 
 const JOB_BOARD_API_BASE =
   import.meta.env.DEV ||
-  window.location.hostname === 'localhost' ||
+    window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
@@ -1541,7 +1541,7 @@ export default function Careers() {
               </div>
 
               {/* Connected Glowing Nodes Timeline */}
-              <div className="relative max-w-4xl mx-auto pt-2 flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-between gap-8 md:gap-4">
+              <div className="relative max-w-4xl mx-auto md:-translate-x-52 pt-2 flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-between gap-8 md:gap-4">
                 {processSteps.map((step, idx) => {
                   const Icon = step.icon;
                   return (
@@ -1552,18 +1552,18 @@ export default function Careers() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: idx * 0.1 }}
-                        className="glass-card-purple p-4 pb-5 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-start shadow-md w-full md:w-[15%] md:h-[210px] group relative"
+                        className="glass-card-purple p-4 md:p-4 lg:p-5 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-[170px] h-[170px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] group relative shrink-0"
                       >
-                        <div className={`h-12 w-12 rounded-full flex items-center justify-center border ${step.bg} mb-3 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105 shrink-0`}>
-                          <Icon className={`h-5.5 w-5.5 ${step.color}`} />
+                        <div className={`h-10 w-10 md:h-9 md:w-9 lg:h-11 lg:w-11 rounded-full flex items-center justify-center border ${step.bg} mb-2 md:mb-1.5 lg:mb-2.5 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105 shrink-0`}>
+                          <Icon className={`h-5 w-5 md:h-4.5 md:w-4.5 lg:h-5.5 lg:w-5.5 ${step.color}`} />
                         </div>
-                        <span className="text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest mb-1">
+                        <span className="text-[9px] md:text-[8px] lg:text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest mb-0.5">
                           Step {step.id}
                         </span>
-                        <h4 className="text-xs font-black group-hover:text-[#EC4899] transition-colors">
+                        <h4 className="text-[11px] md:text-[10px] lg:text-[12px] font-black group-hover:text-[#EC4899] transition-colors leading-tight">
                           {step.title}
                         </h4>
-                        <p className="text-[10px] text-slate-500 leading-relaxed mt-1 font-medium">
+                        <p className="text-[9px] md:text-[8px] lg:text-[9.5px] text-slate-500 leading-tight mt-0.5 font-medium">
                           {step.desc}
                         </p>
                       </motion.div>

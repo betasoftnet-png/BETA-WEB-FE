@@ -79,11 +79,11 @@ export default function Footer() {
             <Link to="/" className="flex items-center justify-center select-none">
               <img src="/logo.png" alt="Beta Logo" className="h-20 w-auto object-contain mx-auto" />
             </Link>
-            <p className="text-sm footer-brand-description font-semibold">
+            {/* <p className="text-sm footer-brand-description font-semibold">
               One platform for communication, security, and teamwork.
-            </p>
+            </p> */}
             {/* Social Icons */}
-            <div className="flex space-x-4 pt-2 justify-center">
+            <div className="flex space-x-4 pt-2 justify-center -mt-8 -ml-4">
               <a
                 href="https://www.instagram.com/beta_softnet/"
                 target="_blank"
