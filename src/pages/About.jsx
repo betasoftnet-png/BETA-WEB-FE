@@ -304,55 +304,69 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 space-y-32">
 
         {/* SECTION 2: OUR STORY */}
-        <div id="story" className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div id="story" className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-6 text-left"
+            className="lg:col-span-5 space-y-6 text-left"
           >
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#0E0F89]/10 border border-[#0E0F89]/20 text-[#0E0F89] text-xs font-semibold uppercase tracking-wider">
               <Compass className="h-3.5 w-3.5" />
               <span>Our Story</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Innovating with Passion</h2>
-            <p className="text-slate-400 leading-relaxed text-base">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-[#0A3161] tracking-tight whitespace-nowrap -ml-6">
+              Innovating with Passion
+            </h2>
+            <p className="text-slate-650 text-base leading-relaxed -ml-6">
               Founded in 2023, Beta set out to build a platform that respects developer focus and enterprise scale. We believe that enterprise software doesn't need to be sluggish or fragmented.
             </p>
-            <p className="text-slate-400 leading-relaxed text-base">
-              Over the years, we have scaled our modules from a basic SMTP group inbox to a complete suite of services including **BNX Mail** for collaborative messaging, **B2 Auth Security** for multi-factor validations, and **Cliks** for sprint workflow collaboration.
+            <p className="text-slate-650 text-base leading-relaxed -ml-6">
+              Over the years, we have scaled our modules from a basic SMTP group inbox to a complete suite of services including <strong className="font-extrabold text-[#0A3161]">BNX Mail</strong> for collaborative messaging, <strong className="font-extrabold text-[#0A3161]">B2 Auth Security</strong> for multi-factor validations, and <strong className="font-extrabold text-[#0A3161]">Cliks</strong> for sprint workflow collaboration.
             </p>
-            <div className="pt-2 flex items-center space-x-8">
-              <div>
-                <span className="text-2xl font-extrabold text-white">2023</span>
-                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Founded</p>
+            <div className="pt-6 flex items-center space-x-10">
+              <div className="space-y-1">
+                <span className="text-3xl sm:text-4xl font-black text-[#0A3161] block tracking-tight">2023</span>
+                <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest block">Founded</span>
               </div>
-              <div className="h-8 w-px bg-slate-200" />
-              <div>
-                <span className="text-2xl font-extrabold text-white">10K+</span>
-                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Active Users</p>
+              <div className="h-10 w-px bg-slate-350" />
+              <div className="space-y-1">
+                <span className="text-3xl sm:text-4xl font-black text-[#0A3161] block tracking-tight">10K+</span>
+                <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest block">Active Users</span>
               </div>
-              <div className="h-8 w-px bg-slate-200" />
-              <div>
-                <span className="text-2xl font-extrabold text-white">50+</span>
-                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Integrations</p>
+              <div className="h-10 w-px bg-slate-350" />
+              <div className="space-y-1">
+                <span className="text-3xl sm:text-4xl font-black text-[#0A3161] block tracking-tight">50+</span>
+                <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest block">Integrations</span>
               </div>
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl glass-card p-4 border border-[#0A3161]/12 shadow-2xl flex items-center justify-center group"
+          <div
+            className="lg:col-span-7 w-full flex items-center justify-center"
+            style={{
+              perspective: "1200px",
+              transformStyle: "preserve-3d"
+            }}
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-sky-500/5 opacity-50 pointer-events-none group-hover:opacity-80 transition duration-500" />
-            <img
-              src="/bnx_product_showcase.png"
-              alt="BNX Product Showcase"
-              className="w-full h-auto object-cover rounded-2xl relative z-10 transition-transform duration-700 group-hover:scale-[1.03]"
-            />
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative overflow-hidden rounded-[24px] bg-[#0e1726] shadow-2xl flex items-center justify-center group w-full aspect-[1720/914] lg:translate-x-12"
+              style={{
+                transform: "rotateX(6deg) rotateY(-18deg) rotateZ(3deg)",
+                transformStyle: "preserve-3d"
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-sky-500/5 opacity-50 pointer-events-none group-hover:opacity-80 transition duration-500" />
+              <img
+                src="/bnxmail2.png"
+                alt="BNX Product Showcase"
+                className="w-full h-full object-cover rounded-[24px] relative z-10 block"
+              />
+            </motion.div>
+          </div>
         </div>
 
         {/* SECTION 3: COMPANY TIMELINE */}
@@ -549,7 +563,7 @@ export default function About() {
           >
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#FF6325]/5 to-transparent opacity-30 pointer-events-none" />
- 
+
             {/* Left Column: Profile (Image, Name, Title) */}
             <div className="w-full md:w-52 flex-shrink-0 flex flex-col items-center justify-center text-center space-y-4 border-b md:border-b-0 md:border-r border-[#0A3161]/10 pb-6 md:pb-0 md:pr-8 relative z-10">
               <div className="h-48 w-48 rounded-2xl overflow-hidden border-2 border-slate-200/80 shadow-md relative group shrink-0">
@@ -559,7 +573,7 @@ export default function About() {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
- 
+
               <div className="space-y-1">
                 <h3 className="text-2xl font-black text-slate-800">{leadership[0].name}</h3>
                 <p className="text-sm font-bold text-[#FF6325] uppercase tracking-widest">
@@ -567,7 +581,7 @@ export default function About() {
                 </p>
               </div>
             </div>
- 
+
             {/* Right Column: Vision Content */}
             <div className="flex-grow flex flex-col md:flex-row gap-6 md:gap-8 items-stretch justify-between relative z-10 text-left">
               {/* Vision Left Column */}
@@ -576,7 +590,7 @@ export default function About() {
                   My work is driven by the belief that progress has meaning only when it uplifts people across borders, cultures, and communities. I am committed to building organizations that operate with purpose—where innovation, responsibility, and humanity go hand in hand.
                 </p>
               </div>
- 
+
               {/* Vision Right Column */}
               <div className="md:w-1/2 flex flex-col justify-center space-y-4 md:pl-2">
                 <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-medium">
