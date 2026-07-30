@@ -1548,15 +1548,70 @@ export default function Careers() {
                     <React.Fragment key={step.id}>
                       {/* Glowing Node Circle */}
                       <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
+                        initial="initial"
+                        whileInView="visible"
+                        whileHover="hover"
+                        whileTap="tap"
+                        variants={{
+                          initial: { opacity: 0, scale: 0.9, y: 0, rotateX: 0, rotateY: 0 },
+                          visible: {
+                            opacity: 1,
+                            scale: 1,
+                            y: [0, -6, 0],
+                            rotateX: [0, -4, 4, 0],
+                            rotateY: [0, 8, -8, 0],
+                            transition: {
+                              opacity: { duration: 0.5, delay: idx * 0.1 },
+                              scale: { duration: 0.5, delay: idx * 0.1 },
+                              y: {
+                                repeat: Infinity,
+                                duration: 4,
+                                ease: "easeInOut",
+                                delay: idx * 0.25
+                              },
+                              rotateX: {
+                                repeat: Infinity,
+                                duration: 4,
+                                ease: "easeInOut",
+                                delay: idx * 0.25
+                              },
+                              rotateY: {
+                                repeat: Infinity,
+                                duration: 4,
+                                ease: "easeInOut",
+                                delay: idx * 0.25
+                              }
+                            }
+                          },
+                          hover: {
+                            scale: 1.08,
+                            rotateY: 15,
+                            rotateX: -10,
+                            y: -12,
+                            transition: { type: "spring", stiffness: 400, damping: 15 }
+                          },
+                          tap: {
+                            scale: 0.95,
+                            rotateY: -5,
+                            rotateX: 5,
+                            y: -2,
+                            transition: { type: "spring", stiffness: 400, damping: 15 }
+                          }
+                        }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: idx * 0.1 }}
-                        className="glass-card-purple p-4 md:p-4 lg:p-5 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-[170px] h-[170px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] group relative shrink-0"
+                        style={{ transformStyle: "preserve-3d", perspective: 1000 }}
+                        className="glass-card-purple p-4 md:p-4 lg:p-5 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-[170px] h-[170px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] group relative shrink-0 cursor-pointer"
                       >
-                        <div className={`h-10 w-10 md:h-9 md:w-9 lg:h-11 lg:w-11 rounded-full flex items-center justify-center border ${step.bg} mb-2 md:mb-1.5 lg:mb-2.5 shadow-lg shadow-purple-500/10 transition-transform duration-500 group-hover:scale-105 shrink-0`}>
+                        <motion.div 
+                          variants={{
+                            hover: { rotate: 360, scale: 1.25 },
+                            tap: { scale: 0.9 }
+                          }}
+                          transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                          className={`h-10 w-10 md:h-9 md:w-9 lg:h-11 lg:w-11 rounded-full flex items-center justify-center border ${step.bg} mb-2 md:mb-1.5 lg:mb-2.5 shadow-lg shadow-purple-500/10 shrink-0`}
+                        >
                           <Icon className={`h-5 w-5 md:h-4.5 md:w-4.5 lg:h-5.5 lg:w-5.5 ${step.color}`} />
-                        </div>
+                        </motion.div>
                         <span className="text-[9px] md:text-[8px] lg:text-[9px] font-extrabold text-[#F59E0B] uppercase tracking-widest mb-0.5">
                           Step {step.id}
                         </span>

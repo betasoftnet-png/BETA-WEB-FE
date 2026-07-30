@@ -4047,6 +4047,16 @@ export default function AdminDashboard() {
                             </p>
                           </div>
                         )}
+                        {selectedApplication.jobLocation && (
+                          <div>
+                            <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Location</label>
+                            <p className="text-xs font-bold text-slate-800 mt-1">
+                              <span className="px-2.5 py-0.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold inline-block">
+                                {selectedApplication.jobLocation}
+                              </span>
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       {selectedApplication.coverLetter && (
