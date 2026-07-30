@@ -144,7 +144,7 @@ export default function ShareJob() {
 
         {/* Job Title */}
         <div className="space-y-3 w-full">
-          <h1 className="mt-5 text-2xl sm:text-3xl font-extrabold text-[#002D7A] tracking-tight leading-tight">
+          <h1 className="mt-8 text-2xl sm:text-3xl font-extrabold text-[#002D7A] tracking-tight leading-tight">
             {job.title}
           </h1>
         </div>
