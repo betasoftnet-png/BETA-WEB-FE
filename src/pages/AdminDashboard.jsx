@@ -471,6 +471,11 @@ export default function AdminDashboard() {
   const [reportMailSendMessage, setReportMailSendMessage] = useState('');
   const [sendingReportMail, setSendingReportMail] = useState(false);
 
+  // Pre-Joining Mail States
+  const [sendingPreJoiningMail, setSendingPreJoiningMail] = useState(false);
+  const [preJoiningSendStatus, setPreJoiningSendStatus] = useState(''); // 'success' | 'error' | ''
+  const [preJoiningSendMessage, setPreJoiningSendMessage] = useState('');
+
   // Inline job-title editing for accepted candidates with orphaned/deleted jobs
   const [editingAppJobTitleId, setEditingAppJobTitleId] = useState(null);
   const [editAppJobTitleValue, setEditAppJobTitleValue] = useState('');
@@ -1529,6 +1534,135 @@ export default function AdminDashboard() {
       setTimeout(() => { setReportMailSendStatus(''); setReportMailSendMessage(''); }, 5000);
     } finally {
       setSendingReportMail(false);
+    }
+  };
+
+  const handleSendPreJoiningMail = async () => {
+    if (!selectedApplication) return;
+    setSendingPreJoiningMail(true);
+    setPreJoiningSendStatus('');
+    setPreJoiningSendMessage('');
+    try {
+      const emailYear = new Date().getFullYear();
+      const formattedHtmlBody = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+  <table class="email-wrapper" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc;">
+    <tr>
+      <td align="center" class="email-wrapper-cell" style="padding: 40px 16px;">
+        <table class="email-container" role="presentation" border="0" cellpadding="0" cellspacing="0" width="580" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.045); width: 100%; max-width: 580px;">
+          <tr>
+            <td class="email-content-cell" style="padding: 40px 44px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <!-- Centered Logo -->
+                <tr>
+                  <td align="center" style="padding-bottom: 8px;">
+                    <img src="https://beta-softnet.com/logo.png" alt="BETA Logo" style="height: 56px; width: auto; display: block; margin: 0 auto;" />
+                    <span style="font-size: 13px; color: #64748b; font-weight: 500; display: block; margin-top: 8px; font-family: inherit;">${selectedApplication.email}</span>
+                  </td>
+                </tr>
+                <!-- Divider -->
+                <tr>
+                  <td style="padding: 16px 0 24px 0;">
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 0;" />
+                  </td>
+                </tr>
+                <!-- Content Body -->
+                <tr>
+                  <td style="color: #334155; font-family: inherit; font-size: 15px; line-height: 1.6; text-align: left;">
+                    <p style="margin: 0 0 16px 0;">Dear <strong>${selectedApplication.fullName}</strong>,</p>
+                    <p style="margin: 0 0 16px 0;"><strong>Congratulations!</strong></p>
+                    <p style="margin: 0 0 16px 0;">We are pleased to inform you that you have successfully completed the task assessment and are moving to the final stage.</p>
+                    <p style="margin: 0 0 20px 0;">Before we proceed with the HR formalities, please review the following information.</p>
+                    
+                    <p style="margin: 0 0 8px 0; font-size: 15px; color: #0f172a; font-weight: 600;">Office Timings</p>
+                    <ul style="margin: 0 0 20px 0; padding-left: 20px; color: #334155; line-height: 1.6;">
+                      <li style="margin-bottom: 6px;">Monday to Friday : 9:00 AM – 6:30 PM</li>
+                      <li style="margin-bottom: 6px;">Saturday : 9:00 AM – 5:30 PM</li>
+                      <li style="margin-bottom: 6px;">Sunday : Weekly Off</li>
+                    </ul>
+                    
+                    <p style="margin: 0 0 8px 0; font-size: 15px; color: #0f172a; font-weight: 600;">Dress Code</p>
+                    <p style="margin: 0 0 20px 0; color: #334155;">Please report to the office in formal business attire.</p>
+                    
+                    <p style="margin: 0 0 8px 0; font-size: 15px; color: #0f172a; font-weight: 600;">Documents to be Submitted</p>
+                    <p style="margin: 0 0 12px 0; color: #334155;">You are required to submit the following documents on your joining date. Two photocopies (Xerox copies) of each document are required for submission.</p>
+                    <ul style="margin: 0 0 20px 0; padding-left: 20px; color: #334155; line-height: 1.6;">
+                      <li style="margin-bottom: 6px;">Updated Resume</li>
+                      <li style="margin-bottom: 6px;">Aadhaar Card</li>
+                      <li style="margin-bottom: 6px;">PAN Card</li>
+                      <li style="margin-bottom: 6px;">Passport-Size Photographs</li>
+                      <li style="margin-bottom: 6px;">Educational Certificates</li>
+                      <li style="margin-bottom: 6px;">Bank Passbook</li>
+                      <li style="margin-bottom: 6px;">Additional Skill/Course Certificates (if applicable)</li>
+                    </ul>
+                    
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="width: 100%; margin-bottom: 20px;">
+                      <tr>
+                        <td style="padding: 16px 0 20px 0;">
+                          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; width: 100%;">
+                            <tr>
+                              <td style="padding: 20px 24px; font-family: inherit;">
+                                <p style="margin: 0; color: #991b1b; font-weight: 600; font-size: 14px; line-height: 1.6;">
+                                  Note : Bring the original *Transfer Certificate (TC) and mark sheets are required for joining process.
+                                </p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                    
+                    <p style="margin: 0 0 16px 0; color: #334155;">Further instructions regarding the final HR process will be shared with you via BNXmail.</p>
+                    <p style="margin: 0 0 24px 0; color: #334155;">We look forward to welcoming you to BETA.</p>
+                    <p style="margin: 0;">Best Regards,<br><br><strong>The BETA Team</strong></p>
+                  </td>
+                </tr>
+                <!-- Footer Divider -->
+                <tr>
+                  <td style="padding: 32px 0 20px 0;">
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 0;" />
+                  </td>
+                </tr>
+                <!-- Footer -->
+                <tr>
+                  <td align="center" style="color: #64748b; font-family: inherit; font-size: 12px; line-height: 1.6; text-align: center;">
+                    This is an automated notification. Please do not reply directly to this email.<br>
+                    &copy; ${emailYear} Beta Softnet. All rights reserved.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+      await backendApi.post('/api/mail/send', {
+        to: selectedApplication.email,
+        subject: `BETA – Pre-Joining Information`,
+        body: formattedHtmlBody,
+        isHtml: true,
+        html: true
+      });
+      setPreJoiningSendStatus('success');
+      setPreJoiningSendMessage(`Pre-joining email sent to ${selectedApplication.fullName} successfully.`);
+      setTimeout(() => { setPreJoiningSendStatus(''); setPreJoiningSendMessage(''); }, 5000);
+    } catch (err) {
+      console.error('Error sending pre-joining mail:', err);
+      setPreJoiningSendStatus('error');
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to send pre-joining email. Please try again.';
+      setPreJoiningSendMessage(typeof errorMsg === 'string' ? errorMsg : 'Failed to send pre-joining email. Please try again.');
+      setTimeout(() => { setPreJoiningSendStatus(''); setPreJoiningSendMessage(''); }, 5000);
+    } finally {
+      setSendingPreJoiningMail(false);
     }
   };
 
@@ -4669,6 +4803,59 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                     )}
+
+                    {/* Pre-Joining Mail Card */}
+                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-4">
+                      <div className="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+                        <div className="h-8 w-8 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center flex-shrink-0">
+                          <Mail className="h-4 w-4 text-[#004AAD]" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Pre-Joining Mail</h3>
+                          <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Send onboarding welcome mail to candidate</p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Candidate Name</label>
+                          <div className="mt-1.5 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800">
+                            {selectedApplication.fullName}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Job Title</label>
+                          <div className="mt-1.5 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800">
+                            {selectedApplication.jobTitle}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end pt-2">
+                        <button
+                          type="button"
+                          disabled={sendingPreJoiningMail}
+                          onClick={handleSendPreJoiningMail}
+                          className="flex items-center gap-2 px-5 py-2.5 bg-[#004AAD] hover:bg-[#003882] disabled:bg-blue-300 disabled:cursor-not-allowed text-white text-xs font-bold rounded-xl transition duration-200 shadow-sm border-none outline-none cursor-pointer"
+                        >
+                          <span>📩 {sendingPreJoiningMail ? 'Sending...' : 'Send Pre-Joining Mail'}</span>
+                        </button>
+                      </div>
+
+                      {/* Feedback messages */}
+                      {preJoiningSendStatus === 'success' && (
+                        <div className="flex items-center gap-2 py-2.5 px-4 rounded-xl bg-emerald-50 border border-emerald-200 animate-fadeIn">
+                          <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                          <span className="text-[11px] font-bold text-emerald-700">{preJoiningSendMessage}</span>
+                        </div>
+                      )}
+                      {preJoiningSendStatus === 'error' && (
+                        <div className="flex items-center gap-2 py-2.5 px-4 rounded-xl bg-rose-50 border border-rose-200 animate-fadeIn">
+                          <AlertCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                          <span className="text-[11px] font-bold text-rose-700">{preJoiningSendMessage}</span>
+                        </div>
+                      )}
+                    </div>
 
                     {/* Assessment Responses Card */}
                     {(() => {
