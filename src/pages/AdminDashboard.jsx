@@ -1514,7 +1514,8 @@ export default function AdminDashboard() {
         to: selectedApplication.email,
         subject: `BETA Softnet - Update regarding your application`,
         body: formattedHtmlBody,
-        isHtml: true
+        isHtml: true,
+        html: true
       });
       setReportMailSendStatus('success');
       setReportMailSendMessage(`Report email sent to ${selectedApplication.fullName} successfully.`);
