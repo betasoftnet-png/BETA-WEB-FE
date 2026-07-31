@@ -477,7 +477,7 @@ export default function AdminDashboard() {
   }, [selectedApplication]);
   const [interviewDate, setInterviewDate] = useState('');
   const [interviewTime, setInterviewTime] = useState('');
-  const [interviewLink, setInterviewLink] = useState('https://meet.google.com/abc-defg-hij');
+  const [interviewLink, setInterviewLink] = useState('');
   const [hrInterviewDate, setHrInterviewDate] = useState('');
   const [hrInterviewTime, setHrInterviewTime] = useState('');
   const [hrInterviewLocation, setHrInterviewLocation] = useState('');
@@ -874,7 +874,7 @@ export default function AdminDashboard() {
       setRemarks(selectedApplication.remarks || '');
       setInterviewDate(selectedApplication.interviewDate || '');
       setInterviewTime(selectedApplication.interviewTime || '');
-      setInterviewLink(selectedApplication.interviewLink || 'https://meet.google.com/abc-defg-hij');
+      setInterviewLink(selectedApplication.interviewLink || '');
       setHrInterviewDate(selectedApplication.hrInterviewDate || '');
       setHrInterviewTime(selectedApplication.hrInterviewTime || '');
       setHrInterviewLocation(selectedApplication.hrInterviewLocation || 'Beta Towers, No. 12, Main Road, Tiruvallur, Tamil Nadu 602001, India');
@@ -888,7 +888,7 @@ export default function AdminDashboard() {
       setRemarks('');
       setInterviewDate('');
       setInterviewTime('');
-      setInterviewLink('https://meet.google.com/abc-defg-hij');
+      setInterviewLink('');
       setHrInterviewDate('');
       setHrInterviewTime('');
       setHrInterviewLocation('');
@@ -1707,14 +1707,14 @@ export default function AdminDashboard() {
                     
                     <p style="margin: 0 0 8px 0; font-size: 15px; color: #0f172a; font-weight: 600;">Documents to be Submitted</p>
                     <p style="margin: 0 0 12px 0; color: #334155;">You are required to submit the following documents on your joining date. Two photocopies (Xerox copies) of each document are required for submission.</p>
-                    <ul style="margin: 0 0 20px 0; padding-left: 20px; color: #334155; line-height: 1.6;">
-                      <li style="margin-bottom: 6px;">Updated Resume</li>
-                      <li style="margin-bottom: 6px;">Aadhaar Card</li>
-                      <li style="margin-bottom: 6px;">PAN Card</li>
-                      <li style="margin-bottom: 6px;">Passport-Size Photographs</li>
-                      <li style="margin-bottom: 6px;">Educational Certificates</li>
-                      <li style="margin-bottom: 6px;">Bank Passbook</li>
-                      <li style="margin-bottom: 6px;">Additional Skill/Course Certificates (if applicable)</li>
+                    <ul style="margin: 0 0 20px 0; padding-left: 0; list-style-type: none; color: #334155; line-height: 1.6;">
+                      <li style="margin-bottom: 6px; list-style-type: none;">1. &nbsp; Updated Resume</li>
+                      <li style="margin-bottom: 6px; list-style-type: none;">2. &nbsp; Aadhaar Card</li>
+                      <li style="margin-bottom: 6px; list-style-type: none;">3. &nbsp; PAN Card</li>
+                      <li style="margin-bottom: 6px; list-style-type: none;">4. &nbsp; Passport-Size Photographs</li>
+                      <li style="margin-bottom: 6px; list-style-type: none;">5. &nbsp; Educational Certificates</li>
+                      <li style="margin-bottom: 6px; list-style-type: none;">6. &nbsp; Bank Passbook</li>
+                      <li style="margin-bottom: 6px; list-style-type: none;">7. &nbsp; Additional Skill/Course Certificates (if applicable)</li>
                     </ul>
                     
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="width: 100%; margin-bottom: 20px;">
@@ -4757,7 +4757,7 @@ export default function AdminDashboard() {
                             type="url"
                             value={interviewLink}
                             onChange={(e) => setInterviewLink(e.target.value)}
-                            placeholder="https://meet.google.com/abc-defg-hij"
+                            placeholder="Enter meeting link"
                             className="w-full admin-custom-input border border-slate-350 rounded-xl py-2.5 px-3.5 focus:outline-none text-xs text-slate-700 bg-white font-semibold"
                           />
                         </div>
