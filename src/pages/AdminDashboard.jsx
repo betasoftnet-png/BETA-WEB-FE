@@ -680,6 +680,7 @@ export default function AdminDashboard() {
             hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
             hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
             hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
+            technicalInterviewSentTime: app.technicalInterviewSentTime || app.technicalinterviewsenttime || '',
             aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
             aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
             assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
@@ -799,6 +800,7 @@ export default function AdminDashboard() {
               hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
               hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
               hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
+              technicalInterviewSentTime: app.technicalInterviewSentTime || app.technicalinterviewsenttime || '',
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
@@ -834,6 +836,7 @@ export default function AdminDashboard() {
           current.appliedDate !== selectedApplication.appliedDate ||
           current.formattedAppliedTime !== selectedApplication.formattedAppliedTime ||
           current.githubLink !== selectedApplication.githubLink ||
+          current.technicalInterviewSentTime !== selectedApplication.technicalInterviewSentTime ||
           current.reportMessage !== selectedApplication.reportMessage
         ) {
           setSelectedApplication(current);
@@ -958,6 +961,7 @@ export default function AdminDashboard() {
               prev.githubLink !== mergedApp.githubLink ||
               prev.taskAssigned !== mergedApp.taskAssigned ||
               prev.taskAssessmentSentTime !== mergedApp.taskAssessmentSentTime ||
+              prev.technicalInterviewSentTime !== mergedApp.technicalInterviewSentTime ||
               prev.interviewDate !== mergedApp.interviewDate ||
               prev.interviewTime !== mergedApp.interviewTime ||
               prev.interviewLink !== mergedApp.interviewLink ||
@@ -977,6 +981,7 @@ export default function AdminDashboard() {
                   a.githubLink !== mergedApp.githubLink ||
                   a.taskAssigned !== mergedApp.taskAssigned ||
                   a.taskAssessmentSentTime !== mergedApp.taskAssessmentSentTime ||
+                  a.technicalInterviewSentTime !== mergedApp.technicalInterviewSentTime ||
                   a.interviewDate !== mergedApp.interviewDate ||
                   a.interviewTime !== mergedApp.interviewTime ||
                   a.interviewLink !== mergedApp.interviewLink ||
@@ -1880,6 +1885,7 @@ export default function AdminDashboard() {
         hrInterviewDate: freshApp.hrInterviewDate || freshApp.hrinterviewdate || '',
         hrInterviewTime: freshApp.hrInterviewTime || freshApp.hrinterviewtime || '',
         hrInterviewLocation: freshApp.hrInterviewLocation || freshApp.hrinterviewlocation || '',
+        technicalInterviewSentTime: freshApp.technicalInterviewSentTime || freshApp.technicalinterviewsenttime || '',
       };
 
       // Update local state
@@ -4094,13 +4100,20 @@ export default function AdminDashboard() {
                           
                           let sentTimeText = '';
                           let isScheduled = false;
+                          let techInterviewSentText = '';
+
                           if (currentStage === 'Test Round' && selectedApplication.assessmentSentTime) {
                             sentTimeText = formatDateTime(selectedApplication.assessmentSentTime);
                           } else if (currentStage === 'Task Assessment' && selectedApplication.taskAssessmentSentTime) {
                             sentTimeText = formatDateTime(selectedApplication.taskAssessmentSentTime);
-                          } else if ((currentStage === 'Technical Assessment' || currentStage === 'Technical Interview') && selectedApplication.interviewDate) {
-                            sentTimeText = formatDateTime(`${selectedApplication.interviewDate}T${selectedApplication.interviewTime || '00:00'}`);
-                            isScheduled = true;
+                          } else if (currentStage === 'Technical Interview') {
+                            if (selectedApplication.technicalInterviewSentTime) {
+                              techInterviewSentText = formatDateTime(selectedApplication.technicalInterviewSentTime);
+                            }
+                            if (selectedApplication.interviewDate) {
+                              sentTimeText = formatDateTime(`${selectedApplication.interviewDate}T${selectedApplication.interviewTime || '00:00'}`);
+                              isScheduled = true;
+                            }
                           }
 
                           return (
@@ -4108,8 +4121,13 @@ export default function AdminDashboard() {
                               <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold capitalize border ${badgeStyle}`}>
                                 {currentStage}
                               </span>
+                              {techInterviewSentText && (
+                                <span className="text-[10px] text-slate-450 font-bold bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded animate-fadeIn">
+                                  Sent: {techInterviewSentText}
+                                </span>
+                              )}
                               {sentTimeText && (
-                                <span className="text-[10px] text-slate-450 font-bold bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded">
+                                <span className="text-[10px] text-slate-450 font-bold bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded animate-fadeIn">
                                   {isScheduled ? 'Scheduled: ' : 'Sent: '} {sentTimeText}
                                 </span>
                               )}
