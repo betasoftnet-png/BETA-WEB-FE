@@ -19,7 +19,7 @@ const mapStatusToUI = (status) => {
   if (s === 'round 3 brand awareness' || s === 'round3brandawareness' || s === 'brand awareness' || s === 'brand') return 'Round 3 Brand Awareness';
   if (s === 'shortlisted') return 'Shortlisted';
   if (s === 'scheduled' || s === 'interview scheduled' || s === 'interviewscheduled') return 'Interview Scheduled';
-  if (s === 'approved' || s === 'selected' || s === 'accepted') return 'Accepted';
+  if (s === 'approved' || s === 'selected' || s === 'accepted' || s === 'task assessment' || s === 'task_assessment' || s === 'technical assessment' || s === 'technical_assessment' || s === 'technical interview' || s === 'technical_interview' || s === 'hr interview' || s === 'hr_interview') return 'Accepted';
   if (s === 'rejected') return 'Rejected';
   if (s === 'terminated (malpractice)' || s === 'terminated') return 'Terminated';
   if (s === 'blocked') return 'Blocked';
@@ -459,7 +459,22 @@ export default function AdminDashboard() {
   };
 
   // Application details/status/interview states
-  const [selectedApplication, setSelectedApplication] = useState(null);
+  const [selectedApplication, setSelectedApplication] = useState(() => {
+    const stored = localStorage.getItem('admin_selected_application');
+    try {
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    if (selectedApplication) {
+      localStorage.setItem('admin_selected_application', JSON.stringify(selectedApplication));
+    } else {
+      localStorage.removeItem('admin_selected_application');
+    }
+  }, [selectedApplication]);
   const [interviewDate, setInterviewDate] = useState('');
   const [interviewTime, setInterviewTime] = useState('');
   const [interviewLink, setInterviewLink] = useState('https://meet.google.com/abc-defg-hij');
@@ -681,12 +696,15 @@ export default function AdminDashboard() {
             hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
             hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
             technicalInterviewSentTime: app.technicalInterviewSentTime || app.technicalinterviewsenttime || '',
+            hrInterviewSentTime: app.hrInterviewSentTime || app.hrinterviewsenttime || '',
             aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
             aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
             assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
             experience: app.experience || app.experience || 'Fresher / 0-1 Years',
             githubLink: app.githubLink || app.githublink || '',
             jobId: app.jobId || app.jobid || '',
+            taskAssigned: app.taskAssigned || app.taskassigned || false,
+            taskAssessmentSentTime: app.taskAssessmentSentTime || app.taskassessmentsenttime || '',
             reportMessage: candidateReport ? candidateReport.message : (app.reportMessage || '')
           };
         });
@@ -801,12 +819,15 @@ export default function AdminDashboard() {
               hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
               hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
               technicalInterviewSentTime: app.technicalInterviewSentTime || app.technicalinterviewsenttime || '',
+              hrInterviewSentTime: app.hrInterviewSentTime || app.hrinterviewsenttime || '',
               aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
               aptitudeScore: app.aptitudeScore !== undefined && app.aptitudeScore !== null ? app.aptitudeScore : (app.aptitudescore !== undefined && app.aptitudescore !== null ? app.aptitudescore : ''),
               assessmentTimeTaken: app.assessmentTimeTaken || app.assessmenttimetaken || '',
               experience: app.experience || app.experience || 'Fresher / 0-1 Years',
               githubLink: app.githubLink || app.githublink || '',
               jobId: app.jobId || app.jobid || '',
+              taskAssigned: app.taskAssigned || app.taskassigned || false,
+              taskAssessmentSentTime: app.taskAssessmentSentTime || app.taskassessmentsenttime || '',
               reportMessage: candidateReport ? candidateReport.message : (app.reportMessage || '')
             };
           });
@@ -837,6 +858,7 @@ export default function AdminDashboard() {
           current.formattedAppliedTime !== selectedApplication.formattedAppliedTime ||
           current.githubLink !== selectedApplication.githubLink ||
           current.technicalInterviewSentTime !== selectedApplication.technicalInterviewSentTime ||
+          current.hrInterviewSentTime !== selectedApplication.hrInterviewSentTime ||
           current.reportMessage !== selectedApplication.reportMessage
         ) {
           setSelectedApplication(current);
@@ -953,7 +975,33 @@ export default function AdminDashboard() {
         const freshApp = candidateRes?.data;
         if (freshApp) {
           const freshGithub = freshApp.githubLink || freshApp.githublink || taskRes?.data?.candidate?.githubLink || taskRes?.data?.githubLink;
-          const mergedApp = { ...freshApp, githubLink: freshGithub || freshApp.githubLink };
+          const matchedJob = externalJobs.find(j => String(j.id) === String(freshApp.jobId));
+          const localTimes = getLocalAppliedDateTime(freshApp);
+          const mergedApp = {
+            ...freshApp,
+            fullName: freshApp.fullName || freshApp.fullname || '',
+            resumeUrl: freshApp.resume
+              ? `${BACKEND_API_BASE}/uploads/${encodeURIComponent(freshApp.resume)}`
+              : (freshApp.resumeUrl || freshApp.resumeurl || ''),
+            status: mapStatusToUI(freshApp.status),
+            createdAt: freshApp.appliedTime || freshApp.appliedDate || freshApp.applieddate || freshApp.createdAt || freshApp.createdat || '',
+            appliedDate: localTimes.appliedDate,
+            appliedTime: freshApp.appliedTime || freshApp.appliedtime || '',
+            formattedAppliedTime: localTimes.formattedAppliedTime,
+            jobTitle: freshApp.jobTitle || freshApp.jobtitle || (matchedJob ? matchedJob.title : '') || '',
+            jobDepartment: freshApp.jobDepartment || freshApp.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
+            jobLocation: freshApp.jobLocation || freshApp.joblocation || (matchedJob ? matchedJob.location : '') || '',
+            interviewDate: freshApp.interviewDate || freshApp.interviewdate || '',
+            interviewTime: freshApp.interviewTime || freshApp.interviewtime || '',
+            hrInterviewDate: freshApp.hrInterviewDate || freshApp.hrinterviewdate || '',
+            hrInterviewTime: freshApp.hrInterviewTime || freshApp.hrinterviewtime || '',
+            hrInterviewLocation: freshApp.hrInterviewLocation || freshApp.hrinterviewlocation || '',
+            technicalInterviewSentTime: freshApp.technicalInterviewSentTime || freshApp.technicalinterviewsenttime || '',
+            hrInterviewSentTime: freshApp.hrInterviewSentTime || freshApp.hrinterviewsenttime || '',
+            taskAssigned: freshApp.taskAssigned || freshApp.taskassigned || false,
+            taskAssessmentSentTime: freshApp.taskAssessmentSentTime || freshApp.taskassessmentsenttime || '',
+            githubLink: freshGithub || freshApp.githubLink || ''
+          };
           
           setSelectedApplication(prev => {
             if (!prev) return null;
@@ -962,6 +1010,7 @@ export default function AdminDashboard() {
               prev.taskAssigned !== mergedApp.taskAssigned ||
               prev.taskAssessmentSentTime !== mergedApp.taskAssessmentSentTime ||
               prev.technicalInterviewSentTime !== mergedApp.technicalInterviewSentTime ||
+              prev.hrInterviewSentTime !== mergedApp.hrInterviewSentTime ||
               prev.interviewDate !== mergedApp.interviewDate ||
               prev.interviewTime !== mergedApp.interviewTime ||
               prev.interviewLink !== mergedApp.interviewLink ||
@@ -982,6 +1031,7 @@ export default function AdminDashboard() {
                   a.taskAssigned !== mergedApp.taskAssigned ||
                   a.taskAssessmentSentTime !== mergedApp.taskAssessmentSentTime ||
                   a.technicalInterviewSentTime !== mergedApp.technicalInterviewSentTime ||
+                  a.hrInterviewSentTime !== mergedApp.hrInterviewSentTime ||
                   a.interviewDate !== mergedApp.interviewDate ||
                   a.interviewTime !== mergedApp.interviewTime ||
                   a.interviewLink !== mergedApp.interviewLink ||
@@ -1923,25 +1973,37 @@ export default function AdminDashboard() {
 
     try {
       const response = await backendApi.put(`/api/admin/applications/${selectedApplication.id}/hr-interview`, payload);
+      const freshApp = response.data;
+      const matchedJob = externalJobs.find(j => String(j.id) === String(freshApp.jobId));
+      const localTimes = getLocalAppliedDateTime(freshApp);
+      const normalizedApp = {
+        ...freshApp,
+        fullName: freshApp.fullName || freshApp.fullname || '',
+        resumeUrl: freshApp.resume
+          ? `${BACKEND_API_BASE}/uploads/${encodeURIComponent(freshApp.resume)}`
+          : (freshApp.resumeUrl || freshApp.resumeurl || ''),
+        status: mapStatusToUI(freshApp.status),
+        createdAt: freshApp.appliedTime || freshApp.appliedDate || freshApp.applieddate || freshApp.createdAt || freshApp.createdat || '',
+        appliedDate: localTimes.appliedDate,
+        appliedTime: freshApp.appliedTime || freshApp.appliedtime || '',
+        formattedAppliedTime: localTimes.formattedAppliedTime,
+        jobTitle: freshApp.jobTitle || freshApp.jobtitle || (matchedJob ? matchedJob.title : '') || '',
+        jobDepartment: freshApp.jobDepartment || freshApp.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
+        jobLocation: freshApp.jobLocation || freshApp.joblocation || (matchedJob ? matchedJob.location : '') || '',
+        interviewDate: freshApp.interviewDate || freshApp.interviewdate || '',
+        interviewTime: freshApp.interviewTime || freshApp.interviewtime || '',
+        hrInterviewDate: freshApp.hrInterviewDate || freshApp.hrinterviewdate || '',
+        hrInterviewTime: freshApp.hrInterviewTime || freshApp.hrinterviewtime || '',
+        hrInterviewLocation: freshApp.hrInterviewLocation || freshApp.hrinterviewlocation || '',
+        technicalInterviewSentTime: freshApp.technicalInterviewSentTime || freshApp.technicalinterviewsenttime || '',
+        hrInterviewSentTime: freshApp.hrInterviewSentTime || freshApp.hrinterviewsenttime || '',
+      };
 
       const updatedApps = externalApplications.map(app =>
-        app.id === selectedApplication.id
-          ? {
-            ...app,
-            hrInterviewDate: hrInterviewDate,
-            hrInterviewTime: hrInterviewTime,
-            hrInterviewLocation: hrInterviewLocation
-          }
-          : app
+        app.id === selectedApplication.id ? normalizedApp : app
       );
       updateAppsAndSync(updatedApps);
-
-      setSelectedApplication(prev => ({
-        ...prev,
-        hrInterviewDate: hrInterviewDate,
-        hrInterviewTime: hrInterviewTime,
-        hrInterviewLocation: hrInterviewLocation
-      }));
+      setSelectedApplication(normalizedApp);
 
       setSuccess(`HR Interview details sent successfully for ${selectedApplication.fullName}!`);
       setTimeout(() => setSuccess(''), 5000);
@@ -3931,7 +3993,7 @@ export default function AdminDashboard() {
                                 <td className="py-4 px-3">
                                   <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 flex-wrap">
                                     {(() => {
-                                      const stage = getCandidateCurrentStage(app);
+                                      const stage = selectedStatusFilter === 'Accepted' ? getCandidateCurrentStage(app) : (selectedStatusFilter === 'Rejected' ? 'Rejected' : 'Applied');
                                       const badgeStyle = getStageBadgeStyle(stage);
                                       
                                       let sentTimeText = '';
@@ -4095,12 +4157,13 @@ export default function AdminDashboard() {
                           {selectedApplication.fullName}
                         </h2>
                         {(() => {
-                          const currentStage = getCandidateCurrentStage(selectedApplication);
+                          const currentStage = selectedStatusFilter === 'Accepted' ? getCandidateCurrentStage(selectedApplication) : (selectedStatusFilter === 'Rejected' ? 'Rejected' : 'Applied');
                           const badgeStyle = getStageBadgeStyle(currentStage);
                           
                           let sentTimeText = '';
                           let isScheduled = false;
                           let techInterviewSentText = '';
+                          let hrInterviewSentText = '';
 
                           if (currentStage === 'Test Round' && selectedApplication.assessmentSentTime) {
                             sentTimeText = formatDateTime(selectedApplication.assessmentSentTime);
@@ -4114,6 +4177,14 @@ export default function AdminDashboard() {
                               sentTimeText = formatDateTime(`${selectedApplication.interviewDate}T${selectedApplication.interviewTime || '00:00'}`);
                               isScheduled = true;
                             }
+                          } else if (currentStage === 'HR Interview') {
+                            if (selectedApplication.hrInterviewSentTime) {
+                              hrInterviewSentText = formatDateTime(selectedApplication.hrInterviewSentTime);
+                            }
+                            if (selectedApplication.hrInterviewDate) {
+                              sentTimeText = formatDateTime(`${selectedApplication.hrInterviewDate}T${selectedApplication.hrInterviewTime || '00:00'}`);
+                              isScheduled = true;
+                            }
                           }
 
                           return (
@@ -4124,6 +4195,11 @@ export default function AdminDashboard() {
                               {techInterviewSentText && (
                                 <span className="text-[10px] text-slate-450 font-bold bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded animate-fadeIn">
                                   Sent: {techInterviewSentText}
+                                </span>
+                              )}
+                              {hrInterviewSentText && (
+                                <span className="text-[10px] text-slate-450 font-bold bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded animate-fadeIn">
+                                  Sent: {hrInterviewSentText}
                                 </span>
                               )}
                               {sentTimeText && (
