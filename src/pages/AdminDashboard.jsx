@@ -4019,10 +4019,14 @@ export default function AdminDashboard() {
                           const badgeStyle = getStageBadgeStyle(currentStage);
                           
                           let sentTimeText = '';
+                          let isScheduled = false;
                           if (currentStage === 'Test Round' && selectedApplication.assessmentSentTime) {
                             sentTimeText = formatDateTime(selectedApplication.assessmentSentTime);
                           } else if (currentStage === 'Task Assessment' && selectedApplication.taskAssessmentSentTime) {
                             sentTimeText = formatDateTime(selectedApplication.taskAssessmentSentTime);
+                          } else if ((currentStage === 'Technical Assessment' || currentStage === 'Technical Interview') && selectedApplication.interviewDate) {
+                            sentTimeText = formatDateTime(`${selectedApplication.interviewDate}T${selectedApplication.interviewTime || '00:00'}`);
+                            isScheduled = true;
                           }
 
                           return (
@@ -4032,7 +4036,7 @@ export default function AdminDashboard() {
                               </span>
                               {sentTimeText && (
                                 <span className="text-[10px] text-slate-450 font-bold bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded">
-                                  Sent: {sentTimeText}
+                                  {isScheduled ? 'Scheduled: ' : 'Sent: '} {sentTimeText}
                                 </span>
                               )}
                             </div>
@@ -4588,10 +4592,10 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={handleScheduleMeeting}
-                          disabled={schedulingMeeting || !interviewDate || !interviewTime || !interviewLink || selectedApplication?.interviewDate}
+                          disabled={schedulingMeeting || !interviewDate || !interviewTime || !interviewLink || (selectedApplication?.interviewDate === interviewDate && selectedApplication?.interviewTime === interviewTime && selectedApplication?.interviewLink === interviewLink)}
                           className="w-full flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#004AAD] hover:bg-[#003882] text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/10 border-none outline-none cursor-pointer"
                         >
-                          <span>{schedulingMeeting ? 'Scheduling & Emailing...' : selectedApplication?.interviewDate ? 'Technical Interview Sent' : 'Schedule & Send BNX Mail'}</span>
+                          <span>{schedulingMeeting ? 'Scheduling & Emailing...' : (selectedApplication?.interviewDate && selectedApplication?.interviewDate !== '' && selectedApplication?.interviewDate !== 'null' && selectedApplication?.interviewDate !== 'undefined') ? 'Reschedule & Send BNX Mail' : 'Schedule & Send BNX Mail'}</span>
                         </button>
                       </div>
                     </div>
