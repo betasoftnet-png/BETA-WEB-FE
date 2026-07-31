@@ -2016,7 +2016,7 @@ export default function Careers() {
                     }}
                     className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] text-white transition-all duration-300 hover:scale-[1.02] shadow-md shadow-purple-500/20 no-underline cursor-pointer border-none text-center"
                   >
-                    Explore Careers
+                    Explore careers
                   </a>
                   <a
                     href="mailto:hr@betasoftnet.com"
