@@ -46,9 +46,9 @@ const getCandidateCurrentStage = (app) => {
     return 'Task Assessment';
   }
 
-  // 4. Technical Assessment stage
-  if (app.interviewDate || app.interviewTime || app.interviewLink || app.status === 'Interview Scheduled' || app.status === 'Round 2 Technical' || app.status === 'SCHEDULED' || app.status === 'Technical Assessment') {
-    return 'Technical Assessment';
+  // 4. Technical Interview stage
+  if (app.interviewDate || app.interviewTime || app.interviewLink || app.status === 'Interview Scheduled' || app.status === 'Round 2 Technical' || app.status === 'SCHEDULED' || app.status === 'Technical Assessment' || app.status === 'Technical Interview') {
+    return 'Technical Interview';
   }
 
   // 5. Test Round stage
@@ -314,11 +314,26 @@ const parseLocalDateTime = (dateStr) => {
     let isoStr = dateStr.trim();
     if (isoStr.includes('T') || isoStr.includes(' ')) {
       isoStr = isoStr.replace(' ', 'T');
-      if (!isoStr.endsWith('Z')) {
-        isoStr = isoStr + 'Z';
-      }
+      const parts = isoStr.split('T');
+      const dateParts = parts[0].split('-');
+      const timeParts = parts[1].split(':');
+      const year = parseInt(dateParts[0]);
+      const month = parseInt(dateParts[1]) - 1;
+      const day = parseInt(dateParts[2]);
+      const hour = parseInt(timeParts[0]);
+      const minute = parseInt(timeParts[1]);
+      const second = timeParts[2] ? parseInt(timeParts[2].split('.')[0]) : 0;
+      const d = new Date(year, month, day, hour, minute, second);
+      return isNaN(d.getTime()) ? null : d;
     } else {
-      isoStr = isoStr + 'T00:00:00Z';
+      const dateParts = isoStr.split('-');
+      if (dateParts.length === 3) {
+        const year = parseInt(dateParts[0]);
+        const month = parseInt(dateParts[1]) - 1;
+        const day = parseInt(dateParts[2]);
+        const d = new Date(year, month, day);
+        return isNaN(d.getTime()) ? null : d;
+      }
     }
     const d = new Date(isoStr);
     return isNaN(d.getTime()) ? null : d;
@@ -335,12 +350,15 @@ const getLocalAppliedDateTime = (app) => {
     return { appliedDate: '', formattedAppliedTime: '' };
   }
 
+  // Prioritize pre-formatted time from the backend
+  const backendFormattedTime = app.formattedAppliedTime || app.formattedappliedtime || '';
+
   if (timeStr && (timeStr.includes('T') || timeStr.includes(':') || timeStr.includes(' '))) {
     const dateObj = parseLocalDateTime(timeStr);
     if (dateObj) {
       return {
         appliedDate: dateObj.toLocaleDateString(),
-        formattedAppliedTime: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
+        formattedAppliedTime: backendFormattedTime || dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
       };
     }
   }
@@ -350,12 +368,12 @@ const getLocalAppliedDateTime = (app) => {
     if (dateObj) {
       return {
         appliedDate: dateObj.toLocaleDateString(),
-        formattedAppliedTime: ''
+        formattedAppliedTime: backendFormattedTime
       };
     }
   }
 
-  return { appliedDate: dateStr, formattedAppliedTime: '' };
+  return { appliedDate: dateStr, formattedAppliedTime: backendFormattedTime };
 };
 
 
@@ -930,11 +948,54 @@ export default function AdminDashboard() {
         }
 
         const freshApp = candidateRes?.data;
-        const freshGithub = freshApp?.githubLink || freshApp?.githublink || taskRes?.data?.candidate?.githubLink || taskRes?.data?.githubLink;
+        if (freshApp) {
+          const freshGithub = freshApp.githubLink || freshApp.githublink || taskRes?.data?.candidate?.githubLink || taskRes?.data?.githubLink;
+          const mergedApp = { ...freshApp, githubLink: freshGithub || freshApp.githubLink };
+          
+          setSelectedApplication(prev => {
+            if (!prev) return null;
+            const hasChanges = 
+              prev.githubLink !== mergedApp.githubLink ||
+              prev.taskAssigned !== mergedApp.taskAssigned ||
+              prev.taskAssessmentSentTime !== mergedApp.taskAssessmentSentTime ||
+              prev.interviewDate !== mergedApp.interviewDate ||
+              prev.interviewTime !== mergedApp.interviewTime ||
+              prev.interviewLink !== mergedApp.interviewLink ||
+              prev.status !== mergedApp.status ||
+              prev.hrInterviewDate !== mergedApp.hrInterviewDate ||
+              prev.hrInterviewTime !== mergedApp.hrInterviewTime ||
+              prev.hrInterviewLocation !== mergedApp.hrInterviewLocation;
+              
+            return hasChanges ? { ...prev, ...mergedApp } : prev;
+          });
 
-        if (freshGithub && freshGithub !== selectedApplication.githubLink) {
-          setSelectedApplication(prev => prev ? { ...prev, githubLink: freshGithub } : prev);
-          setExternalApplications(prevApps => prevApps.map(a => a.id === selectedApplication.id ? { ...a, githubLink: freshGithub } : a));
+          setExternalApplications(prevApps => {
+            let changed = false;
+            const updated = prevApps.map(a => {
+              if (a.id === selectedApplication.id) {
+                const hasChanges = 
+                  a.githubLink !== mergedApp.githubLink ||
+                  a.taskAssigned !== mergedApp.taskAssigned ||
+                  a.taskAssessmentSentTime !== mergedApp.taskAssessmentSentTime ||
+                  a.interviewDate !== mergedApp.interviewDate ||
+                  a.interviewTime !== mergedApp.interviewTime ||
+                  a.interviewLink !== mergedApp.interviewLink ||
+                  a.status !== mergedApp.status ||
+                  a.hrInterviewDate !== mergedApp.hrInterviewDate ||
+                  a.hrInterviewTime !== mergedApp.hrInterviewTime ||
+                  a.hrInterviewLocation !== mergedApp.hrInterviewLocation;
+                if (hasChanges) {
+                  changed = true;
+                  return { ...a, ...mergedApp };
+                }
+              }
+              return a;
+            });
+            if (changed) {
+              localStorage.setItem('beta_applications', JSON.stringify(updated));
+            }
+            return updated;
+          });
         }
       } catch (err) {
         const localVal = localStorage.getItem(`task_assessment_${selectedApplication.id}`);
@@ -1794,28 +1855,41 @@ export default function AdminDashboard() {
     try {
       // Calls backend which saves the schedule AND sends the Technical Interview
       // invitation email to the candidate via the backend EmailService automatically.
-      await backendApi.put(`/api/admin/applications/${selectedApplication.id}/schedule`, payload);
+      const response = await backendApi.put(`/api/admin/applications/${selectedApplication.id}/schedule`, payload);
+      const freshApp = response.data;
+
+      // Normalize updated app from server
+      const matchedJob = externalJobs.find(j => String(j.id) === String(freshApp.jobId));
+      const localTimes = getLocalAppliedDateTime(freshApp);
+      const normalizedApp = {
+        ...freshApp,
+        fullName: freshApp.fullName || freshApp.fullname || '',
+        resumeUrl: freshApp.resume
+          ? `${BACKEND_API_BASE}/uploads/${encodeURIComponent(freshApp.resume)}`
+          : (freshApp.resumeUrl || freshApp.resumeurl || ''),
+        status: mapStatusToUI(freshApp.status),
+        createdAt: freshApp.appliedTime || freshApp.appliedDate || freshApp.applieddate || freshApp.createdAt || freshApp.createdat || '',
+        appliedDate: localTimes.appliedDate,
+        appliedTime: freshApp.appliedTime || freshApp.appliedtime || '',
+        formattedAppliedTime: localTimes.formattedAppliedTime,
+        jobTitle: freshApp.jobTitle || freshApp.jobtitle || (matchedJob ? matchedJob.title : '') || '',
+        jobDepartment: freshApp.jobDepartment || freshApp.jobdepartment || (matchedJob ? matchedJob.department : '') || '',
+        jobLocation: freshApp.jobLocation || freshApp.joblocation || (matchedJob ? matchedJob.location : '') || '',
+        interviewDate: freshApp.interviewDate || freshApp.interviewdate || '',
+        interviewTime: freshApp.interviewTime || freshApp.interviewtime || '',
+        hrInterviewDate: freshApp.hrInterviewDate || freshApp.hrinterviewdate || '',
+        hrInterviewTime: freshApp.hrInterviewTime || freshApp.hrinterviewtime || '',
+        hrInterviewLocation: freshApp.hrInterviewLocation || freshApp.hrinterviewlocation || '',
+      };
 
       // Update local state
       const updatedApps = externalApplications.map(app =>
-        app.id === selectedApplication.id
-          ? {
-            ...app,
-            interviewDate: interviewDate,
-            interviewTime: interviewTime,
-            interviewLink: interviewLink
-          }
-          : app
+        app.id === selectedApplication.id ? normalizedApp : app
       );
       updateAppsAndSync(updatedApps);
 
       // Update currently selected application in view
-      setSelectedApplication(prev => ({
-        ...prev,
-        interviewDate: interviewDate,
-        interviewTime: interviewTime,
-        interviewLink: interviewLink
-      }));
+      setSelectedApplication(normalizedApp);
 
       setSuccess(`Meeting scheduled successfully for ${selectedApplication.fullName}. Interview invitation email sent to ${selectedApplication.email}!`);
       setTimeout(() => setSuccess(''), 5000);
@@ -3650,7 +3724,7 @@ export default function AdminDashboard() {
                             <>
                               <option value="All">All Stages</option>
                               <option value="Test Round">Test Round</option>
-                              <option value="Technical Assessment">Technical Assessment</option>
+                              <option value="Technical Interview">Technical Interview</option>
                               <option value="Task Assessment">Task Assessment</option>
                               <option value="HR Interview">HR Interview</option>
                               <option value="Selected">Selected</option>
@@ -4427,8 +4501,13 @@ export default function AdminDashboard() {
                                 localStorage.setItem(`task_assessment_${selectedApplication.id}`, taskDescription.trim());
                                 setFetchedTask(taskDescription.trim());
                                 setFetchedTaskStatus('ASSIGNED');
-                                setSelectedApplication(prev => prev ? { ...prev, taskAssigned: true, taskAssessmentSentTime: nowIso } : prev);
-                                setExternalApplications(prev => prev.map(a => a.id === selectedApplication.id ? { ...a, taskAssigned: true, taskAssessmentSentTime: nowIso } : a));
+                                 const updatedApps = externalApplications.map(a =>
+                                  a.id === selectedApplication.id
+                                    ? { ...a, taskAssigned: true, taskAssessmentSentTime: nowIso, status: 'Task Assessment' }
+                                    : a
+                                );
+                                updateAppsAndSync(updatedApps);
+                                setSelectedApplication(prev => prev ? { ...prev, taskAssigned: true, taskAssessmentSentTime: nowIso, status: 'Task Assessment' } : prev);
                                 setTaskSendStatus('success');
                                 setTaskSendMessage(`Task assigned to ${selectedApplication.fullName} successfully.`);
                                 setTaskDescription('');
