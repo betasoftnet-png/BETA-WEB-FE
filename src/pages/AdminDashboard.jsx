@@ -1002,10 +1002,10 @@ export default function AdminDashboard() {
             taskAssessmentSentTime: freshApp.taskAssessmentSentTime || freshApp.taskassessmentsenttime || '',
             githubLink: freshGithub || freshApp.githubLink || ''
           };
-          
+
           setSelectedApplication(prev => {
             if (!prev) return null;
-            const hasChanges = 
+            const hasChanges =
               prev.githubLink !== mergedApp.githubLink ||
               prev.taskAssigned !== mergedApp.taskAssigned ||
               prev.taskAssessmentSentTime !== mergedApp.taskAssessmentSentTime ||
@@ -1018,7 +1018,7 @@ export default function AdminDashboard() {
               prev.hrInterviewDate !== mergedApp.hrInterviewDate ||
               prev.hrInterviewTime !== mergedApp.hrInterviewTime ||
               prev.hrInterviewLocation !== mergedApp.hrInterviewLocation;
-              
+
             return hasChanges ? { ...prev, ...mergedApp } : prev;
           });
 
@@ -1026,7 +1026,7 @@ export default function AdminDashboard() {
             let changed = false;
             const updated = prevApps.map(a => {
               if (a.id === selectedApplication.id) {
-                const hasChanges = 
+                const hasChanges =
                   a.githubLink !== mergedApp.githubLink ||
                   a.taskAssigned !== mergedApp.taskAssigned ||
                   a.taskAssessmentSentTime !== mergedApp.taskAssessmentSentTime ||
@@ -1696,10 +1696,10 @@ export default function AdminDashboard() {
                     <p style="margin: 0 0 20px 0;">Before we proceed with the HR formalities, please review the following information.</p>
                     
                     <p style="margin: 0 0 8px 0; font-size: 15px; color: #0f172a; font-weight: 600;">Office Timings</p>
-                    <ul style="margin: 0 0 20px 0; padding-left: 20px; color: #334155; line-height: 1.6;">
-                      <li style="margin-bottom: 6px;">Monday to Friday : 9:00 AM – 6:30 PM</li>
-                      <li style="margin-bottom: 6px;">Saturday : 9:00 AM – 5:30 PM</li>
-                      <li style="margin-bottom: 6px;">Sunday : Weekly Off</li>
+                    <ul style="margin: 0 0 20px 0; padding-left: 0; list-style-type: none; color: #334155; line-height: 1.6;">
+                      <li style="margin-bottom: 6px; list-style-type: none;">&bull; &nbsp; Monday–Friday: 9:00 AM–6:30 PM</li>
+                      <li style="margin-bottom: 6px; list-style-type: none;">&bull; &nbsp; Saturday: 9:00 AM–5:30 PM</li>
+                      <li style="margin-bottom: 6px; list-style-type: none;">&bull; &nbsp; Sunday: Weekly Off</li>
                     </ul>
                     
                     <p style="margin: 0 0 8px 0; font-size: 15px; color: #0f172a; font-weight: 600;">Dress Code</p>
@@ -3995,7 +3995,7 @@ export default function AdminDashboard() {
                                     {(() => {
                                       const stage = selectedStatusFilter === 'Accepted' ? getCandidateCurrentStage(app) : (selectedStatusFilter === 'Rejected' ? 'Rejected' : 'Applied');
                                       const badgeStyle = getStageBadgeStyle(stage);
-                                      
+
                                       let sentTimeText = '';
                                       if (stage === 'Test Round' && app.assessmentSentTime) {
                                         sentTimeText = formatDateTime(app.assessmentSentTime);
@@ -4159,7 +4159,7 @@ export default function AdminDashboard() {
                         {(() => {
                           const currentStage = selectedStatusFilter === 'Accepted' ? getCandidateCurrentStage(selectedApplication) : (selectedStatusFilter === 'Rejected' ? 'Rejected' : 'Applied');
                           const badgeStyle = getStageBadgeStyle(currentStage);
-                          
+
                           let sentTimeText = '';
                           let isScheduled = false;
                           let techInterviewSentText = '';
@@ -4595,7 +4595,7 @@ export default function AdminDashboard() {
                                 localStorage.setItem(`task_assessment_${selectedApplication.id}`, taskDescription.trim());
                                 setFetchedTask(taskDescription.trim());
                                 setFetchedTaskStatus('ASSIGNED');
-                                 const updatedApps = externalApplications.map(a =>
+                                const updatedApps = externalApplications.map(a =>
                                   a.id === selectedApplication.id
                                     ? { ...a, taskAssigned: true, taskAssessmentSentTime: nowIso, status: 'Task Assessment' }
                                     : a
