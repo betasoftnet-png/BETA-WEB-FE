@@ -1663,7 +1663,7 @@ export default function Careers() {
                         style={{ transformStyle: "preserve-3d", perspective: 1000 }}
                         className="glass-card-purple p-4 md:p-4 lg:p-5 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-[170px] h-[170px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] group relative shrink-0 cursor-pointer"
                       >
-                        <motion.div 
+                        <motion.div
                           variants={{
                             hover: { rotate: 360, scale: 1.25 },
                             tap: { scale: 0.9 }
@@ -1968,13 +1968,13 @@ export default function Careers() {
                     >
                       {/* Gradient card glow on hover */}
                       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-slate-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      
+
                       <div className="space-y-4 relative z-10">
                         {/* Beautiful Icon Wrapper */}
                         <div className={`h-12 w-12 rounded-2xl border flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300 ${val.bg}`}>
                           <Icon className={`h-6 w-6 transition-transform duration-300 group-hover:rotate-6 ${val.color}`} />
                         </div>
-                        
+
                         <div className="space-y-2">
                           <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors flex items-center gap-1.5">
                             {val.title}
@@ -2005,7 +2005,7 @@ export default function Careers() {
                   Your Future Starts Here
                 </h2>
                 <p className="text-slate-650 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-semibold">
-                  At Beta Softnet, every idea matters, every challenge is an opportunity to grow, and every team member contributes to building innovative solutions. If you're ready to learn, collaborate, and make an impact, we'd love to have you on our journey.
+                  At Beta,every idea matters, every challenge is an opportunity to grow, and every team member contributes to building innovative solutions. If you're ready to learn, collaborate, and make an impact, we'd love to have you on our journey.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                   <a
