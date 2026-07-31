@@ -31,7 +31,9 @@ import {
   MessageSquare,
   Handshake,
   Target,
-  TrendingUp
+  TrendingUp,
+  Shield,
+  UserCheck
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -61,6 +63,65 @@ const processSteps = [
   { id: '4', title: 'Task Assessment', desc: 'GitHub task and code review', icon: CheckSquare, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
   { id: '5', title: 'HR interview', desc: 'Culture fit & team alignment', icon: Users, color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
   { id: '6', title: 'Offer', desc: 'Final proposal discussions', icon: Award, color: 'text-[#F59E0B]', bg: 'bg-amber-500/10 border-amber-500/20' }
+];
+
+const companyValues = [
+  {
+    title: 'Innovation',
+    desc: 'Pushing the boundaries of technology, thinking outside the box to solve complex software engineering challenges.',
+    icon: Sparkles,
+    color: 'text-amber-500',
+    bg: 'bg-amber-50/70 border-amber-100/50',
+    glow: 'hover:shadow-amber-500/10 hover:border-amber-300'
+  },
+  {
+    title: 'Ownership',
+    desc: 'Acting like founders. We take full responsibility for our code, our products, and our users\' satisfaction.',
+    icon: Target,
+    color: 'text-rose-500',
+    bg: 'bg-rose-50/70 border-rose-100/50',
+    glow: 'hover:shadow-rose-500/10 hover:border-rose-300'
+  },
+  {
+    title: 'Integrity',
+    desc: 'Operating with absolute transparency, honesty, and professional ethics in all internal and external relations.',
+    icon: Shield,
+    color: 'text-indigo-500',
+    bg: 'bg-indigo-50/70 border-indigo-100/50',
+    glow: 'hover:shadow-indigo-500/10 hover:border-indigo-300'
+  },
+  {
+    title: 'Customer First',
+    desc: 'Empathizing with our customers and prioritizing their success and experience above all else.',
+    icon: UserCheck,
+    color: 'text-emerald-500',
+    bg: 'bg-emerald-50/70 border-emerald-100/50',
+    glow: 'hover:shadow-emerald-500/10 hover:border-emerald-300'
+  },
+  {
+    title: 'Teamwork',
+    desc: 'Collaborating seamlessly, supporting one another, and achieving great things together as one unified force.',
+    icon: Handshake,
+    color: 'text-sky-500',
+    bg: 'bg-sky-50/70 border-sky-100/50',
+    glow: 'hover:shadow-sky-500/10 hover:border-sky-300'
+  },
+  {
+    title: 'Continuous Learning',
+    desc: 'Fostering curiosity, embracing growth, and constantly refining our skills and knowledge.',
+    icon: BookOpen,
+    color: 'text-purple-500',
+    bg: 'bg-purple-50/70 border-purple-100/50',
+    glow: 'hover:shadow-purple-500/10 hover:border-purple-300'
+  },
+  {
+    title: 'Excellence',
+    desc: 'Committing to the highest standards of quality, precision, and craftsmanship in everything we design and build.',
+    icon: Award,
+    color: 'text-[#F59E0B]',
+    bg: 'bg-amber-50/70 border-amber-200/50',
+    glow: 'hover:shadow-amber-500/10 hover:border-amber-400'
+  }
 ];
 const mapStatusToUI = (status) => {
   if (!status) return 'Applied';
@@ -1872,6 +1933,96 @@ export default function Careers() {
                     className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-[#004AAD] to-blue-600 hover:from-[#003A8C] hover:to-blue-700 text-white transition-all duration-300 hover:scale-[1.02] shadow-md shadow-blue-500/20 no-underline"
                   >
                     Apply Now
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* SECTION 9: OUR VALUES SECTION */}
+            <div className="space-y-16 py-16 mt-12 md:mt-16 border-t border-slate-100">
+              <div className="text-center max-w-3xl mx-auto space-y-4 px-4">
+                <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#8B5CF6]/10 to-[#EC4899]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] text-xs font-extrabold uppercase tracking-widest">
+                  <Sparkles className="h-3.5 w-3.5 text-[#EC4899] animate-pulse" />
+                  <span>Our Values</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+                  The Foundations of Our Culture
+                </h2>
+                <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto font-semibold leading-relaxed">
+                  These core values drive our decisions, guide our product architectural choices, and inspire our team members every single day.
+                </p>
+              </div>
+
+              {/* Grid of 7 Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto px-4 md:px-6">
+                {companyValues.map((val, idx) => {
+                  const Icon = val.icon;
+                  return (
+                    <motion.div
+                      key={val.title}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: idx * 0.08 }}
+                      className={`relative overflow-hidden p-8 rounded-3xl border border-slate-200/80 bg-white text-left flex flex-col justify-between space-y-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 group cursor-pointer ${val.glow}`}
+                    >
+                      {/* Gradient card glow on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-slate-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="space-y-4 relative z-10">
+                        {/* Beautiful Icon Wrapper */}
+                        <div className={`h-12 w-12 rounded-2xl border flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300 ${val.bg}`}>
+                          <Icon className={`h-6 w-6 transition-transform duration-300 group-hover:rotate-6 ${val.color}`} />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors flex items-center gap-1.5">
+                            {val.title}
+                          </h4>
+                          <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-semibold">
+                            {val.desc}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* SECTION 10: PREMIUM CALL TO ACTION SECTION */}
+            <div className="relative overflow-hidden rounded-3xl p-10 md:p-16 border border-purple-100 bg-gradient-to-r from-purple-50/90 via-fuchsia-50/80 to-pink-50/90 text-center shadow-xl shadow-purple-500/5 mt-12 md:mt-16 mx-4 md:mx-6 group">
+              {/* Subtle background glow circles inside CTA */}
+              <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-[#8B5CF6]/10 rounded-full blur-2xl pointer-events-none group-hover:scale-110 transition-transform duration-700" />
+              <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-[#EC4899]/10 rounded-full blur-2xl pointer-events-none group-hover:scale-110 transition-transform duration-700" />
+
+              <div className="relative z-10 space-y-6 max-w-3xl mx-auto">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
+                  <Sparkles className="h-3.5 w-3.5 text-[#EC4899] animate-pulse" />
+                  <span>Join Our Journey</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+                  Your Future Starts Here
+                </h2>
+                <p className="text-slate-650 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-semibold">
+                  At Beta Softnet, every idea matters, every challenge is an opportunity to grow, and every team member contributes to building innovative solutions. If you're ready to learn, collaborate, and make an impact, we'd love to have you on our journey.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                  <a
+                    href="#search-roles"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById('search-roles')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] text-white transition-all duration-300 hover:scale-[1.02] shadow-md shadow-purple-500/20 no-underline cursor-pointer border-none text-center"
+                  >
+                    Explore Careers
+                  </a>
+                  <a
+                    href="mailto:hr@betasoftnet.com"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 transition-all duration-300 hover:scale-[1.02] shadow-md shadow-slate-200/50 no-underline cursor-pointer text-center"
+                  >
+                    Contact HR
                   </a>
                 </div>
               </div>

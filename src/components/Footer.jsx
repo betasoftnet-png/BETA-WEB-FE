@@ -83,7 +83,7 @@ export default function Footer() {
               One platform for communication, security, and teamwork.
             </p> */}
             {/* Social Icons */}
-            <div className="flex space-x-4 pt-2 justify-center -mt-8 -ml-4">
+            <div className="flex space-x-4 pt-2 justify-center -mt-3 -ml-4">
               <a
                 href="https://www.instagram.com/beta_softnet/"
                 target="_blank"
