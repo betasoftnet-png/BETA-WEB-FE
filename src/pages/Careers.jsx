@@ -153,12 +153,44 @@ const AppliedTime = ({ timestamp }) => {
   const [timeAgo, setTimeAgo] = useState('');
 
   useEffect(() => {
+    const parseLocalDateTime = (dateStr) => {
+      if (!dateStr) return null;
+      try {
+        if (typeof dateStr !== 'string') {
+          const d = new Date(dateStr);
+          return isNaN(d.getTime()) ? null : d;
+        }
+        if (dateStr.includes('Z') || /[+-]\d{2}:?\d{2}$/.test(dateStr)) {
+          const d = new Date(dateStr);
+          return isNaN(d.getTime()) ? null : d;
+        }
+        let isoStr = dateStr.trim().replace(' ', 'T');
+        const match = isoStr.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2}))?/);
+        if (match) {
+          const year = parseInt(match[1], 10);
+          const month = parseInt(match[2], 10) - 1;
+          const day = parseInt(match[3], 10);
+          const hour = match[4] ? parseInt(match[4], 10) : 0;
+          const minute = match[5] ? parseInt(match[5], 10) : 0;
+          const second = match[6] ? parseInt(match[6], 10) : 0;
+          return new Date(year, month, day, hour, minute, second);
+        }
+        const d = new Date(isoStr);
+        return isNaN(d.getTime()) ? null : d;
+      } catch (e) {
+        return null;
+      }
+    };
+
     const calculateTimeAgo = () => {
       if (!timestamp) return '';
       try {
-        const date = new Date(timestamp);
+        const date = parseLocalDateTime(timestamp);
+        if (!date) return 'Applied';
         const now = new Date();
         const diffMs = now - date;
+        // Guard against future clock skew
+        if (diffMs < 0) return 'Applied just now';
         const diffSecs = Math.floor(diffMs / 1000);
         const diffMins = Math.floor(diffMs / 60000);
         const diffHours = Math.floor(diffMs / 3600000);

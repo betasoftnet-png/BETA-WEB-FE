@@ -259,19 +259,27 @@ export default function Navbar() {
         const d = new Date(dateStr);
         return isNaN(d.getTime()) ? null : d;
       }
+      // If the string already has timezone info (Z or ±HH:MM), parse as-is
       if (dateStr.includes('Z') || /[+-]\d{2}:?\d{2}$/.test(dateStr)) {
         const d = new Date(dateStr);
         return isNaN(d.getTime()) ? null : d;
       }
-      let isoStr = dateStr.trim();
-      if (isoStr.includes('T') || isoStr.includes(' ')) {
-        isoStr = isoStr.replace(' ', 'T');
-        if (!isoStr.endsWith('Z')) {
-          isoStr = isoStr + 'Z';
-        }
-      } else {
-        isoStr = isoStr + 'T00:00:00Z';
+      // No timezone info — treat as LOCAL time (not UTC) so the diff is correct
+      // regardless of the server's timezone. Do NOT append 'Z'.
+      let isoStr = dateStr.trim().replace(' ', 'T');
+      
+      // Parse YYYY-MM-DDTHH:mm:ss or YYYY-MM-DD manually to treat as local time
+      const match = isoStr.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2}))?/);
+      if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1; // 0-indexed
+        const day = parseInt(match[3], 10);
+        const hour = match[4] ? parseInt(match[4], 10) : 0;
+        const minute = match[5] ? parseInt(match[5], 10) : 0;
+        const second = match[6] ? parseInt(match[6], 10) : 0;
+        return new Date(year, month, day, hour, minute, second);
       }
+
       const d = new Date(isoStr);
       return isNaN(d.getTime()) ? null : d;
     } catch (e) {
@@ -286,6 +294,8 @@ export default function Navbar() {
       const date = createdAtVal instanceof Date ? createdAtVal : parseLocalDateTime(createdAtVal);
       if (!date) return 'just now';
       const diffMs = now - date;
+      // Guard against clock skew or future timestamps
+      if (diffMs < 0) return 'just now';
       const diffMins = Math.floor(diffMs / 60000);
       if (diffMins < 1) return 'just now';
       if (diffMins < 60) return `${diffMins}m ago`;
@@ -345,7 +355,7 @@ export default function Navbar() {
     try {
       const token = localStorage.getItem('beta_token');
       if (token) {
-        const cached = localStorage.getItem('beta_candidate_notifications');
+        const cached = localStorage.getItem('beta_candidate_notifications_v3');
         if (cached) {
           setNotifications(JSON.parse(cached));
         }
@@ -363,7 +373,7 @@ export default function Navbar() {
 
       if (!token) {
         setNotifications([]);
-        localStorage.removeItem('beta_candidate_notifications');
+        localStorage.removeItem('beta_candidate_notifications_v3');
         return;
       }
 
@@ -407,15 +417,16 @@ export default function Navbar() {
 
         if (Array.isArray(candApps) && candApps.length > 0) {
           await Promise.all(candApps.map(async (app) => {
-            const appliedDateStr = app.createdAt || app.appliedDate || app.appliedTime;
-            const formattedDate = appliedDateStr ? new Date(appliedDateStr).toLocaleDateString(undefined, {
+            const appliedDateStr = app.createdAt || app.appliedTime || app.appliedtime || app.appliedDate || app.applieddate;
+            const appliedDateObj = parseLocalDateTime(appliedDateStr);
+            const formattedDate = appliedDateObj ? appliedDateObj.toLocaleDateString(undefined, {
               year: 'numeric',
               month: 'short',
               day: 'numeric'
             }) : 'N/A';
             
             const notifId = `app-received-${app.id}`;
-            const appliedTimestamp = new Date(appliedDateStr || 0).getTime();
+            const appliedTimestamp = appliedDateObj ? appliedDateObj.getTime() : 0;
 
             dynamicList.push({
               id: notifId,
@@ -472,7 +483,7 @@ export default function Navbar() {
         }
 
         // Cache candidate notifications
-        localStorage.setItem('beta_candidate_notifications', JSON.stringify(dynamicList));
+        localStorage.setItem('beta_candidate_notifications_v3', JSON.stringify(dynamicList));
         setNotifications(dynamicList);
         setIsServerDown(false);
       } catch (e) {
