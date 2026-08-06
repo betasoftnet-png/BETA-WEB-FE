@@ -778,11 +778,15 @@ export default function Careers() {
           jobLocation: app.jobLocation || app.joblocation || '',
           interviewDate: app.interviewDate || app.interviewdate || '',
           interviewTime: app.interviewTime || app.interviewtime || '',
+          interviewLink: app.interviewLink || app.interviewlink || '',
           aptitudeStatus: app.aptitudeStatus || app.aptitudestatus || '',
           aptitudeScore: app.aptitudeScore || app.aptitudescore || '',
           experience: app.experience || '3 Years',
           githubLink: app.githubLink || app.githublink || '',
           taskAssigned: app.taskAssigned !== undefined ? app.taskAssigned : (app.taskassigned || false),
+          hrInterviewDate: app.hrInterviewDate || app.hrinterviewdate || '',
+          hrInterviewTime: app.hrInterviewTime || app.hrinterviewtime || '',
+          hrInterviewLocation: app.hrInterviewLocation || app.hrinterviewlocation || '',
           jobId: app.jobId || app.jobid || '',
           appliedTime: app.appliedTime || app.appliedtime || '',
           pipelineStage: app.pipelineStage !== undefined && app.pipelineStage !== null ? app.pipelineStage : null
@@ -814,6 +818,14 @@ export default function Careers() {
           if (localMatch.pipelineStage !== undefined && localMatch.pipelineStage !== null && normalized.pipelineStage === null) {
             normalized.pipelineStage = localMatch.pipelineStage;
           }
+          if (localMatch.interviewDate && !normalized.interviewDate) normalized.interviewDate = localMatch.interviewDate;
+          if (localMatch.interviewTime && !normalized.interviewTime) normalized.interviewTime = localMatch.interviewTime;
+          if (localMatch.interviewLink && !normalized.interviewLink) normalized.interviewLink = localMatch.interviewLink;
+          if (localMatch.githubLink && !normalized.githubLink) normalized.githubLink = localMatch.githubLink;
+          if (localMatch.taskAssigned && !normalized.taskAssigned) normalized.taskAssigned = localMatch.taskAssigned;
+          if (localMatch.hrInterviewDate && !normalized.hrInterviewDate) normalized.hrInterviewDate = localMatch.hrInterviewDate;
+          if (localMatch.hrInterviewTime && !normalized.hrInterviewTime) normalized.hrInterviewTime = localMatch.hrInterviewTime;
+          if (localMatch.hrInterviewLocation && !normalized.hrInterviewLocation) normalized.hrInterviewLocation = localMatch.hrInterviewLocation;
         }
 
         mergedApps.push(normalized);
@@ -841,6 +853,12 @@ export default function Careers() {
             jobLocation: localApp.jobLocation || 'Tiruvallur',
             interviewDate: localApp.interviewDate || '',
             interviewTime: localApp.interviewTime || '',
+            interviewLink: localApp.interviewLink || '',
+            githubLink: localApp.githubLink || '',
+            taskAssigned: localApp.taskAssigned !== undefined ? localApp.taskAssigned : (localApp.taskassigned || false),
+            hrInterviewDate: localApp.hrInterviewDate || '',
+            hrInterviewTime: localApp.hrInterviewTime || '',
+            hrInterviewLocation: localApp.hrInterviewLocation || '',
             aptitudeStatus: localApp.aptitudeStatus || '',
             aptitudeScore: localApp.aptitudeScore !== undefined && localApp.aptitudeScore !== null ? localApp.aptitudeScore : '',
             experience: localApp.experience || '3 Years',
@@ -2138,10 +2156,75 @@ export default function Careers() {
                     const aptitudeStatus = (app.aptitudeStatus || '').toLowerCase().trim();
                     const isRejected = rawStatus.toLowerCase().trim() === 'rejected';
 
-                    // Fetch pipeline stage status dynamically from backend
-                    let activeIdx = app.pipelineStage !== undefined && app.pipelineStage !== null ? app.pipelineStage : 0;
-
+                    // Calculate step completion and reach dynamically
                     const steps = ['Application', 'Assessment', 'Technical interview', 'Task Assessment', 'HR interview', 'Offer'];
+
+                    const stepStates = steps.map((stepName) => {
+                      const statusLower = (app.status || '').toLowerCase().trim();
+                      const aptitudeStatusLower = (app.aptitudeStatus || '').toLowerCase().trim();
+                      const assessmentSubmitted = app.assessmentSubmitted === true || app.assessmentSubmitted === 'true';
+
+                      let isCompleted = false;
+                      let isReached = false;
+
+                      switch (stepName) {
+                        case 'Application':
+                          isCompleted = true;
+                          isReached = true;
+                          break;
+
+                        case 'Assessment':
+                          isCompleted = assessmentSubmitted || aptitudeStatusLower === 'completed';
+                          isReached = true;
+                          break;
+
+                        case 'Technical interview':
+                          isCompleted = [
+                            'reviewed', 'accepted', 'joined', 'selected', 'approved', 'offer sent',
+                            'task assessment', 'task assigned', 'task submitted', 'task',
+                            'hr interview', 'hr scheduled', 'hr round', 'hr'
+                          ].includes(statusLower) ||
+                          app.taskAssigned === true ||
+                          (app.githubLink && app.githubLink.trim() !== '') ||
+                          (app.hrInterviewDate || app.hrInterviewTime || app.hrInterviewLocation);
+
+                          isReached = !!(app.interviewDate || app.interviewTime || app.interviewLink) ||
+                          ['technical interview', 'interview scheduled', 'scheduled', 'technical', 'round 2 technical', 'technical assessment'].includes(statusLower);
+                          break;
+
+                        case 'Task Assessment':
+                          isCompleted = !!(app.githubLink && app.githubLink.trim() !== '');
+                          isReached = app.taskAssigned === true ||
+                          ['task assessment', 'task assigned', 'task submitted', 'task'].includes(statusLower) ||
+                          isCompleted;
+                          break;
+
+                        case 'HR interview':
+                          isCompleted = ['accepted', 'joined', 'selected', 'approved', 'offer sent'].includes(statusLower);
+                          isReached = !!(app.hrInterviewDate || app.hrInterviewTime || app.hrInterviewLocation) ||
+                          ['hr interview', 'hr scheduled', 'hr round', 'hr'].includes(statusLower) ||
+                          isCompleted;
+                          break;
+
+                        case 'Offer':
+                          isCompleted = statusLower === 'joined';
+                          isReached = ['accepted', 'selected', 'approved', 'offer sent', 'joined'].includes(statusLower);
+                          break;
+
+                        default:
+                          break;
+                      }
+
+                      return { stepName, isCompleted, isReached };
+                    });
+
+                    // Determine activeIdx as the highest index that is reached or completed
+                    let activeIdx = 0;
+                    for (let i = 0; i < stepStates.length; i++) {
+                      if (stepStates[i].isReached || stepStates[i].isCompleted) {
+                        activeIdx = i;
+                      }
+                    }
 
                     return (
                       <div
@@ -2199,8 +2282,8 @@ export default function Careers() {
 
                             {/* Node Circles */}
                             {steps.map((stepName, idx) => {
-                              const isCompleted = idx < activeIdx;
-                              const isActive = idx === activeIdx;
+                              const isCompleted = stepStates[idx].isCompleted;
+                              const isActive = idx === activeIdx && !isCompleted;
                               const isRejectedNode = isRejected && isActive;
 
                               let circleClasses = 'bg-white border-slate-200 text-slate-400';
