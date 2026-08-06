@@ -761,9 +761,17 @@ export default function AdminDashboard() {
 
   // Silent background polling — re-fetches applications every 20s so scores/statuses update automatically
   useEffect(() => {
-    if (!user || user.role !== 'ROLE_ADMIN' || !isServerReachable) return;
+    if (!user || user.role !== 'ROLE_ADMIN') return;
 
     const silentRefetch = async () => {
+      if (!isServerReachable) {
+        const storedApps = localStorage.getItem('beta_applications');
+        if (storedApps) {
+          const parsed = JSON.parse(storedApps) || [];
+          setExternalApplications(parsed);
+        }
+        return;
+      }
       let jobsList = [];
       try {
         const jobsRes = await backendApi.get('/api/jobs');
