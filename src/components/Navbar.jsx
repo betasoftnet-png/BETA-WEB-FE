@@ -292,18 +292,33 @@ export default function Navbar() {
     try {
       const now = new Date();
       const date = createdAtVal instanceof Date ? createdAtVal : parseLocalDateTime(createdAtVal);
-      if (!date) return 'just now';
-      const diffMs = now - date;
-      // Guard against clock skew or future timestamps
-      if (diffMs < 0) return 'just now';
-      const diffMins = Math.floor(diffMs / 60000);
-      if (diffMins < 1) return 'just now';
-      if (diffMins < 60) return `${diffMins}m ago`;
-      const diffHours = Math.floor(diffMins / 60);
-      if (diffHours < 24) return `${diffHours}h ago`;
-      const diffDays = Math.floor(diffHours / 24);
-      return `${diffDays}d ago`;
+      
+      const calculated = (() => {
+        if (!date) return 'just now';
+        const diffMs = now - date;
+        // Guard against clock skew or future timestamps
+        if (diffMs < 0) return 'just now';
+        const diffMins = Math.floor(diffMs / 60000);
+        if (diffMins < 1) return 'just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        const diffHours = Math.floor(diffMins / 60);
+        if (diffHours < 24) return `${diffHours}h ago`;
+        const diffDays = Math.floor(diffHours / 24);
+        return `${diffDays}d ago`;
+      })();
+
+      console.log('[Notification TRACE]', {
+        rawApiTimestamp: createdAtVal,
+        parsedDate: date ? date.toISOString() : null,
+        parsedLocalDateStr: date ? date.toString() : null,
+        currentSystemTime: now.toISOString(),
+        currentSystemLocalTimeStr: now.toString(),
+        calculatedRelativeTime: calculated
+      });
+
+      return calculated;
     } catch (e) {
+      console.error('[Notification TRACE] Formatting error:', e);
       return 'some time ago';
     }
   };
