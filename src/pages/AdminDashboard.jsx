@@ -357,30 +357,39 @@ const getLocalAppliedDateTime = (app) => {
     return { appliedDate: '', formattedAppliedTime: '' };
   }
 
-  // Prioritize pre-formatted time from the backend
   const backendFormattedTime = app.formattedAppliedTime || app.formattedappliedtime || '';
+  let result = { appliedDate: dateStr, formattedAppliedTime: backendFormattedTime };
 
   if (timeStr && (timeStr.includes('T') || timeStr.includes(':') || timeStr.includes(' '))) {
     const dateObj = parseLocalDateTime(timeStr);
     if (dateObj) {
-      return {
+      result = {
         appliedDate: dateObj.toLocaleDateString(),
-        formattedAppliedTime: backendFormattedTime || dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
+        formattedAppliedTime: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
       };
     }
-  }
-
-  if (dateStr) {
+  } else if (dateStr) {
     const dateObj = parseLocalDateTime(dateStr);
     if (dateObj) {
-      return {
+      result = {
         appliedDate: dateObj.toLocaleDateString(),
-        formattedAppliedTime: backendFormattedTime
+        formattedAppliedTime: ''
       };
     }
   }
 
-  return { appliedDate: dateStr, formattedAppliedTime: backendFormattedTime };
+  console.log('[Applied Time TRACE]', {
+    candidateId: app.id,
+    candidateName: app.fullName || app.fullname || '',
+    rawTimeStr: timeStr,
+    rawDateStr: dateStr,
+    backendFormattedTime: backendFormattedTime,
+    parsedDateObj: result.appliedDate ? (parseLocalDateTime(timeStr || dateStr)?.toISOString() || null) : null,
+    finalDisplayedDate: result.appliedDate,
+    finalDisplayedTime: result.formattedAppliedTime
+  });
+
+  return result;
 };
 
 
