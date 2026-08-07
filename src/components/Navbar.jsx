@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const JOB_BOARD_API_BASE =
   import.meta.env.DEV ||
-  window.location.hostname === 'localhost' ||
+    window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8081'
     : 'https://apply.beta-softnet.com';
@@ -38,7 +38,7 @@ const SEARCH_INDEX = [
     description: 'Daily utility assistant for user productivity & daily tools.',
     category: 'Products',
     type: 'Product',
-    url: 'https://bit-tool.beta-softnet.com/',
+    url: 'https://bit-tool.com/',
     isExternal: true,
     keywords: ['bit-tool', 'bit', 'tool', 'utility', 'assistant', 'productivity', 'calculator', 'daily']
   },
@@ -224,7 +224,7 @@ export default function Navbar() {
       if (stored) {
         setSeenNotificationIds(JSON.parse(stored));
       }
-    } catch (_) {}
+    } catch (_) { }
   }, []);
 
   // Sync seen notifications when dropdown opens or new notifications are received while dropdown is open
@@ -267,7 +267,7 @@ export default function Navbar() {
       // No timezone info — treat as LOCAL time (not UTC) so the diff is correct
       // regardless of the server's timezone. Do NOT append 'Z'.
       let isoStr = dateStr.trim().replace(' ', 'T');
-      
+
       // Parse YYYY-MM-DDTHH:mm:ss or YYYY-MM-DD manually to treat as local time
       const match = isoStr.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2}))?/);
       if (match) {
@@ -292,7 +292,7 @@ export default function Navbar() {
     try {
       const now = new Date();
       const date = createdAtVal instanceof Date ? createdAtVal : parseLocalDateTime(createdAtVal);
-      
+
       const calculated = (() => {
         if (!date) return 'just now';
         const diffMs = now - date;
@@ -377,7 +377,7 @@ export default function Navbar() {
       } else {
         setNotifications([]);
       }
-    } catch (_) {}
+    } catch (_) { }
   }, [user]);
 
   useEffect(() => {
@@ -439,7 +439,7 @@ export default function Navbar() {
               month: 'short',
               day: 'numeric'
             }) : 'N/A';
-            
+
             const notifId = `app-received-${app.id}`;
             const appliedTimestamp = appliedDateObj ? appliedDateObj.getTime() : 0;
 
@@ -460,7 +460,7 @@ export default function Navbar() {
                 const backendNotifs = Array.isArray(notifsRes.data) ? notifsRes.data : [];
                 backendNotifs.forEach((dbNotif) => {
                   const createdAtTimestamp = new Date(dbNotif.createdAt || 0).getTime();
-                  
+
                   // Map category based on title or description
                   let category = 'bell';
                   const titleLower = (dbNotif.title || '').toLowerCase();
@@ -868,10 +868,10 @@ export default function Navbar() {
                                             )}
                                           </button>
                                         </div>
- 
+
                                         {/* Divider Line below Base */}
                                         <hr className="border-t border-slate-200 -ml-6 -mr-2 opacity-80 -mt-2.5" />
- 
+
                                         {/* Aligns with B2Auth */}
                                         <div className="h-[60px] flex items-center justify-center animate-fadeIn">
                                           <button
@@ -942,7 +942,7 @@ export default function Navbar() {
                                             </a>
 
                                             <a
-                                              href="https://bit-tool.beta-softnet.com/"
+                                              href="https://bit-tool.com/"
                                               target="_blank"
                                               rel="noopener noreferrer"
                                               className="flex items-center space-x-2.5 p-2 rounded-xl border border-slate-200 bg-slate-50/40 transition group hover:bg-slate-100 hover:border-slate-300 hover:shadow-sm cursor-pointer text-left block animate-fadeIn"
@@ -1409,6 +1409,16 @@ export default function Navbar() {
                                   B2Auth Security
                                   <span className="coming-soon-badge">Coming Soon</span>
                                 </span>
+                              </a>
+
+                              <a
+                                href="https://bit-tool.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center space-x-2.5 text-slate-700 text-xs py-1 hover:text-[#004AAD] transition cursor-pointer text-left block"
+                              >
+                                <img src="/bit_tool_logo.png" alt="Bit Tool" className="h-4 w-4 object-contain" />
+                                <span className="font-semibold">Bit-Tool</span>
                               </a>
 
                               <a
