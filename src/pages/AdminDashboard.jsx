@@ -13,6 +13,13 @@ import api from '../api';
 
 const mapStatusToUI = (status) => {
   const s = (status || '').toLowerCase().trim();
+  if (s === '1') return 'Applied';
+  if (s === '2') return 'Round 1 Aptitude';
+  if (s === '3') return 'Round 2 Technical';
+  if (s === '4') return 'Accepted';
+  if (s === '5') return 'Accepted';
+  if (s === '6') return 'Joined';
+
   if (s === 'pending' || s === 'applied' || s === 'reviewed' || s === 'under review' || s === 'underreview' || s === 'candidates' || s === 'candidate') return 'Applied';
   if (s === 'round 1 aptitude' || s === 'round1aptitude' || s === 'aptitude') return 'Round 1 Aptitude';
   if (s === 'round 2 technical' || s === 'round2technical' || s === 'technical' || s === 'technical questions') return 'Round 2 Technical';

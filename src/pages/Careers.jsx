@@ -125,8 +125,16 @@ const companyValues = [
 ];
 const mapStatusToUI = (status) => {
   if (!status) return 'Applied';
-  const s = status.trim();
+  const s = String(status).trim();
   const lower = s.toLowerCase();
+
+  // Numeric status mappings: 1=Application, 2=Assessment, 3=Technical, 4=Task, 5=HR, 6=Offer
+  if (lower === '1') return 'Applied';
+  if (lower === '2') return 'Assessment Sent';
+  if (lower === '3') return 'Technical Interview';
+  if (lower === '4') return 'Task Assessment';
+  if (lower === '5') return 'HR Interview';
+  if (lower === '6') return 'Selected';
 
   if (lower === 'pending' || lower === 'applied' || lower === 'under review' || lower === 'candidates' || lower === 'candidate') return 'Applied';
   if (lower === 'shortlisted') return 'Shortlisted';
@@ -736,6 +744,7 @@ export default function Careers() {
       try {
         const response = await axios.get(`${JOB_BOARD_API_BASE}/api/jobs/my-applications?email=${encodeURIComponent(userEmail)}`);
         apiApps = response.data?.data || response.data || [];
+        console.log('[Careers TRACE] Raw API Response for my-applications:', response.data);
       } catch (err) {
         console.error('API /api/jobs/my-applications failed:', err);
       }
@@ -762,6 +771,7 @@ export default function Careers() {
 
       // Normalize API apps and match with local storage
       apiFiltered.forEach((app) => {
+        console.log('[Careers TRACE] Pre-mapped application status from backend:', { id: app.id, status: app.status });
         const normalized = {
           id: app.id,
           fullName: app.fullName || app.fullname || '',
@@ -828,6 +838,7 @@ export default function Careers() {
           if (localMatch.hrInterviewLocation && !normalized.hrInterviewLocation) normalized.hrInterviewLocation = localMatch.hrInterviewLocation;
         }
 
+        console.log('[Careers TRACE] Normalized application pushed to mergedApps:', normalized);
         mergedApps.push(normalized);
         seenIds.add(app.id);
       });
@@ -2225,6 +2236,14 @@ export default function Careers() {
                         activeIdx = i;
                       }
                     }
+                    console.log('[Careers TRACE] Calculated activeIdx and step states:', {
+                      id: app.id,
+                      jobTitle: app.jobTitle,
+                      status: app.status,
+                      stepStates,
+                      activeIdx,
+                      finalStageRendered: steps[activeIdx]
+                    });
 
                     return (
                       <div
