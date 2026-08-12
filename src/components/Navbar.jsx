@@ -1492,7 +1492,7 @@ export default function Navbar() {
                     <Link
                       to="/adminofcarrer"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]"
+                      className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-[#004AAD]"
                     >
                       <LayoutDashboard className="h-5 w-5 text-slate-400" />
                       <span>Admin Dashboard</span>
