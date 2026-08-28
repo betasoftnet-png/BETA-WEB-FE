@@ -1216,8 +1216,11 @@ export default function Navbar() {
 
                       <div className="space-y-4">
                         <Link
-                          to="/adminofcarrer"
-                          onClick={() => setIsProfileOpen(false)}
+                          to="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsProfileOpen(false);
+                          }}
                           className="block text-sm font-semibold text-slate-700 hover:text-[#004AAD] transition"
                         >
                           Account Profile
