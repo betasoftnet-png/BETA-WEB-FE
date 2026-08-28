@@ -154,15 +154,15 @@ export default function Footer() {
 
           {/* Internships */}
           <div>
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Internships</h2>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Business</h2>
             <ul className="space-y-2 text-sm font-medium">
-              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Fullstack Development</Link></li>
-              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">App Development</Link></li>
-              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">AI&ML</Link></li>
-              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Data Science</Link></li>
-              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Data Analytics</Link></li>
-              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Devops</Link></li>
-              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Testing</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Enterprise</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Small Business</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Partners</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Integrations</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Custom Solutions</Link></li>
+              <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Customer Solutions</Link></li>
+              {/* <li><Link to="/careers" className="text-slate-600 hover:text-blue-600 transition">Testing</Link></li> */}
             </ul>
           </div>
 
