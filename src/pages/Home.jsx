@@ -300,14 +300,11 @@ export default function Home() {
       `}</style>
 
 
-      {/* Top Background Color Layer matching the reference design */}
-      <div className="absolute inset-x-0 top-0 w-full h-[56.25vw] min-h-[540px] max-h-[960px] pointer-events-none z-0 overflow-hidden select-none">
-        <div className="w-full h-full bg-gradient-to-tr from-[#e0f2fe]/80 via-[#e0e7ff]/60 to-[#f3e8ff]/80" />
-        <div className="absolute top-[-10%] left-[-10%] w-[55%] h-[65%] rounded-full bg-cyan-300/30 blur-[130px]" />
-        <div className="absolute top-[-10%] right-[-10%] w-[55%] h-[65%] rounded-full bg-purple-300/30 blur-[130px]" />
-        {/* Soft smooth gradient transition into page background */}
-        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/70 to-transparent pointer-events-none" />
-      </div>
+
+
+
+
+
 
       {/* HERO SECTION: SIDE-BY-SIDE LAYOUT */}
       <div className="relative w-full mb-16 pt-6 pb-12 overflow-hidden">

@@ -1173,14 +1173,7 @@ export default function Careers() {
       `}</style>
 
 
-      {/* Dedicated Top Background Color Layer for Careers matching reference design */}
-      <div className="absolute inset-x-0 top-0 w-full h-[56.25vw] min-h-[540px] max-h-[960px] pointer-events-none z-0 overflow-hidden select-none">
-        <div className="w-full h-full bg-gradient-to-tr from-[#e0e7ff]/80 via-[#f3e8ff]/50 to-[#ffedd5]/80" />
-        <div className="absolute top-[-10%] left-[-10%] w-[55%] h-[65%] rounded-full bg-indigo-300/25 blur-[130px]" />
-        <div className="absolute top-[-10%] right-[-10%] w-[55%] h-[65%] rounded-full bg-rose-300/25 blur-[130px]" />
-        {/* Soft smooth gradient transition into page background */}
-        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/70 to-transparent pointer-events-none" />
-      </div>
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 space-y-16 md:space-y-20 relative z-10">
         {!showMyJobs ? (
