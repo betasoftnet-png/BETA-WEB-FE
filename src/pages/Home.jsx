@@ -299,212 +299,198 @@ export default function Home() {
         }
       `}</style>
 
+
+      {/* Top Background Color Layer matching the reference design */}
+      <div className="absolute inset-x-0 top-0 w-full h-[56.25vw] min-h-[540px] max-h-[960px] pointer-events-none z-0 overflow-hidden select-none">
+        <div className="w-full h-full bg-gradient-to-tr from-[#e0f2fe]/80 via-[#e0e7ff]/60 to-[#f3e8ff]/80" />
+        <div className="absolute top-[-10%] left-[-10%] w-[55%] h-[65%] rounded-full bg-cyan-300/30 blur-[130px]" />
+        <div className="absolute top-[-10%] right-[-10%] w-[55%] h-[65%] rounded-full bg-purple-300/30 blur-[130px]" />
+        {/* Soft smooth gradient transition into page background */}
+        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/70 to-transparent pointer-events-none" />
+      </div>
+
       {/* HERO SECTION: SIDE-BY-SIDE LAYOUT */}
-      <div className="w-full mb-16 pt-0 overflow-hidden">
-        {/* Central main title */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 text-center pt-0 mt-0">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-2"
-          >
-            {/* <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Vision</span>
-            </span> */}
-            <motion.h1
-              className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter cursor-pointer select-none flex items-center justify-center gap-0 mt-5 mb-1"
-              style={{ fontFamily: '"Saira Stencil One", sans-serif' }}
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.15,
-                  }
-                }
-              }}
-              initial="hidden"
-              animate="visible"
-            >
-              {['B', 'E', 'T', 'A'].map((letter, idx) => (
-                <motion.span
-                  key={idx}
-                  variants={{
-                    hidden: { opacity: 0, y: 50, scale: 0.3 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      scale: 1,
-                      transition: { type: 'spring', damping: 8, stiffness: 100 }
-                    }
-                  }}
-                  whileHover={{
-                    scale: 1.25,
-                    y: -12,
-                    rotate: idx % 2 === 0 ? 6 : -6,
-                    color: '#005be3',
-                    filter: 'drop-shadow(0 12px 20px rgba(0, 74, 173, 0.4))'
-                  }}
-                  whileTap={{ scale: 0.9 }}
-                  className="inline-block transition-all duration-300 ease-out"
-                  style={{
-                    color: '#004AAD',
-                    textShadow: '0px 0px 30px rgba(0, 74, 173, 0.12)',
-                    padding: '0',
-                    marginLeft: letter === 'T' ? '5px' : '0px'
-                  }}
-                >
-                  {letter}
-                </motion.span>
-              ))}
-            </motion.h1>
+      <div className="relative w-full mb-16 pt-6 pb-12 overflow-hidden">
 
-
-
-
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-blue-700 tracking-tight leading-tight max-w-4xl mx-auto">
-              Where Technology Meets{" "}
-              <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Possibility
-              </span>
-
-            </h1>
-
-          </motion.div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center lg:items-end gap-6 w-full">
-
-          {/* Left Column: Heading and description */}
-          <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 lg:pb-16">
-
+        {/* Hero Content Layer */}
+        <div className="relative z-10">
+          {/* Central main title */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 text-center pt-0 mt-0">
             <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-6 w-full flex flex-col items-center lg:items-start text-center lg:text-left"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-2"
             >
-              <motion.h2
-                variants={itemVariants}
-                className="w-full text-slate-900 leading-tight tracking-tight flex flex-col items-center lg:items-start text-center lg:text-left"
+              <motion.h1
+                className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter cursor-pointer select-none flex items-center justify-center gap-0 mt-5 mb-1"
+                style={{ fontFamily: '"Saira Stencil One", sans-serif' }}
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.15,
+                    }
+                  }
+                }}
+                initial="hidden"
+                animate="visible"
               >
-                <span className="block text-3xl sm:text-4xl lg:text-[54px] font-black text-slate-900 tracking-wide">
-                  Unified Software for
+                {['B', 'E', 'T', 'A'].map((letter, idx) => (
+                  <motion.span
+                    key={idx}
+                    variants={{
+                      hidden: { opacity: 0, y: 50, scale: 0.3 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        transition: { type: 'spring', damping: 8, stiffness: 100 }
+                      }
+                    }}
+                    whileHover={{
+                      scale: 1.25,
+                      y: -12,
+                      rotate: idx % 2 === 0 ? 6 : -6,
+                      color: '#005be3',
+                      filter: 'drop-shadow(0 12px 20px rgba(0, 74, 173, 0.4))'
+                    }}
+                    whileTap={{ scale: 0.9 }}
+                    className="inline-block transition-all duration-300 ease-out"
+                    style={{
+                      color: '#004AAD',
+                      textShadow: '0px 0px 30px rgba(0, 74, 173, 0.12)',
+                      padding: '0',
+                      marginLeft: letter === 'T' ? '5px' : '0px'
+                    }}
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </motion.h1>
+
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-blue-950 tracking-tight leading-tight max-w-4xl mx-auto">
+                Where Technology Meets{" "}
+                <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 bg-clip-text text-transparent">
+                  Possibility
                 </span>
-
-                <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent text-3xl sm:text-4xl lg:text-[48px] font-extrabold mt-1 lg:whitespace-nowrap whitespace-normal">
-                  Connected Generation
-                </span>
-              </motion.h2>
-
-              <motion.p
-                variants={itemVariants}
-                className="mt-2 text-slate-600 text-lg leading-9 text-center lg:text-left w-full max-w-4xl tracking-wide"
-              >
-                Beta builds secure, real-time corporate applications. SMTP mail threads,
-                live authentication protocols, and agile sprints under one dashboard.
-              </motion.p>
-
+              </h1>
             </motion.div>
           </div>
 
-          {/* Right Column: Enterprise suite */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center lg:items-end gap-6 w-full">
+            {/* Left Column: Heading and description */}
+            <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 lg:pb-16">
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-6 w-full flex flex-col items-center lg:items-start text-center lg:text-left"
+              >
+                <motion.h2
+                  variants={itemVariants}
+                  className="w-full text-slate-900 leading-tight tracking-tight flex flex-col items-center lg:items-start text-center lg:text-left"
+                >
+                  <span className="block text-3xl sm:text-4xl lg:text-[54px] font-black text-slate-900 tracking-wide">
+                    Unified Software for
+                  </span>
 
+                  <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent text-3xl sm:text-4xl lg:text-[48px] font-extrabold mt-1 lg:whitespace-nowrap whitespace-normal">
+                    Connected Generation
+                  </span>
+                </motion.h2>
 
-          <div className="w-full lg:w-1/2 h-full flex flex-col justify-center text-left">
+                <motion.p
+                  variants={itemVariants}
+                  className="mt-2 text-slate-700 text-lg leading-9 text-center lg:text-left w-full max-w-4xl tracking-wide font-medium"
+                >
+                  Beta builds secure, real-time corporate applications. SMTP mail threads,
+                  live authentication protocols, and agile sprints under one dashboard.
+                </motion.p>
+              </motion.div>
+            </div>
 
-            <div className="glass-card bg-white/70 hover:bg-white/90 border border-slate-200/80 p-4 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 w-full">
-              <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
-                  Enterprise Suite
-                </span>
-                {/* Horizontal line below heading
-                <div className="border-t border-slate-300 w-full my-4"></div> */}
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
-                {/* Left Side inside Box: Styled BNX Showcase Card */}
-                <div className="lg:col-span-1 w-full h-72 text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg rounded-2xl">
-                  {/* Deep Glowing Tech Starfield Particles */}
-                  <div className="absolute w-2 h-2 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
-                  <div className="absolute w-1 h-1 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
-                  <div className="absolute w-2 h-2 bg-indigo-500/20 rounded-full blur-[1.5px]" style={{ bottom: '10%', left: '75%', animation: 'floatParticle 6s linear infinite', animationDelay: '1.2s' }} />
-
-                  {/* Glowing Orbit Rings */}
-                  <div className="orbit-ring-1 pointer-events-none">
-                    <div className="orbit-node-1" />
-                  </div>
-                  <div className="orbit-ring-2 pointer-events-none">
-                    <div className="orbit-node-2" />
-                    <div className="orbit-node-3" />
-                  </div>
-
-
-                  {/* Tech Aura Glow behind Logo */}
-                  <div className="absolute w-28 h-28 bg-blue-500/10 blur-xl pointer-events-none animate-pulse" />
-
-                  {/* Pulsating Premium Logo Container */}
-                  <div className="relative z-10 transition-transform duration-300 hover:scale-105">
-                    <div className="bg-white border border-blue-500/45 w-24 h-24 rounded-2xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
-                      <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/25 via-cyan-500/10 to-transparent pointer-events-none" />
-                      <img src="/logo.png" alt="Beta Logo" className="object-contain relative z-10 animate-pulse" style={{ width: '90px', height: '90px' }} />
-                    </div>
-                  </div>
+            {/* Right Column: Enterprise suite */}
+            <div className="w-full lg:w-1/2 h-full flex flex-col justify-center text-left">
+              <div className="glass-card bg-white/80 hover:bg-white/95 backdrop-blur-md border border-slate-200/90 p-4 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 w-full">
+                <div className="border-b border-slate-100 pb-2.5 w-full mb-4">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">
+                    Enterprise Suite
+                  </span>
                 </div>
 
-                {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
-                <div className="lg:col-span-1 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
-                  {/* BNXmail */}
-                  <a
-                    href="https://www.bnxmail.com/login"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50/50 hover:bg-slate-100 transition-all duration-300 group cursor-pointer text-left gap-1"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      {/* Logo */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+                  {/* Left Side inside Box: Styled BNX Showcase Card */}
+                  <div className="lg:col-span-1 w-full h-72 text-center overflow-hidden relative select-none flex flex-col items-center justify-center swirling-showcase-bg rounded-2xl">
+                    {/* Deep Glowing Tech Starfield Particles */}
+                    <div className="absolute w-2 h-2 bg-blue-400/40 rounded-full blur-[1px]" style={{ bottom: '10%', left: '20%', animation: 'floatParticle 5s linear infinite', animationDelay: '0s' }} />
+                    <div className="absolute w-1 h-1 bg-cyan-300/30 rounded-full blur-[0.5px]" style={{ bottom: '15%', left: '45%', animation: 'floatParticle 7s linear infinite', animationDelay: '2.5s' }} />
+                    <div className="absolute w-2 h-2 bg-indigo-500/20 rounded-full blur-[1.5px]" style={{ bottom: '10%', left: '75%', animation: 'floatParticle 6s linear infinite', animationDelay: '1.2s' }} />
 
-                      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                        <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-14 w-14 object-contain" />
-                      </div>
-
-                      {/* Heading */}
-                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
-                        BNXmail
-                      </h4>
+                    {/* Glowing Orbit Rings */}
+                    <div className="orbit-ring-1 pointer-events-none">
+                      <div className="orbit-node-1" />
+                    </div>
+                    <div className="orbit-ring-2 pointer-events-none">
+                      <div className="orbit-node-2" />
+                      <div className="orbit-node-3" />
                     </div>
 
-                    {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-xs font-medium leading-normal mt-0.5">
-                      Real time mail, always <span className="whitespace-nowrap">in sync.</span> “Instant mail, Connected work.”
-                    </p>
-                  </a>
+                    {/* Tech Aura Glow behind Logo */}
+                    <div className="absolute w-28 h-28 bg-blue-500/10 blur-xl pointer-events-none animate-pulse" />
 
-                  {/* Cliks Business */}
-                  <a
-                    href="https://www.cliksbusiness.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50/50 hover:bg-slate-100 transition-all duration-300 group cursor-pointer text-left gap-1"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      {/* Logo */}
-                      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                        <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-12 w-12 object-contain" />
+                    {/* Pulsating Premium Logo Container */}
+                    <div className="relative z-10 transition-transform duration-300 hover:scale-105">
+                      <div className="bg-white border border-blue-500/45 w-24 h-24 rounded-2xl flex items-center justify-center bnx-logo-pulse-premium transition-all duration-300 relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/25 via-cyan-500/10 to-transparent pointer-events-none" />
+                        <img src="/logo.png" alt="Beta Logo" className="object-contain relative z-10 animate-pulse" style={{ width: '90px', height: '90px' }} />
                       </div>
-
-                      {/* Heading */}
-                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
-                        Cliks Business
-                      </h4>
                     </div>
+                  </div>
 
-                    {/* Description below logo/heading */}
-                    <p className="text-slate-500 text-xs font-medium leading-normal mt-0.5">
-                      "Connecting businesses, creating opportunities, and enabling growth."
-                    </p>
-                  </a>
+                  {/* Right Side: Vertical list of products (BNXmail and Cliks Business) */}
+                  <div className="lg:col-span-1 flex flex-col gap-4 h-full justify-between items-stretch lg:border-l lg:border-slate-200/80 lg:pl-4">
+                    {/* BNXmail */}
+                    <a
+                      href="https://www.bnxmail.com/login"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50/70 hover:bg-slate-100 transition-all duration-300 group cursor-pointer text-left gap-1"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                          <img src="/bnx_mail_logo.png" alt="BNX Mail" className="h-14 w-14 object-contain" />
+                        </div>
+                        <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                          BNXmail
+                        </h4>
+                      </div>
+                      <p className="text-slate-500 text-xs font-medium leading-normal mt-0.5">
+                        Real time mail, always <span className="whitespace-nowrap">in sync.</span> “Instant mail, Connected work.”
+                      </p>
+                    </a>
+
+                    {/* Cliks Business */}
+                    <a
+                      href="https://www.cliksbusiness.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex flex-col justify-center p-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50/70 hover:bg-slate-100 transition-all duration-300 group cursor-pointer text-left gap-1"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                          <img src="/cliks_business_logo.png" alt="Cliks Business" className="h-12 w-12 object-contain" />
+                        </div>
+                        <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                          Cliks Business
+                        </h4>
+                      </div>
+                      <p className="text-slate-500 text-xs font-medium leading-normal mt-0.5">
+                        "Connecting businesses, creating opportunities, and enabling growth."
+                      </p>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

@@ -904,7 +904,11 @@ export default function Careers() {
       <div className="auth-white-theme min-h-screen flex items-center justify-center px-4 py-12 bg-slate-50 relative overflow-hidden w-full">
         <style>{`
           .auth-white-theme {
-            background: linear-gradient(135deg, #F5F3FF 0%, #EFF6FF 50%, #FDF2F8 100%) !important;
+            background-image: url('/careers_bg.svg') !important;
+            background-size: cover !important;
+            background-position: center top !important;
+            background-repeat: no-repeat !important;
+            background-attachment: scroll !important;
             color: #1E293B !important;
           }
         `}</style>
@@ -1027,7 +1031,7 @@ export default function Careers() {
     <div className="careers-purple-pink-theme min-h-screen relative overflow-hidden pb-20 pt-4">
       <style>{`
         .careers-purple-pink-theme {
-          background: linear-gradient(135deg, #F5F3FF 0%, #EFF6FF 50%, #FDF2F8 100%) !important;
+          background: #f8fafc !important;
           color: #1E293B !important;
           position: relative;
           z-index: 10;
@@ -1161,27 +1165,39 @@ export default function Careers() {
           pointer-events: none;
         }
         .unified-openings-box {
-          background:white !important;
+          background: rgba(255, 255, 255, 0.78) !important;
+          backdrop-filter: blur(16px) !important;
+          border: 1px solid rgba(255, 255, 255, 0.85) !important;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06) !important;
         }
       `}</style>
 
 
+      {/* Dedicated Top Background Color Layer for Careers matching reference design */}
+      <div className="absolute inset-x-0 top-0 w-full h-[56.25vw] min-h-[540px] max-h-[960px] pointer-events-none z-0 overflow-hidden select-none">
+        <div className="w-full h-full bg-gradient-to-tr from-[#e0e7ff]/80 via-[#f3e8ff]/50 to-[#ffedd5]/80" />
+        <div className="absolute top-[-10%] left-[-10%] w-[55%] h-[65%] rounded-full bg-indigo-300/25 blur-[130px]" />
+        <div className="absolute top-[-10%] right-[-10%] w-[55%] h-[65%] rounded-full bg-rose-300/25 blur-[130px]" />
+        {/* Soft smooth gradient transition into page background */}
+        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/70 to-transparent pointer-events-none" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 space-y-16 md:space-y-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 space-y-16 md:space-y-20 relative z-10">
         {!showMyJobs ? (
           <>
             {/* COMBINED HERO & OPEN ROLES GROUP */}
             <div className="space-y-6">
               {/* HERO SECTION */}
               <div className="text-center max-w-3xl mx-auto pt-2 pb-4 space-y-6">
-                {/* <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Join Our Team</span>
-            </motion.div> */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex items-center justify-center space-x-3 text-xs font-bold uppercase tracking-widest text-slate-400 select-none mb-2"
+                >
+                  <span className="w-8 h-[1px] bg-slate-300"></span>
+                  <span>JOIN OUR TEAM</span>
+                  <span className="w-8 h-[1px] bg-slate-300"></span>
+                </motion.div>
 
                 <motion.h1
                   initial={{ opacity: 0, y: -20 }}
@@ -2195,26 +2211,26 @@ export default function Careers() {
                             'task assessment', 'task assigned', 'task submitted', 'task',
                             'hr interview', 'hr scheduled', 'hr round', 'hr'
                           ].includes(statusLower) ||
-                          app.taskAssigned === true ||
-                          (app.githubLink && app.githubLink.trim() !== '') ||
-                          (app.hrInterviewDate || app.hrInterviewTime || app.hrInterviewLocation);
+                            app.taskAssigned === true ||
+                            (app.githubLink && app.githubLink.trim() !== '') ||
+                            (app.hrInterviewDate || app.hrInterviewTime || app.hrInterviewLocation);
 
                           isReached = !!(app.interviewDate || app.interviewTime || app.interviewLink) ||
-                          ['technical interview', 'interview scheduled', 'scheduled', 'technical', 'round 2 technical', 'technical assessment'].includes(statusLower);
+                            ['technical interview', 'interview scheduled', 'scheduled', 'technical', 'round 2 technical', 'technical assessment'].includes(statusLower);
                           break;
 
                         case 'Task Assessment':
                           isCompleted = !!(app.githubLink && app.githubLink.trim() !== '');
                           isReached = app.taskAssigned === true ||
-                          ['task assessment', 'task assigned', 'task submitted', 'task'].includes(statusLower) ||
-                          isCompleted;
+                            ['task assessment', 'task assigned', 'task submitted', 'task'].includes(statusLower) ||
+                            isCompleted;
                           break;
 
                         case 'HR interview':
                           isCompleted = ['accepted', 'joined', 'selected', 'approved', 'offer sent'].includes(statusLower);
                           isReached = !!(app.hrInterviewDate || app.hrInterviewTime || app.hrInterviewLocation) ||
-                          ['hr interview', 'hr scheduled', 'hr round', 'hr'].includes(statusLower) ||
-                          isCompleted;
+                            ['hr interview', 'hr scheduled', 'hr round', 'hr'].includes(statusLower) ||
+                            isCompleted;
                           break;
 
                         case 'Offer':

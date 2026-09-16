@@ -409,12 +409,25 @@ export default function Partners() {
 
       {/* SECTION 1: Futurisic Hero with Floating Network */}
       <div className="relative overflow-hidden flex flex-col items-center justify-center pt-8 pb-16 px-4 sm:px-6 lg:px-8 border-b border-purple-950/20">
+        {/* Global Network Dot Matrix Map Background matching reference image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none z-0 opacity-90"
+          style={{ 
+            backgroundImage: "url('/partners_bg.jpg')",
+            backgroundPosition: 'center center',
+            backgroundSize: 'cover'
+          }}
+        />
+        {/* Soft light gradient overlays for seamless blending */}
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/60 to-transparent pointer-events-none z-0" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#E2EDFA] via-[#E2EDFA]/80 to-transparent pointer-events-none z-0" />
+
         {/* Shifting blobs */}
         <div className="absolute top-[10%] left-[5%] w-[450px] h-[450px] bg-[#00E5FF]/10 rounded-full blur-[140px] pointer-events-none blob-cyan-pulse" />
         <div className="absolute bottom-[10%] right-[5%] w-[500px] h-[500px] bg-[#7C3AED]/10 rounded-full blur-[140px] pointer-events-none blob-purple-pulse" />
 
         {/* Animated Connected Network background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-20">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-15">
           <svg className="absolute w-full h-full" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
             <line x1="100" y1="150" x2="300" y2="250" stroke="#00E5FF" strokeWidth="1" className="flow-vector-line" />
             <line x1="300" y1="250" x2="500" y2="150" stroke="#7C3AED" strokeWidth="1" />
