@@ -534,28 +534,30 @@ export default function Home() {
       </div>
 
       {/* SECTION 4: STATISTICS COUNTER */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <div className="glass-card rounded-3xl border border-slate-200 p-8 md:p-12 shadow-lg">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.1 }}
-                  className="text-center space-y-2 flex flex-col items-center justify-center p-4 rounded-2xl hover:bg-slate-50/50 transition-colors"
-                >
-                  <div className="inline-flex p-3 bg-blue-50 rounded-2xl mb-2 border border-blue-100">
-                    <Icon className={`h-6 w-6 ${stat.color}`} />
-                  </div>
-                  <div className="text-3xl md:text-4xl font-extrabold text-[#004AAD]">{stat.value}</div>
-                  <div className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{stat.label}</div>
-                </motion.div>
-              );
-            })}
+      <div className="w-full bg-[#FFCB05] py-14 mb-24 shadow-inner">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="glass-card rounded-3xl border border-slate-200/80 p-8 md:p-12 shadow-lg">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat, idx) => {
+                const Icon = stat.icon;
+                return (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.1 }}
+                    className="text-center space-y-2 flex flex-col items-center justify-center p-4 rounded-2xl hover:bg-slate-50/50 transition-colors"
+                  >
+                    <div className="inline-flex p-3 bg-blue-50 rounded-2xl mb-2 border border-blue-100">
+                      <Icon className={`h-6 w-6 ${stat.color}`} />
+                    </div>
+                    <div className="text-3xl md:text-4xl font-extrabold text-[#004AAD]">{stat.value}</div>
+                    <div className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{stat.label}</div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
