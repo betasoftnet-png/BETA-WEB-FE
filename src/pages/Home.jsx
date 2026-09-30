@@ -155,6 +155,17 @@ export default function Home() {
     }
   ];
 
+  const principlesMarquee = [
+    { title: 'Performance First', desc: 'Sub-millisecond latency', icon: Zap, color: 'text-amber-500', bg: 'bg-amber-50' },
+    { title: 'Security by Default', desc: 'End-to-end encryption', icon: Lock, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+    { title: 'Designed to Scale', desc: 'Elastic infrastructure', icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-50' },
+    { title: 'Built for Simplicity', desc: 'Effortless user workflows', icon: Puzzle, color: 'text-purple-500', bg: 'bg-purple-50' },
+    { title: 'High Availability', desc: '99.99% uptime SLA', icon: Activity, color: 'text-cyan-500', bg: 'bg-cyan-50' },
+    { title: 'Zero-Trust Protocol', desc: 'Cryptographic SSO gates', icon: Shield, color: 'text-indigo-500', bg: 'bg-indigo-50' },
+    { title: 'Real-Time Sync', desc: 'WebSocket live pipeline', icon: Workflow, color: 'text-rose-500', bg: 'bg-rose-50' },
+    { title: 'Global Architecture', desc: 'Edge-distributed workloads', icon: Globe, color: 'text-sky-500', bg: 'bg-sky-50' }
+  ];
+
   return (
     <div className="relative min-h-screen bg-transparent z-10 pt-0 pb-20">
       <style>{`
@@ -296,6 +307,28 @@ export default function Home() {
         .showcase-white-text p, 
         .showcase-white-text span {
           color: #ffffff !important;
+        }
+        @keyframes marqueeLeftToRight {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0%);
+          }
+        }
+        .marquee-track-lr {
+          display: flex;
+          width: max-content;
+          animation: marqueeLeftToRight 30s linear infinite;
+          will-change: transform;
+        }
+        .marquee-track-lr:hover {
+          animation-play-state: paused;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .marquee-track-lr {
+            animation: none !important;
+          }
         }
       `}</style>
 
@@ -496,7 +529,7 @@ export default function Home() {
       </div>
 
       {/* SECTION 3: KEY FEATURES */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
         <div className="max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
             <UserCheck className="h-3.5 w-3.5" />
@@ -534,9 +567,9 @@ export default function Home() {
       </div>
 
       {/* SECTION 4: STATISTICS COUNTER */}
-      <div className="w-full bg-[#FFCB05] py-14 mb-24 shadow-inner">
+      <div className="relative z-0 w-full bg-[#FFCB05] -mt-[220px] pt-[175px] pb-14 mb-24 shadow-inner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="glass-card rounded-3xl border border-slate-200/80 p-8 md:p-12 shadow-lg">
+          <div className="p-8 md:p-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, idx) => {
                 const Icon = stat.icon;
@@ -547,7 +580,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: idx * 0.1 }}
-                    className="text-center space-y-2 flex flex-col items-center justify-center p-4 rounded-2xl hover:bg-slate-50/50 transition-colors"
+                    className="text-center space-y-2 flex flex-col items-center justify-center p-4 rounded-2xl hover:bg-amber-400/20 transition-colors"
                   >
                     <div className="inline-flex p-3 bg-blue-50 rounded-2xl mb-2 border border-blue-100">
                       <Icon className={`h-6 w-6 ${stat.color}`} />
@@ -703,117 +736,119 @@ export default function Home() {
       </div>
 
       {/* SECTION: WHY CHOOSE OUR PRODUCTS */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
-        <div className="max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
-            <Award className="h-3.5 w-3.5" />
-            <span>Product Highlights</span>
+      <div className="w-full bg-[#EAF6FF] py-20 mb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-3xl mx-auto mb-16 space-y-4">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+              <Award className="h-3.5 w-3.5" />
+              <span>Product Highlights</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
+              Why Choose Our Products?
+            </h2>
+            <p className="text-slate-500 text-lg">
+              Engineered for low-latency synchronization, enterprise-grade security, and seamless workflow integration.
+            </p>
           </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
-            Why Choose Our Products?
-          </h2>
-          <p className="text-slate-500 text-lg">
-            Engineered for low-latency synchronization, enterprise-grade security, and seamless workflow integration.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left">
-          {/* Left Column: Visual Growth Roadmap */}
-          <div className="lg:col-span-5 w-full">
-            <div className="relative p-6 rounded-3xl bg-slate-900 text-white border border-slate-800 shadow-2xl overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-transparent to-purple-900/30 opacity-60 pointer-events-none" />
-              <div className="relative z-10 space-y-5">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                  <div className="flex items-center space-x-1.5">
-                    <div className="h-2.5 w-2.5 rounded-full bg-rose-500" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left">
+            {/* Left Column: Visual Growth Roadmap */}
+            <div className="lg:col-span-5 w-full">
+              <div className="relative p-6 rounded-3xl bg-slate-900 text-white border border-slate-800 shadow-2xl overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-transparent to-purple-900/30 opacity-60 pointer-events-none" />
+                <div className="relative z-10 space-y-5">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div className="flex items-center space-x-1.5">
+                      <div className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                      <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                      <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                    </div>
+                    <span className="text-[9px] font-mono text-slate-500">product_architecture.json</span>
                   </div>
-                  <span className="text-[9px] font-mono text-slate-500">product_architecture.json</span>
-                </div>
 
-                {/* Pipeline visual steps */}
-                <div className="space-y-3">
-                  {[
-                    { phase: 'Layer 1', title: 'Secure SMTP & Real-Time Sync', status: 'Active', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
-                    { phase: 'Layer 2', title: 'SSO & Multi-Factor Auth Gateway', status: 'Verified', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-                    { phase: 'Layer 3', title: 'Live WebSocket Channels & Boards', status: 'Connected', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
-                    { phase: 'Layer 4', title: 'Centralized Scalable Workspace DB', status: 'Synced', color: 'text-slate-400 bg-slate-800 border-slate-700' }
-                  ].map((step, idx) => (
-                    <motion.div
-                      key={step.phase}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: idx * 0.12 }}
-                      className="flex items-center justify-between p-3 rounded-xl bg-slate-955/85 border border-slate-800 hover:border-slate-700 transition-colors"
-                    >
-                      <div className="flex items-center space-x-3 overflow-hidden mr-2">
-                        <span className="text-[10px] font-mono text-slate-500 w-14 flex-shrink-0">{step.phase}</span>
-                        <span className="text-[11px] font-semibold text-slate-200 truncate">{step.title}</span>
-                      </div>
-                      <span className={`text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border flex-shrink-0 ${step.color}`}>
-                        {step.status}
-                      </span>
-                    </motion.div>
-                  ))}
+                  {/* Pipeline visual steps */}
+                  <div className="space-y-3">
+                    {[
+                      { phase: 'Layer 1', title: 'Secure SMTP & Real-Time Sync', status: 'Active', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+                      { phase: 'Layer 2', title: 'SSO & Multi-Factor Auth Gateway', status: 'Verified', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
+                      { phase: 'Layer 3', title: 'Live WebSocket Channels & Boards', status: 'Connected', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+                      { phase: 'Layer 4', title: 'Centralized Scalable Workspace DB', status: 'Synced', color: 'text-slate-400 bg-slate-800 border-slate-700' }
+                    ].map((step, idx) => (
+                      <motion.div
+                        key={step.phase}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: idx * 0.12 }}
+                        className="flex items-center justify-between p-3 rounded-xl bg-slate-955/85 border border-slate-800 hover:border-slate-700 transition-colors"
+                      >
+                        <div className="flex items-center space-x-3 overflow-hidden mr-2">
+                          <span className="text-[10px] font-mono text-slate-500 w-14 flex-shrink-0">{step.phase}</span>
+                          <span className="text-[11px] font-semibold text-slate-200 truncate">{step.title}</span>
+                        </div>
+                        <span className={`text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border flex-shrink-0 ${step.color}`}>
+                          {step.status}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Column: Key Benefits */}
-          <div className="lg:col-span-7 space-y-4">
-            {[
-              {
-                title: 'Real-Time Collaboration',
-                desc: 'Sync team messages, sprint boards, and document revisions instantly across teams using optimized bi-directional WebSocket protocols.',
-                icon: Zap,
-                bg: 'bg-amber-50 text-amber-600 border-amber-100'
-              },
-              {
-                title: 'Enterprise Security & SSO',
-                desc: 'Protect corporate workloads with cryptographically signed JSON Web Tokens (JWT) and multi-factor validation flows.',
-                icon: Users,
-                bg: 'bg-blue-50 text-blue-600 border-blue-100'
-              },
-              {
-                title: 'High Availability Relays',
-                desc: 'Our BNX mail relays feature a 99.99% uptime SLA with active load balancers and robust queue managers.',
-                icon: Workflow,
-                bg: 'bg-emerald-50 text-emerald-600 border-emerald-100'
-              },
-              {
-                title: 'Centralized Workspaces',
-                desc: 'Consolidate your business toolchain. Seamlessly bridge email threads into sprint tasks or live discussion boards.',
-                icon: Award,
-                bg: 'bg-purple-50 text-purple-600 border-purple-100'
-              }
-            ].map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.08 }}
-                  className="glass-card hover:bg-white/90 p-5 rounded-2xl border border-slate-200/80 flex items-start space-x-4 shadow-sm hover:shadow-md transition-all duration-300 group cursor-default"
-                >
-                  <div className={`p-3 rounded-xl border flex-shrink-0 mt-0.5 transition-colors ${item.bg}`}>
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div className="space-y-1 text-left">
-                    <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
-                      {item.title}
-                    </h3>
-                    <p className="text-slate-500 text-xs leading-relaxed font-medium">
-                      {item.desc}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
+            {/* Right Column: Key Benefits */}
+            <div className="lg:col-span-7 space-y-4">
+              {[
+                {
+                  title: 'Real-Time Collaboration',
+                  desc: 'Sync team messages, sprint boards, and document revisions instantly across teams using optimized bi-directional WebSocket protocols.',
+                  icon: Zap,
+                  bg: 'bg-amber-50 text-amber-600 border-amber-100'
+                },
+                {
+                  title: 'Enterprise Security & SSO',
+                  desc: 'Protect corporate workloads with cryptographically signed JSON Web Tokens (JWT) and multi-factor validation flows.',
+                  icon: Users,
+                  bg: 'bg-blue-50 text-blue-600 border-blue-100'
+                },
+                {
+                  title: 'High Availability Relays',
+                  desc: 'Our BNX mail relays feature a 99.99% uptime SLA with active load balancers and robust queue managers.',
+                  icon: Workflow,
+                  bg: 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                },
+                {
+                  title: 'Centralized Workspaces',
+                  desc: 'Consolidate your business toolchain. Seamlessly bridge email threads into sprint tasks or live discussion boards.',
+                  icon: Award,
+                  bg: 'bg-purple-50 text-purple-600 border-purple-100'
+                }
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.08 }}
+                    className="glass-card hover:bg-white/90 p-5 rounded-2xl border border-slate-200/80 flex items-start space-x-4 shadow-sm hover:shadow-md transition-all duration-300 group cursor-default"
+                  >
+                    <div className={`p-3 rounded-xl border flex-shrink-0 mt-0.5 transition-colors ${item.bg}`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div className="space-y-1 text-left">
+                      <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                        {item.title}
+                      </h3>
+                      <p className="text-slate-500 text-xs leading-relaxed font-medium">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -881,82 +916,32 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {/* Card 1: Performance First */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 bg-white"
-          >
-            <div className="h-12 w-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-              <Zap className="h-6 w-6" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors">⚡ Performance First</h3>
-              <p className="text-slate-600 text-xs md:text-sm leading-relaxed font-medium">
-                Every millisecond matters. We optimize for speed and responsiveness.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Card 2: Security by Default */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 bg-white"
-          >
-            <div className="h-12 w-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-              <Lock className="h-6 w-6" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors">🔒 Security by Default</h3>
-              <p className="text-slate-600 text-xs md:text-sm leading-relaxed font-medium">
-                Security is integrated into every stage of development.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Card 3: Designed to Scale */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 bg-white"
-          >
-            <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-              <TrendingUp className="h-6 w-6" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors">📈 Designed to Scale</h3>
-              <p className="text-slate-600 text-xs md:text-sm leading-relaxed font-medium">
-                Applications grow alongside your business.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Card 4: Built for Simplicity */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 bg-white"
-          >
-            <div className="h-12 w-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-              <Puzzle className="h-6 w-6" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors">🧩 Built for Simplicity</h3>
-              <p className="text-slate-600 text-xs md:text-sm leading-relaxed font-medium">
-                Complex technology should feel effortless to use.
-              </p>
-            </div>
-          </motion.div>
+        {/* CONTINUOUS HORIZONTAL MARQUEE (LEFT -> RIGHT) */}
+        <div className="relative w-full overflow-hidden py-8 mb-12 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+          <div className="marquee-track-lr flex items-center">
+            {[...principlesMarquee, ...principlesMarquee].map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={`${item.title}-${idx}`}
+                  className="flex items-center space-x-3.5 mx-8 flex-shrink-0 select-none cursor-default group"
+                >
+                  <div className={`h-11 w-11 rounded-2xl ${item.bg} border border-slate-200/80 flex items-center justify-center ${item.color} shadow-xs transition-transform duration-300 group-hover:scale-110 flex-shrink-0`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="text-left">
+                    <span className="block text-sm sm:text-base font-extrabold text-slate-900 tracking-tight group-hover:text-[#004AAD] transition-colors whitespace-nowrap">
+                      {item.title}
+                    </span>
+                    <span className="block text-xs text-slate-500 font-medium whitespace-nowrap">
+                      {item.desc}
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-1.5 rounded-full bg-slate-300 ml-8 flex-shrink-0" />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
