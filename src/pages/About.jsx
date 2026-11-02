@@ -641,14 +641,6 @@ export default function About() {
 
             {/* Left Column: Profile (Image, Name, Title) */}
             <div className="w-full md:w-52 flex-shrink-0 flex flex-col items-center justify-center text-center space-y-4 border-b md:border-b-0 md:border-r border-[#0A3161]/10 pb-6 md:pb-0 md:pr-8 relative z-10">
-              <div className="h-48 w-48 rounded-2xl overflow-hidden border-2 border-slate-200/80 shadow-md relative group shrink-0">
-                <img
-                  src={leadership[0].avatar}
-                  alt={leadership[0].name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
               <div className="space-y-1">
                 <h3 className="text-2xl font-black text-slate-800">{leadership[0].name}</h3>
                 <p className="text-sm font-bold text-[#FF6325] uppercase tracking-widest">
