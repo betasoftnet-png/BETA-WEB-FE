@@ -737,3 +737,53 @@ span.coming-soon-badge {
   margin-left: 8px !important;
   line-height: 1 !important;
 }
+
+/* Values Section Infinite Horizontal Marquee */
+@keyframes valuesMarqueeLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes valuesMarqueeRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.values-marquee-left {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: valuesMarqueeLeft 45s linear infinite;
+  will-change: transform;
+}
+
+.values-marquee-right {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: valuesMarqueeRight 48s linear infinite;
+  will-change: transform;
+}
+
+.values-marquee-row,
+.marquee-row {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.values-marquee-row:hover .values-marquee-left,
+.values-marquee-row:hover .values-marquee-right,
+.marquee-row:hover .values-marquee-left,
+.marquee-row:hover .values-marquee-right,
+.marquee-row:hover .scrolling-track {
+  animation-play-state: paused !important;
+}

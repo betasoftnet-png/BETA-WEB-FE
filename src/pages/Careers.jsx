@@ -71,6 +71,9 @@ const companyValues = [
     desc: 'Pushing the boundaries of technology, thinking outside the box to solve complex software engineering challenges.',
     icon: Sparkles,
     color: 'text-amber-500',
+    iconColor: 'text-amber-500',
+    iconBg: 'bg-[#FFF9EA]',
+    iconBorder: 'border-amber-200/80',
     bg: 'bg-amber-50/70 border-amber-100/50',
     glow: 'hover:shadow-amber-500/10 hover:border-amber-300'
   },
@@ -79,6 +82,9 @@ const companyValues = [
     desc: 'Acting like founders. We take full responsibility for our code, our products, and our users\' satisfaction.',
     icon: Target,
     color: 'text-rose-500',
+    iconColor: 'text-rose-500',
+    iconBg: 'bg-[#FFF0F3]',
+    iconBorder: 'border-rose-200/80',
     bg: 'bg-rose-50/70 border-rose-100/50',
     glow: 'hover:shadow-rose-500/10 hover:border-rose-300'
   },
@@ -86,7 +92,10 @@ const companyValues = [
     title: 'Integrity',
     desc: 'Operating with absolute transparency, honesty, and professional ethics in all internal and external relations.',
     icon: Shield,
-    color: 'text-indigo-500',
+    color: 'text-blue-600',
+    iconColor: 'text-blue-600',
+    iconBg: 'bg-[#EFF6FF]',
+    iconBorder: 'border-blue-200/80',
     bg: 'bg-indigo-50/70 border-indigo-100/50',
     glow: 'hover:shadow-indigo-500/10 hover:border-indigo-300'
   },
@@ -95,6 +104,9 @@ const companyValues = [
     desc: 'Empathizing with our customers and prioritizing their success and experience above all else.',
     icon: UserCheck,
     color: 'text-emerald-500',
+    iconColor: 'text-emerald-500',
+    iconBg: 'bg-[#ECFDF5]',
+    iconBorder: 'border-emerald-200/80',
     bg: 'bg-emerald-50/70 border-emerald-100/50',
     glow: 'hover:shadow-emerald-500/10 hover:border-emerald-300'
   },
@@ -103,6 +115,9 @@ const companyValues = [
     desc: 'Collaborating seamlessly, supporting one another, and achieving great things together as one unified force.',
     icon: Handshake,
     color: 'text-sky-500',
+    iconColor: 'text-sky-500',
+    iconBg: 'bg-[#F0F9FF]',
+    iconBorder: 'border-sky-200/80',
     bg: 'bg-sky-50/70 border-sky-100/50',
     glow: 'hover:shadow-sky-500/10 hover:border-sky-300'
   },
@@ -111,6 +126,9 @@ const companyValues = [
     desc: 'Fostering curiosity, embracing growth, and constantly refining our skills and knowledge.',
     icon: BookOpen,
     color: 'text-purple-500',
+    iconColor: 'text-purple-500',
+    iconBg: 'bg-[#F5F3FF]',
+    iconBorder: 'border-purple-200/80',
     bg: 'bg-purple-50/70 border-purple-100/50',
     glow: 'hover:shadow-purple-500/10 hover:border-purple-300'
   },
@@ -118,7 +136,10 @@ const companyValues = [
     title: 'Excellence',
     desc: 'Committing to the highest standards of quality, precision, and craftsmanship in everything we design and build.',
     icon: Award,
-    color: 'text-[#F59E0B]',
+    color: 'text-amber-500',
+    iconColor: 'text-amber-500',
+    iconBg: 'bg-[#FFFBEB]',
+    iconBorder: 'border-amber-200/80',
     bg: 'bg-amber-50/70 border-amber-200/50',
     glow: 'hover:shadow-amber-500/10 hover:border-amber-400'
   }
@@ -238,6 +259,280 @@ const AppliedTime = ({ timestamp }) => {
 
   return <span>{timeAgo || 'Applied'}</span>;
 };
+
+// Data for What We Look For / Our Culture 3x2 Grid
+const whatWeLookForCards = [
+  {
+    id: 'problem-solver',
+    titlePrimary: 'Problem',
+    titleAccent: 'Solver',
+    desc: 'Think critically and find smart solutions.',
+    icon: Lightbulb,
+    bgImage: '/culture/problem_solver.jpg',
+    overlay: 'bg-gradient-to-r from-black/92 via-black/65 to-black/30',
+    iconColor: 'text-amber-400',
+    iconBadgeBg: 'bg-amber-400/15 border-amber-400/30',
+    accentColor: 'text-amber-300',
+    btnBorder: 'border-amber-400/60 text-amber-300 group-hover:bg-amber-500/20'
+  },
+  {
+    id: 'continuous-learner',
+    titlePrimary: 'Continuous',
+    titleAccent: 'Learner',
+    desc: 'Curious to explore new technologies and improve daily.',
+    icon: BookOpen,
+    bgImage: '/culture/continuous_learner.jpg',
+    overlay: 'bg-gradient-to-r from-[#03152E]/94 via-[#06244C]/70 to-[#06244C]/30',
+    iconColor: 'text-sky-400',
+    iconBadgeBg: 'bg-sky-400/15 border-sky-400/30',
+    accentColor: 'text-sky-300',
+    btnBorder: 'border-sky-400/60 text-sky-300 group-hover:bg-sky-500/20'
+  },
+  {
+    id: 'great-communicator',
+    titlePrimary: 'Great',
+    titleAccent: 'Communicator',
+    desc: 'Share ideas and communicate clearly.',
+    icon: MessageSquare,
+    bgImage: '/culture/great_communicator.jpg',
+    overlay: 'bg-gradient-to-r from-[#03201B]/94 via-[#06382E]/70 to-[#06382E]/30',
+    iconColor: 'text-emerald-400',
+    iconBadgeBg: 'bg-emerald-400/15 border-emerald-400/30',
+    accentColor: 'text-emerald-300',
+    btnBorder: 'border-emerald-400/60 text-emerald-300 group-hover:bg-emerald-500/20'
+  },
+  {
+    id: 'team-player',
+    titlePrimary: 'Team',
+    titleAccent: 'Player',
+    desc: 'Collaborate with others to build better products.',
+    icon: Handshake,
+    bgImage: '/culture/team_player.jpg',
+    overlay: 'bg-gradient-to-r from-[#290715]/94 via-[#3D0A20]/70 to-[#3D0A20]/30',
+    iconColor: 'text-rose-400',
+    iconBadgeBg: 'bg-rose-400/15 border-rose-400/30',
+    accentColor: 'text-rose-300',
+    btnBorder: 'border-rose-400/60 text-rose-300 group-hover:bg-rose-500/20'
+  },
+  {
+    id: 'ownership',
+    titlePrimary: 'Ownership',
+    titleAccent: '',
+    desc: 'Take responsibility and deliver with confidence.',
+    icon: Target,
+    bgImage: '/culture/ownership.jpg',
+    overlay: 'bg-gradient-to-r from-[#2B1003]/94 via-[#421905]/70 to-[#421905]/30',
+    iconColor: 'text-orange-400',
+    iconBadgeBg: 'bg-orange-400/15 border-orange-400/30',
+    accentColor: 'text-orange-300',
+    btnBorder: 'border-orange-400/60 text-orange-300 group-hover:bg-orange-500/20'
+  },
+  {
+    id: 'growth-mindset',
+    titlePrimary: 'Growth',
+    titleAccent: 'Mindset',
+    desc: 'Always improving skills and knowledge.',
+    icon: TrendingUp,
+    bgImage: '/culture/growth_mindset.jpg',
+    overlay: 'bg-gradient-to-r from-[#170529]/94 via-[#250942]/70 to-[#250942]/30',
+    iconColor: 'text-purple-400',
+    iconBadgeBg: 'bg-purple-400/15 border-purple-400/30',
+    accentColor: 'text-purple-300',
+    btnBorder: 'border-purple-400/60 text-purple-300 group-hover:bg-purple-500/20'
+  }
+];
+
+function WhatWeLookForCardsGrid() {
+  return (
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {whatWeLookForCards.map((card, idx) => {
+          const IconComponent = card.icon;
+          return (
+            <div
+              key={card.id}
+              className="relative overflow-hidden rounded-[28px] md:rounded-[32px] min-h-[360px] md:min-h-[400px] p-7 md:p-8 flex flex-col justify-between group transition-all duration-500 hover:scale-[1.015] hover:shadow-[0_24px_50px_rgba(0,0,0,0.35)] border border-white/10 shadow-lg text-left careers-reveal-card"
+              style={{ '--card-delay': `${idx * 80 + 60}ms` }}
+            >
+              {/* Background Photographic Visual */}
+              <img
+                src={card.bgImage}
+                alt={`${card.titlePrimary} ${card.titleAccent || ''}`}
+                className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none"
+              />
+
+              {/* Tinted Protective Gradient Overlay */}
+              <div className={`absolute inset-0 ${card.overlay} pointer-events-none`} />
+
+              {/* Top Section: Glowing Icon Badge */}
+              <div className="relative z-10">
+                <div
+                  className={`w-14 h-14 rounded-2xl ${card.iconBadgeBg} border backdrop-blur-md flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-105`}
+                >
+                  <IconComponent className={`w-6 h-6 ${card.iconColor}`} />
+                </div>
+              </div>
+
+              {/* Bottom Section: Title, Description, and Circular Arrow Action */}
+              <div className="relative z-10 space-y-4 text-[#FFFFFF]">
+                <div className="space-y-2">
+                  <h3 className="text-2xl md:text-3xl font-black text-[#FFFFFF] tracking-tight font-['Plus_Jakarta_Sans',sans-serif] flex flex-wrap items-baseline gap-2">
+                    <span className="text-[#FFFFFF] !text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">{card.titlePrimary}</span>
+                    {card.titleAccent && (
+                      <span className={`font-['Caveat',cursive] text-3xl md:text-4xl font-bold ${card.accentColor} -rotate-1 tracking-normal inline-block drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]`}>
+                        {card.titleAccent}
+                      </span>
+                    )}
+                  </h3>
+                  <p className="text-[#FFFFFF] !text-white text-sm md:text-[15px] font-medium leading-relaxed max-w-[280px] drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+                    {card.desc}
+                  </p>
+                </div>
+
+                <div className="pt-2">
+                  <div
+                    className={`w-10 h-10 rounded-full border ${card.btnBorder} bg-black/20 backdrop-blur-xs flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm cursor-pointer`}
+                  >
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Value Card Component matching the reference pill-shaped design
+function ValuePillCard({ value }) {
+  const Icon = value.icon;
+  return (
+    <div className="group/valcard relative flex items-center gap-4 sm:gap-5 px-5 sm:px-6 md:px-7 py-3.5 sm:py-4 bg-white rounded-full border border-slate-200/90 shadow-[0_4px_20px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_32px_rgba(0,74,173,0.09)] hover:border-blue-300/90 transition-all duration-300 w-[350px] sm:w-[420px] md:w-[470px] h-[112px] sm:h-[120px] md:h-[126px] shrink-0 select-none cursor-pointer">
+      {/* Large Circular Icon Area */}
+      <div
+        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shrink-0 border transition-transform duration-300 group-hover/valcard:scale-105 shadow-xs ${value.iconBg} ${value.iconBorder}`}
+      >
+        <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${value.iconColor}`} />
+      </div>
+
+      {/* Value Title & Description */}
+      <div className="min-w-0 flex-1 pr-2 sm:pr-3 text-left">
+        <h4 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-snug group-hover/valcard:text-blue-600 transition-colors">
+          {value.title}
+        </h4>
+        <p className="text-xs sm:text-[13px] text-slate-500 font-normal leading-relaxed mt-1 line-clamp-3">
+          {value.desc}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Decorative divider elements between cards (inspired by reference)
+function ValueDecorativeDivider({ type = 0 }) {
+  switch (type % 6) {
+    case 0:
+      // Soft blue semicircle (facing right) + small dot
+      return (
+        <div className="flex items-center space-x-2 shrink-0 select-none pointer-events-none px-2.5 sm:px-3.5 opacity-85">
+          <div className="w-5 sm:w-6 h-10 sm:h-12 bg-sky-200/80 rounded-r-full" />
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-sky-400/90" />
+        </div>
+      );
+    case 1:
+      // Small dot + soft blue semicircle (facing left)
+      return (
+        <div className="flex items-center space-x-2 shrink-0 select-none pointer-events-none px-2.5 sm:px-3.5 opacity-85">
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-blue-400/90" />
+          <div className="w-5 sm:w-6 h-10 sm:h-12 bg-blue-200/80 rounded-l-full" />
+        </div>
+      );
+    case 2:
+      // Soft purple semicircle (facing right) + small dot
+      return (
+        <div className="flex items-center space-x-2 shrink-0 select-none pointer-events-none px-2.5 sm:px-3.5 opacity-85">
+          <div className="w-5 sm:w-6 h-10 sm:h-12 bg-purple-200/80 rounded-r-full" />
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-purple-400/90" />
+        </div>
+      );
+    case 3:
+      // Small dot + soft teal semicircle (facing left)
+      return (
+        <div className="flex items-center space-x-2 shrink-0 select-none pointer-events-none px-2.5 sm:px-3.5 opacity-85">
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-teal-400/90" />
+          <div className="w-5 sm:w-6 h-10 sm:h-12 bg-teal-200/80 rounded-l-full" />
+        </div>
+      );
+    case 4:
+      // Soft indigo semicircle (facing right) + small dot
+      return (
+        <div className="flex items-center space-x-2 shrink-0 select-none pointer-events-none px-2.5 sm:px-3.5 opacity-85">
+          <div className="w-5 sm:w-6 h-10 sm:h-12 bg-indigo-200/80 rounded-r-full" />
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-indigo-400/90" />
+        </div>
+      );
+    default:
+      // Small dot + soft sky semicircle (facing left)
+      return (
+        <div className="flex items-center space-x-2 shrink-0 select-none pointer-events-none px-2.5 sm:px-3.5 opacity-85">
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-sky-400/90" />
+          <div className="w-5 sm:w-6 h-10 sm:h-12 bg-sky-200/80 rounded-l-full" />
+        </div>
+      );
+  }
+}
+
+// Single marquee row track component with pause on hover
+function MarqueeRow({ items, direction = 'left', dividerOffset = 0, className = '' }) {
+  // Duplicate items sequence to create an infinite seamless loop without jumps
+  const duplicatedItems = [...items, ...items];
+
+  return (
+    <div className={`marquee-row values-marquee-row w-full overflow-hidden flex items-center py-2 relative ${className}`}>
+      <div className={`scrolling-track ${direction === 'left' ? 'values-marquee-left' : 'values-marquee-right'}`}>
+        {duplicatedItems.map((val, idx) => (
+          <React.Fragment key={`${val.title}-${idx}`}>
+            <ValuePillCard value={val} />
+            <ValueDecorativeDivider type={idx + dividerOffset} />
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Full horizontal scrolling multi-row marquee for Our Values
+function OurValuesHorizontalMarquee() {
+  // Row 1: Innovation, Ownership, Integrity, Customer First (matches Row 1 of reference)
+  const row1Values = [companyValues[0], companyValues[1], companyValues[2], companyValues[3]];
+
+  // Row 2: Teamwork, Continuous Learning, Excellence, Innovation (matches Row 2 of reference)
+  const row2Values = [companyValues[4], companyValues[5], companyValues[6], companyValues[0]];
+
+  // Row 3: Integrity, Customer First, Teamwork, Excellence, Ownership (matches Row 3 of reference)
+  const row3Values = [companyValues[2], companyValues[3], companyValues[4], companyValues[6], companyValues[1]];
+
+  return (
+    <div className="w-full space-y-4 sm:space-y-5 md:space-y-6 select-none relative">
+      {/* Subtle ambient light backdrop */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute left-1/4 top-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-blue-50/50 rounded-full blur-3xl" />
+        <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-sky-50/50 rounded-full blur-3xl" />
+      </div>
+
+      {/* Row 1: Moves slowly from RIGHT -> LEFT (All screens) */}
+      <MarqueeRow items={row1Values} direction="left" dividerOffset={0} />
+
+      {/* Row 2: Moves slowly from LEFT -> RIGHT (All screens) */}
+      <MarqueeRow items={row2Values} direction="right" dividerOffset={2} />
+
+      {/* Row 3: Moves slowly from RIGHT -> LEFT (Desktop only: hidden on mobile/tablet, flex on lg+) */}
+      <MarqueeRow items={row3Values} direction="left" dividerOffset={4} className="hidden lg:flex" />
+    </div>
+  );
+}
 
 export default function Careers() {
   const navigate = useNavigate();
@@ -363,6 +658,41 @@ export default function Careers() {
     };
     fetchSavedJobs();
   }, [user]);
+
+  // Viewport-based bottom-to-top scroll reveal with IntersectionObserver
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      document
+        .querySelectorAll('.careers-reveal, .careers-reveal-card')
+        .forEach((el) => {
+          el.classList.add('is-visible');
+        });
+      return;
+    }
+
+    const observerCallback = (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          // Once animated, unobserve so it only animates once when first appearing
+          observer.unobserve(entry.target);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      threshold: 0.18, // Triggers when ~18% (15–25%) of the section enters the viewport
+      rootMargin: '0px 0px -40px 0px',
+    });
+
+    const revealElements = document.querySelectorAll('.careers-reveal');
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [showMyJobs]);
 
   const [activeReportJobId, setActiveReportJobId] = useState(null);
 
@@ -1151,6 +1481,51 @@ export default function Careers() {
           scrollbar-width: none;
         }
 
+        /* Values Section Infinite Horizontal Marquee */
+        @keyframes valuesMarqueeLeft {
+          0% {
+            transform: translate3d(0, 0, 0);
+          }
+          100% {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+        @keyframes valuesMarqueeRight {
+          0% {
+            transform: translate3d(-50%, 0, 0);
+          }
+          100% {
+            transform: translate3d(0, 0, 0);
+          }
+        }
+        .values-marquee-left {
+          display: flex;
+          width: max-content;
+          align-items: center;
+          animation: valuesMarqueeLeft 45s linear infinite;
+          will-change: transform;
+        }
+        .values-marquee-right {
+          display: flex;
+          width: max-content;
+          align-items: center;
+          animation: valuesMarqueeRight 48s linear infinite;
+          will-change: transform;
+        }
+        .values-marquee-row,
+        .marquee-row {
+          width: 100%;
+          overflow: hidden;
+          position: relative;
+        }
+        .values-marquee-row:hover .values-marquee-left,
+        .values-marquee-row:hover .values-marquee-right,
+        .marquee-row:hover .values-marquee-left,
+        .marquee-row:hover .values-marquee-right,
+        .marquee-row:hover .scrolling-track {
+          animation-play-state: paused !important;
+        }
+
         /* Hacker-style double borders for jobs */
         // .hacker-layout-box {
         //   background: rgba(255, 255, 255, 0.75) !important;
@@ -1170,6 +1545,46 @@ export default function Careers() {
           border: 1px solid rgba(255, 255, 255, 0.85) !important;
           box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06) !important;
         }
+
+        /* Smooth Viewport-Based Scroll Reveal Animations */
+        .careers-reveal {
+          opacity: 0;
+          transform: translateY(80px);
+          transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+                      transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+          will-change: opacity, transform;
+        }
+
+        .careers-reveal.is-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .careers-reveal-card {
+          opacity: 0;
+          transform: translateY(50px);
+          transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+                      transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+          transition-delay: 0ms;
+          will-change: opacity, transform;
+        }
+
+        .is-visible .careers-reveal-card,
+        .is-visible.careers-reveal-card {
+          opacity: 1;
+          transform: translateY(0);
+          transition-delay: var(--card-delay, 0ms);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .careers-reveal,
+          .careers-reveal-card {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+            transition-delay: 0ms !important;
+          }
+        }
       `}</style>
 
 
@@ -1181,7 +1596,7 @@ export default function Careers() {
             {/* COMBINED HERO & OPEN ROLES GROUP */}
             <div className="space-y-6">
               {/* HERO SECTION */}
-              <div className="text-center max-w-3xl mx-auto pt-2 pb-4 space-y-6">
+              <div className="text-center max-w-3xl mx-auto pt-2 pb-4 space-y-6 careers-reveal">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -1213,7 +1628,7 @@ export default function Careers() {
                 </motion.p>
               </div>
 
-              <div id="search-roles" className="space-y-4">
+              <div id="search-roles" className="space-y-4 careers-reveal">
                 <div className="w-full max-w-5xl mx-auto hacker-layout-box unified-openings-box p-6 sm:p-8 rounded-2xl shadow-xl shadow-purple-500/5 text-left space-y-6">
                   {/* Header inside Box with Centered Title, and Search Bar + Filter Button */}
                   <div className="flex flex-col items-center justify-center gap-4 border-b border-purple-500/10 pb-6 w-full">
@@ -1661,7 +2076,7 @@ export default function Careers() {
             </div>
 
             {/* SECTION 6: HIRING PROCESS */}
-            <div className="space-y-10 -mt-6 md:-mt-8">
+            <div className="space-y-10 -mt-6 md:-mt-8 careers-reveal">
               <div className="text-center max-w-2xl mx-auto space-y-2.5">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
                   <CheckSquare className="h-3.5 w-3.5" />
@@ -1679,6 +2094,12 @@ export default function Careers() {
                     <React.Fragment key={step.id}>
                       {/* Glowing Node Circle */}
                       <motion.div
+                        className="careers-reveal-card glass-card-purple p-4 md:p-4 lg:p-5 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-[170px] h-[170px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] group relative shrink-0 cursor-pointer"
+                        style={{
+                          '--card-delay': `${idx * 120 + 80}ms`,
+                          transformStyle: "preserve-3d",
+                          perspective: 1000
+                        }}
                         initial="initial"
                         whileInView="visible"
                         whileHover="hover"
@@ -1730,8 +2151,6 @@ export default function Careers() {
                           }
                         }}
                         viewport={{ once: true }}
-                        style={{ transformStyle: "preserve-3d", perspective: 1000 }}
-                        className="glass-card-purple p-4 md:p-4 lg:p-5 rounded-3xl border border-purple-500/20 text-center flex flex-col items-center justify-center shadow-md w-[170px] h-[170px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] group relative shrink-0 cursor-pointer"
                       >
                         <motion.div
                           variants={{
@@ -1765,88 +2184,225 @@ export default function Careers() {
             </div>
 
             {/* SECTION 4: TEAM CULTURE MASONRY */}
-            <div className="space-y-12">
+            <div className="careers-reveal relative py-12 sm:py-16 px-4 sm:px-6 lg:px-8 rounded-[36px] bg-gradient-to-b from-[#F2F8FD]/80 via-[#F8FBFF] to-[#FFFFFF] border border-blue-100/50 shadow-[0_12px_40px_-15px_rgba(10,40,90,0.04)] space-y-12">
               <div className="text-center max-w-2xl mx-auto space-y-3">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
-                  <Users className="h-3.5 w-3.5" />
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+                  <Users className="h-3.5 w-3.5 text-[#004AAD]" />
                   <span>Team Culture</span>
                 </div>
-                <h2 className="text-3xl md:text-5xl font-extrabold">Our Team Culture</h2>
-                <p className="text-slate-500 text-sm">A look inside our technical sprints, hackathons, and global offsites.</p>
+                <h2 className="text-3xl md:text-5xl font-extrabold text-[#0B1E3B] tracking-tight">
+                  Our Team Culture
+                </h2>
+                <p className="text-slate-500 text-sm md:text-base">
+                  A look inside our technical sprints, hackathons, and global offsites.
+                </p>
               </div>
 
-              {/* Sequential Grid Layout */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {/* Box 1 (Text Quote) */}
-                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
-                  <Quote className="h-8 w-8 text-[#EC4899] opacity-40 mb-4" />
-                  <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
-                    "We don't build software to hit corporate metrics. We design and deliver real-time systems that solve actual production bottlenecks for customers globally."
-                  </p>
-                  <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
-                    <img src="/marcus_avatar.png" alt="Marcus" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
-                    <div className="text-left">
-                      <h5 className="text-xs font-bold">Marcus Sterling</h5>
-                      <p className="text-[10px] text-[#EC4899] font-semibold">Chief Technology Officer</p>
-                    </div>
-                  </div>
-                </div>
+              {/* 5-Card Responsive Grid Layout (Desktop: 3 + 2, Tablet: 2 cols, Mobile: 1 col) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 max-w-6xl mx-auto text-left">
+                {/* ROW 1: CARD 1 — TEAM QUOTE (Subtle Pink Accent) */}
+                <div style={{ '--card-delay': '60ms' }} className="careers-reveal-card col-span-1 md:col-span-1 lg:col-span-4 bg-white rounded-[26px] p-7 sm:p-8 border border-pink-100/80 shadow-[0_10px_30px_-5px_rgba(244,63,94,0.05)] hover:shadow-[0_16px_36px_-6px_rgba(244,63,94,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between group">
+                  {/* Subtle Corner Accent */}
+                  <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-gradient-to-br from-pink-100/70 to-pink-50/20 pointer-events-none" />
 
-                {/* Box 2 (Text Highlight Content) */}
-                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
-                  <Code2 className="h-8 w-8 text-[#8B5CF6] opacity-40 mb-4" />
-                  <div className="space-y-3 flex-grow text-left">
-                    <h4 className="text-sm font-bold text-slate-800">Interactive Technology</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">
-                      We develop premium user interfaces using React, Tailwind CSS, and custom WebSocket pipelines (STOMP). Our engineers focus on low-latency state synchronization, smooth keyframe animations, and highly responsive layouts that delight users.
-                    </p>
-                  </div>
-                  <div className="border-t border-purple-500/10 pt-4 mt-6 text-left">
-                    <span className="text-[10px] uppercase font-bold text-[#8B5CF6] tracking-wider">
-                      Our Engineering Core
-                    </span>
-                  </div>
-                </div>
-
-                {/* Box 3 (Text Quote) */}
-                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
-                  <Quote className="h-8 w-8 text-[#8B5CF6] opacity-40 mb-4" />
-                  <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
-                    "Our designs prioritize aesthetics and responsiveness. Using HSL palettes and custom-built tokens, we create interfaces that look absolutely premium."
-                  </p>
-                  <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
-                    <img src="/ananya_avatar.png" alt="Ananya" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
-                    <div className="text-left">
-                      <h5 className="text-xs font-bold">Ananya Nair</h5>
-                      <p className="text-[10px] text-[#8B5CF6] font-semibold">Head of Design</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Box 4 (Small Card) */}
-                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 shadow-md relative overflow-hidden text-left flex flex-col justify-between group">
                   <div>
-                    <h4 className="text-base font-bold mb-2">No-Meeting Wednesdays</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">
-                      We protect developers' deep focus. Mid-week days are dedicated purely to code, research, and flow.
+                    {/* Quotation Icon */}
+                    <div className="w-11 h-11 rounded-2xl bg-pink-50 border border-pink-100/90 flex items-center justify-center text-pink-500 shadow-sm mb-5">
+                      <Quote className="w-5 h-5 fill-pink-500/20 text-pink-500" />
+                    </div>
+
+                    {/* Quote text */}
+                    <p className="text-[14.5px] sm:text-[15px] italic text-slate-700 leading-relaxed font-normal">
+                      "We don’t just write code to meet requirements. We build solutions that create real value for users around the world."
                     </p>
                   </div>
-                  <div className="border-t border-purple-500/10 pt-4 mt-6">
-                    <span className="text-[10px] font-extrabold text-[#F59E0B] uppercase tracking-wider">Async Focus block</span>
+
+                  <div>
+                    {/* Thin divider */}
+                    <div className="h-px w-full bg-pink-100/80 my-5" />
+
+                    {/* Team Member Info */}
+                    <div className="flex items-center space-x-3.5">
+                      <img
+                        src="/marcus_avatar.png"
+                        alt="Arjun Kumar"
+                        className="h-11 w-11 rounded-full object-cover ring-2 ring-pink-100 shrink-0"
+                      />
+                      <div>
+                        <h4 className="text-sm font-bold text-[#0B1E3B] leading-tight">Arjun Kumar</h4>
+                        <p className="text-xs text-pink-600 font-medium mt-0.5">Chief Technology Officer</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Box 5 (Quote) */}
-                <div className="glass-card-purple p-6 rounded-3xl border border-purple-500/20 flex flex-col justify-between shadow-md relative overflow-hidden group">
-                  <Quote className="h-8 w-8 text-[#EC4899] opacity-40 mb-4" />
-                  <p className="text-sm font-medium italic text-slate-600 leading-relaxed text-left">
-                    "Working asynchronously is our superpower. We pair program over codebases and communicate through design RFCs instead of sitting in long daily standups."
-                  </p>
-                  <div className="flex items-center space-x-3 mt-6 border-t border-purple-500/10 pt-4">
-                    <img src="/rohan_avatar.png" alt="Rohan" className="h-9 w-9 rounded-full object-cover border border-purple-500/30" />
-                    <div className="text-left">
-                      <h5 className="text-xs font-bold">Rohan Sen</h5>
-                      <p className="text-[10px] text-[#EC4899] font-semibold">Frontend Architect</p>
+                {/* ROW 1: CARD 2 — INNOVATIVE TECHNOLOGY (Subtle Blue Accent) */}
+                <div style={{ '--card-delay': '140ms' }} className="careers-reveal-card col-span-1 md:col-span-1 lg:col-span-4 bg-white rounded-[26px] p-7 sm:p-8 border border-blue-100/80 shadow-[0_10px_30px_-5px_rgba(59,130,246,0.05)] hover:shadow-[0_16px_36px_-6px_rgba(59,130,246,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between group">
+                  {/* Subtle Corner Accent */}
+                  <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-gradient-to-br from-sky-100/70 to-blue-50/20 pointer-events-none" />
+
+                  <div>
+                    {/* Technology / Code Icon */}
+                    <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100/90 flex items-center justify-center text-blue-600 shadow-sm mb-5">
+                      <Code2 className="w-5 h-5 text-blue-600" />
+                    </div>
+
+                    {/* Heading */}
+                    <h3 className="text-lg font-bold text-[#0B1E3B] tracking-tight mb-2.5">
+                      Innovative Technology
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">
+                      We build modern, scalable solutions using React, Spring Boot, cloud infrastructure, and AI-driven tools.
+                    </p>
+                  </div>
+
+                  <div>
+                    {/* Thin divider */}
+                    <div className="h-px w-full bg-blue-100/80 my-5" />
+
+                    {/* Bottom Section with Label & Circular Action Button */}
+                    <div className="flex items-center justify-between">
+                      <span className="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/60 text-[10px] font-bold uppercase tracking-wider">
+                        OUR TECHNOLOGY STACK
+                      </span>
+                      <div className="w-8 h-8 rounded-full bg-blue-50 group-hover:bg-blue-600 text-blue-600 group-hover:text-white border border-blue-100 flex items-center justify-center transition-all duration-200 cursor-pointer">
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ROW 1: CARD 3 — DESIGN / CULTURE (Subtle Soft Orange/Peach Accent) */}
+                <div style={{ '--card-delay': '220ms' }} className="careers-reveal-card col-span-1 md:col-span-2 lg:col-span-4 bg-white rounded-[26px] p-7 sm:p-8 border border-amber-100/80 shadow-[0_10px_30px_-5px_rgba(245,158,11,0.05)] hover:shadow-[0_16px_36px_-6px_rgba(245,158,11,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between group">
+                  {/* Subtle Corner Accent */}
+                  <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-gradient-to-br from-amber-100/70 to-orange-50/20 pointer-events-none" />
+
+                  <div>
+                    {/* Quotation Icon */}
+                    <div className="w-11 h-11 rounded-2xl bg-amber-50 border border-amber-100/90 flex items-center justify-center text-amber-500 shadow-sm mb-5">
+                      <Quote className="w-5 h-5 fill-amber-500/20 text-amber-500" />
+                    </div>
+
+                    {/* Quote text */}
+                    <p className="text-[14.5px] sm:text-[15px] italic text-slate-700 leading-relaxed font-normal">
+                      "Our designs prioritize aesthetics and responsiveness. We create interfaces that look absolutely premium."
+                    </p>
+                  </div>
+
+                  <div>
+                    {/* Thin divider */}
+                    <div className="h-px w-full bg-amber-100/80 my-5" />
+
+                    {/* Team Member Info */}
+                    <div className="flex items-center space-x-3.5">
+                      <img
+                        src="/ananya_avatar.png"
+                        alt="Priya Menon"
+                        className="h-11 w-11 rounded-full object-cover ring-2 ring-amber-100 shrink-0"
+                      />
+                      <div>
+                        <h4 className="text-sm font-bold text-[#0B1E3B] leading-tight">Priya Menon</h4>
+                        <p className="text-xs text-amber-600 font-medium mt-0.5">Head of Design</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ROW 2: CARD 4 — FOCUS / PRODUCTIVITY (Soft Purple Accent — Wider 7 cols) */}
+                <div style={{ '--card-delay': '300ms' }} className="careers-reveal-card col-span-1 md:col-span-2 lg:col-span-7 bg-white rounded-[26px] p-7 sm:p-8 border border-purple-100/80 shadow-[0_10px_30px_-5px_rgba(139,92,246,0.05)] hover:shadow-[0_16px_36px_-6px_rgba(139,92,246,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 group">
+                  {/* Subtle Corner Accent */}
+                  <div className="absolute -bottom-10 -left-10 w-44 h-44 rounded-full bg-gradient-to-tr from-purple-100/60 to-indigo-50/10 pointer-events-none" />
+
+                  <div className="space-y-4 max-w-md relative z-10">
+                    {/* Team / Focus Icon */}
+                    <div className="w-11 h-11 rounded-2xl bg-purple-50 border border-purple-100/90 flex items-center justify-center text-purple-600 shadow-sm">
+                      <Users className="w-5 h-5 text-purple-600" />
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-bold text-[#0B1E3B] tracking-tight mb-2">
+                        No-Meeting Wednesdays
+                      </h3>
+                      <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">
+                        We protect developers' deep focus. Mid-week days are dedicated purely to code, research, learning, and building without unnecessary meetings.
+                      </p>
+                    </div>
+
+                    <div className="pt-1">
+                      <span className="px-3 py-1.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200/60 text-[10px] font-bold uppercase tracking-wider inline-block">
+                        FOCUS & PRODUCTIVITY
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Minimal Calendar & Productivity Illustration */}
+                  <div className="relative w-36 h-32 sm:w-44 sm:h-36 shrink-0 flex items-center justify-center self-center sm:self-auto z-10">
+                    <div className="w-full h-full bg-gradient-to-br from-purple-50 via-indigo-50/50 to-purple-100/30 rounded-2xl border border-purple-200/60 p-3.5 shadow-inner flex flex-col justify-between relative overflow-hidden">
+                      {/* Calendar Header with Rings */}
+                      <div className="flex items-center justify-between border-b border-purple-200/60 pb-2">
+                        <div className="flex space-x-1.5">
+                          <span className="w-1.5 h-3 rounded-full bg-purple-300" />
+                          <span className="w-1.5 h-3 rounded-full bg-purple-300" />
+                        </div>
+                        <span className="text-[10px] font-bold text-purple-700 tracking-wider">WEDNESDAY</span>
+                        <span className="w-2 h-2 rounded-full bg-purple-400" />
+                      </div>
+
+                      {/* Calendar Grid Representation */}
+                      <div className="grid grid-cols-4 gap-1.5 py-1">
+                        <span className="h-2 rounded bg-purple-200/40" />
+                        <span className="h-2 rounded bg-purple-200/40" />
+                        <span className="h-2 rounded bg-purple-200/40" />
+                        <span className="h-2 rounded bg-purple-200/40" />
+                        <span className="h-2 rounded bg-purple-200/40" />
+                        <span className="h-2 rounded bg-purple-400/80 font-bold" />
+                        <span className="h-2 rounded bg-purple-200/40" />
+                        <span className="h-2 rounded bg-purple-200/40" />
+                      </div>
+
+                      {/* Focus Status Indicator */}
+                      <div className="self-end px-2.5 py-1 rounded-full bg-white text-purple-700 border border-purple-200 shadow-sm flex items-center space-x-1.5 text-[9px] font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                        <span>Deep Flow</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ROW 2: CARD 5 — COLLABORATION QUOTE (Soft Mint Green Accent — 5 cols) */}
+                <div style={{ '--card-delay': '380ms' }} className="careers-reveal-card col-span-1 md:col-span-2 lg:col-span-5 bg-white rounded-[26px] p-7 sm:p-8 border border-emerald-100/80 shadow-[0_10px_30px_-5px_rgba(16,185,129,0.05)] hover:shadow-[0_16px_36px_-6px_rgba(16,185,129,0.12)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between group">
+                  {/* Subtle Corner Accent */}
+                  <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-gradient-to-br from-emerald-100/70 to-teal-50/20 pointer-events-none" />
+
+                  <div>
+                    {/* Quotation Icon */}
+                    <div className="w-11 h-11 rounded-2xl bg-emerald-50 border border-emerald-100/90 flex items-center justify-center text-emerald-600 shadow-sm mb-5">
+                      <Quote className="w-5 h-5 fill-emerald-500/20 text-emerald-600" />
+                    </div>
+
+                    {/* Quote text */}
+                    <p className="text-[14.5px] sm:text-[15px] italic text-slate-700 leading-relaxed font-normal">
+                      "Working asynchronously is our superpower. We pair program over codebases and communicate through design RFCs instead of sitting in long daily standups."
+                    </p>
+                  </div>
+
+                  <div>
+                    {/* Thin divider */}
+                    <div className="h-px w-full bg-emerald-100/80 my-5" />
+
+                    {/* Team Member Info */}
+                    <div className="flex items-center space-x-3.5">
+                      <img
+                        src="/rohan_avatar.png"
+                        alt="Rohan Verma"
+                        className="h-11 w-11 rounded-full object-cover ring-2 ring-emerald-100 shrink-0"
+                      />
+                      <div>
+                        <h4 className="text-sm font-bold text-[#0B1E3B] leading-tight">Rohan Verma</h4>
+                        <p className="text-xs text-emerald-600 font-medium mt-0.5">Frontend Architect</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1854,162 +2410,72 @@ export default function Careers() {
             </div>
 
             {/* SECTION 5: WHAT WE LOOK FOR */}
-            <div className="space-y-16 py-12">
+            <div className="careers-reveal space-y-12 py-12">
               <div className="text-center max-w-2xl mx-auto space-y-3">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
+                <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-[#EC4899] text-xs font-bold uppercase tracking-wider">
                   <Award className="h-3.5 w-3.5" />
-                  <span>Our Culture</span>
+                  <span>OUR CULTURE</span>
                 </div>
-                <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">What We Look For</h2>
-                <p className="text-slate-500 text-sm font-semibold">The qualities that make a great BNX team member.</p>
+                <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-['Plus_Jakarta_Sans',sans-serif]">
+                  What We <span className="text-[#3B82F6] relative inline-block">Look For<svg className="absolute -top-3 -right-6 w-5 h-5 text-[#3B82F6]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M4 14l4-4M10 8l4-4M16 4l4-2" /></svg></span>
+                </h2>
+                <p className="text-slate-500 text-sm md:text-base font-semibold">The qualities that make a great BNX team member.</p>
               </div>
 
-              {/* Grid of 6 Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
-                {/* Card 1: Problem Solver */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
-                >
-                  <div className="h-12 w-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                    <Lightbulb className="h-6 w-6" />
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">💡 Problem Solver</h4>
-                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
-                      Think critically and find smart solutions.
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* Card 2: Continuous Learner */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
-                >
-                  <div className="h-12 w-12 rounded-2xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                    <BookOpen className="h-6 w-6" />
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">📚 Continuous Learner</h4>
-                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
-                      Curious to explore new technologies and improve daily.
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* Card 3: Great Communicator */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
-                >
-                  <div className="h-12 w-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                    <MessageSquare className="h-6 w-6" />
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">💬 Great Communicator</h4>
-                    <p className="text-slate-550 text-xs md:text-sm leading-relaxed font-semibold">
-                      Share ideas and communicate clearly.
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* Card 4: Team Player */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
-                >
-                  <div className="h-12 w-12 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                    <Handshake className="h-6 w-6" />
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">🤝 Team Player</h4>
-                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
-                      Collaborate with others to build better products.
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* Card 5: Ownership */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.5 }}
-                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
-                >
-                  <div className="h-12 w-12 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                    <Target className="h-6 w-6" />
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">🎯 Ownership</h4>
-                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
-                      Take responsibility and deliver with confidence.
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* Card 6: Growth Mindset */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
-                  className="glass-card p-6 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group bg-white"
-                >
-                  <div className="h-12 w-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-500 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                    <TrendingUp className="h-6 w-6" />
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors">📈 Growth Mindset</h4>
-                    <p className="text-slate-505 text-xs md:text-sm leading-relaxed font-semibold">
-                      Always improving skills and knowledge.
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
+              {/* Large 3-Column x 2-Row Culture Cards Grid */}
+              <WhatWeLookForCardsGrid />
             </div>
 
 
 
             {/* SECTION 8: CALL TO ACTION SECTION */}
-            <div className="cta-block relative overflow-hidden rounded-3xl p-10 md:p-16 border border-blue-100 bg-gradient-to-r from-blue-50/90 via-sky-50/80 to-blue-50/90 text-center shadow-xl shadow-blue-500/5">
-              {/* Subtle blue background glow circles inside CTA */}
-              <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-blue-200/30 rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-sky-200/30 rounded-full blur-2xl pointer-events-none" />
+            <div className="careers-reveal cta-block relative overflow-hidden rounded-[32px] md:rounded-[40px] border border-slate-200/80 bg-white p-8 sm:p-12 md:p-16 min-h-[380px] md:min-h-[420px] flex items-center shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] text-left">
+              {/* Premium Realistic Workspace Visual Integrated into the Right Side */}
+              <img
+                src="/careers_cta_workspace.jpg"
+                alt="Workspace"
+                className="absolute right-0 top-0 bottom-0 w-full sm:w-[68%] md:w-[60%] lg:w-[54%] h-full object-cover object-right pointer-events-none select-none"
+              />
 
-              <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
-                <h2 className="text-3xl md:text-5xl font-black text-black leading-tight tracking-tight">
-                  Ready to Build Something Amazing?
+              {/* Seamless Fade & Ambient Glow Gradient Overlays */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 via-45% to-white/0 pointer-events-none" />
+              <div className="absolute inset-0 bg-white/85 sm:bg-transparent pointer-events-none" />
+              <div className="absolute top-0 left-0 w-96 h-96 bg-sky-100/40 rounded-full blur-3xl pointer-events-none" />
+
+              {/* Left Content Area */}
+              <div className="relative z-10 max-w-xl space-y-5">
+                {/* Pill Badge */}
+                <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-50/90 border border-blue-200/70 text-[#0055FF] text-xs font-bold uppercase tracking-wider shadow-xs">
+                  <Users className="h-3.5 w-3.5" />
+                  <span>Join Our Team</span>
+                </div>
+
+                {/* Main Headline */}
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0B1E3B] leading-[1.12] tracking-tight font-['Plus_Jakarta_Sans',sans-serif]">
+                  Ready to Build <br className="hidden sm:inline" />
+                  <span className="text-[#0055FF]">Something Amazing?</span>
                 </h2>
-                <p className="text-black max-w-xl mx-auto text-sm md:text-base leading-relaxed font-semibold">
+
+                {/* Subtitle */}
+                <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium max-w-lg">
                   Join a team of creators, system architects, and designers scaling software to thousands of businesses globally.
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+
+                {/* Action Button */}
+                <div className="pt-2">
                   <a
                     href="#search-roles"
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-[#004AAD] to-blue-600 hover:from-[#003A8C] hover:to-blue-700 text-white transition-all duration-300 hover:scale-[1.02] shadow-md shadow-blue-500/20 no-underline"
+                    className="inline-flex items-center space-x-2 px-7 py-3.5 rounded-xl text-sm font-bold bg-[#0055FF] hover:bg-[#0042D0] !text-white transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-blue-500/25 cursor-pointer no-underline group"
                   >
-                    Apply Now
+                    <span>Apply Now</span>
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </a>
                 </div>
               </div>
             </div>
 
             {/* SECTION 9: OUR VALUES SECTION */}
-            <div className="space-y-16 py-16 mt-12 md:mt-16 border-t border-slate-100">
+            <section className="careers-reveal space-y-10 sm:space-y-12 py-12 sm:py-16 mt-12 md:mt-16 border-t border-slate-100 w-full relative">
               <div className="text-center max-w-3xl mx-auto space-y-4 px-4">
                 <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#8B5CF6]/10 to-[#EC4899]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] text-xs font-extrabold uppercase tracking-widest">
                   <Sparkles className="h-3.5 w-3.5 text-[#EC4899] animate-pulse" />
@@ -2023,76 +2489,203 @@ export default function Careers() {
                 </p>
               </div>
 
-              {/* Grid of 7 Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto px-4 md:px-6">
-                {companyValues.map((val, idx) => {
-                  const Icon = val.icon;
-                  return (
-                    <motion.div
-                      key={val.title}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: idx * 0.08 }}
-                      className={`relative overflow-hidden p-8 rounded-3xl border border-slate-200/80 bg-white text-left flex flex-col justify-between space-y-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 group cursor-pointer ${val.glow}`}
-                    >
-                      {/* Gradient card glow on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-slate-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                      <div className="space-y-4 relative z-10">
-                        {/* Beautiful Icon Wrapper */}
-                        <div className={`h-12 w-12 rounded-2xl border flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300 ${val.bg}`}>
-                          <Icon className={`h-6 w-6 transition-transform duration-300 group-hover:rotate-6 ${val.color}`} />
-                        </div>
-
-                        <div className="space-y-2">
-                          <h4 className="text-base font-extrabold text-slate-900 group-hover:text-[#EC4899] transition-colors flex items-center gap-1.5">
-                            {val.title}
-                          </h4>
-                          <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-semibold">
-                            {val.desc}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
+              {/* Seamless Multi-Row Horizontal Pill Marquee */}
+              <OurValuesHorizontalMarquee />
+            </section>
 
             {/* SECTION 10: PREMIUM CALL TO ACTION SECTION */}
-            <div className="relative overflow-hidden rounded-3xl p-10 md:p-16 border border-purple-100 bg-gradient-to-r from-purple-50/90 via-fuchsia-50/80 to-pink-50/90 text-center shadow-xl shadow-purple-500/5 mt-12 md:mt-16 mx-4 md:mx-6 group">
-              {/* Subtle background glow circles inside CTA */}
-              <div className="absolute top-[-30px] left-[-30px] w-48 h-48 bg-[#8B5CF6]/10 rounded-full blur-2xl pointer-events-none group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute bottom-[-30px] right-[-30px] w-64 h-64 bg-[#EC4899]/10 rounded-full blur-2xl pointer-events-none group-hover:scale-110 transition-transform duration-700" />
+            <div className="careers-reveal relative overflow-hidden rounded-[32px] md:rounded-[36px] p-8 sm:p-12 md:p-16 border border-[#D4E5F7] shadow-[0_20px_50px_rgba(59,130,246,0.07)] mt-12 md:mt-16 mx-4 md:mx-6 group min-h-[380px] md:min-h-[420px] flex items-center">
+              {/* Pure CSS/SVG Abstract Architectural Background (Light sky-blue & white, translucent curves, glass panel, podium) */}
+              <svg
+                viewBox="0 0 1000 380"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden"
+                preserveAspectRatio="xMidYMid slice"
+              >
+                <defs>
+                  {/* Base sky background gradient */}
+                  <linearGradient id="ctaBgSky" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#F4F9FF" />
+                    <stop offset="35%" stopColor="#EBF4FE" />
+                    <stop offset="70%" stopColor="#DCECFE" />
+                    <stop offset="100%" stopColor="#CDE4FE" />
+                  </linearGradient>
 
-              <div className="relative z-10 space-y-6 max-w-3xl mx-auto">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[#EC4899] text-xs font-semibold uppercase tracking-wider">
-                  <Sparkles className="h-3.5 w-3.5 text-[#EC4899] animate-pulse" />
+                  {/* Primary Arch Gradient */}
+                  <linearGradient id="archMainGrad" x1="0%" y1="100%" x2="60%" y2="0%">
+                    <stop offset="0%" stopColor="#BAE6FD" stopOpacity="0.4" />
+                    <stop offset="40%" stopColor="#E0F2FE" stopOpacity="0.65" />
+                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.9" />
+                  </linearGradient>
+
+                  {/* Secondary Curve Gradient */}
+                  <linearGradient id="archSecondGrad" x1="20%" y1="100%" x2="80%" y2="0%">
+                    <stop offset="0%" stopColor="#93C5FD" stopOpacity="0.3" />
+                    <stop offset="60%" stopColor="#BAE6FD" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.8" />
+                  </linearGradient>
+
+                  {/* Fluted Glass Gradient */}
+                  <linearGradient id="flutedGlassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#BAE6FD" stopOpacity="0.5" />
+                    <stop offset="50%" stopColor="#E0F2FE" stopOpacity="0.75" />
+                    <stop offset="100%" stopColor="#93C5FD" stopOpacity="0.4" />
+                  </linearGradient>
+
+                  {/* Podium Top Gradient */}
+                  <linearGradient id="podiumTopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.98" />
+                    <stop offset="70%" stopColor="#F0F7FF" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#E0F2FE" stopOpacity="0.8" />
+                  </linearGradient>
+
+                  {/* Podium Base Gradient */}
+                  <linearGradient id="podiumSideGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#E2E8F0" stopOpacity="0.95" />
+                    <stop offset="25%" stopColor="#F8FAFC" stopOpacity="0.98" />
+                    <stop offset="85%" stopColor="#EDF4FD" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#CBD5E1" stopOpacity="0.95" />
+                  </linearGradient>
+
+                  {/* Soft Glow Filters */}
+                  <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="24" result="blur" />
+                  </filter>
+                  <filter id="warmGlow" x="-40%" y="-40%" width="180%" height="180%">
+                    <feGaussianBlur stdDeviation="18" result="blur" />
+                  </filter>
+                  <linearGradient id="leftProtectionGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#F4F9FF" stopOpacity="0.98" />
+                    <stop offset="55%" stopColor="#F4F9FF" stopOpacity="0.85" />
+                    <stop offset="100%" stopColor="#F4F9FF" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+
+                {/* Overall Sky-to-White Base Fill */}
+                <rect width="1000" height="380" fill="url(#ctaBgSky)" />
+
+                {/* Ambient Light Blooms on the Right */}
+                <circle cx="680" cy="180" r="140" fill="rgba(186, 230, 253, 0.45)" filter="url(#softGlow)" />
+                <circle cx="820" cy="140" r="120" fill="rgba(147, 197, 253, 0.35)" filter="url(#softGlow)" />
+                <circle cx="760" cy="300" r="60" fill="rgba(254, 240, 138, 0.45)" filter="url(#warmGlow)" />
+
+                {/* Smooth Ambient Light Sweep from Left */}
+                <ellipse cx="500" cy="190" rx="200" ry="120" fill="rgba(255, 255, 255, 0.45)" filter="url(#softGlow)" />
+
+                {/* 1. Large Parabolic Architectural Curved Sail (Far Layer) */}
+                <path
+                  d="M 520 380 C 560 250, 640 120, 840 40 L 980 40 C 980 200, 950 320, 950 380 Z"
+                  fill="url(#archSecondGrad)"
+                />
+                <path
+                  d="M 520 380 C 560 250, 640 120, 840 40"
+                  stroke="rgba(255, 255, 255, 0.75)"
+                  strokeWidth="1.8"
+                  fill="none"
+                />
+
+                {/* Translucent Sphere nestled in curve */}
+                <ellipse cx="640" cy="175" rx="55" ry="60" fill="rgba(147, 197, 253, 0.4)" filter="url(#softGlow)" />
+
+                {/* 2. Main Sweeping Parabolic Curved Wave (Middle Layer) */}
+                <path
+                  d="M 440 380 C 470 280, 540 160, 720 70 C 800 30, 880 15, 960 10 L 960 380 Z"
+                  fill="url(#archMainGrad)"
+                  opacity="0.8"
+                />
+                <path
+                  d="M 440 380 C 470 280, 540 160, 720 70 C 800 30, 880 15, 960 10"
+                  stroke="#FFFFFF"
+                  strokeWidth="2.2"
+                  strokeOpacity="0.9"
+                  fill="none"
+                />
+
+                {/* Thin Elegant Glowing Curved Edge Accent */}
+                <path
+                  d="M 410 380 C 440 300, 500 200, 650 110"
+                  stroke="rgba(255, 255, 255, 0.85)"
+                  strokeWidth="1.4"
+                  strokeDasharray="4 2"
+                  strokeOpacity="0.6"
+                  fill="none"
+                />
+
+                {/* 3. Minimal Fluted Ribbed Glass Panel (Far Right) */}
+                <g transform="translate(820, 0)">
+                  <rect x="0" y="0" width="130" height="280" fill="url(#flutedGlassGrad)" stroke="rgba(255, 255, 255, 0.8)" strokeWidth="1.5" />
+                  <line x1="12" y1="0" x2="12" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="24" y1="0" x2="24" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="36" y1="0" x2="36" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="48" y1="0" x2="48" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="60" y1="0" x2="60" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="72" y1="0" x2="72" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="84" y1="0" x2="84" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="96" y1="0" x2="96" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="108" y1="0" x2="108" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                  <line x1="120" y1="0" x2="120" y2="280" stroke="rgba(255, 255, 255, 0.65)" strokeWidth="3" />
+                </g>
+
+                {/* Horizon Floor Line & Soft Reflection Surface */}
+                <path
+                  d="M 400 310 L 1000 300"
+                  stroke="rgba(255, 255, 255, 0.9)"
+                  strokeWidth="1.2"
+                  strokeOpacity="0.8"
+                />
+
+                {/* 4. Minimal Cylindrical Architectural Podium (Bottom Right) */}
+                <g transform="translate(780, 270)">
+                  <path
+                    d="M 0 16 L 0 65 C 0 80, 180 80, 180 65 L 180 16 Z"
+                    fill="url(#podiumSideGrad)"
+                    stroke="rgba(255, 255, 255, 0.6)"
+                    strokeWidth="1"
+                  />
+                  <ellipse cx="90" cy="16" rx="90" ry="18" fill="url(#podiumTopGrad)" stroke="#FFFFFF" strokeWidth="1.5" />
+                  <ellipse cx="0" cy="60" rx="35" ry="14" fill="rgba(254, 240, 138, 0.5)" filter="url(#warmGlow)" />
+                </g>
+
+                {/* Gradient Overlay from Left for 100% Solid Text Legibility */}
+                <rect width="520" height="380" fill="url(#leftProtectionGrad)" />
+              </svg>
+
+              <div className="relative z-10 space-y-6 max-w-xl text-left">
+                <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-50/90 border border-blue-200/70 text-[#0055FF] text-xs font-bold uppercase tracking-wider shadow-xs">
+                  <Sparkles className="h-3.5 w-3.5 text-[#0055FF]" />
                   <span>Join Our Journey</span>
                 </div>
                 <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight">
-                  Your Future Starts Here
+                  Your Future <br />
+                  <span className="relative inline-block bg-gradient-to-r from-[#0055FF] via-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent">
+                    Starts Here
+                    <svg className="absolute -bottom-2.5 left-0 w-full h-3 text-[#0055FF]/70" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none">
+                      <path d="M 2 8 C 50 2, 150 2, 198 8 C 150 5, 50 5, 2 8 Z" fill="currentColor" opacity="0.6" />
+                    </svg>
+                  </span>
                 </h2>
-                <p className="text-slate-650 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-semibold">
+                <p className="text-slate-650 max-w-lg text-sm md:text-base leading-relaxed font-semibold">
                   At Beta,every idea matters, every challenge is an opportunity to grow, and every team member contributes to building innovative solutions. If you're ready to learn, collaborate, and make an impact, we'd love to have you on our journey.
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
                   <a
                     href="#search-roles"
                     onClick={(e) => {
                       e.preventDefault();
                       document.getElementById('search-roles')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7c4ee6] hover:to-[#db3c8b] text-white transition-all duration-300 hover:scale-[1.02] shadow-md shadow-purple-500/20 no-underline cursor-pointer border-none text-center"
+                    className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-8 py-3.5 rounded-xl text-sm font-black bg-gradient-to-r from-[#0055FF] to-[#7C3AED] hover:from-[#0044D0] hover:to-[#6D28D9] text-white transition-all duration-300 hover:scale-[1.02] shadow-md shadow-blue-500/20 no-underline cursor-pointer border-none text-center"
                   >
-                    Explore careers
+                    <span>Explore careers</span>
+                    <ArrowRight className="h-4 w-4 ml-1" />
                   </a>
                   <a
                     href="mailto:hr@betasoftnet.com"
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-black bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 transition-all duration-300 hover:scale-[1.02] shadow-md shadow-slate-200/50 no-underline cursor-pointer text-center"
+                    className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-8 py-3.5 rounded-xl text-sm font-black bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 transition-all duration-300 hover:scale-[1.02] shadow-md shadow-slate-200/50 no-underline cursor-pointer text-center"
                   >
-                    Contact HR
+                    <span>Contact HR</span>
+                    <ArrowRight className="h-4 w-4 ml-1" />
                   </a>
                 </div>
               </div>
