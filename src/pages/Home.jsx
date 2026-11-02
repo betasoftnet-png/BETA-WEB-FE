@@ -306,6 +306,73 @@ export default function Home() {
 
 
 
+
+
+
+
+      {/* Precision Double-Fanning Intersecting Wave Mesh Background matching reference image */}
+      <div className="absolute inset-x-0 top-0 w-full h-[540px] md:h-[620px] lg:h-[700px] pointer-events-none z-0 overflow-hidden select-none">
+
+
+        {/* SVG Intersecting Wave Lines Mesh */}
+        <svg
+          className="absolute inset-0 w-full h-full object-cover"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            {/* Primary Blue Line Gradient */}
+            <linearGradient id="refMeshBlue" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#004AAD" stopOpacity="0.04" />
+              <stop offset="30%" stopColor="#2563eb" stopOpacity="0.28" />
+              <stop offset="70%" stopColor="#3b82f6" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.04" />
+            </linearGradient>
+
+            {/* Secondary Cyan/Blue Line Gradient */}
+            <linearGradient id="refMeshCyan" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.04" />
+              <stop offset="40%" stopColor="#004AAD" stopOpacity="0.26" />
+              <stop offset="80%" stopColor="#38bdf8" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#2563eb" stopOpacity="0.04" />
+            </linearGradient>
+          </defs>
+
+          {/* Cluster A: Sweeping from Bottom-Left Pinch up to Top-Right */}
+          {Array.from({ length: 25 }).map((_, i) => {
+            const spread = i * 26;
+            return (
+              <path
+                key={`mesh-a-${i}`}
+                d={`M -80 620 C ${260 + i * 5} ${580 - spread * 0.75}, ${680 - i * 5} ${360 - spread * 0.8}, 1520 ${30 + spread}`}
+                stroke="url(#refMeshBlue)"
+                strokeWidth={1.0 + (i % 3) * 0.25}
+                fill="none"
+              />
+            );
+          })}
+
+          {/* Cluster B: Sweeping from Top-Right Pinch down to Bottom-Left */}
+          {Array.from({ length: 25 }).map((_, i) => {
+            const spread = i * 26;
+            return (
+              <path
+                key={`mesh-b-${i}`}
+                d={`M 1520 40 C ${1180 - i * 5} ${80 + spread * 0.75}, ${760 + i * 5} ${300 + spread * 0.8}, -80 ${640 - spread}`}
+                stroke="url(#refMeshCyan)"
+                strokeWidth={1.0 + (i % 3) * 0.25}
+                fill="none"
+              />
+            );
+          })}
+        </svg>
+
+        {/* Soft Smooth Bottom Fade into Page Background */}
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/80 to-transparent pointer-events-none" />
+      </div>
+
       {/* HERO SECTION: SIDE-BY-SIDE LAYOUT */}
       <div className="relative w-full mb-16 pt-6 pb-12 overflow-hidden">
 
@@ -496,7 +563,7 @@ export default function Home() {
       </div>
 
       {/* SECTION 3: KEY FEATURES */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
         <div className="max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
             <UserCheck className="h-3.5 w-3.5" />
@@ -534,28 +601,30 @@ export default function Home() {
       </div>
 
       {/* SECTION 4: STATISTICS COUNTER */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <div className="glass-card rounded-3xl border border-slate-200 p-8 md:p-12 shadow-lg">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.1 }}
-                  className="text-center space-y-2 flex flex-col items-center justify-center p-4 rounded-2xl hover:bg-slate-50/50 transition-colors"
-                >
-                  <div className="inline-flex p-3 bg-blue-50 rounded-2xl mb-2 border border-blue-100">
-                    <Icon className={`h-6 w-6 ${stat.color}`} />
-                  </div>
-                  <div className="text-3xl md:text-4xl font-extrabold text-[#004AAD]">{stat.value}</div>
-                  <div className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{stat.label}</div>
-                </motion.div>
-              );
-            })}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div className="bg-[#F1F6FC] p-6 md:p-8 rounded-[32px]">
+          <div className="bg-[#DFF1FF] rounded-3xl border border-[#DCE8F5] p-8 md:p-12 shadow-sm">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat, idx) => {
+                const Icon = stat.icon;
+                return (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.1 }}
+                    className="text-center space-y-2 flex flex-col items-center justify-center p-4 rounded-2xl hover:bg-white/40 transition-colors"
+                  >
+                    <div className="inline-flex p-3 bg-white/70 rounded-2xl mb-2 border border-[#DCE8F5]">
+                      <Icon className={`h-6 w-6 ${stat.color}`} />
+                    </div>
+                    <div className="text-3xl md:text-4xl font-extrabold text-[#0753B8]">{stat.value}</div>
+                    <div className="text-xs font-extrabold text-[#64748B] uppercase tracking-wider">{stat.label}</div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -563,7 +632,7 @@ export default function Home() {
 
 
       {/* SECTION: INNOVATION & PHILOSOPHY */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
             <Sparkles className="h-3.5 w-3.5" />
@@ -960,22 +1029,22 @@ export default function Home() {
 
       {/* SECTION 6: CALL TO ACTION */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="cta-colored-section animated-gradient-bg relative rounded-3xl p-8 md:p-16 border border-blue-500/20 overflow-hidden text-left shadow-2xl">
+        <div className="cta-colored-section animated-gradient-bg relative rounded-3xl p-8 md:p-16 border border-blue-500/20 overflow-hidden text-center shadow-2xl">
           {/* Decorative patterns */}
           <div className="absolute inset-0 bg-mesh-pattern bg-mesh opacity-10 pointer-events-none" />
           <div className="absolute inset-0 bg-white/5 backdrop-blur-[1px] pointer-events-none" />
 
-          <div className="relative z-10 space-y-6 max-w-2xl mr-auto">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">
+          <div className="relative z-10 space-y-6 max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight max-w-2xl mx-auto">
               Ready to Upgrade Your Corporate Software?
             </h2>
-            <p className="text-slate-200 max-w-xl mr-auto text-sm md:text-base">
+            <p className="text-slate-200 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
               Unify your group mailbox, auth logs, dashboard notes, and project backlogs under one centralized and secure portal.
             </p>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-4 pt-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <button
                 type="button"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white text-[#004AAD] cursor-pointer"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white text-[#004AAD] hover:bg-slate-50 transition-all duration-300 shadow-md cursor-pointer"
               >
                 Browse Product Suites
               </button>

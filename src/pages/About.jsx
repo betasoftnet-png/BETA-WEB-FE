@@ -231,6 +231,81 @@ export default function About() {
 
 
 
+      {/* Radiant Elliptical Contour Arcs Background (About Page Only) */}
+      <div className="absolute inset-x-0 top-0 w-full h-[550px] md:h-[650px] lg:h-[750px] pointer-events-none z-0 overflow-hidden select-none">
+        {/* Soft Ambient Tint */}
+        <div className="w-full h-full bg-gradient-to-b from-[#f0f6ff]/70 via-[#f8fafc]/50 to-[#f8fafc]" />
+        
+        {/* Ambient Glow Blobs */}
+        <div className="absolute top-[10%] left-[15%] w-[450px] h-[450px] rounded-full bg-blue-400/10 blur-[130px] particle-glow-1" />
+        <div className="absolute top-[5%] right-[15%] w-[400px] h-[400px] rounded-full bg-orange-400/8 blur-[130px] particle-glow-2" />
+
+        <svg
+          className="absolute inset-0 w-full h-full object-cover"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            {/* Navy/Blue Arc Gradient */}
+            <linearGradient id="arcNavyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0A3161" stopOpacity="0.03" />
+              <stop offset="40%" stopColor="#004AAD" stopOpacity="0.22" />
+              <stop offset="80%" stopColor="#3b82f6" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#0A3161" stopOpacity="0.02" />
+            </linearGradient>
+
+            {/* Brand Orange Accent Arc Gradient */}
+            <linearGradient id="arcOrangeGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#FF6325" stopOpacity="0.03" />
+              <stop offset="50%" stopColor="#f97316" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#FF6325" stopOpacity="0.02" />
+            </linearGradient>
+          </defs>
+
+          {/* Concentric Elliptical & Circular Contour Arcs (Radiating from Center-Top) */}
+          {Array.from({ length: 22 }).map((_, i) => {
+            const rx = 400 + i * 45;
+            const ry = 220 + i * 28;
+            return (
+              <ellipse
+                key={`ellipse-navy-${i}`}
+                cx="720"
+                cy="180"
+                rx={rx}
+                ry={ry}
+                stroke="url(#arcNavyGrad)"
+                strokeWidth={1.0 + (i % 3) * 0.3}
+                strokeDasharray={i % 2 === 0 ? "none" : "8 4"}
+                fill="none"
+              />
+            );
+          })}
+
+          {/* Sweeping Elliptical Accent Arcs */}
+          {Array.from({ length: 16 }).map((_, i) => {
+            const rx = 320 + i * 55;
+            const ry = 160 + i * 34;
+            return (
+              <ellipse
+                key={`ellipse-orange-${i}`}
+                cx="720"
+                cy="220"
+                rx={rx}
+                ry={ry}
+                stroke="url(#arcOrangeGrad)"
+                strokeWidth={0.9 + (i % 2) * 0.3}
+                fill="none"
+              />
+            );
+          })}
+        </svg>
+
+        {/* Soft Smooth Bottom Fade into Page Background */}
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/85 to-transparent pointer-events-none" />
+      </div>
+
       {/* SECTION 1: HERO BANNER */}
       <div className="animated-gradient-bg-light relative overflow-hidden flex flex-col items-center justify-center pt-8 pb-16 px-4 sm:px-6 lg:px-8 border-b border-[#0A3161]/10">
         {/* Floating Particles and Glows */}
