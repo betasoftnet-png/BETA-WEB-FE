@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -9,23 +8,13 @@ import {
   Globe,
   Zap,
   Sparkles,
-  Mail,
-  Briefcase,
   UserCheck,
-  User,
   Star,
   Cpu,
-  Database,
   Lock,
   Terminal,
-  Code2,
   Workflow,
-  Network,
   Award,
-  Lightbulb,
-  Handshake,
-  Rocket,
-  Quote,
   TrendingUp,
   Puzzle
 } from 'lucide-react';
@@ -88,72 +77,6 @@ export default function Home() {
     }
   ];
 
-  const techStack = [
-    {
-      name: 'React 18',
-      description: 'Modern front-end framework rendering declarative, state-driven interfaces with high responsiveness.',
-      icon: Code2,
-      category: 'Frontend',
-      bg: 'bg-cyan-50 text-cyan-600 border-cyan-100',
-      gradient: 'from-cyan-400 to-blue-500'
-    },
-    {
-      name: 'Vite',
-      description: 'Ultra-fast bundler and dev server powering blazing fast builds and Hot Module Replacement.',
-      icon: Terminal,
-      category: 'Build System',
-      bg: 'bg-amber-50 text-amber-600 border-amber-100',
-      gradient: 'from-amber-400 to-orange-500'
-    },
-    {
-      name: 'Tailwind CSS',
-      description: 'Utility-first styling library supporting rich design systems and layouts natively.',
-      icon: Globe,
-      category: 'Styling',
-      bg: 'bg-sky-50 text-sky-600 border-sky-100',
-      gradient: 'from-sky-400 to-indigo-500'
-    },
-    {
-      name: 'Node.js & Express',
-      description: 'Robust server architecture supporting scalable RESTful APIs and rapid routing services.',
-      icon: Cpu,
-      category: 'Backend Server',
-      bg: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-      gradient: 'from-emerald-400 to-teal-500'
-    },
-    {
-      name: 'MongoDB',
-      description: 'Scalable NoSQL database engine storage for flexible team workspaces, notes, and task backlogs.',
-      icon: Database,
-      category: 'Database',
-      bg: 'bg-green-50 text-green-600 border-green-100',
-      gradient: 'from-green-400 to-emerald-600'
-    },
-    {
-      name: 'OAuth 2.0 & JWT',
-      description: 'Cryptographically secure auth protocols powering SSO gateways and API access controls.',
-      icon: Lock,
-      category: 'Security',
-      bg: 'bg-rose-50 text-rose-600 border-rose-100',
-      gradient: 'from-rose-400 to-red-500'
-    },
-    {
-      name: 'WebSockets',
-      description: 'Bi-directional real-time channels syncing collaborative task boards and email clients.',
-      icon: Network,
-      category: 'Communication',
-      bg: 'bg-indigo-50 text-indigo-600 border-indigo-100',
-      gradient: 'from-indigo-400 to-violet-500'
-    },
-    {
-      name: 'Framer Motion',
-      description: 'High-performance layout transitions and fluid micro-animations for an interactive UX.',
-      icon: Workflow,
-      category: 'Animation',
-      bg: 'bg-fuchsia-50 text-fuchsia-600 border-fuchsia-100',
-      gradient: 'from-fuchsia-400 to-pink-500'
-    }
-  ];
 
   const principlesMarquee = [
     { title: 'Performance First', desc: 'Sub-millisecond latency', icon: Zap, color: 'text-amber-500', bg: 'bg-amber-50' },
@@ -634,9 +557,10 @@ export default function Home() {
       </div>
 
       {/* SECTION 4: STATISTICS COUNTER */}
-      <div className="relative z-0 w-full bg-[#FFCB05] -mt-[220px] pt-[175px] pb-14 mb-24 shadow-inner">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-8 md:p-12">
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div className="bg-[#F1F6FC] p-6 md:p-8 rounded-[32px]">
+          <div className="bg-[#DFF1FF] rounded-3xl border border-[#DCE8F5] p-8 md:p-12 shadow-sm">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, idx) => {
                 const Icon = stat.icon;
@@ -647,13 +571,13 @@ export default function Home() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: idx * 0.1 }}
-                    className="text-center space-y-2 flex flex-col items-center justify-center p-4 rounded-2xl hover:bg-amber-400/20 transition-colors"
+                    className="text-center space-y-2 flex flex-col items-center justify-center p-4 rounded-2xl hover:bg-white/40 transition-colors"
                   >
-                    <div className="inline-flex p-3 bg-blue-50 rounded-2xl mb-2 border border-blue-100">
+                    <div className="inline-flex p-3 bg-white/70 rounded-2xl mb-2 border border-[#DCE8F5]">
                       <Icon className={`h-6 w-6 ${stat.color}`} />
                     </div>
-                    <div className="text-3xl md:text-4xl font-extrabold text-[#004AAD]">{stat.value}</div>
-                    <div className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{stat.label}</div>
+                    <div className="text-3xl md:text-4xl font-extrabold text-[#0753B8]">{stat.value}</div>
+                    <div className="text-xs font-extrabold text-[#64748B] uppercase tracking-wider">{stat.label}</div>
                   </motion.div>
                 );
               })}
@@ -664,385 +588,385 @@ export default function Home() {
 
 
 
-      {/* SECTION: INNOVATION & PHILOSOPHY */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Our Core Philosophy</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
-            How We Shape the Future
-          </h2>
-          <p className="text-slate-500 text-lg leading-relaxed font-medium">
-            Driven by innovation, engineering excellence, clean code, and continuous growth.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-          {/* Card 1: What We Build */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-            className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
-          >
-            {/* Ambient Background Glow on Hover */}
-            <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-blue-500/10 to-cyan-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-            <div className="space-y-6">
-              <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-blue-50 text-blue-600 border border-blue-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
-                <Cpu className="h-6 w-6" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-blue-650 transition-colors">
-                  What We Build
-                </h3>
-                <p className="text-slate-600 text-sm leading-relaxed font-medium">
-                  At Beta Softnet, we develop intelligent software products that help businesses improve efficiency, automate workflows, and accelerate digital transformation. Our products are designed with scalability, security, and user experience at their core, enabling organizations to adapt and grow in an ever-changing digital world.
-                </p>
-              </div>
-            </div>
-            <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-blue-600 select-none group-hover:translate-x-1 transition-transform">
-              <span>View our products suite</span>
-              <ArrowRight className="ml-1 h-3.5 w-3.5" />
-            </div>
-          </motion.div>
-
-          {/* Card 2: Engineering Excellence */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
-          >
-            {/* Ambient Background Glow on Hover */}
-            <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-amber-500/10 to-orange-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-            <div className="space-y-6">
-              <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-amber-50 text-amber-600 border border-amber-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
-                <Terminal className="h-6 w-6" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-amber-650 transition-colors">
-                  Engineering Excellence
-                </h3>
-                <p className="text-slate-600 text-sm leading-relaxed font-medium">
-                  We believe that great products are built with strong engineering practices. Our teams focus on clean architecture, modern technologies, continuous improvement, and high-quality code to deliver reliable and innovative software solutions.
-                </p>
-              </div>
-            </div>
-            <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-amber-600 select-none group-hover:translate-x-1 transition-transform">
-              <span>Explore our codebase standards</span>
-              <ArrowRight className="ml-1 h-3.5 w-3.5" />
-            </div>
-          </motion.div>
-
-          {/* Card 3: Technology & Innovation */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
-          >
-            {/* Ambient Background Glow on Hover */}
-            <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-            <div className="space-y-6">
-              <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-purple-50 text-purple-600 border border-purple-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
-                <Workflow className="h-6 w-6" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-purple-650 transition-colors">
-                  Technology & Innovation
-                </h3>
-                <p className="text-slate-600 text-sm leading-relaxed font-medium">
-                  Innovation drives everything we do. We continuously explore emerging technologies, modern development practices, and creative ideas to build products that solve real-world business challenges and create lasting value.
-                </p>
-              </div>
-            </div>
-            <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-purple-600 select-none group-hover:translate-x-1 transition-transform">
-              <span>See our roadmap</span>
-              <ArrowRight className="ml-1 h-3.5 w-3.5" />
-            </div>
-          </motion.div>
-
-          {/* Card 4: Grow With Us */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
-          >
-            {/* Ambient Background Glow on Hover */}
-            <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-emerald-500/10 to-teal-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-            <div className="space-y-6">
-              <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
-                <Users className="h-6 w-6" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-emerald-650 transition-colors">
-                  Grow With Us
-                </h3>
-                <p className="text-slate-600 text-sm leading-relaxed font-medium">
-                  We provide an environment where learning never stops. Through real-world projects, mentorship, and collaborative teamwork, you'll gain valuable experience, expand your technical expertise, and build a successful career in product development.
-                </p>
-              </div>
-            </div>
-            <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-emerald-600 select-none group-hover:translate-x-1 transition-transform">
-              <span>Explore active career roles</span>
-              <ArrowRight className="ml-1 h-3.5 w-3.5" />
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* SECTION: WHY CHOOSE OUR PRODUCTS */}
-      <div className="w-full bg-[#EAF6FF] py-20 mb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="max-w-3xl mx-auto mb-16 space-y-4">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
-              <Award className="h-3.5 w-3.5" />
-              <span>Product Highlights</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
-              Why Choose Our Products?
-            </h2>
-            <p className="text-slate-500 text-lg">
-              Engineered for low-latency synchronization, enterprise-grade security, and seamless workflow integration.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left">
-            {/* Left Column: Visual Growth Roadmap */}
-            <div className="lg:col-span-5 w-full">
-              <div className="relative p-6 rounded-3xl bg-slate-900 text-white border border-slate-800 shadow-2xl overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-transparent to-purple-900/30 opacity-60 pointer-events-none" />
-                <div className="relative z-10 space-y-5">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <div className="flex items-center space-x-1.5">
-                      <div className="h-2.5 w-2.5 rounded-full bg-rose-500" />
-                      <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-                      <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                    </div>
-                    <span className="text-[9px] font-mono text-slate-500">product_architecture.json</span>
-                  </div>
-
-                  {/* Pipeline visual steps */}
-                  <div className="space-y-3">
-                    {[
-                      { phase: 'Layer 1', title: 'Secure SMTP & Real-Time Sync', status: 'Active', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
-                      { phase: 'Layer 2', title: 'SSO & Multi-Factor Auth Gateway', status: 'Verified', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-                      { phase: 'Layer 3', title: 'Live WebSocket Channels & Boards', status: 'Connected', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
-                      { phase: 'Layer 4', title: 'Centralized Scalable Workspace DB', status: 'Synced', color: 'text-slate-400 bg-slate-800 border-slate-700' }
-                    ].map((step, idx) => (
-                      <motion.div
-                        key={step.phase}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: idx * 0.12 }}
-                        className="flex items-center justify-between p-3 rounded-xl bg-slate-955/85 border border-slate-800 hover:border-slate-700 transition-colors"
-                      >
-                        <div className="flex items-center space-x-3 overflow-hidden mr-2">
-                          <span className="text-[10px] font-mono text-slate-500 w-14 flex-shrink-0">{step.phase}</span>
-                          <span className="text-[11px] font-semibold text-slate-200 truncate">{step.title}</span>
-                        </div>
-                        <span className={`text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border flex-shrink-0 ${step.color}`}>
-                          {step.status}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
+            {/* SECTION: INNOVATION & PHILOSOPHY */}
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+              <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Our Core Philosophy</span>
                 </div>
+                <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+                  How We Shape the Future
+                </h2>
+                <p className="text-slate-500 text-lg leading-relaxed font-medium">
+                  Driven by innovation, engineering excellence, clean code, and continuous growth.
+                </p>
               </div>
-            </div>
 
-            {/* Right Column: Key Benefits */}
-            <div className="lg:col-span-7 space-y-4">
-              {[
-                {
-                  title: 'Real-Time Collaboration',
-                  desc: 'Sync team messages, sprint boards, and document revisions instantly across teams using optimized bi-directional WebSocket protocols.',
-                  icon: Zap,
-                  bg: 'bg-amber-50 text-amber-600 border-amber-100'
-                },
-                {
-                  title: 'Enterprise Security & SSO',
-                  desc: 'Protect corporate workloads with cryptographically signed JSON Web Tokens (JWT) and multi-factor validation flows.',
-                  icon: Users,
-                  bg: 'bg-blue-50 text-blue-600 border-blue-100'
-                },
-                {
-                  title: 'High Availability Relays',
-                  desc: 'Our BNX mail relays feature a 99.99% uptime SLA with active load balancers and robust queue managers.',
-                  icon: Workflow,
-                  bg: 'bg-emerald-50 text-emerald-600 border-emerald-100'
-                },
-                {
-                  title: 'Centralized Workspaces',
-                  desc: 'Consolidate your business toolchain. Seamlessly bridge email threads into sprint tasks or live discussion boards.',
-                  icon: Award,
-                  bg: 'bg-purple-50 text-purple-600 border-purple-100'
-                }
-              ].map((item, idx) => {
-                const Icon = item.icon;
-                return (
-                  <motion.div
-                    key={item.title}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: idx * 0.08 }}
-                    className="glass-card hover:bg-white/90 p-5 rounded-2xl border border-slate-200/80 flex items-start space-x-4 shadow-sm hover:shadow-md transition-all duration-300 group cursor-default"
-                  >
-                    <div className={`p-3 rounded-xl border flex-shrink-0 mt-0.5 transition-colors ${item.bg}`}>
-                      <Icon className="h-5 w-5" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                {/* Card 1: What We Build */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.05 }}
+                  className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                >
+                  {/* Ambient Background Glow on Hover */}
+                  <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-blue-500/10 to-cyan-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                  <div className="space-y-6">
+                    <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-blue-50 text-blue-600 border border-blue-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                      <Cpu className="h-6 w-6" />
                     </div>
-                    <div className="space-y-1 text-left">
-                      <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
-                        {item.title}
+                    <div className="space-y-3">
+                      <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-blue-650 transition-colors">
+                        What We Build
                       </h3>
-                      <p className="text-slate-500 text-xs leading-relaxed font-medium">
-                        {item.desc}
+                      <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                        At Beta Softnet, we develop intelligent software products that help businesses improve efficiency, automate workflows, and accelerate digital transformation. Our products are designed with scalability, security, and user experience at their core, enabling organizations to adapt and grow in an ever-changing digital world.
                       </p>
                     </div>
-                  </motion.div>
-                );
-              })}
+                  </div>
+                  <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-blue-600 select-none group-hover:translate-x-1 transition-transform">
+                    <span>View our products suite</span>
+                    <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                  </div>
+                </motion.div>
+
+                {/* Card 2: Engineering Excellence */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                >
+                  {/* Ambient Background Glow on Hover */}
+                  <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-amber-500/10 to-orange-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                  <div className="space-y-6">
+                    <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-amber-50 text-amber-600 border border-amber-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                      <Terminal className="h-6 w-6" />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-amber-650 transition-colors">
+                        Engineering Excellence
+                      </h3>
+                      <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                        We believe that great products are built with strong engineering practices. Our teams focus on clean architecture, modern technologies, continuous improvement, and high-quality code to deliver reliable and innovative software solutions.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-amber-600 select-none group-hover:translate-x-1 transition-transform">
+                    <span>Explore our codebase standards</span>
+                    <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                  </div>
+                </motion.div>
+
+                {/* Card 3: Technology & Innovation */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.15 }}
+                  className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                >
+                  {/* Ambient Background Glow on Hover */}
+                  <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                  <div className="space-y-6">
+                    <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-purple-50 text-purple-600 border border-purple-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                      <Workflow className="h-6 w-6" />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-purple-650 transition-colors">
+                        Technology & Innovation
+                      </h3>
+                      <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                        Innovation drives everything we do. We continuously explore emerging technologies, modern development practices, and creative ideas to build products that solve real-world business challenges and create lasting value.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-purple-600 select-none group-hover:translate-x-1 transition-transform">
+                    <span>See our roadmap</span>
+                    <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                  </div>
+                </motion.div>
+
+                {/* Card 4: Grow With Us */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                >
+                  {/* Ambient Background Glow on Hover */}
+                  <div className="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-gradient-to-br from-emerald-500/10 to-teal-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                  <div className="space-y-6">
+                    <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                      <Users className="h-6 w-6" />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight group-hover:text-emerald-650 transition-colors">
+                        Grow With Us
+                      </h3>
+                      <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                        We provide an environment where learning never stops. Through real-world projects, mentorship, and collaborative teamwork, you'll gain valuable experience, expand your technical expertise, and build a successful career in product development.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-8 border-t border-slate-100 pt-4 flex items-center text-xs font-bold text-emerald-600 select-none group-hover:translate-x-1 transition-transform">
+                    <span>Explore active career roles</span>
+                    <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                  </div>
+                </motion.div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* SECTION 5: CUSTOMER TESTIMONIALS */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
-        <div className="max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
-            <Users className="h-3.5 w-3.5" />
-            <span>Success Stories</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
-            Trusted by Innovation Leaders
-          </h2>
-          <p className="text-slate-500 text-lg">
-            Hear from engineering and security leaders running critical corporate systems on our platform.
-          </p>
-        </div>
+            {/* SECTION: WHY CHOOSE OUR PRODUCTS */}
+            <div className="w-full bg-[#EAF6FF] py-20 mb-24">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div className="max-w-3xl mx-auto mb-16 space-y-4">
+                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+                    <Award className="h-3.5 w-3.5" />
+                    <span>Product Highlights</span>
+                  </div>
+                  <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
+                    Why Choose Our Products?
+                  </h2>
+                  <p className="text-slate-500 text-lg">
+                    Engineered for low-latency synchronization, enterprise-grade security, and seamless workflow integration.
+                  </p>
+                </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {testimonials.map((test, idx) => (
-            <motion.div
-              key={test.author}
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="glass-card p-8 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-6 shadow-sm"
-            >
-              {/* Star rating */}
-              <div className="flex items-center space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left">
+                  {/* Left Column: Visual Growth Roadmap */}
+                  <div className="lg:col-span-5 w-full">
+                    <div className="relative p-6 rounded-3xl bg-slate-900 text-white border border-slate-800 shadow-2xl overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-transparent to-purple-900/30 opacity-60 pointer-events-none" />
+                      <div className="relative z-10 space-y-5">
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                          <div className="flex items-center space-x-1.5">
+                            <div className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                            <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                            <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                          </div>
+                          <span className="text-[9px] font-mono text-slate-500">product_architecture.json</span>
+                        </div>
+
+                        {/* Pipeline visual steps */}
+                        <div className="space-y-3">
+                          {[
+                            { phase: 'Layer 1', title: 'Secure SMTP & Real-Time Sync', status: 'Active', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+                            { phase: 'Layer 2', title: 'SSO & Multi-Factor Auth Gateway', status: 'Verified', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
+                            { phase: 'Layer 3', title: 'Live WebSocket Channels & Boards', status: 'Connected', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+                            { phase: 'Layer 4', title: 'Centralized Scalable Workspace DB', status: 'Synced', color: 'text-slate-400 bg-slate-800 border-slate-700' }
+                          ].map((step, idx) => (
+                            <motion.div
+                              key={step.phase}
+                              initial={{ opacity: 0, x: -20 }}
+                              whileInView={{ opacity: 1, x: 0 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.4, delay: idx * 0.12 }}
+                              className="flex items-center justify-between p-3 rounded-xl bg-slate-955/85 border border-slate-800 hover:border-slate-700 transition-colors"
+                            >
+                              <div className="flex items-center space-x-3 overflow-hidden mr-2">
+                                <span className="text-[10px] font-mono text-slate-500 w-14 flex-shrink-0">{step.phase}</span>
+                                <span className="text-[11px] font-semibold text-slate-200 truncate">{step.title}</span>
+                              </div>
+                              <span className={`text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border flex-shrink-0 ${step.color}`}>
+                                {step.status}
+                              </span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Key Benefits */}
+                  <div className="lg:col-span-7 space-y-4">
+                    {[
+                      {
+                        title: 'Real-Time Collaboration',
+                        desc: 'Sync team messages, sprint boards, and document revisions instantly across teams using optimized bi-directional WebSocket protocols.',
+                        icon: Zap,
+                        bg: 'bg-amber-50 text-amber-600 border-amber-100'
+                      },
+                      {
+                        title: 'Enterprise Security & SSO',
+                        desc: 'Protect corporate workloads with cryptographically signed JSON Web Tokens (JWT) and multi-factor validation flows.',
+                        icon: Users,
+                        bg: 'bg-blue-50 text-blue-600 border-blue-100'
+                      },
+                      {
+                        title: 'High Availability Relays',
+                        desc: 'Our BNX mail relays feature a 99.99% uptime SLA with active load balancers and robust queue managers.',
+                        icon: Workflow,
+                        bg: 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                      },
+                      {
+                        title: 'Centralized Workspaces',
+                        desc: 'Consolidate your business toolchain. Seamlessly bridge email threads into sprint tasks or live discussion boards.',
+                        icon: Award,
+                        bg: 'bg-purple-50 text-purple-600 border-purple-100'
+                      }
+                    ].map((item, idx) => {
+                      const Icon = item.icon;
+                      return (
+                        <motion.div
+                          key={item.title}
+                          initial={{ opacity: 0, x: 20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: idx * 0.08 }}
+                          className="glass-card hover:bg-white/90 p-5 rounded-2xl border border-slate-200/80 flex items-start space-x-4 shadow-sm hover:shadow-md transition-all duration-300 group cursor-default"
+                        >
+                          <div className={`p-3 rounded-xl border flex-shrink-0 mt-0.5 transition-colors ${item.bg}`}>
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <div className="space-y-1 text-left">
+                            <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#004AAD] transition-colors duration-200">
+                              {item.title}
+                            </h3>
+                            <p className="text-slate-500 text-xs leading-relaxed font-medium">
+                              {item.desc}
+                            </p>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SECTION 5: CUSTOMER TESTIMONIALS */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
+              <div className="max-w-3xl mx-auto mb-16 space-y-4">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#E9F4FF] border border-[#004AAD]/20 text-[#004AAD] text-xs font-semibold uppercase tracking-wider">
+                  <Users className="h-3.5 w-3.5" />
+                  <span>Success Stories</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
+                  Trusted by Innovation Leaders
+                </h2>
+                <p className="text-slate-500 text-lg">
+                  Hear from engineering and security leaders running critical corporate systems on our platform.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {testimonials.map((test, idx) => (
+                  <motion.div
+                    key={test.author}
+                    initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="glass-card p-8 rounded-3xl border border-slate-200 text-left flex flex-col justify-between space-y-6 shadow-sm"
+                  >
+                    {/* Star rating */}
+                    <div className="flex items-center space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+
+                    {/* Quote */}
+                    <p className="text-slate-650 italic text-sm md:text-base leading-relaxed">
+                      "{test.quote}"
+                    </p>
+
+                    {/* User Info */}
+                    <div className="flex items-center space-x-3 pt-4 border-t border-slate-100">
+                      <div className={`h-11 w-11 rounded-full bg-gradient-to-tr ${test.gradient} flex items-center justify-center font-bold text-white text-sm shadow-sm`}>
+                        {test.initials}
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-extrabold text-slate-900">{test.author}</h4>
+                        <p className="text-xs text-slate-500">{test.title}</p>
+                      </div>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
+            </div>
 
-              {/* Quote */}
-              <p className="text-slate-650 italic text-sm md:text-base leading-relaxed">
-                "{test.quote}"
-              </p>
+            {/* SECTION 5.5: THE PRINCIPLES BEHIND EVERY PRODUCT */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
+              <div className="max-w-3xl mx-auto text-center mb-12 space-y-4 animate-fadeIn">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                  The Principles Behind Every Product
+                </h2>
+                <p className="text-slate-500 text-sm md:text-base leading-relaxed font-semibold">
+                  Discover the core foundations of performance, security, scaling, and simplicity that dictate our engineering standards.
+                </p>
+              </div>
 
-              {/* User Info */}
-              <div className="flex items-center space-x-3 pt-4 border-t border-slate-100">
-                <div className={`h-11 w-11 rounded-full bg-gradient-to-tr ${test.gradient} flex items-center justify-center font-bold text-white text-sm shadow-sm`}>
-                  {test.initials}
-                </div>
-                <div>
-                  <h4 className="text-sm font-extrabold text-slate-900">{test.author}</h4>
-                  <p className="text-xs text-slate-500">{test.title}</p>
+              {/* CONTINUOUS HORIZONTAL MARQUEE (LEFT -> RIGHT) */}
+              <div className="relative w-full overflow-hidden py-8 mb-12 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                <div className="marquee-track-lr flex items-center">
+                  {[...principlesMarquee, ...principlesMarquee].map((item, idx) => {
+                    const Icon = item.icon;
+                    return (
+                      <div
+                        key={`${item.title}-${idx}`}
+                        className="flex items-center space-x-3.5 mx-8 flex-shrink-0 select-none cursor-default group"
+                      >
+                        <div className={`h-11 w-11 rounded-2xl ${item.bg} border border-slate-200/80 flex items-center justify-center ${item.color} shadow-xs transition-transform duration-300 group-hover:scale-110 flex-shrink-0`}>
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div className="text-left">
+                          <span className="block text-sm sm:text-base font-extrabold text-slate-900 tracking-tight group-hover:text-[#004AAD] transition-colors whitespace-nowrap">
+                            {item.title}
+                          </span>
+                          <span className="block text-xs text-slate-500 font-medium whitespace-nowrap">
+                            {item.desc}
+                          </span>
+                        </div>
+                        <div className="h-1.5 w-1.5 rounded-full bg-slate-300 ml-8 flex-shrink-0" />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+            </div>
 
-      {/* SECTION 5.5: THE PRINCIPLES BEHIND EVERY PRODUCT */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 text-center">
-        <div className="max-w-3xl mx-auto text-center mb-12 space-y-4 animate-fadeIn">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-            The Principles Behind Every Product
-          </h2>
-          <p className="text-slate-500 text-sm md:text-base leading-relaxed font-semibold">
-            Discover the core foundations of performance, security, scaling, and simplicity that dictate our engineering standards.
-          </p>
-        </div>
+            {/* SECTION 6: CALL TO ACTION */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="cta-colored-section animated-gradient-bg relative rounded-3xl p-8 md:p-16 border border-blue-500/20 overflow-hidden text-center shadow-2xl">
+                {/* Decorative patterns */}
+                <div className="absolute inset-0 bg-mesh-pattern bg-mesh opacity-10 pointer-events-none" />
+                <div className="absolute inset-0 bg-white/5 backdrop-blur-[1px] pointer-events-none" />
 
-        {/* CONTINUOUS HORIZONTAL MARQUEE (LEFT -> RIGHT) */}
-        <div className="relative w-full overflow-hidden py-8 mb-12 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="marquee-track-lr flex items-center">
-            {[...principlesMarquee, ...principlesMarquee].map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={`${item.title}-${idx}`}
-                  className="flex items-center space-x-3.5 mx-8 flex-shrink-0 select-none cursor-default group"
-                >
-                  <div className={`h-11 w-11 rounded-2xl ${item.bg} border border-slate-200/80 flex items-center justify-center ${item.color} shadow-xs transition-transform duration-300 group-hover:scale-110 flex-shrink-0`}>
-                    <Icon className="h-5 w-5" />
+                <div className="relative z-10 space-y-6 max-w-3xl mx-auto text-center">
+                  <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight max-w-2xl mx-auto">
+                    Ready to Upgrade Your Corporate Software?
+                  </h2>
+                  <p className="text-slate-200 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                    Unify your group mailbox, auth logs, dashboard notes, and project backlogs under one centralized and secure portal.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+                    <button
+                      type="button"
+                      className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white text-[#004AAD] hover:bg-slate-50 transition-all duration-300 shadow-md cursor-pointer"
+                    >
+                      Browse Product Suites
+                    </button>
+                    <Link
+                      to="/support"
+                      className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30 transition-all duration-300 hover:scale-[1.02]"
+                    >
+                      Contact Support
+                    </Link>
                   </div>
-                  <div className="text-left">
-                    <span className="block text-sm sm:text-base font-extrabold text-slate-900 tracking-tight group-hover:text-[#004AAD] transition-colors whitespace-nowrap">
-                      {item.title}
-                    </span>
-                    <span className="block text-xs text-slate-500 font-medium whitespace-nowrap">
-                      {item.desc}
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-1.5 rounded-full bg-slate-300 ml-8 flex-shrink-0" />
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 6: CALL TO ACTION */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="cta-colored-section animated-gradient-bg relative rounded-3xl p-8 md:p-16 border border-blue-500/20 overflow-hidden text-center shadow-2xl">
-          {/* Decorative patterns */}
-          <div className="absolute inset-0 bg-mesh-pattern bg-mesh opacity-10 pointer-events-none" />
-          <div className="absolute inset-0 bg-white/5 backdrop-blur-[1px] pointer-events-none" />
-
-          <div className="relative z-10 space-y-6 max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight max-w-2xl mx-auto">
-              Ready to Upgrade Your Corporate Software?
-            </h2>
-            <p className="text-slate-200 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-              Unify your group mailbox, auth logs, dashboard notes, and project backlogs under one centralized and secure portal.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
-              <button
-                type="button"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white text-[#004AAD] hover:bg-slate-50 transition-all duration-300 shadow-md cursor-pointer"
-              >
-                Browse Product Suites
-              </button>
-              <Link
-                to="/support"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30 transition-all duration-300 hover:scale-[1.02]"
-              >
-                Contact Support
-              </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
+          );
 }
