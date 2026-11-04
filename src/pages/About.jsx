@@ -235,7 +235,7 @@ export default function About() {
       <div className="absolute inset-x-0 top-0 w-full h-[550px] md:h-[650px] lg:h-[750px] pointer-events-none z-0 overflow-hidden select-none">
         {/* Soft Ambient Tint */}
         <div className="w-full h-full bg-gradient-to-b from-[#f0f6ff]/70 via-[#f8fafc]/50 to-[#f8fafc]" />
-        
+
         {/* Ambient Glow Blobs */}
         <div className="absolute top-[10%] left-[15%] w-[450px] h-[450px] rounded-full bg-blue-400/10 blur-[130px] particle-glow-1" />
         <div className="absolute top-[5%] right-[15%] w-[400px] h-[400px] rounded-full bg-orange-400/8 blur-[130px] particle-glow-2" />
