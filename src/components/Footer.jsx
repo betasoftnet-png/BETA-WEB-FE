@@ -29,7 +29,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main 6-Column Footer Grid aligned to top baseline */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-6 xl:gap-8 items-start mb-12 sm:mb-16">
-          
+
           {/* Column 1: Beta Logo + Description + Social Media */}
           <div className="flex flex-col items-center text-center space-y-4">
             <Link to="/" className="inline-block select-none focus:outline-none">
@@ -109,7 +109,17 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="text-slate-600 hover:text-[#004AAD] transition-all duration-200 inline-block hover:translate-x-0.5"
                 >
-                  B2 Auth Security
+                  B2 Auth
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://bit-tool.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-600 hover:text-[#004AAD] transition-all duration-200 inline-block hover:translate-x-0.5"
+                >
+                  Bit-Tool
                 </a>
               </li>
               <li>
