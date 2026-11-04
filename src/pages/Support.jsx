@@ -103,12 +103,25 @@ export default function Support() {
     setStatus('loading');
     try {
       // Send selected product in the company field to reuse the contact message schema
-      await api.post('/api/contact', {
-        name,
-        email,
-        company: `Support Request - ${product}`,
-        message
-      });
+      try {
+        await api.post('/api/contact', {
+          name,
+          email,
+          company: `Support Request - ${product}`,
+          message
+        });
+      } catch (postErr) {
+        if (postErr.response?.status === 404 || postErr.response?.status === 405) {
+          await api.post('/api/contacts', {
+            name,
+            email,
+            company: `Support Request - ${product}`,
+            message
+          });
+        } else {
+          throw postErr;
+        }
+      }
       setStatus('success');
       setFeedbackMsg('Your support ticket has been lodged! Our engineering team will contact you shortly.');
       // Reset form fields

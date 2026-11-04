@@ -636,12 +636,25 @@ export default function Partners() {
     `;
 
     try {
-      await api.post('/api/contact', {
-        name: fullName,
-        email: workEmail,
-        company: companyName,
-        message: constructedMessage
-      });
+      try {
+        await api.post('/api/contact', {
+          name: fullName,
+          email: workEmail,
+          company: companyName,
+          message: constructedMessage
+        });
+      } catch (postErr) {
+        if (postErr.response?.status === 404 || postErr.response?.status === 405) {
+          await api.post('/api/contacts', {
+            name: fullName,
+            email: workEmail,
+            company: companyName,
+            message: constructedMessage
+          });
+        } else {
+          throw postErr;
+        }
+      }
       setStatus('success');
       setStatusMsg('Thank you! Your strategic partner request has been recorded. Our alliance engineers will connect shortly.');
       // Reset state
