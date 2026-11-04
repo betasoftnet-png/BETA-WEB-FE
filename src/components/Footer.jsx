@@ -142,7 +142,7 @@ export default function Footer() {
                   Cliks Business
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="https://bit-tool.com/"
                   target="_blank"
@@ -151,7 +151,7 @@ export default function Footer() {
                 >
                   Bit-Tool
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
